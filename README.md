@@ -33,7 +33,7 @@ Propio is a modern property management platform for independent landlords (1–5
 ### 2. Install
 
 ```bash
-npm install
+yarn
 ```
 
 ### 3. Environment
@@ -59,16 +59,16 @@ The app degrades gracefully: without Resend it logs emails instead of sending; w
 ### 4. Database
 
 ```bash
-npm run db:push      # create the schema (dev)
-npm run db:seed      # optional: demo data → demo@propio.app / Demo1234!
+yarn db:push      # create the schema (dev)
+yarn db:seed      # optional: demo data → demo@propio.app / Demo1234!
 ```
 
-For production use migrations instead: `npm run db:migrate`.
+For production use migrations instead: `yarn db:migrate`.
 
 ### 5. Run
 
 ```bash
-npm run dev
+yarn dev
 ```
 
 Open http://localhost:3000 — register an account or sign in with the seeded demo user.
@@ -77,10 +77,10 @@ Open http://localhost:3000 — register an account or sign in with the seeded de
 
 | Script | Purpose |
 | --- | --- |
-| `npm run dev` | Development server |
-| `npm run build` | `prisma generate` + production build |
-| `npm run lint` / `format` / `typecheck` / `test` | Quality gates (Vitest unit tests) |
-| `npm run db:push` / `db:migrate` / `db:studio` / `db:seed` | Database workflows |
+| `yarn dev` | Development server |
+| `yarn build` | `prisma generate` + production build |
+| `yarn lint` / `format` / `typecheck` / `test` | Quality gates (Vitest unit tests) |
+| `yarn db:push` / `db:migrate` / `db:studio` / `db:seed` | Database workflows |
 
 ## Architecture
 
@@ -133,7 +133,7 @@ src/
 - ✅ Documents: uploads (PDF/images/Word) stored per owner, linked to properties/tenants
 - ✅ Reports: yearly revenue/expenses/profit with **year selector**, expense category breakdown, occupancy
 - ✅ Notifications: in-app feed + **daily cron** (`/api/cron/notifications`, `CRON_SECRET`-protected, wired in `vercel.json`) for upcoming/late payments and expiring contracts
-- ✅ Tests: Vitest unit suite for validators, formatting, pagination and error mapping (`npm test`)
+- ✅ Tests: Vitest unit suite for validators, formatting, pagination and error mapping (`yarn test`)
 
 ### Roadmap
 

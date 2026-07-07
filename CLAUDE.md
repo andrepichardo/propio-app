@@ -4,8 +4,8 @@ SaaS for independent landlords. Next.js 15 App Router · React 19 · TS strict �
 
 ## Commands
 
-- `npm run dev` · `npm run build` · `npm run typecheck` · `npm run lint`
-- DB: `npm run db:push` (dev), `db:migrate`, `db:seed` (demo@propio.app / Demo1234!)
+- **Yarn, not npm** (`yarn.lock` is the lockfile): `yarn dev` · `yarn build` · `yarn typecheck` · `yarn lint` · `yarn test`
+- DB: `yarn db:push` (dev), `db:migrate`, `db:seed` (demo@propio.app / Demo1234!)
 - Copy `.env.example` → `.env`; minimum `DATABASE_URL` + `AUTH_SECRET`.
 
 ## Architecture rules (follow these when adding code)
