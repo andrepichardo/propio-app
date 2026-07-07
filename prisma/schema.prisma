@@ -1,0 +1,565 @@
+// ---------------------------------------------------------------------------
+// Propio — Prisma schema
+//
+// Design principles:
+//   • Multi-tenant by ownership. Every tenant-scoped row carries `ownerId`
+//     pointing at the owning User. Repositories ALWAYS filter by it.
+//   • Soft deletes. Domain rows carry `deletedAt`; queries exclude them.
+//   • Audit fields: createdAt / updatedAt / deletedAt on every domain model.
+//   • Money is stored as Decimal(12,2) — never floats.
+//   • Explicit onDelete rules; indexes on every foreign key + hot filters.
+// ---------------------------------------------------------------------------
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ===========================================================================
+// AUTH (Auth.js / NextAuth) — the User is also the tenant root.
+// ===========================================================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  hashedPassword String?  // null for pure-OAuth accounts
+
+  role          UserRole  @default(OWNER)
+  locale        String    @default("en")
+  currency      String    @default("USD") // ISO 4217, used for money formatting
+  timezone      String    @default("UTC")
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Auth.js relations
+  accounts      Account[]
+  sessions      Session[]
+
+  // Tenant-owned data (all cascade: deleting an owner removes their world)
+  properties    Property[]
+  tenants       Tenant[]
+  contracts     Contract[]
+  payments      Payment[]
+  receipts      Receipt[]
+  statements    Statement[]
+  expenses      Expense[]
+  documents     Document[]
+  notifications Notification[]
+  activities    Activity[]
+
+  @@index([email])
+  @@map("users")
+}
+
+enum UserRole {
+  OWNER
+  ADMIN // reserved for internal/staff usage
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ===========================================================================
+// PROPERTIES
+// ===========================================================================
+
+model Property {
+  id          String         @id @default(cuid())
+  ownerId     String
+
+  name        String
+  description String?        @db.Text
+  type        PropertyType   @default(TRADITIONAL_RENTAL)
+  status      PropertyStatus @default(AVAILABLE)
+
+  // Address
+  addressLine String?
+  city        String?
+  state       String?
+  postalCode  String?
+  country     String?        // ISO 3166-1 alpha-2
+
+  // Denormalised financials help the dashboard avoid N+1 aggregation.
+  bedrooms    Int?
+  bathrooms   Int?
+  areaSqm     Decimal?       @db.Decimal(10, 2)
+
+  coverImageUrl String?
+
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  deletedAt   DateTime?
+
+  owner       User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  photos      PropertyPhoto[]
+  contracts   Contract[]
+  payments    Payment[]
+  expenses    Expense[]
+  documents   Document[]
+  receipts    Receipt[]
+  statements  Statement[]
+
+  @@index([ownerId])
+  @@index([ownerId, status])
+  @@index([ownerId, type])
+  @@index([ownerId, deletedAt])
+  @@map("properties")
+}
+
+enum PropertyType {
+  TRADITIONAL_RENTAL
+  VACATION_RENTAL
+  PERSONAL
+  COMMERCIAL // future
+}
+
+enum PropertyStatus {
+  AVAILABLE
+  OCCUPIED
+  MAINTENANCE
+}
+
+model PropertyPhoto {
+  id         String   @id @default(cuid())
+  propertyId String
+  url        String
+  storageKey String   // path in the storage bucket, for deletion/migration
+  caption    String?
+  position   Int      @default(0)
+
+  createdAt  DateTime @default(now())
+
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId])
+  @@map("property_photos")
+}
+
+// ===========================================================================
+// TENANTS (the people renting — distinct from the SaaS "tenant"/owner)
+// ===========================================================================
+
+model Tenant {
+  id               String     @id @default(cuid())
+  ownerId          String
+
+  firstName        String
+  lastName         String
+  email            String?
+  phone            String?
+  identification   String?    // national ID / passport number
+  avatarUrl        String?
+
+  emergencyName    String?
+  emergencyPhone   String?
+  emergencyRelation String?
+
+  notes            String?    @db.Text
+
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  deletedAt        DateTime?
+
+  owner            User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  contracts        Contract[]
+  payments         Payment[]
+  documents        Document[]
+  receipts         Receipt[]
+  statements       Statement[]
+
+  @@index([ownerId])
+  @@index([ownerId, deletedAt])
+  @@index([ownerId, lastName])
+  @@map("tenants")
+}
+
+// ===========================================================================
+// CONTRACTS
+// ===========================================================================
+
+model Contract {
+  id                 String         @id @default(cuid())
+  ownerId            String
+  propertyId         String
+  tenantId           String
+
+  startDate          DateTime
+  endDate            DateTime?      // null = open-ended
+  monthlyRent        Decimal        @db.Decimal(12, 2)
+  currency           String         @default("USD")
+  dueDay             Int            @default(1) // day of month rent is due (1-31)
+  securityDeposit    Decimal        @default(0) @db.Decimal(12, 2)
+  maintenanceIncluded Boolean       @default(false)
+
+  status             ContractStatus @default(ACTIVE)
+  contractPdfUrl     String?
+  notes              String?        @db.Text
+
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  deletedAt          DateTime?
+
+  owner              User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  property           Property       @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  tenant             Tenant         @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  payments           Payment[]
+  receipts           Receipt[]
+  statements         Statement[]
+
+  @@index([ownerId])
+  @@index([ownerId, status])
+  @@index([propertyId])
+  @@index([tenantId])
+  @@index([ownerId, endDate])
+  @@index([ownerId, deletedAt])
+  @@map("contracts")
+}
+
+enum ContractStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+// ===========================================================================
+// PAYMENTS
+// ===========================================================================
+
+model Payment {
+  id              String        @id @default(cuid())
+  ownerId         String
+  contractId      String
+  propertyId      String
+  tenantId        String
+
+  amount          Decimal       @db.Decimal(12, 2)
+  currency        String        @default("USD")
+  method          PaymentMethod @default(TRANSFER)
+  status          PaymentStatus @default(COMPLETED)
+  reference       String?       // bank ref / check number
+  concept         String?       // "Rent — March 2026"
+
+  // The rent period this payment settles (first day of the month).
+  periodStart     DateTime?
+  periodEnd       DateTime?
+  paidAt          DateTime      @default(now())
+
+  notes           String?       @db.Text
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
+
+  owner           User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  contract        Contract      @relation(fields: [contractId], references: [id], onDelete: Restrict)
+  property        Property      @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  tenant          Tenant        @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  receipt         Receipt?
+
+  @@index([ownerId])
+  @@index([ownerId, paidAt])
+  @@index([ownerId, status])
+  @@index([contractId])
+  @@index([propertyId])
+  @@index([tenantId])
+  @@index([ownerId, periodStart])
+  @@map("payments")
+}
+
+enum PaymentMethod {
+  CASH
+  TRANSFER
+  CARD
+  CHECK
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+// ===========================================================================
+// RECEIPTS
+// ===========================================================================
+
+model Receipt {
+  id            String   @id @default(cuid())
+  ownerId       String
+  paymentId     String   @unique
+  contractId    String
+  propertyId    String
+  tenantId      String
+
+  // Human-friendly sequential number, unique per owner (e.g. "REC-2026-0001").
+  number        String
+  concept       String
+  amount        Decimal  @db.Decimal(12, 2)
+  currency      String   @default("USD")
+  balanceAfter  Decimal  @default(0) @db.Decimal(12, 2)
+
+  issuedAt      DateTime @default(now())
+  pdfUrl        String?  // cached rendered PDF in storage
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  owner         User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  payment       Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  contract      Contract @relation(fields: [contractId], references: [id], onDelete: Restrict)
+  property      Property @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  @@unique([ownerId, number])
+  @@index([ownerId])
+  @@index([contractId])
+  @@index([tenantId])
+  @@map("receipts")
+}
+
+// ===========================================================================
+// MONTHLY STATEMENTS
+// ===========================================================================
+
+model Statement {
+  id                String   @id @default(cuid())
+  ownerId           String
+  contractId        String
+  propertyId        String
+  tenantId          String
+
+  number            String
+  periodStart       DateTime
+  periodEnd         DateTime
+
+  totalCharged      Decimal  @db.Decimal(12, 2)
+  totalPaid         Decimal  @db.Decimal(12, 2)
+  outstanding       Decimal  @db.Decimal(12, 2)
+  nextDueDate       DateTime?
+  currency          String   @default("USD")
+
+  pdfUrl            String?
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  owner             User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  contract          Contract @relation(fields: [contractId], references: [id], onDelete: Restrict)
+  property          Property @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  @@unique([ownerId, number])
+  @@index([ownerId])
+  @@index([contractId])
+  @@index([ownerId, periodStart])
+  @@map("statements")
+}
+
+// ===========================================================================
+// EXPENSES
+// ===========================================================================
+
+model Expense {
+  id          String        @id @default(cuid())
+  ownerId     String
+  propertyId  String?       // optional: some expenses are portfolio-wide
+
+  category    ExpenseCategory @default(OTHER)
+  description String
+  amount      Decimal       @db.Decimal(12, 2)
+  currency    String        @default("USD")
+  incurredAt  DateTime      @default(now())
+  vendor      String?
+  notes       String?       @db.Text
+  invoiceUrl  String?
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  deletedAt   DateTime?
+
+  owner       User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  property    Property?     @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+
+  @@index([ownerId])
+  @@index([ownerId, incurredAt])
+  @@index([ownerId, category])
+  @@index([propertyId])
+  @@index([ownerId, deletedAt])
+  @@map("expenses")
+}
+
+enum ExpenseCategory {
+  MAINTENANCE
+  CONDOMINIUM
+  CLEANING
+  REPAIRS
+  PAINTING
+  FURNITURE
+  UTILITIES
+  TAXES
+  INSURANCE
+  OTHER
+}
+
+// ===========================================================================
+// DOCUMENTS
+// ===========================================================================
+
+model Document {
+  id          String       @id @default(cuid())
+  ownerId     String
+  propertyId  String?
+  tenantId    String?
+
+  name        String
+  type        DocumentType @default(OTHER)
+  url         String
+  storageKey  String
+  mimeType    String?
+  sizeBytes   Int?
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  deletedAt   DateTime?
+
+  owner       User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  property    Property?    @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  tenant      Tenant?      @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+
+  @@index([ownerId])
+  @@index([propertyId])
+  @@index([tenantId])
+  @@index([ownerId, type])
+  @@map("documents")
+}
+
+enum DocumentType {
+  CONTRACT
+  PHOTO
+  INVOICE
+  ID
+  OTHER
+}
+
+// ===========================================================================
+// NOTIFICATIONS
+// ===========================================================================
+
+model Notification {
+  id          String             @id @default(cuid())
+  ownerId     String
+
+  type        NotificationType
+  title       String
+  body        String?            @db.Text
+  // Loose reference to the entity that triggered the notification.
+  entityType  String?
+  entityId    String?
+  actionUrl   String?
+
+  readAt      DateTime?
+  dueAt       DateTime?          // when the reminder becomes relevant
+
+  createdAt   DateTime           @default(now())
+
+  owner       User               @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([ownerId])
+  @@index([ownerId, readAt])
+  @@index([ownerId, dueAt])
+  @@map("notifications")
+}
+
+enum NotificationType {
+  PAYMENT_UPCOMING
+  PAYMENT_LATE
+  CONTRACT_EXPIRING
+  MAINTENANCE_REMINDER
+  SYSTEM
+}
+
+// ===========================================================================
+// ACTIVITY LOG (audit trail powering "Recent Activity")
+// ===========================================================================
+
+model Activity {
+  id          String       @id @default(cuid())
+  ownerId     String
+
+  action      ActivityAction
+  entityType  String       // "Property" | "Payment" | ...
+  entityId    String
+  summary     String       // "Registered payment of $1,200 for Apt 4B"
+  metadata    Json?
+
+  createdAt   DateTime     @default(now())
+
+  owner       User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([ownerId])
+  @@index([ownerId, createdAt])
+  @@map("activities")
+}
+
+enum ActivityAction {
+  CREATED
+  UPDATED
+  DELETED
+  PAYMENT_REGISTERED
+  RECEIPT_GENERATED
+  STATEMENT_GENERATED
+}

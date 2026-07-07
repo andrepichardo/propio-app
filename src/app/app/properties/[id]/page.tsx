@@ -1,0 +1,172 @@
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
+import {
+  Building2,
+  FileSignature,
+  FolderClosed,
+  MapPin,
+  Pencil,
+  Receipt as ReceiptIcon,
+} from 'lucide-react';
+import { requireOwnerId } from '@/shared/lib/auth/session';
+import { NotFoundError } from '@/shared/lib/errors';
+import { propertyService } from '@/features/properties/services/property.service';
+import {
+  PROPERTY_TYPE_LABELS,
+} from '@/features/properties/constants';
+import { PropertyStatusBadge } from '@/features/properties/components/property-status-badge';
+import { DeletePropertyDialog } from '@/features/properties/components/delete-property-dialog';
+import { PropertyPhotos } from '@/features/properties/components/property-photos';
+import { PageHeader } from '@/shared/components/page-header';
+import { Button } from '@/shared/components/ui/button';
+import { Card, CardContent } from '@/shared/components/ui/card';
+import { formatDate } from '@/shared/lib/format';
+
+export const metadata: Metadata = { title: 'Property' };
+
+export default async function PropertyDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const ownerId = await requireOwnerId();
+  const { id } = await params;
+
+  const property = await propertyService.getById(ownerId, id).catch((error) => {
+    if (error instanceof NotFoundError) notFound();
+    throw error;
+  });
+
+  const location = [
+    property.addressLine,
+    property.city,
+    property.state,
+    property.country,
+  ]
+    .filter(Boolean)
+    .join(', ');
+
+  const stats = [
+    {
+      label: 'Contracts',
+      value: property._count.contracts,
+      icon: FileSignature,
+    },
+    { label: 'Documents', value: property._count.documents, icon: FolderClosed },
+    { label: 'Expenses', value: property._count.expenses, icon: ReceiptIcon },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        title={property.name}
+        description={PROPERTY_TYPE_LABELS[property.type]}
+        actions={
+          <>
+            <Button variant="outline" asChild>
+              <Link href={`/app/properties/${property.id}/edit`}>
+                <Pencil className="size-4" /> Edit
+              </Link>
+            </Button>
+            <DeletePropertyDialog
+              propertyId={property.id}
+              propertyName={property.name}
+            />
+          </>
+        }
+      />
+
+      <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+        <Card className="overflow-hidden">
+          <div className="relative aspect-[16/9] bg-muted">
+            {property.coverImageUrl ? (
+              <Image
+                src={property.coverImageUrl}
+                alt={property.name}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 60vw"
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center">
+                <Building2 className="size-12 text-muted-foreground/40" />
+              </div>
+            )}
+            <div className="absolute left-4 top-4">
+              <PropertyStatusBadge status={property.status} />
+            </div>
+          </div>
+          <CardContent className="space-y-4 p-6">
+            <div className="flex items-start gap-2 text-sm text-muted-foreground">
+              <MapPin className="mt-0.5 size-4 shrink-0" />
+              <span>{location || 'No location set'}</span>
+            </div>
+            {property.description ? (
+              <p className="text-sm leading-relaxed text-foreground/90">
+                {property.description}
+              </p>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No description added yet.
+              </p>
+            )}
+            <p className="text-xs text-muted-foreground">
+              Added {formatDate(property.createdAt)}
+            </p>
+          </CardContent>
+        </Card>
+
+        <div className="space-y-4">
+          <div className="grid grid-cols-3 gap-3">
+            {stats.map((stat) => (
+              <Card key={stat.label}>
+                <CardContent className="flex flex-col items-center gap-1 p-4 text-center">
+                  <stat.icon className="size-5 text-muted-foreground" />
+                  <p className="text-xl font-semibold">{stat.value}</p>
+                  <p className="text-xs text-muted-foreground">{stat.label}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <Card>
+            <CardContent className="space-y-3 p-6 text-sm">
+              <Detail label="Bedrooms" value={property.bedrooms ?? '—'} />
+              <Detail label="Bathrooms" value={property.bathrooms ?? '—'} />
+              <Detail
+                label="Area"
+                value={property.areaSqm ? `${property.areaSqm} m²` : '—'}
+              />
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      <PropertyPhotos
+        propertyId={property.id}
+        photos={property.photos.map((photo) => ({
+          id: photo.id,
+          url: photo.url,
+          caption: photo.caption,
+        }))}
+      />
+    </div>
+  );
+}
+
+function Detail({
+  label,
+  value,
+}: {
+  label: string;
+  value: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-medium">{value}</span>
+    </div>
+  );
+}

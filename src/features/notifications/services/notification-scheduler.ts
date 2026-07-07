@@ -1,0 +1,195 @@
+import 'server-only';
+import {
+  addDays,
+  addMonths,
+  differenceInCalendarDays,
+  endOfMonth,
+  startOfMonth,
+  subDays,
+} from 'date-fns';
+import {
+  ContractStatus,
+  NotificationType,
+  PaymentStatus,
+} from '@prisma/client';
+import { prisma } from '@/shared/lib/prisma';
+import { formatCurrency } from '@/shared/lib/format';
+
+const UPCOMING_WINDOW_DAYS = 3;
+const EXPIRING_WINDOW_DAYS = 30;
+
+/** Skip if an identical reminder was already created within the window. */
+async function alreadyNotified(
+  ownerId: string,
+  type: NotificationType,
+  entityId: string,
+  withinDays: number,
+): Promise<boolean> {
+  const existing = await prisma.notification.findFirst({
+    where: {
+      ownerId,
+      type,
+      entityId,
+      createdAt: { gte: subDays(new Date(), withinDays) },
+    },
+    select: { id: true },
+  });
+  return existing !== null;
+}
+
+/** Due date for the given month, clamped to day 28 for short months. */
+function dueDateFor(monthAnchor: Date, dueDay: number): Date {
+  return new Date(
+    monthAnchor.getFullYear(),
+    monthAnchor.getMonth(),
+    Math.min(Math.max(dueDay, 1), 28),
+  );
+}
+
+export type SchedulerResult = {
+  upcoming: number;
+  late: number;
+  expiring: number;
+};
+
+/**
+ * System-level job that fans reminder notifications out to every owner:
+ *   • PAYMENT_UPCOMING  — rent due within 3 days, current period unpaid
+ *   • PAYMENT_LATE      — due day passed this month, current period unpaid
+ *   • CONTRACT_EXPIRING — active contract ends within 30 days
+ *
+ * Idempotent by design: each reminder de-dupes against recent notifications,
+ * so the job can run daily (or be retried) without spamming.
+ */
+export async function runNotificationScheduler(): Promise<SchedulerResult> {
+  const now = new Date();
+  const result: SchedulerResult = { upcoming: 0, late: 0, expiring: 0 };
+
+  const contracts = await prisma.contract.findMany({
+    where: { deletedAt: null, status: ContractStatus.ACTIVE },
+    select: {
+      id: true,
+      ownerId: true,
+      dueDay: true,
+      endDate: true,
+      monthlyRent: true,
+      currency: true,
+      property: { select: { name: true } },
+      tenant: { select: { firstName: true, lastName: true } },
+    },
+  });
+
+  for (const contract of contracts) {
+    const tenantName = `${contract.tenant.firstName} ${contract.tenant.lastName}`;
+    const rent = formatCurrency(
+      contract.monthlyRent.toString(),
+      contract.currency,
+    );
+    const actionUrl = `/app/contracts/${contract.id}`;
+
+    // --- Contract expiring ---------------------------------------------------
+    if (contract.endDate) {
+      const daysLeft = differenceInCalendarDays(contract.endDate, now);
+      if (
+        daysLeft >= 0 &&
+        daysLeft <= EXPIRING_WINDOW_DAYS &&
+        !(await alreadyNotified(
+          contract.ownerId,
+          NotificationType.CONTRACT_EXPIRING,
+          contract.id,
+          EXPIRING_WINDOW_DAYS,
+        ))
+      ) {
+        await prisma.notification.create({
+          data: {
+            ownerId: contract.ownerId,
+            type: NotificationType.CONTRACT_EXPIRING,
+            title: 'Contract expiring soon',
+            body: `The lease for ${contract.property.name} with ${tenantName} ends in ${daysLeft} day${daysLeft === 1 ? '' : 's'}.`,
+            entityType: 'Contract',
+            entityId: contract.id,
+            actionUrl,
+            dueAt: contract.endDate,
+          },
+        });
+        result.expiring += 1;
+      }
+    }
+
+    // --- Rent payment status for the current period --------------------------
+    const periodStart = startOfMonth(now);
+    const paid = await prisma.payment.findFirst({
+      where: {
+        ownerId: contract.ownerId,
+        contractId: contract.id,
+        deletedAt: null,
+        status: PaymentStatus.COMPLETED,
+        OR: [
+          { periodStart },
+          { paidAt: { gte: periodStart, lte: endOfMonth(now) } },
+        ],
+      },
+      select: { id: true },
+    });
+    if (paid) continue;
+
+    const dueThisMonth = dueDateFor(now, contract.dueDay);
+
+    if (now > dueThisMonth) {
+      // Late for the current period.
+      if (
+        !(await alreadyNotified(
+          contract.ownerId,
+          NotificationType.PAYMENT_LATE,
+          contract.id,
+          7,
+        ))
+      ) {
+        await prisma.notification.create({
+          data: {
+            ownerId: contract.ownerId,
+            type: NotificationType.PAYMENT_LATE,
+            title: 'Rent payment overdue',
+            body: `${tenantName} hasn’t paid ${rent} for ${contract.property.name} (was due day ${contract.dueDay}).`,
+            entityType: 'Contract',
+            entityId: contract.id,
+            actionUrl,
+            dueAt: dueThisMonth,
+          },
+        });
+        result.late += 1;
+      }
+    } else {
+      // Not yet due — remind when the window opens.
+      const nextDue =
+        dueThisMonth >= now
+          ? dueThisMonth
+          : dueDateFor(addMonths(now, 1), contract.dueDay);
+      if (
+        nextDue <= addDays(now, UPCOMING_WINDOW_DAYS) &&
+        !(await alreadyNotified(
+          contract.ownerId,
+          NotificationType.PAYMENT_UPCOMING,
+          contract.id,
+          7,
+        ))
+      ) {
+        await prisma.notification.create({
+          data: {
+            ownerId: contract.ownerId,
+            type: NotificationType.PAYMENT_UPCOMING,
+            title: 'Rent payment due soon',
+            body: `${rent} from ${tenantName} for ${contract.property.name} is due in ${differenceInCalendarDays(nextDue, now)} day(s).`,
+            entityType: 'Contract',
+            entityId: contract.id,
+            actionUrl,
+            dueAt: nextDue,
+          },
+        });
+        result.upcoming += 1;
+      }
+    }
+  }
+
+  return result;
+}
