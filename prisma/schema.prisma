@@ -12,7 +12,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -26,24 +25,24 @@ datasource db {
 // ===========================================================================
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  hashedPassword String?  // null for pure-OAuth accounts
+  id             String    @id @default(cuid())
+  name           String?
+  email          String    @unique
+  emailVerified  DateTime?
+  image          String?
+  hashedPassword String? // null for pure-OAuth accounts
 
-  role          UserRole  @default(OWNER)
-  locale        String    @default("en")
-  currency      String    @default("USD") // ISO 4217, used for money formatting
-  timezone      String    @default("UTC")
+  role     UserRole @default(OWNER)
+  locale   String   @default("en")
+  currency String   @default("USD") // ISO 4217, used for money formatting
+  timezone String   @default("UTC")
 
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Auth.js relations
-  accounts      Account[]
-  sessions      Session[]
+  accounts Account[]
+  sessions Session[]
 
   // Tenant-owned data (all cascade: deleting an owner removes their world)
   properties    Property[]
@@ -113,8 +112,8 @@ model VerificationToken {
 // ===========================================================================
 
 model Property {
-  id          String         @id @default(cuid())
-  ownerId     String
+  id      String @id @default(cuid())
+  ownerId String
 
   name        String
   description String?        @db.Text
@@ -126,28 +125,28 @@ model Property {
   city        String?
   state       String?
   postalCode  String?
-  country     String?        // ISO 3166-1 alpha-2
+  country     String? // ISO 3166-1 alpha-2
 
   // Denormalised financials help the dashboard avoid N+1 aggregation.
-  bedrooms    Int?
-  bathrooms   Int?
-  areaSqm     Decimal?       @db.Decimal(10, 2)
+  bedrooms  Int?
+  bathrooms Int?
+  areaSqm   Decimal? @db.Decimal(10, 2)
 
   coverImageUrl String?
 
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  deletedAt   DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
-  owner       User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
-  photos      PropertyPhoto[]
-  contracts   Contract[]
-  payments    Payment[]
-  expenses    Expense[]
-  documents   Document[]
-  receipts    Receipt[]
-  statements  Statement[]
+  photos     PropertyPhoto[]
+  contracts  Contract[]
+  payments   Payment[]
+  expenses   Expense[]
+  documents  Document[]
+  receipts   Receipt[]
+  statements Statement[]
 
   @@index([ownerId])
   @@index([ownerId, status])
@@ -170,16 +169,16 @@ enum PropertyStatus {
 }
 
 model PropertyPhoto {
-  id         String   @id @default(cuid())
+  id         String  @id @default(cuid())
   propertyId String
   url        String
-  storageKey String   // path in the storage bucket, for deletion/migration
+  storageKey String // path in the storage bucket, for deletion/migration
   caption    String?
-  position   Int      @default(0)
+  position   Int     @default(0)
 
-  createdAt  DateTime @default(now())
+  createdAt DateTime @default(now())
 
-  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
   @@index([propertyId])
   @@map("property_photos")
@@ -190,33 +189,33 @@ model PropertyPhoto {
 // ===========================================================================
 
 model Tenant {
-  id               String     @id @default(cuid())
-  ownerId          String
+  id      String @id @default(cuid())
+  ownerId String
 
-  firstName        String
-  lastName         String
-  email            String?
-  phone            String?
-  identification   String?    // national ID / passport number
-  avatarUrl        String?
+  firstName      String
+  lastName       String
+  email          String?
+  phone          String?
+  identification String? // national ID / passport number
+  avatarUrl      String?
 
-  emergencyName    String?
-  emergencyPhone   String?
+  emergencyName     String?
+  emergencyPhone    String?
   emergencyRelation String?
 
-  notes            String?    @db.Text
+  notes String? @db.Text
 
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
-  deletedAt        DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
-  owner            User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
-  contracts        Contract[]
-  payments         Payment[]
-  documents        Document[]
-  receipts         Receipt[]
-  statements       Statement[]
+  contracts  Contract[]
+  payments   Payment[]
+  documents  Document[]
+  receipts   Receipt[]
+  statements Statement[]
 
   @@index([ownerId])
   @@index([ownerId, deletedAt])
@@ -229,34 +228,34 @@ model Tenant {
 // ===========================================================================
 
 model Contract {
-  id                 String         @id @default(cuid())
-  ownerId            String
-  propertyId         String
-  tenantId           String
+  id         String @id @default(cuid())
+  ownerId    String
+  propertyId String
+  tenantId   String
 
-  startDate          DateTime
-  endDate            DateTime?      // null = open-ended
-  monthlyRent        Decimal        @db.Decimal(12, 2)
-  currency           String         @default("USD")
-  dueDay             Int            @default(1) // day of month rent is due (1-31)
-  securityDeposit    Decimal        @default(0) @db.Decimal(12, 2)
-  maintenanceIncluded Boolean       @default(false)
+  startDate           DateTime
+  endDate             DateTime? // null = open-ended
+  monthlyRent         Decimal   @db.Decimal(12, 2)
+  currency            String    @default("USD")
+  dueDay              Int       @default(1) // day of month rent is due (1-31)
+  securityDeposit     Decimal   @default(0) @db.Decimal(12, 2)
+  maintenanceIncluded Boolean   @default(false)
 
-  status             ContractStatus @default(ACTIVE)
-  contractPdfUrl     String?
-  notes              String?        @db.Text
+  status         ContractStatus @default(ACTIVE)
+  contractPdfUrl String?
+  notes          String?        @db.Text
 
-  createdAt          DateTime       @default(now())
-  updatedAt          DateTime       @updatedAt
-  deletedAt          DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
-  owner              User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  property           Property       @relation(fields: [propertyId], references: [id], onDelete: Restrict)
-  tenant             Tenant         @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  owner    User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
 
-  payments           Payment[]
-  receipts           Receipt[]
-  statements         Statement[]
+  payments   Payment[]
+  receipts   Receipt[]
+  statements Statement[]
 
   @@index([ownerId])
   @@index([ownerId, status])
@@ -278,36 +277,36 @@ enum ContractStatus {
 // ===========================================================================
 
 model Payment {
-  id              String        @id @default(cuid())
-  ownerId         String
-  contractId      String
-  propertyId      String
-  tenantId        String
+  id         String @id @default(cuid())
+  ownerId    String
+  contractId String
+  propertyId String
+  tenantId   String
 
-  amount          Decimal       @db.Decimal(12, 2)
-  currency        String        @default("USD")
-  method          PaymentMethod @default(TRANSFER)
-  status          PaymentStatus @default(COMPLETED)
-  reference       String?       // bank ref / check number
-  concept         String?       // "Rent — March 2026"
+  amount    Decimal       @db.Decimal(12, 2)
+  currency  String        @default("USD")
+  method    PaymentMethod @default(TRANSFER)
+  status    PaymentStatus @default(COMPLETED)
+  reference String? // bank ref / check number
+  concept   String? // "Rent — March 2026"
 
   // The rent period this payment settles (first day of the month).
-  periodStart     DateTime?
-  periodEnd       DateTime?
-  paidAt          DateTime      @default(now())
+  periodStart DateTime?
+  periodEnd   DateTime?
+  paidAt      DateTime  @default(now())
 
-  notes           String?       @db.Text
+  notes String? @db.Text
 
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  deletedAt       DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
-  owner           User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  contract        Contract      @relation(fields: [contractId], references: [id], onDelete: Restrict)
-  property        Property      @relation(fields: [propertyId], references: [id], onDelete: Restrict)
-  tenant          Tenant        @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  owner    User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  contract Contract @relation(fields: [contractId], references: [id], onDelete: Restrict)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
 
-  receipt         Receipt?
+  receipt Receipt?
 
   @@index([ownerId])
   @@index([ownerId, paidAt])
@@ -338,31 +337,31 @@ enum PaymentStatus {
 // ===========================================================================
 
 model Receipt {
-  id            String   @id @default(cuid())
-  ownerId       String
-  paymentId     String   @unique
-  contractId    String
-  propertyId    String
-  tenantId      String
+  id         String @id @default(cuid())
+  ownerId    String
+  paymentId  String @unique
+  contractId String
+  propertyId String
+  tenantId   String
 
   // Human-friendly sequential number, unique per owner (e.g. "REC-2026-0001").
-  number        String
-  concept       String
-  amount        Decimal  @db.Decimal(12, 2)
-  currency      String   @default("USD")
-  balanceAfter  Decimal  @default(0) @db.Decimal(12, 2)
+  number       String
+  concept      String
+  amount       Decimal @db.Decimal(12, 2)
+  currency     String  @default("USD")
+  balanceAfter Decimal @default(0) @db.Decimal(12, 2)
 
-  issuedAt      DateTime @default(now())
-  pdfUrl        String?  // cached rendered PDF in storage
+  issuedAt DateTime @default(now())
+  pdfUrl   String? // cached rendered PDF in storage
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  owner         User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  payment       Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
-  contract      Contract @relation(fields: [contractId], references: [id], onDelete: Restrict)
-  property      Property @relation(fields: [propertyId], references: [id], onDelete: Restrict)
-  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  owner    User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  payment  Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  contract Contract @relation(fields: [contractId], references: [id], onDelete: Restrict)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
 
   @@unique([ownerId, number])
   @@index([ownerId])
@@ -376,31 +375,31 @@ model Receipt {
 // ===========================================================================
 
 model Statement {
-  id                String   @id @default(cuid())
-  ownerId           String
-  contractId        String
-  propertyId        String
-  tenantId          String
+  id         String @id @default(cuid())
+  ownerId    String
+  contractId String
+  propertyId String
+  tenantId   String
 
-  number            String
-  periodStart       DateTime
-  periodEnd         DateTime
+  number      String
+  periodStart DateTime
+  periodEnd   DateTime
 
-  totalCharged      Decimal  @db.Decimal(12, 2)
-  totalPaid         Decimal  @db.Decimal(12, 2)
-  outstanding       Decimal  @db.Decimal(12, 2)
-  nextDueDate       DateTime?
-  currency          String   @default("USD")
+  totalCharged Decimal   @db.Decimal(12, 2)
+  totalPaid    Decimal   @db.Decimal(12, 2)
+  outstanding  Decimal   @db.Decimal(12, 2)
+  nextDueDate  DateTime?
+  currency     String    @default("USD")
 
-  pdfUrl            String?
+  pdfUrl String?
 
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  owner             User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  contract          Contract @relation(fields: [contractId], references: [id], onDelete: Restrict)
-  property          Property @relation(fields: [propertyId], references: [id], onDelete: Restrict)
-  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  owner    User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  contract Contract @relation(fields: [contractId], references: [id], onDelete: Restrict)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
 
   @@unique([ownerId, number])
   @@index([ownerId])
@@ -414,25 +413,25 @@ model Statement {
 // ===========================================================================
 
 model Expense {
-  id          String        @id @default(cuid())
-  ownerId     String
-  propertyId  String?       // optional: some expenses are portfolio-wide
+  id         String  @id @default(cuid())
+  ownerId    String
+  propertyId String? // optional: some expenses are portfolio-wide
 
   category    ExpenseCategory @default(OTHER)
   description String
-  amount      Decimal       @db.Decimal(12, 2)
-  currency    String        @default("USD")
-  incurredAt  DateTime      @default(now())
+  amount      Decimal         @db.Decimal(12, 2)
+  currency    String          @default("USD")
+  incurredAt  DateTime        @default(now())
   vendor      String?
-  notes       String?       @db.Text
+  notes       String?         @db.Text
   invoiceUrl  String?
 
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  deletedAt   DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
-  owner       User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  property    Property?     @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  owner    User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  property Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
 
   @@index([ownerId])
   @@index([ownerId, incurredAt])
@@ -460,25 +459,25 @@ enum ExpenseCategory {
 // ===========================================================================
 
 model Document {
-  id          String       @id @default(cuid())
-  ownerId     String
-  propertyId  String?
-  tenantId    String?
+  id         String  @id @default(cuid())
+  ownerId    String
+  propertyId String?
+  tenantId   String?
 
-  name        String
-  type        DocumentType @default(OTHER)
-  url         String
-  storageKey  String
-  mimeType    String?
-  sizeBytes   Int?
+  name       String
+  type       DocumentType @default(OTHER)
+  url        String
+  storageKey String
+  mimeType   String?
+  sizeBytes  Int?
 
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  deletedAt   DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
-  owner       User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  property    Property?    @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  tenant      Tenant?      @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  owner    User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  property Property? @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  tenant   Tenant?   @relation(fields: [tenantId], references: [id], onDelete: SetNull)
 
   @@index([ownerId])
   @@index([propertyId])
@@ -500,23 +499,23 @@ enum DocumentType {
 // ===========================================================================
 
 model Notification {
-  id          String             @id @default(cuid())
-  ownerId     String
+  id      String @id @default(cuid())
+  ownerId String
 
-  type        NotificationType
-  title       String
-  body        String?            @db.Text
+  type       NotificationType
+  title      String
+  body       String?          @db.Text
   // Loose reference to the entity that triggered the notification.
-  entityType  String?
-  entityId    String?
-  actionUrl   String?
+  entityType String?
+  entityId   String?
+  actionUrl  String?
 
-  readAt      DateTime?
-  dueAt       DateTime?          // when the reminder becomes relevant
+  readAt DateTime?
+  dueAt  DateTime? // when the reminder becomes relevant
 
-  createdAt   DateTime           @default(now())
+  createdAt DateTime @default(now())
 
-  owner       User               @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   @@index([ownerId])
   @@index([ownerId, readAt])
@@ -537,18 +536,18 @@ enum NotificationType {
 // ===========================================================================
 
 model Activity {
-  id          String       @id @default(cuid())
-  ownerId     String
+  id      String @id @default(cuid())
+  ownerId String
 
-  action      ActivityAction
-  entityType  String       // "Property" | "Payment" | ...
-  entityId    String
-  summary     String       // "Registered payment of $1,200 for Apt 4B"
-  metadata    Json?
+  action     ActivityAction
+  entityType String // "Property" | "Payment" | ...
+  entityId   String
+  summary    String // "Registered payment of $1,200 for Apt 4B"
+  metadata   Json?
 
-  createdAt   DateTime     @default(now())
+  createdAt DateTime @default(now())
 
-  owner       User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   @@index([ownerId])
   @@index([ownerId, createdAt])
