@@ -33,6 +33,12 @@ export async function loginAction(
   } catch (error) {
     if (error instanceof AuthError) {
       if (error.type === 'CredentialsSignin') {
+        if ('code' in error && error.code === 'email_not_verified') {
+          return fail(
+            'Please verify your email before signing in. Check your inbox for the verification link.',
+            'EMAIL_NOT_VERIFIED',
+          );
+        }
         return fail('Invalid email or password.', 'INVALID_CREDENTIALS');
       }
       return fail('Could not sign you in. Please try again.', 'AUTH_ERROR');

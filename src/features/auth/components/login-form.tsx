@@ -1,6 +1,6 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -25,6 +25,7 @@ import { loginAction } from '../actions/auth.actions';
 export function LoginForm() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null);
 
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -35,6 +36,9 @@ export function LoginForm() {
     startTransition(async () => {
       const result = await loginAction(values);
       if (!result.success) {
+        setUnverifiedEmail(
+          result.code === 'EMAIL_NOT_VERIFIED' ? values.email : null,
+        );
         toast.error(result.error);
         form.setError('password', { message: ' ' });
         return;
@@ -95,6 +99,17 @@ export function LoginForm() {
         <Button type="submit" className="w-full" loading={isPending}>
           Sign in
         </Button>
+        {unverifiedEmail && (
+          <p className="text-center text-sm text-muted-foreground">
+            Email not verified.{' '}
+            <Link
+              href={`/verify-email?email=${encodeURIComponent(unverifiedEmail)}`}
+              className="font-medium text-primary hover:underline"
+            >
+              Resend verification link
+            </Link>
+          </p>
+        )}
       </form>
     </Form>
   );

@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth';
+import NextAuth, { CredentialsSignin } from 'next-auth';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import Credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';
@@ -7,6 +7,15 @@ import { prisma } from '@/shared/lib/prisma';
 import { authConfig } from './auth.config';
 import { verifyPassword } from './password';
 import { credentialsSchema } from './auth.validators';
+
+/**
+ * Thrown when credentials are correct but the email hasn't been verified.
+ * The `code` lets `loginAction` show a specific "verify your email" message
+ * instead of the generic invalid-credentials error.
+ */
+export class EmailNotVerifiedError extends CredentialsSignin {
+  override code = 'email_not_verified';
+}
 
 /**
  * Full Auth.js instance (Node runtime). Composes the edge-safe base config
@@ -55,6 +64,10 @@ export const {
 
         const valid = await verifyPassword(password, user.hashedPassword);
         if (!valid) return null;
+
+        // Credentials are correct — now require a verified email. Checked after
+        // the password so we never reveal verification state to a guesser.
+        if (!user.emailVerified) throw new EmailNotVerifiedError();
 
         return {
           id: user.id,

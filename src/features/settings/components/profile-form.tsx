@@ -22,6 +22,7 @@ import {
 } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
+import { Label } from '@/shared/components/ui/label';
 import {
   Card,
   CardContent,
@@ -78,13 +79,13 @@ export function ProfileForm({
                 </FormItem>
               )}
             />
-            <FormItem>
-              <FormLabel>Email</FormLabel>
+            <div className="space-y-1.5">
+              <Label>Email</Label>
               <Input value={email} disabled />
-              <FormDescription>
+              <p className="text-xs text-muted-foreground">
                 Contact support to change your sign-in email.
-              </FormDescription>
-            </FormItem>
+              </p>
+            </div>
           </CardContent>
         </Card>
 

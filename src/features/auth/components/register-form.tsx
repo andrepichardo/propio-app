@@ -23,7 +23,6 @@ import {
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
 import { registerAction } from '../actions/register.action';
-import { loginAction } from '../actions/auth.actions';
 
 export function RegisterForm() {
   const router = useRouter();
@@ -48,14 +47,10 @@ export function RegisterForm() {
         return;
       }
 
-      // Auto sign-in for a frictionless first-run experience.
-      const login = await loginAction({
-        email: values.email,
-        password: values.password,
-      });
-      toast.success('Account created. Welcome to Propio!');
-      router.push(login.success ? login.data.redirectTo : '/login');
-      router.refresh();
+      // Email verification is required before the account can sign in, so we
+      // send the user to the "check your email" page instead of auto-logging in.
+      toast.success('Account created. Check your email to verify your account.');
+      router.push(`/verify-email?email=${encodeURIComponent(values.email)}`);
     });
   }
 
