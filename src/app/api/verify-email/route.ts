@@ -4,9 +4,9 @@ import { verifyEmailToken } from '@/features/auth/services/email-verification.se
 export const dynamic = 'force-dynamic';
 
 /**
- * Email verification landing. Route handlers bypass layouts, so this works
- * whether or not the user is signed in; we redirect into the app afterwards
- * (middleware bounces unauthenticated users to /login).
+ * Email verification landing. The user follows this link from their inbox and
+ * has no session yet, so we land on /login with an explicit outcome flag the
+ * page can turn into a clear "verified — sign in" or "link expired" notice.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
@@ -19,6 +19,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
   const verified = await verifyEmailToken(email, token);
   return NextResponse.redirect(
-    new URL(verified ? '/app' : '/login?error=verification', request.url),
+    new URL(
+      verified
+        ? '/login?verified=1'
+        : `/login?error=verification&email=${encodeURIComponent(email)}`,
+      request.url,
+    ),
   );
 }

@@ -2,7 +2,7 @@ import 'server-only';
 import { createHash, randomBytes } from 'crypto';
 import { prisma } from '@/shared/lib/prisma';
 import { clientEnv } from '@/shared/config/env';
-import { sendVerifyEmail } from '@/emails/send';
+import { sendVerifyEmail, sendWelcomeEmail } from '@/emails/send';
 
 const IDENTIFIER_PREFIX = 'email-verify:';
 const VERIFY_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
@@ -73,13 +73,16 @@ export async function verifyEmailToken(
   });
   if (!record || record.expires < new Date()) return false;
 
-  await prisma.$transaction([
+  const [user] = await prisma.$transaction([
     prisma.user.update({
       where: { email: normalized },
       data: { emailVerified: new Date() },
     }),
     prisma.verificationToken.deleteMany({ where: { identifier } }),
   ]);
+
+  // The account is now usable — greet the user. Fire-and-forget.
+  void sendWelcomeEmail({ to: user.email, name: user.name });
 
   return true;
 }

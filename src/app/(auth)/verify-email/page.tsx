@@ -23,15 +23,24 @@ export default async function VerifyEmailPage({
           Check your email
         </h1>
         <p className="text-sm text-muted-foreground">
-          We’ve sent you a verification link. Click it to confirm your address
-          and secure your account.
+          {email ? (
+            <>
+              We’ve sent a verification link to{' '}
+              <span className="font-medium text-foreground">{email}</span>.
+              Click it to activate your account.
+            </>
+          ) : (
+            <>Enter your email below and we’ll send you a verification link.</>
+          )}
         </p>
       </div>
+      {email && (
+        <p className="text-xs text-muted-foreground">
+          Didn’t get it? Check your spam folder, or resend below.
+        </p>
+      )}
       <ResendVerificationForm initialEmail={email} />
-      <p className="text-xs text-muted-foreground">
-        Didn’t get it? Check your spam folder or resend above.
-      </p>
-      <Button variant="outline" asChild>
+      <Button variant="ghost" asChild>
         <Link href="/login">Back to sign in</Link>
       </Button>
     </div>

@@ -1,12 +1,19 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { CheckCircle2, TriangleAlert } from 'lucide-react';
 import { Separator } from '@/shared/components/ui/separator';
 import { LoginForm } from '@/features/auth/components/login-form';
 import { OAuthButtons } from '@/features/auth/components/oauth-buttons';
 
 export const metadata: Metadata = { title: 'Sign in' };
 
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ verified?: string; error?: string; email?: string }>;
+}) {
+  const { verified, error, email } = await searchParams;
+
   return (
     <div className="space-y-6">
       <div className="space-y-1.5 text-center">
@@ -15,6 +22,29 @@ export default function LoginPage() {
           Sign in to continue to your dashboard
         </p>
       </div>
+
+      {verified === '1' && (
+        <div className="flex items-start gap-2 rounded-md border border-emerald-500/30 bg-emerald-500/10 p-3 text-sm text-emerald-700 dark:text-emerald-400">
+          <CheckCircle2 className="mt-0.5 size-4 shrink-0" />
+          <p>Email verified — you can sign in now.</p>
+        </div>
+      )}
+
+      {error === 'verification' && (
+        <div className="flex items-start gap-2 rounded-md border border-amber-500/30 bg-amber-500/10 p-3 text-sm text-amber-700 dark:text-amber-400">
+          <TriangleAlert className="mt-0.5 size-4 shrink-0" />
+          <p>
+            That verification link is invalid or has expired.{' '}
+            <Link
+              href={`/verify-email${email ? `?email=${encodeURIComponent(email)}` : ''}`}
+              className="font-medium underline underline-offset-2"
+            >
+              Request a new one
+            </Link>
+            .
+          </p>
+        </div>
+      )}
 
       <OAuthButtons />
 

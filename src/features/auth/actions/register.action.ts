@@ -5,7 +5,6 @@ import { hashPassword } from '@/shared/lib/auth/password';
 import { registerSchema } from '@/shared/lib/auth/auth.validators';
 import { ConflictError, ValidationError } from '@/shared/lib/errors';
 import { type ActionResult, ok, toActionFailure } from '@/shared/lib/result';
-import { sendWelcomeEmail } from '@/emails/send';
 import { issueVerificationEmail } from '../services/email-verification.service';
 
 /**
@@ -44,8 +43,9 @@ export async function registerAction(
       select: { id: true, email: true, name: true },
     });
 
-    // Fire-and-forget emails; never block registration on delivery.
-    void sendWelcomeEmail({ to: user.email, name: user.name });
+    // Fire-and-forget; never block registration on delivery. Only the
+    // verification email goes out now — the welcome email is sent after the
+    // address is verified (when the account is actually usable).
     void issueVerificationEmail(user.email);
 
     return ok({ id: user.id, email: user.email });
