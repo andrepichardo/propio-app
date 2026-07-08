@@ -24,7 +24,12 @@ export default async function AppLayout({
     getUnreadNotificationCount(user.id),
     prisma.user.findUnique({
       where: { id: user.id },
-      select: { emailVerified: true, hashedPassword: true },
+      select: {
+        emailVerified: true,
+        hashedPassword: true,
+        name: true,
+        image: true,
+      },
     }),
   ]);
 
@@ -48,7 +53,16 @@ export default async function AppLayout({
       </aside>
 
       <div className="flex min-h-screen flex-col">
-        <Topbar user={user} unreadCount={unreadCount} />
+        {/* Prefer DB values for name/image: the JWT snapshot goes stale after
+            profile edits (avatar upload, rename) until the next sign-in. */}
+        <Topbar
+          user={{
+            ...user,
+            name: account?.name ?? user.name,
+            image: account?.image ?? null,
+          }}
+          unreadCount={unreadCount}
+        />
         {needsVerification ? <VerifyEmailBanner /> : null}
         <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
           <div className="mx-auto w-full max-w-6xl">{children}</div>

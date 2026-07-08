@@ -4,35 +4,25 @@ import { prisma } from '@/shared/lib/prisma';
 import { ProfileForm } from '@/features/settings/components/profile-form';
 import { PageHeader } from '@/shared/components/page-header';
 
-export const metadata: Metadata = { title: 'Settings' };
+export const metadata: Metadata = { title: 'Profile' };
 
 export default async function ProfileSettingsPage() {
   const sessionUser = await requireUser();
   const user = await prisma.user.findUniqueOrThrow({
     where: { id: sessionUser.id },
-    select: {
-      name: true,
-      email: true,
-      currency: true,
-      locale: true,
-      timezone: true,
-    },
+    select: { name: true, email: true, image: true },
   });
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <PageHeader
-        title="Settings"
-        description="Your profile and formatting preferences."
+        title="Profile"
+        description="Your photo and personal information."
       />
       <ProfileForm
         email={user.email}
-        defaultValues={{
-          name: user.name ?? '',
-          currency: user.currency,
-          locale: user.locale,
-          timezone: user.timezone,
-        }}
+        image={user.image}
+        defaultValues={{ name: user.name ?? '' }}
       />
     </div>
   );

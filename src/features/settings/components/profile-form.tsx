@@ -14,7 +14,6 @@ import { applyFieldErrors } from '@/shared/hooks/use-server-action';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -29,13 +28,16 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/components/ui/card';
+import { AvatarUploader } from './avatar-uploader';
 
 export function ProfileForm({
   defaultValues,
   email,
+  image,
 }: {
   defaultValues: UpdateProfileInput;
   email: string;
+  image?: string | null;
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -63,7 +65,16 @@ export function ProfileForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Profile</CardTitle>
+            <CardTitle className="text-base">Photo</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <AvatarUploader name={form.watch('name')} image={image} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Identity</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-5 sm:grid-cols-2">
             <FormField
@@ -86,56 +97,6 @@ export function ProfileForm({
                 Contact support to change your sign-in email.
               </p>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Preferences</CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-5 sm:grid-cols-3">
-            <FormField
-              control={form.control}
-              name="currency"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Currency</FormLabel>
-                  <FormControl>
-                    <Input placeholder="USD" maxLength={3} {...field} />
-                  </FormControl>
-                  <FormDescription>ISO 4217 code.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="locale"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Locale</FormLabel>
-                  <FormControl>
-                    <Input placeholder="en" {...field} />
-                  </FormControl>
-                  <FormDescription>e.g. en, es, en-US.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="timezone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Timezone</FormLabel>
-                  <FormControl>
-                    <Input placeholder="America/Santo_Domingo" {...field} />
-                  </FormControl>
-                  <FormDescription>IANA identifier.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
           </CardContent>
         </Card>
 

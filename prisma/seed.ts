@@ -11,7 +11,32 @@ import { addMonths, startOfMonth, subMonths } from 'date-fns';
 
 const prisma = new PrismaClient();
 
+/**
+ * Safety guard. This seed wipes and recreates the demo tenant, so it must never
+ * touch the production database. We refuse to run when `DATABASE_URL` points at
+ * a known production project (or NODE_ENV=production). Override only with an
+ * explicit, deliberate `ALLOW_PROD_SEED=true`.
+ */
+const PRODUCTION_DB_MARKERS = ['imeqnlqshmwomzaocczc'];
+
+function assertNotProduction(): void {
+  const url = process.env.DATABASE_URL ?? '';
+  const looksLikeProduction =
+    process.env.NODE_ENV === 'production' ||
+    PRODUCTION_DB_MARKERS.some((marker) => url.includes(marker));
+
+  if (looksLikeProduction && process.env.ALLOW_PROD_SEED !== 'true') {
+    throw new Error(
+      'Refusing to seed: DATABASE_URL looks like PRODUCTION. This seed wipes ' +
+        'the demo tenant. Point at a dev database, or set ALLOW_PROD_SEED=true ' +
+        'to override (you almost never want this).',
+    );
+  }
+}
+
 async function main() {
+  assertNotProduction();
+
   const email = 'demo@propio.app';
   const hashedPassword = await bcrypt.hash('Demo1234!', 12);
 
