@@ -1,7 +1,8 @@
 'use client';
 
 import { useTransition } from 'react';
-import { LogOut, Settings, User as UserIcon } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { LogOut, Settings, SunMoon, User as UserIcon } from 'lucide-react';
 import Link from 'next/link';
 import {
   Avatar,
@@ -13,7 +14,13 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu';
 import { getInitials } from '@/shared/lib/format';
@@ -27,6 +34,7 @@ type UserMenuProps = {
 
 export function UserMenu({ name, email, image }: UserMenuProps) {
   const [isPending, startTransition] = useTransition();
+  const { theme, setTheme } = useTheme();
 
   return (
     <DropdownMenu>
@@ -65,6 +73,28 @@ export function UserMenu({ name, email, image }: UserMenuProps) {
             <Settings /> Settings
           </Link>
         </DropdownMenuItem>
+
+        {/* `theme` is undefined until next-themes hydrates, but the menu only
+            renders once opened (client-side), so there's no SSR mismatch. */}
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>
+            <SunMoon /> Theme
+          </DropdownMenuSubTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuSubContent>
+              <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
+                <DropdownMenuRadioItem value="light">
+                  Light
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="dark">Dark</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="system">
+                  System
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuSubContent>
+          </DropdownMenuPortal>
+        </DropdownMenuSub>
+
         <DropdownMenuSeparator />
         <DropdownMenuItem
           variant="destructive"
