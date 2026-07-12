@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
-import { getLocale } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { Providers } from '@/shared/components/providers';
 import './globals.css';
 
@@ -11,28 +11,30 @@ const inter = Inter({
   display: 'swap',
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: 'Propio — Manage your properties with confidence',
-    template: '%s · Propio',
-  },
-  description:
-    'Propio is the all-in-one operating system for independent landlords. Manage properties, tenants, contracts, payments, and reports from one place.',
-  applicationName: 'Propio',
-  keywords: [
-    'property management',
-    'landlord software',
-    'rental management',
-    'tenants',
-    'leases',
-  ],
-  authors: [{ name: 'Propio' }],
-  openGraph: {
-    title: 'Propio',
-    description: 'Manage your properties with confidence.',
-    type: 'website',
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('site');
+  return {
+    title: {
+      default: t('title'),
+      template: '%s · Propio',
+    },
+    description: t('description'),
+    applicationName: 'Propio',
+    keywords: [
+      'property management',
+      'landlord software',
+      'rental management',
+      'tenants',
+      'leases',
+    ],
+    authors: [{ name: 'Propio' }],
+    openGraph: {
+      title: 'Propio',
+      description: t('ogDescription'),
+      type: 'website',
+    },
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: [

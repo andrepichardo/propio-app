@@ -689,6 +689,11 @@
     "passwordChanged": "Contraseña cambiada.",
     "noPasswordError": "El inicio de sesión con contraseña no está habilitado para esta cuenta."
   },
+  "site": {
+    "title": "Propio — Gestiona tus propiedades con confianza",
+    "description": "Propio es el sistema todo-en-uno para arrendadores independientes. Gestiona propiedades, inquilinos, contratos, pagos y reportes desde un solo lugar.",
+    "ogDescription": "Gestiona tus propiedades con confianza."
+  },
   "landing": {
     "goToDashboard": "Ir al panel",
     "signIn": "Iniciar sesión",

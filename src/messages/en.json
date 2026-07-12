@@ -686,6 +686,11 @@
     "passwordChanged": "Password changed.",
     "noPasswordError": "Password sign-in is not enabled for this account."
   },
+  "site": {
+    "title": "Propio — Manage your properties with confidence",
+    "description": "Propio is the all-in-one operating system for independent landlords. Manage properties, tenants, contracts, payments, and reports from one place.",
+    "ogDescription": "Manage your properties with confidence."
+  },
   "landing": {
     "goToDashboard": "Go to dashboard",
     "signIn": "Sign in",
