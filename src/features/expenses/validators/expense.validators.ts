@@ -9,10 +9,10 @@ export const expenseBaseSchema = z.object({
     .or(z.literal(''))
     .transform((v) => (v ? v : undefined)),
   category: z.nativeEnum(ExpenseCategory).default(ExpenseCategory.OTHER),
-  description: z.string().trim().min(2, 'Description is required.').max(200),
+  description: z.string().trim().min(2, 'descriptionRequired').max(200),
   amount: z.coerce
     .number()
-    .positive('Amount must be greater than zero.')
+    .positive('amountPositive')
     .max(100_000_000),
   currency: z.string().length(3).default('USD'),
   incurredAt: z.coerce.date().default(() => new Date()),

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import { Mail, Phone, Plus, Users } from 'lucide-react';
 import { tenantService } from '../services/tenant.service';
 import type { TenantFilters } from '../validators/tenant.validators';
@@ -32,22 +33,19 @@ export async function TenantsList({
     ownerId,
     filters,
   );
+  const t = await getTranslations('tenants');
 
   if (items.length === 0) {
     return (
       <EmptyState
         icon={Users}
-        title={filters.search ? 'No tenants match your search' : 'No tenants yet'}
-        description={
-          filters.search
-            ? 'Try a different name, email or phone number.'
-            : 'Add tenants to link them to contracts and track their payments.'
-        }
+        title={filters.search ? t('emptyFilteredTitle') : t('emptyTitle')}
+        description={filters.search ? t('emptyFilteredDesc') : t('emptyDesc')}
         action={
           filters.search ? undefined : (
             <Button asChild>
               <Link href="/app/tenants/new">
-                <Plus className="size-4" /> Add tenant
+                <Plus className="size-4" /> {t('add')}
               </Link>
             </Button>
           )
@@ -62,9 +60,9 @@ export async function TenantsList({
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead>Name</TableHead>
-              <TableHead>Contact</TableHead>
-              <TableHead className="text-right">Contracts</TableHead>
+              <TableHead>{t('colName')}</TableHead>
+              <TableHead>{t('colContact')}</TableHead>
+              <TableHead className="text-right">{t('colContracts')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

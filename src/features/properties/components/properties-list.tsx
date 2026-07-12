@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import { Building2, Plus } from 'lucide-react';
 import { propertyService } from '../services/property.service';
 import type { PropertyFilters } from '../validators/property.validators';
@@ -22,6 +23,7 @@ export async function PropertiesList({
     ownerId,
     filters,
   );
+  const t = await getTranslations('properties');
 
   const hasFilters = Boolean(filters.search || filters.type || filters.status);
 
@@ -29,17 +31,13 @@ export async function PropertiesList({
     return (
       <EmptyState
         icon={Building2}
-        title={hasFilters ? 'No properties match your filters' : 'No properties yet'}
-        description={
-          hasFilters
-            ? 'Try adjusting your search or filters to find what you’re looking for.'
-            : 'Add your first property to start tracking rentals, tenants and payments.'
-        }
+        title={hasFilters ? t('emptyFilteredTitle') : t('emptyTitle')}
+        description={hasFilters ? t('emptyFilteredDesc') : t('emptyDesc')}
         action={
           hasFilters ? undefined : (
             <Button asChild>
               <Link href="/app/properties/new">
-                <Plus className="size-4" /> Add property
+                <Plus className="size-4" /> {t('add')}
               </Link>
             </Button>
           )

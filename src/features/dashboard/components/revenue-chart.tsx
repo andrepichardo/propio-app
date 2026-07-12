@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import {
   Area,
   AreaChart,
@@ -24,6 +25,7 @@ export function RevenueChart({
   data: Point[];
   currency: string;
 }) {
+  const t = useTranslations('dashboard');
   return (
     <ResponsiveContainer width="100%" height={280}>
       <AreaChart
@@ -74,7 +76,7 @@ export function RevenueChart({
           labelStyle={{ color: 'hsl(var(--muted-foreground))' }}
           formatter={(value: number, name: string) => [
             formatCurrency(value, currency),
-            name === 'revenue' ? 'Revenue' : 'Expenses',
+            name === 'revenue' ? t('revenue') : t('expenses'),
           ]}
         />
         <Area

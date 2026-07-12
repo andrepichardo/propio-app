@@ -1,12 +1,16 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { NotFoundError } from '@/shared/lib/errors';
 import { tenantService } from '@/features/tenants/services/tenant.service';
 import { TenantForm } from '@/features/tenants/components/tenant-form';
 import { PageHeader } from '@/shared/components/page-header';
 
-export const metadata: Metadata = { title: 'Edit tenant' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return { title: t('editTenant') };
+}
 
 export default async function EditTenantPage({
   params,
@@ -21,9 +25,11 @@ export default async function EditTenantPage({
     throw error;
   });
 
+  const t = await getTranslations('tenants.edit');
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <PageHeader title="Edit tenant" description="Update contact details." />
+      <PageHeader title={t('title')} description={t('subtitle')} />
       <TenantForm
         mode="edit"
         tenantId={tenant.id}

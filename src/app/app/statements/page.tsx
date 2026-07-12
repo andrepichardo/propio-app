@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
+import { getTranslations } from 'next-intl/server';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { contractRepository } from '@/features/contracts/repositories/contract.repository';
 import { statementFiltersSchema } from '@/features/statements/validators/statement.validators';
@@ -8,7 +9,10 @@ import { GenerateStatementDialog } from '@/features/statements/components/genera
 import { PageHeader } from '@/shared/components/page-header';
 import { Skeleton } from '@/shared/components/ui/skeleton';
 
-export const metadata: Metadata = { title: 'Statements' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return { title: t('statements') };
+}
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -23,11 +27,13 @@ export default async function StatementsPage({
     contractRepository.activeOptions(ownerId),
   ]);
 
+  const t = await getTranslations('statements');
+
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Statements"
-        description="Monthly summaries of charges, payments and balances per contract."
+        title={t('title')}
+        description={t('subtitle')}
         actions={
           <GenerateStatementDialog
             contracts={contracts.map((c) => ({

@@ -1,11 +1,8 @@
+import { getTranslations } from 'next-intl/server';
 import { FolderClosed } from 'lucide-react';
 import { documentService } from '../services/document.service';
 import type { DocumentFilters } from '../validators/document.validators';
-import {
-  DOCUMENT_TYPE_ICONS,
-  DOCUMENT_TYPE_LABELS,
-  formatFileSize,
-} from '../constants';
+import { DOCUMENT_TYPE_ICONS, formatFileSize } from '../constants';
 import { DeleteDocumentButton } from './delete-document-button';
 import { EmptyState } from '@/shared/components/empty-state';
 import { Badge } from '@/shared/components/ui/badge';
@@ -31,13 +28,14 @@ export async function DocumentsList({
     ownerId,
     filters,
   );
+  const t = await getTranslations('documents');
 
   if (items.length === 0) {
     return (
       <EmptyState
         icon={FolderClosed}
-        title="No documents yet"
-        description="Upload contracts, invoices, IDs and photos to keep everything organised per property."
+        title={t('emptyTitle')}
+        description={t('emptyDesc')}
       />
     );
   }
@@ -48,11 +46,11 @@ export async function DocumentsList({
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead>Document</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Linked to</TableHead>
-              <TableHead>Size</TableHead>
-              <TableHead>Uploaded</TableHead>
+              <TableHead>{t('colDocument')}</TableHead>
+              <TableHead>{t('colType')}</TableHead>
+              <TableHead>{t('colLinkedTo')}</TableHead>
+              <TableHead>{t('colSize')}</TableHead>
+              <TableHead>{t('colUploaded')}</TableHead>
               <TableHead className="w-10" />
             </TableRow>
           </TableHeader>
@@ -74,7 +72,7 @@ export async function DocumentsList({
                   </TableCell>
                   <TableCell>
                     <Badge variant="secondary">
-                      {DOCUMENT_TYPE_LABELS[document.type]}
+                      {t(`types.${document.type}`)}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">

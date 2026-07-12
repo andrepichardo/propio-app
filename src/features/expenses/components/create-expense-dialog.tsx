@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Plus } from 'lucide-react';
 import { ExpenseCategory } from '@prisma/client';
@@ -32,6 +33,7 @@ export function CreateExpenseDialog({
 }: {
   properties: OptionItem[];
 }) {
+  const t = useTranslations('expenses');
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -58,7 +60,7 @@ export function CreateExpenseDialog({
         toast.error(result.error);
         return;
       }
-      toast.success('Expense logged.');
+      toast.success(t('loggedToast'));
       setOpen(false);
       form.reset();
       router.refresh();
@@ -69,15 +71,13 @@ export function CreateExpenseDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Plus className="size-4" /> Log expense
+          <Plus className="size-4" /> {t('logExpense')}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>Log an expense</DialogTitle>
-          <DialogDescription>
-            Track a cost against a property or your portfolio.
-          </DialogDescription>
+          <DialogTitle>{t('create.title')}</DialogTitle>
+          <DialogDescription>{t('create.desc')}</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -89,10 +89,10 @@ export function CreateExpenseDialog({
                 onClick={() => setOpen(false)}
                 disabled={isPending}
               >
-                Cancel
+                {t('create.cancel')}
               </Button>
               <Button type="submit" loading={isPending}>
-                Save expense
+                {t('create.save')}
               </Button>
             </DialogFooter>
           </form>

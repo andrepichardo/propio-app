@@ -3,6 +3,7 @@
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { CheckCheck } from 'lucide-react';
 import type { NotificationType } from '@prisma/client';
@@ -30,6 +31,7 @@ export function NotificationsPanel({
 }: {
   notifications: NotificationItem[];
 }) {
+  const t = useTranslations('notifications');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -62,7 +64,7 @@ export function NotificationsPanel({
           disabled={!hasUnread || isPending}
           onClick={markAllRead}
         >
-          <CheckCheck className="size-4" /> Mark all read
+          <CheckCheck className="size-4" /> {t('markAllRead')}
         </Button>
       </div>
 
@@ -109,7 +111,7 @@ export function NotificationsPanel({
                       href={notification.actionUrl}
                       className="text-xs font-medium text-primary hover:underline"
                     >
-                      View
+                      {t('view')}
                     </Link>
                   ) : null}
                   {unread ? (
@@ -118,7 +120,7 @@ export function NotificationsPanel({
                       onClick={() => markRead(notification.id)}
                       className="text-xs text-muted-foreground hover:text-foreground"
                     >
-                      Mark read
+                      {t('markRead')}
                     </button>
                   ) : null}
                 </div>

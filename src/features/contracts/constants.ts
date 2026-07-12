@@ -1,11 +1,9 @@
 import { ContractStatus } from '@prisma/client';
 import type { BadgeProps } from '@/shared/components/ui/badge';
 
-export const CONTRACT_STATUS_LABELS: Record<ContractStatus, string> = {
-  [ContractStatus.ACTIVE]: 'Active',
-  [ContractStatus.EXPIRED]: 'Expired',
-  [ContractStatus.CANCELLED]: 'Cancelled',
-};
+/** Keys under `contracts.statuses` are the enum values; translate with
+ * `t(\`statuses.${value}\`)`. */
+export const CONTRACT_STATUS_VALUES = Object.values(ContractStatus);
 
 export const CONTRACT_STATUS_VARIANT: Record<
   ContractStatus,
@@ -15,7 +13,3 @@ export const CONTRACT_STATUS_VARIANT: Record<
   [ContractStatus.EXPIRED]: 'secondary',
   [ContractStatus.CANCELLED]: 'destructive',
 };
-
-export const CONTRACT_STATUS_OPTIONS = Object.values(ContractStatus).map(
-  (value) => ({ value, label: CONTRACT_STATUS_LABELS[value] }),
-);

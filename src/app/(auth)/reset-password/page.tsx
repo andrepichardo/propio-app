@@ -4,7 +4,10 @@ import { getTranslations } from 'next-intl/server';
 import { Button } from '@/shared/components/ui/button';
 import { ResetPasswordForm } from '@/features/auth/components/reset-password-form';
 
-export const metadata: Metadata = { title: 'Reset password' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return { title: t('resetPassword') };
+}
 
 export default async function ResetPasswordPage({
   searchParams,

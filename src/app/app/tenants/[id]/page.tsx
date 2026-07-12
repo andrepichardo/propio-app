@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import { Mail, Pencil, Phone, ShieldAlert, IdCard } from 'lucide-react';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { NotFoundError } from '@/shared/lib/errors';
@@ -16,7 +17,10 @@ import {
 import { TenantAvatarUpload } from '@/features/tenants/components/tenant-avatar-upload';
 import { getInitials } from '@/shared/lib/format';
 
-export const metadata: Metadata = { title: 'Tenant' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return { title: t('tenant') };
+}
 
 export default async function TenantDetailPage({
   params,
@@ -31,17 +35,21 @@ export default async function TenantDetailPage({
     throw error;
   });
 
+  const t = await getTranslations('tenants.detail');
   const fullName = `${tenant.firstName} ${tenant.lastName}`;
 
   return (
     <div className="space-y-6">
       <PageHeader
         title={fullName}
-        description={`${tenant._count.contracts} contracts · ${tenant._count.payments} payments`}
+        description={t('summary', {
+          contracts: tenant._count.contracts,
+          payments: tenant._count.payments,
+        })}
         actions={
           <Button variant="outline" asChild>
             <Link href={`/app/tenants/${tenant.id}/edit`}>
-              <Pencil className="size-4" /> Edit
+              <Pencil className="size-4" /> {t('edit')}
             </Link>
           </Button>
         }
@@ -67,14 +75,14 @@ export default async function TenantDetailPage({
         <div className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Contact information</CardTitle>
+              <CardTitle className="text-base">{t('contactInfo')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
-              <Row icon={Mail} label="Email" value={tenant.email} />
-              <Row icon={Phone} label="Phone" value={tenant.phone} />
+              <Row icon={Mail} label={t('email')} value={tenant.email} />
+              <Row icon={Phone} label={t('phone')} value={tenant.phone} />
               <Row
                 icon={IdCard}
-                label="Identification"
+                label={t('identification')}
                 value={tenant.identification}
               />
             </CardContent>
@@ -83,15 +91,21 @@ export default async function TenantDetailPage({
           {tenant.emergencyName || tenant.emergencyPhone ? (
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Emergency contact</CardTitle>
+                <CardTitle className="text-base">
+                  {t('emergencyContact')}
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 text-sm">
                 <Row
                   icon={ShieldAlert}
-                  label={tenant.emergencyRelation ?? 'Contact'}
+                  label={tenant.emergencyRelation ?? t('contact')}
                   value={tenant.emergencyName}
                 />
-                <Row icon={Phone} label="Phone" value={tenant.emergencyPhone} />
+                <Row
+                  icon={Phone}
+                  label={t('phone')}
+                  value={tenant.emergencyPhone}
+                />
               </CardContent>
             </Card>
           ) : null}
@@ -99,7 +113,7 @@ export default async function TenantDetailPage({
           {tenant.notes ? (
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Notes</CardTitle>
+                <CardTitle className="text-base">{t('notes')}</CardTitle>
               </CardHeader>
               <CardContent className="text-sm leading-relaxed text-foreground/90">
                 {tenant.notes}

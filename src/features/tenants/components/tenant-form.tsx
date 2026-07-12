@@ -4,6 +4,7 @@ import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import {
   createTenantSchema,
@@ -39,6 +40,7 @@ interface TenantFormProps {
 }
 
 export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
+  const t = useTranslations('tenants.form');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -70,7 +72,9 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
         toast.error(result.error);
         return;
       }
-      toast.success(mode === 'create' ? 'Tenant added.' : 'Tenant updated.');
+      toast.success(
+        mode === 'create' ? t('createdToast') : t('updatedToast'),
+      );
       router.push(`/app/tenants/${result.data.id}`);
       router.refresh();
     });
@@ -81,7 +85,7 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Contact</CardTitle>
+            <CardTitle className="text-base">{t('contact')}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-5 sm:grid-cols-2">
             <FormField
@@ -89,7 +93,7 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
               name="firstName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>First name</FormLabel>
+                  <FormLabel>{t('firstName')}</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -102,7 +106,7 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
               name="lastName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Last name</FormLabel>
+                  <FormLabel>{t('lastName')}</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -115,7 +119,7 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{t('email')}</FormLabel>
                   <FormControl>
                     <Input type="email" {...field} value={field.value ?? ''} />
                   </FormControl>
@@ -128,7 +132,7 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone</FormLabel>
+                  <FormLabel>{t('phone')}</FormLabel>
                   <FormControl>
                     <Input {...field} value={field.value ?? ''} />
                   </FormControl>
@@ -141,10 +145,10 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
               name="identification"
               render={({ field }) => (
                 <FormItem className="sm:col-span-2">
-                  <FormLabel>Identification</FormLabel>
+                  <FormLabel>{t('identification')}</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="National ID / passport"
+                      placeholder={t('identificationPlaceholder')}
                       {...field}
                       value={field.value ?? ''}
                     />
@@ -158,7 +162,7 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Emergency contact</CardTitle>
+            <CardTitle className="text-base">{t('emergencyContact')}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-5 sm:grid-cols-3">
             <FormField
@@ -166,7 +170,7 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
               name="emergencyName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>{t('name')}</FormLabel>
                   <FormControl>
                     <Input {...field} value={field.value ?? ''} />
                   </FormControl>
@@ -179,7 +183,7 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
               name="emergencyPhone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone</FormLabel>
+                  <FormLabel>{t('phone')}</FormLabel>
                   <FormControl>
                     <Input {...field} value={field.value ?? ''} />
                   </FormControl>
@@ -192,7 +196,7 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
               name="emergencyRelation"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Relationship</FormLabel>
+                  <FormLabel>{t('relationship')}</FormLabel>
                   <FormControl>
                     <Input {...field} value={field.value ?? ''} />
                   </FormControl>
@@ -205,7 +209,7 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Notes</CardTitle>
+            <CardTitle className="text-base">{t('notes')}</CardTitle>
           </CardHeader>
           <CardContent>
             <FormField
@@ -216,7 +220,7 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
                   <FormControl>
                     <Textarea
                       rows={3}
-                      placeholder="Anything worth remembering…"
+                      placeholder={t('notesPlaceholder')}
                       {...field}
                       value={field.value ?? ''}
                     />
@@ -235,10 +239,10 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
             onClick={() => router.back()}
             disabled={isPending}
           >
-            Cancel
+            {t('cancel')}
           </Button>
           <Button type="submit" loading={isPending}>
-            {mode === 'create' ? 'Add tenant' : 'Save changes'}
+            {mode === 'create' ? t('add') : t('save')}
           </Button>
         </div>
       </form>

@@ -8,10 +8,10 @@ import {
   startOfYear,
 } from 'date-fns';
 import { PaymentStatus } from '@prisma/client';
+import { getTranslations } from 'next-intl/server';
 import { prisma } from '@/shared/lib/prisma';
 import { propertyRepository } from '@/features/properties/repositories/property.repository';
 import { expenseRepository } from '@/features/expenses/repositories/expense.repository';
-import { EXPENSE_CATEGORY_LABELS } from '@/features/expenses/constants';
 
 export type MonthlyReportRow = {
   month: string;
@@ -61,6 +61,8 @@ export async function getYearlyReport(
   const yearStart = startOfYear(new Date(year, 0, 1));
   const yearEnd = endOfYear(yearStart);
   const months = eachMonthOfInterval({ start: yearStart, end: yearEnd });
+  // Translate expense-category labels to the viewer's locale (request-scoped).
+  const tCategory = await getTranslations('expenses.categories');
 
   const [monthly, statusCounts, breakdown] = await Promise.all([
     Promise.all(
@@ -99,7 +101,7 @@ export async function getYearlyReport(
     categoryBreakdown: breakdown
       .filter((row) => row.total > 0)
       .map((row) => ({
-        label: EXPENSE_CATEGORY_LABELS[row.category],
+        label: tCategory(row.category),
         value: row.total,
       })),
     occupancy: {

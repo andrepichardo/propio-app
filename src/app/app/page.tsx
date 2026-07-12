@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
+import { getTranslations } from 'next-intl/server';
 import { requireUser } from '@/shared/lib/auth/session';
 import { getUserPreferences } from '@/shared/lib/auth/preferences';
 import { DashboardOverview } from '@/features/dashboard/components/dashboard-overview';
@@ -7,13 +8,16 @@ import { PageHeader } from '@/shared/components/page-header';
 import { QuickActions } from '@/features/dashboard/components/quick-actions';
 import { Skeleton } from '@/shared/components/ui/skeleton';
 
-export const metadata: Metadata = { title: 'Dashboard' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return { title: t('dashboard') };
+}
 
-function greeting(): string {
+function greetingKey(): 'greetingMorning' | 'greetingAfternoon' | 'greetingEvening' {
   const hour = new Date().getHours();
-  if (hour < 12) return 'Good morning';
-  if (hour < 18) return 'Good afternoon';
-  return 'Good evening';
+  if (hour < 12) return 'greetingMorning';
+  if (hour < 18) return 'greetingAfternoon';
+  return 'greetingEvening';
 }
 
 function DashboardSkeleton() {
@@ -35,14 +39,16 @@ function DashboardSkeleton() {
 export default async function DashboardPage() {
   const user = await requireUser();
   const { currency } = await getUserPreferences(user.id);
+  const t = await getTranslations('dashboard');
   const firstName = user.name?.split(' ')[0];
+  const greeting = t(greetingKey());
+  const title = firstName
+    ? t('greetingName', { greeting, name: firstName })
+    : greeting;
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title={`${greeting()}${firstName ? `, ${firstName}` : ''}`}
-        description="Here’s what’s happening across your portfolio."
-      />
+      <PageHeader title={title} description={t('subtitle')} />
 
       <QuickActions />
 

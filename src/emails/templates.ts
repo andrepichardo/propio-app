@@ -1,10 +1,9 @@
 import { clientEnv } from '@/shared/config/env';
 
 /**
- * Minimal, dependency-free HTML email templates. Kept inline (rather than
- * React Email) so the transactional layer has zero render dependencies and
- * stays trivially portable. Swap for react-email later without touching
- * callers in `send.ts`.
+ * Minimal, dependency-free HTML email templates. Presentational only: all
+ * copy is passed in already translated (see `send.ts`), so the transactional
+ * layer stays locale-agnostic and trivially portable.
  */
 const brand = {
   name: clientEnv.NEXT_PUBLIC_APP_NAME,
@@ -12,9 +11,11 @@ const brand = {
   url: clientEnv.NEXT_PUBLIC_APP_URL,
 };
 
-function layout(title: string, body: string): string {
+export { brand as emailBrand };
+
+function layout(title: string, body: string, footer: string): string {
   return `<!doctype html>
-<html lang="en">
+<html>
   <body style="margin:0;background:#f6f7f9;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1f2430;">
     <div style="max-width:520px;margin:0 auto;padding:32px 24px;">
       <div style="font-weight:600;font-size:18px;color:${brand.color};margin-bottom:24px;">${brand.name}</div>
@@ -22,7 +23,7 @@ function layout(title: string, body: string): string {
         <h1 style="margin:0 0 12px;font-size:18px;">${title}</h1>
         ${body}
       </div>
-      <p style="color:#8a909c;font-size:12px;margin-top:20px;">© ${new Date().getFullYear()} ${brand.name}. Manage your properties with confidence.</p>
+      <p style="color:#8a909c;font-size:12px;margin-top:20px;">© ${new Date().getFullYear()} ${brand.name}. ${footer}</p>
     </div>
   </body>
 </html>`;
@@ -32,58 +33,75 @@ function button(href: string, label: string): string {
   return `<a href="${href}" style="display:inline-block;background:${brand.color};color:#fff;text-decoration:none;padding:10px 18px;border-radius:8px;font-weight:600;font-size:14px;">${label}</a>`;
 }
 
-export function welcomeEmail(name?: string | null): {
-  subject: string;
-  html: string;
-} {
-  return {
-    subject: `Welcome to ${brand.name}`,
-    html: layout(
-      `Welcome${name ? `, ${name}` : ''} 👋`,
-      `<p style="font-size:14px;line-height:1.6;color:#4a5160;">Your ${brand.name} account is ready. Add your first property and start managing rentals, tenants and payments from one place.</p>
-       <p style="margin-top:20px;">${button(`${brand.url}/app`, 'Open your dashboard')}</p>`,
-    ),
-  };
+function paragraph(html: string): string {
+  return `<p style="font-size:14px;line-height:1.6;color:#4a5160;">${html}</p>`;
 }
 
-export function resetPasswordEmail(resetUrl: string): {
+export function welcomeEmail(p: {
   subject: string;
-  html: string;
-} {
-  return {
-    subject: `Reset your ${brand.name} password`,
-    html: layout(
-      'Reset your password',
-      `<p style="font-size:14px;line-height:1.6;color:#4a5160;">We received a request to reset your password. This link expires in 1 hour. If you didn’t request this, you can safely ignore this email.</p>
-       <p style="margin-top:20px;">${button(resetUrl, 'Reset password')}</p>`,
-    ),
-  };
-}
-
-export function verifyEmail(verifyUrl: string): {
-  subject: string;
-  html: string;
-} {
-  return {
-    subject: `Verify your ${brand.name} email`,
-    html: layout(
-      'Confirm your email',
-      `<p style="font-size:14px;line-height:1.6;color:#4a5160;">Confirm this email address to secure your account.</p>
-       <p style="margin-top:20px;">${button(verifyUrl, 'Verify email')}</p>`,
-    ),
-  };
-}
-
-export function receiptEmail(params: {
-  tenantName: string;
-  amount: string;
-  receiptNumber: string;
+  title: string;
+  body: string;
+  cta: string;
+  footer: string;
+  dashboardUrl: string;
 }): { subject: string; html: string } {
   return {
-    subject: `Receipt ${params.receiptNumber}`,
+    subject: p.subject,
     html: layout(
-      'Payment received',
-      `<p style="font-size:14px;line-height:1.6;color:#4a5160;">Hi ${params.tenantName}, we’ve recorded your payment of <strong>${params.amount}</strong>. Your receipt ${params.receiptNumber} is attached.</p>`,
+      p.title,
+      `${paragraph(p.body)}
+       <p style="margin-top:20px;">${button(p.dashboardUrl, p.cta)}</p>`,
+      p.footer,
     ),
+  };
+}
+
+export function resetPasswordEmail(p: {
+  subject: string;
+  title: string;
+  body: string;
+  cta: string;
+  footer: string;
+  resetUrl: string;
+}): { subject: string; html: string } {
+  return {
+    subject: p.subject,
+    html: layout(
+      p.title,
+      `${paragraph(p.body)}
+       <p style="margin-top:20px;">${button(p.resetUrl, p.cta)}</p>`,
+      p.footer,
+    ),
+  };
+}
+
+export function verifyEmail(p: {
+  subject: string;
+  title: string;
+  body: string;
+  cta: string;
+  footer: string;
+  verifyUrl: string;
+}): { subject: string; html: string } {
+  return {
+    subject: p.subject,
+    html: layout(
+      p.title,
+      `${paragraph(p.body)}
+       <p style="margin-top:20px;">${button(p.verifyUrl, p.cta)}</p>`,
+      p.footer,
+    ),
+  };
+}
+
+export function receiptEmail(p: {
+  subject: string;
+  title: string;
+  body: string;
+  footer: string;
+}): { subject: string; html: string } {
+  return {
+    subject: p.subject,
+    html: layout(p.title, paragraph(p.body), p.footer),
   };
 }

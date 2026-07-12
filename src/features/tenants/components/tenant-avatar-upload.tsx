@@ -2,6 +2,7 @@
 
 import { useRef, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Camera, Loader2 } from 'lucide-react';
 import {
@@ -20,6 +21,7 @@ export function TenantAvatarUpload({
   avatarUrl?: string | null;
   initials: string;
 }) {
+  const t = useTranslations('tenants');
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
@@ -39,7 +41,7 @@ export function TenantAvatarUpload({
         toast.error(result.error);
         return;
       }
-      toast.success('Avatar updated.');
+      toast.success(t('avatarUpdated'));
       router.refresh();
     });
   }
@@ -54,7 +56,7 @@ export function TenantAvatarUpload({
         type="button"
         onClick={() => inputRef.current?.click()}
         disabled={isPending}
-        aria-label="Change avatar"
+        aria-label={t('changeAvatar')}
         className="absolute -bottom-1 -right-1 flex size-7 items-center justify-center rounded-full border bg-background shadow-soft transition-colors hover:text-primary"
       >
         {isPending ? (

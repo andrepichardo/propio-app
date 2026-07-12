@@ -1,16 +1,18 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { PageHeader } from '@/shared/components/page-header';
 import { TenantForm } from '@/features/tenants/components/tenant-form';
 
-export const metadata: Metadata = { title: 'New tenant' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return { title: t('newTenant') };
+}
 
-export default function NewTenantPage() {
+export default async function NewTenantPage() {
+  const t = await getTranslations('tenants.new');
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <PageHeader
-        title="Add a tenant"
-        description="Store contact details so you can link them to contracts."
-      />
+      <PageHeader title={t('title')} description={t('subtitle')} />
       <TenantForm mode="create" />
     </div>
   );

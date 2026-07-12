@@ -1,10 +1,14 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { contractRepository } from '@/features/contracts/repositories/contract.repository';
 import { PaymentForm } from '@/features/payments/components/payment-form';
 import { PageHeader } from '@/shared/components/page-header';
 
-export const metadata: Metadata = { title: 'Register payment' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return { title: t('registerPayment') };
+}
 
 export default async function NewPaymentPage({
   searchParams,
@@ -15,13 +19,11 @@ export default async function NewPaymentPage({
   const { contractId } = await searchParams;
 
   const contracts = await contractRepository.activeOptions(ownerId);
+  const t = await getTranslations('payments.new');
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <PageHeader
-        title="Register a payment"
-        description="Recording a payment generates a receipt and updates your dashboard automatically."
-      />
+      <PageHeader title={t('title')} description={t('subtitle')} />
       <PaymentForm
         defaultContractId={contractId}
         contracts={contracts.map((c) => ({

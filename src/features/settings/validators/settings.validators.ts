@@ -1,15 +1,15 @@
 import { z } from 'zod';
 
-/** Identity fields shown on the Profile page. */
+/** Identity fields shown on the Profile page. Messages are `validation` keys. */
 export const updateProfileSchema = z.object({
-  name: z.string().trim().min(2, 'Enter your name.').max(80),
+  name: z.string().trim().min(2, 'nameRequired').max(80),
 });
 
 /** Formatting preferences shown on the Settings page. */
 export const updatePreferencesSchema = z.object({
   currency: z
     .string()
-    .length(3, 'Use a 3-letter ISO code (e.g. USD).')
+    .length(3, 'currencyCode')
     .transform((v) => v.toUpperCase()),
   locale: z.string().min(2).max(10).default('en'),
   timezone: z.string().min(1).max(60).default('UTC'),
@@ -18,22 +18,22 @@ export const updatePreferencesSchema = z.object({
 /** In-app password change. Mirrors the registration password policy. */
 export const changePasswordSchema = z
   .object({
-    currentPassword: z.string().min(1, 'Enter your current password.'),
+    currentPassword: z.string().min(1, 'currentPasswordRequired'),
     password: z
       .string()
-      .min(8, 'Password must be at least 8 characters.')
-      .max(72, 'Password is too long.')
-      .regex(/[a-z]/, 'Include a lowercase letter.')
-      .regex(/[A-Z]/, 'Include an uppercase letter.')
-      .regex(/[0-9]/, 'Include a number.'),
+      .min(8, 'passwordMin')
+      .max(72, 'passwordMax')
+      .regex(/[a-z]/, 'passwordLower')
+      .regex(/[A-Z]/, 'passwordUpper')
+      .regex(/[0-9]/, 'passwordNumber'),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match.',
+    message: 'passwordsMatch',
     path: ['confirmPassword'],
   })
   .refine((data) => data.password !== data.currentPassword, {
-    message: 'New password must be different from the current one.',
+    message: 'passwordDifferent',
     path: ['password'],
   });
 

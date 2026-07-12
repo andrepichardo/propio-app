@@ -18,11 +18,7 @@ const optionalNumber = (schema: z.ZodNumber) =>
   );
 
 export const propertyBaseSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, 'Name must be at least 2 characters.')
-    .max(120),
+  name: z.string().trim().min(2, 'propertyNameMin').max(120),
   description: optionalTrimmed(2000),
   type: z.nativeEnum(PropertyType).default(PropertyType.TRADITIONAL_RENTAL),
   status: z.nativeEnum(PropertyStatus).default(PropertyStatus.AVAILABLE),

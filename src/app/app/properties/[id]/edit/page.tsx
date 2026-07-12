@@ -1,12 +1,16 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { NotFoundError } from '@/shared/lib/errors';
 import { propertyService } from '@/features/properties/services/property.service';
 import { PropertyForm } from '@/features/properties/components/property-form';
 import { PageHeader } from '@/shared/components/page-header';
 
-export const metadata: Metadata = { title: 'Edit property' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return { title: t('editProperty') };
+}
 
 export default async function EditPropertyPage({
   params,
@@ -21,11 +25,13 @@ export default async function EditPropertyPage({
     throw error;
   });
 
+  const t = await getTranslations('properties.edit');
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <PageHeader
-        title="Edit property"
-        description={`Update the details for “${property.name}”.`}
+        title={t('title')}
+        description={t('subtitle', { name: property.name })}
       />
       <PropertyForm
         mode="edit"

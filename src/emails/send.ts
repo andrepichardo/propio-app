@@ -1,4 +1,6 @@
 import 'server-only';
+import { getTranslations } from 'next-intl/server';
+import { clientEnv } from '@/shared/config/env';
 import { EMAIL_FROM, getResend } from './client';
 import {
   receiptEmail,
@@ -8,6 +10,14 @@ import {
 } from './templates';
 
 type Attachment = { filename: string; content: Buffer };
+
+const APP = clientEnv.NEXT_PUBLIC_APP_NAME;
+const APP_URL = clientEnv.NEXT_PUBLIC_APP_URL;
+
+/** Email copy follows the request locale (the acting user's language). */
+function emailTranslations() {
+  return getTranslations('emails');
+}
 
 async function deliver(params: {
   to: string;
@@ -39,7 +49,17 @@ export async function sendWelcomeEmail(params: {
   to: string;
   name?: string | null;
 }): Promise<void> {
-  const { subject, html } = welcomeEmail(params.name);
+  const t = await emailTranslations();
+  const { subject, html } = welcomeEmail({
+    subject: t('welcomeSubject', { app: APP }),
+    title: params.name
+      ? t('welcomeTitleNamed', { name: params.name })
+      : t('welcomeTitle'),
+    body: t('welcomeBody', { app: APP }),
+    cta: t('welcomeCta'),
+    footer: t('footer'),
+    dashboardUrl: `${APP_URL}/app`,
+  });
   await deliver({ to: params.to, subject, html });
 }
 
@@ -47,7 +67,15 @@ export async function sendResetPasswordEmail(params: {
   to: string;
   resetUrl: string;
 }): Promise<void> {
-  const { subject, html } = resetPasswordEmail(params.resetUrl);
+  const t = await emailTranslations();
+  const { subject, html } = resetPasswordEmail({
+    subject: t('resetSubject', { app: APP }),
+    title: t('resetTitle'),
+    body: t('resetBody'),
+    cta: t('resetCta'),
+    footer: t('footer'),
+    resetUrl: params.resetUrl,
+  });
   await deliver({ to: params.to, subject, html });
 }
 
@@ -55,7 +83,15 @@ export async function sendVerifyEmail(params: {
   to: string;
   verifyUrl: string;
 }): Promise<void> {
-  const { subject, html } = verifyEmail(params.verifyUrl);
+  const t = await emailTranslations();
+  const { subject, html } = verifyEmail({
+    subject: t('verifySubject', { app: APP }),
+    title: t('verifyTitle'),
+    body: t('verifyBody'),
+    cta: t('verifyCta'),
+    footer: t('footer'),
+    verifyUrl: params.verifyUrl,
+  });
   await deliver({ to: params.to, subject, html });
 }
 
@@ -66,7 +102,17 @@ export async function sendReceiptEmail(params: {
   receiptNumber: string;
   pdf?: Buffer;
 }): Promise<void> {
-  const { subject, html } = receiptEmail(params);
+  const t = await emailTranslations();
+  const { subject, html } = receiptEmail({
+    subject: t('receiptSubject', { number: params.receiptNumber }),
+    title: t('receiptTitle'),
+    body: t('receiptBody', {
+      name: params.tenantName,
+      amount: `<strong>${params.amount}</strong>`,
+      number: params.receiptNumber,
+    }),
+    footer: t('footer'),
+  });
   await deliver({
     to: params.to,
     subject,

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
+import { getTranslations } from 'next-intl/server';
 import { Download, Receipt } from 'lucide-react';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { receiptService } from '@/features/receipts/services/receipt.service';
@@ -18,7 +19,10 @@ import {
 } from '@/shared/components/ui/table';
 import { formatCurrency, formatDate } from '@/shared/lib/format';
 
-export const metadata: Metadata = { title: 'Receipts' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return { title: t('receipts') };
+}
 
 async function ReceiptsTable({
   ownerId,
@@ -30,13 +34,14 @@ async function ReceiptsTable({
   const { items, pageCount, total } = await receiptService.list(ownerId, {
     page,
   });
+  const t = await getTranslations('receipts');
 
   if (items.length === 0) {
     return (
       <EmptyState
         icon={Receipt}
-        title="No receipts yet"
-        description="Receipts are generated automatically when you register a payment."
+        title={t('emptyTitle')}
+        description={t('emptyDesc')}
       />
     );
   }
@@ -47,12 +52,12 @@ async function ReceiptsTable({
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead>Number</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Tenant</TableHead>
-              <TableHead>Property</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
-              <TableHead className="text-right">PDF</TableHead>
+              <TableHead>{t('colNumber')}</TableHead>
+              <TableHead>{t('colDate')}</TableHead>
+              <TableHead>{t('colTenant')}</TableHead>
+              <TableHead>{t('colProperty')}</TableHead>
+              <TableHead className="text-right">{t('colAmount')}</TableHead>
+              <TableHead className="text-right">{t('colPdf')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -84,7 +89,7 @@ async function ReceiptsTable({
                     </Button>
                   ) : (
                     <span className="text-xs text-muted-foreground">
-                      Generating…
+                      {t('generating')}
                     </span>
                   )}
                 </TableCell>
@@ -106,13 +111,11 @@ export default async function ReceiptsPage({
   const ownerId = await requireOwnerId();
   const { page } = await searchParams;
   const currentPage = Math.max(1, Number(page) || 1);
+  const t = await getTranslations('receipts');
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Receipts"
-        description="Every receipt generated from your payments."
-      />
+      <PageHeader title={t('title')} description={t('subtitle')} />
       <Suspense
         key={currentPage}
         fallback={<Skeleton className="h-72 rounded-xl" />}

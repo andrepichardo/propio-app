@@ -3,6 +3,7 @@
 import { useRef, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { ImagePlus, Trash2 } from 'lucide-react';
 import {
@@ -30,6 +31,7 @@ export function PropertyPhotos({
   propertyId: string;
   photos: PropertyPhotoItem[];
 }) {
+  const t = useTranslations('properties.photos');
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
@@ -49,7 +51,7 @@ export function PropertyPhotos({
         toast.error(result.error);
         return;
       }
-      toast.success('Photo added.');
+      toast.success(t('addedToast'));
       router.refresh();
     });
   }
@@ -61,7 +63,7 @@ export function PropertyPhotos({
         toast.error(result.error);
         return;
       }
-      toast.success('Photo removed.');
+      toast.success(t('removedToast'));
       router.refresh();
     });
   }
@@ -69,14 +71,14 @@ export function PropertyPhotos({
   return (
     <Card>
       <CardHeader className="flex-row items-center justify-between space-y-0">
-        <CardTitle className="text-base">Photos</CardTitle>
+        <CardTitle className="text-base">{t('title')}</CardTitle>
         <Button
           variant="outline"
           size="sm"
           loading={isPending}
           onClick={() => inputRef.current?.click()}
         >
-          {!isPending && <ImagePlus className="size-4" />} Add photo
+          {!isPending && <ImagePlus className="size-4" />} {t('add')}
         </Button>
         <input
           ref={inputRef}
@@ -89,7 +91,7 @@ export function PropertyPhotos({
       <CardContent>
         {photos.length === 0 ? (
           <p className="py-6 text-center text-sm text-muted-foreground">
-            No photos yet. The first photo becomes the cover image.
+            {t('empty')}
           </p>
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
@@ -100,7 +102,7 @@ export function PropertyPhotos({
               >
                 <Image
                   src={photo.url}
-                  alt={photo.caption ?? 'Property photo'}
+                  alt={photo.caption ?? t('title')}
                   fill
                   sizes="(max-width: 640px) 50vw, 25vw"
                   className="object-cover"
@@ -109,7 +111,7 @@ export function PropertyPhotos({
                   type="button"
                   onClick={() => removePhoto(photo.id)}
                   disabled={isPending}
-                  aria-label="Delete photo"
+                  aria-label={t('deleteAria')}
                   className="absolute right-2 top-2 rounded-md bg-background/90 p-1.5 opacity-0 shadow-soft transition-opacity hover:text-destructive focus-visible:opacity-100 group-hover:opacity-100"
                 >
                   <Trash2 className="size-4" />

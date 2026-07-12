@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+import { getTranslations } from 'next-intl/server';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { ValidationError } from '@/shared/lib/errors';
 import { type ActionResult, ok, toActionFailure } from '@/shared/lib/result';
@@ -18,7 +19,9 @@ export async function uploadTenantAvatarAction(
 
     const tenantId = z.string().cuid().safeParse(formData.get('tenantId'));
     if (!tenantId.success) {
-      throw new ValidationError('Missing tenant reference.');
+      throw new ValidationError(
+        (await getTranslations('tenants'))('avatarMissingRef'),
+      );
     }
 
     const file = await readUploadedFile(formData.get('file'), {

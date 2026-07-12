@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import {
   Select,
   SelectContent,
@@ -8,11 +9,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import { EXPENSE_CATEGORY_OPTIONS } from '../constants';
+import { EXPENSE_CATEGORY_VALUES } from '../constants';
 
 const ALL = 'all';
 
 export function ExpenseCategoryFilter() {
+  const t = useTranslations('expenses');
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -31,13 +33,13 @@ export function ExpenseCategoryFilter() {
       onValueChange={onChange}
     >
       <SelectTrigger className="w-48">
-        <SelectValue placeholder="Category" />
+        <SelectValue placeholder={t('category')} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value={ALL}>All categories</SelectItem>
-        {EXPENSE_CATEGORY_OPTIONS.map((option) => (
-          <SelectItem key={option.value} value={option.value}>
-            {option.label}
+        <SelectItem value={ALL}>{t('allCategories')}</SelectItem>
+        {EXPENSE_CATEGORY_VALUES.map((value) => (
+          <SelectItem key={value} value={value}>
+            {t(`categories.${value}`)}
           </SelectItem>
         ))}
       </SelectContent>

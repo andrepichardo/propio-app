@@ -2,10 +2,11 @@
 
 import { useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Upload } from 'lucide-react';
 import { DocumentType } from '@prisma/client';
-import { DOCUMENT_TYPE_OPTIONS } from '../constants';
+import { DOCUMENT_TYPE_VALUES } from '../constants';
 import { uploadDocumentAction } from '../actions/document.actions';
 import type { OptionItem } from '@/features/contracts/components/contract-form';
 import { Button } from '@/shared/components/ui/button';
@@ -35,6 +36,7 @@ export function UploadDocumentDialog({
 }: {
   properties: OptionItem[];
 }) {
+  const t = useTranslations('documents');
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const [open, setOpen] = useState(false);
@@ -54,7 +56,7 @@ export function UploadDocumentDialog({
         toast.error(result.error);
         return;
       }
-      toast.success('Document uploaded.');
+      toast.success(t('uploadedToast'));
       setOpen(false);
       formRef.current?.reset();
       router.refresh();
@@ -65,19 +67,17 @@ export function UploadDocumentDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Upload className="size-4" /> Upload document
+          <Upload className="size-4" /> {t('upload')}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Upload a document</DialogTitle>
-          <DialogDescription>
-            PDFs, images and Word documents up to 10 MB.
-          </DialogDescription>
+          <DialogTitle>{t('dialog.title')}</DialogTitle>
+          <DialogDescription>{t('dialog.desc')}</DialogDescription>
         </DialogHeader>
         <form ref={formRef} onSubmit={onSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="doc-file">File</Label>
+            <Label htmlFor="doc-file">{t('dialog.file')}</Label>
             <Input
               id="doc-file"
               name="file"
@@ -87,16 +87,16 @@ export function UploadDocumentDialog({
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="doc-name">Name</Label>
+            <Label htmlFor="doc-name">{t('dialog.name')}</Label>
             <Input
               id="doc-name"
               name="name"
-              placeholder="Defaults to the file name"
+              placeholder={t('dialog.namePlaceholder')}
             />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
-              <Label>Type</Label>
+              <Label>{t('dialog.type')}</Label>
               <Select
                 value={docType}
                 onValueChange={(v) => setDocType(v as DocumentType)}
@@ -105,22 +105,22 @@ export function UploadDocumentDialog({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {DOCUMENT_TYPE_OPTIONS.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
+                  {DOCUMENT_TYPE_VALUES.map((value) => (
+                    <SelectItem key={value} value={value}>
+                      {t(`types.${value}`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label>Property</Label>
+              <Label>{t('dialog.property')}</Label>
               <Select value={propertyId} onValueChange={setPropertyId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Unlinked" />
+                  <SelectValue placeholder={t('dialog.unlinked')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={NONE}>Unlinked</SelectItem>
+                  <SelectItem value={NONE}>{t('dialog.unlinked')}</SelectItem>
                   {properties.map((p) => (
                     <SelectItem key={p.id} value={p.id}>
                       {p.label}
@@ -137,10 +137,10 @@ export function UploadDocumentDialog({
               onClick={() => setOpen(false)}
               disabled={isPending}
             >
-              Cancel
+              {t('dialog.cancel')}
             </Button>
             <Button type="submit" loading={isPending}>
-              Upload
+              {t('dialog.submit')}
             </Button>
           </DialogFooter>
         </form>

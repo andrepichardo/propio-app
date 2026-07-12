@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { NotFoundError } from '@/shared/lib/errors';
 import { contractService } from '@/features/contracts/services/contract.service';
@@ -8,7 +9,10 @@ import { tenantService } from '@/features/tenants/services/tenant.service';
 import { ContractForm } from '@/features/contracts/components/contract-form';
 import { PageHeader } from '@/shared/components/page-header';
 
-export const metadata: Metadata = { title: 'Edit contract' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return { title: t('editContract') };
+}
 
 export default async function EditContractPage({
   params,
@@ -27,9 +31,11 @@ export default async function EditContractPage({
     tenantService.options(ownerId),
   ]);
 
+  const t = await getTranslations('contracts.edit');
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <PageHeader title="Edit contract" description="Update the lease terms." />
+      <PageHeader title={t('title')} description={t('subtitle')} />
       <ContractForm
         mode="edit"
         contractId={contract.id}

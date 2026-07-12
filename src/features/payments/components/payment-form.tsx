@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { PaymentMethod } from '@prisma/client';
@@ -13,7 +14,7 @@ import {
   registerPaymentSchema,
   type RegisterPaymentInput,
 } from '../validators/payment.validators';
-import { PAYMENT_METHOD_OPTIONS } from '../constants';
+import { PAYMENT_METHOD_VALUES } from '../constants';
 import { registerPaymentAction } from '../actions/payment.actions';
 import { applyFieldErrors } from '@/shared/hooks/use-server-action';
 import {
@@ -60,6 +61,7 @@ export function PaymentForm({
   contracts,
   defaultContractId,
 }: PaymentFormProps) {
+  const t = useTranslations('payments');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -87,7 +89,9 @@ export function PaymentForm({
         toast.error(result.error);
         return;
       }
-      toast.success(`Payment recorded — receipt ${result.data.receiptNumber}.`);
+      toast.success(
+        t('recordedToast', { number: result.data.receiptNumber }),
+      );
       router.push('/app/payments');
       router.refresh();
     });
@@ -97,11 +101,11 @@ export function PaymentForm({
     return (
       <EmptyState
         icon={Wallet}
-        title="No active contracts"
-        description="You can only register payments against an active contract. Create one first."
+        title={t('noContracts.title')}
+        description={t('noContracts.desc')}
         action={
           <Button asChild>
-            <Link href="/app/contracts/new">Create contract</Link>
+            <Link href="/app/contracts/new">{t('noContracts.create')}</Link>
           </Button>
         }
       />
@@ -113,7 +117,7 @@ export function PaymentForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Payment</CardTitle>
+            <CardTitle className="text-base">{t('form.payment')}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-5 sm:grid-cols-2">
             <FormField
@@ -121,7 +125,7 @@ export function PaymentForm({
               name="contractId"
               render={({ field }) => (
                 <FormItem className="sm:col-span-2">
-                  <FormLabel>Contract</FormLabel>
+                  <FormLabel>{t('form.contract')}</FormLabel>
                   <Select
                     onValueChange={(value) => {
                       field.onChange(value);
@@ -132,7 +136,7 @@ export function PaymentForm({
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select contract" />
+                        <SelectValue placeholder={t('form.selectContract')} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -152,7 +156,7 @@ export function PaymentForm({
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount</FormLabel>
+                  <FormLabel>{t('form.amount')}</FormLabel>
                   <FormControl>
                     <Input type="number" step="0.01" min="0" {...field} />
                   </FormControl>
@@ -165,7 +169,7 @@ export function PaymentForm({
               name="method"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Method</FormLabel>
+                  <FormLabel>{t('form.method')}</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
@@ -173,9 +177,9 @@ export function PaymentForm({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {PAYMENT_METHOD_OPTIONS.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
+                      {PAYMENT_METHOD_VALUES.map((value) => (
+                        <SelectItem key={value} value={value}>
+                          {t(`methods.${value}`)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -189,7 +193,7 @@ export function PaymentForm({
               name="paidAt"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Payment date</FormLabel>
+                  <FormLabel>{t('form.date')}</FormLabel>
                   <FormControl>
                     <Input
                       type="date"
@@ -210,10 +214,10 @@ export function PaymentForm({
               name="reference"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Reference</FormLabel>
+                  <FormLabel>{t('form.reference')}</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Transfer / check number"
+                      placeholder={t('form.referencePlaceholder')}
                       {...field}
                       value={field.value ?? ''}
                     />
@@ -227,10 +231,10 @@ export function PaymentForm({
               name="concept"
               render={({ field }) => (
                 <FormItem className="sm:col-span-2">
-                  <FormLabel>Concept</FormLabel>
+                  <FormLabel>{t('form.concept')}</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Defaults to “Rent — {month}”"
+                      placeholder={t('form.conceptPlaceholder')}
                       {...field}
                       value={field.value ?? ''}
                     />
@@ -244,7 +248,7 @@ export function PaymentForm({
               name="notes"
               render={({ field }) => (
                 <FormItem className="sm:col-span-2">
-                  <FormLabel>Notes</FormLabel>
+                  <FormLabel>{t('form.notes')}</FormLabel>
                   <FormControl>
                     <Textarea rows={2} {...field} value={field.value ?? ''} />
                   </FormControl>
@@ -258,9 +262,9 @@ export function PaymentForm({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3 sm:col-span-2">
                   <div>
-                    <FormLabel>Email receipt to tenant</FormLabel>
+                    <FormLabel>{t('form.emailReceipt')}</FormLabel>
                     <FormDescription>
-                      We’ll attach the generated PDF receipt.
+                      {t('form.emailReceiptHint')}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -282,10 +286,10 @@ export function PaymentForm({
             onClick={() => router.back()}
             disabled={isPending}
           >
-            Cancel
+            {t('form.cancel')}
           </Button>
           <Button type="submit" loading={isPending}>
-            Register payment
+            {t('form.submit')}
           </Button>
         </div>
       </form>

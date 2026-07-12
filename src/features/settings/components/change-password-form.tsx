@@ -3,6 +3,7 @@
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import {
   changePasswordSchema,
@@ -28,6 +29,7 @@ import {
 } from '@/shared/components/ui/card';
 
 export function ChangePasswordForm({ hasPassword }: { hasPassword: boolean }) {
+  const t = useTranslations('settings');
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<ChangePasswordInput>({
@@ -43,7 +45,7 @@ export function ChangePasswordForm({ hasPassword }: { hasPassword: boolean }) {
         toast.error(result.error);
         return;
       }
-      toast.success('Password changed.');
+      toast.success(t('passwordChanged'));
       form.reset();
     });
   }
@@ -52,12 +54,11 @@ export function ChangePasswordForm({ hasPassword }: { hasPassword: boolean }) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Security</CardTitle>
+          <CardTitle className="text-base">{t('security')}</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            This account signs in with a social provider (Google or GitHub), so
-            there’s no password to change here.
+            {t('oauthNoPassword')}
           </p>
         </CardContent>
       </Card>
@@ -69,7 +70,7 @@ export function ChangePasswordForm({ hasPassword }: { hasPassword: boolean }) {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Security</CardTitle>
+            <CardTitle className="text-base">{t('security')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
             <FormField
@@ -77,7 +78,7 @@ export function ChangePasswordForm({ hasPassword }: { hasPassword: boolean }) {
               name="currentPassword"
               render={({ field }) => (
                 <FormItem className="sm:max-w-sm">
-                  <FormLabel>Current password</FormLabel>
+                  <FormLabel>{t('currentPassword')}</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
@@ -96,12 +97,12 @@ export function ChangePasswordForm({ hasPassword }: { hasPassword: boolean }) {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>New password</FormLabel>
+                    <FormLabel>{t('newPassword')}</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
                         autoComplete="new-password"
-                        placeholder="At least 8 characters"
+                        placeholder={t('newPasswordPlaceholder')}
                         {...field}
                       />
                     </FormControl>
@@ -114,12 +115,12 @@ export function ChangePasswordForm({ hasPassword }: { hasPassword: boolean }) {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirm new password</FormLabel>
+                    <FormLabel>{t('confirmNewPassword')}</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
                         autoComplete="new-password"
-                        placeholder="Re-enter your new password"
+                        placeholder={t('confirmNewPasswordPlaceholder')}
                         {...field}
                       />
                     </FormControl>
@@ -130,7 +131,7 @@ export function ChangePasswordForm({ hasPassword }: { hasPassword: boolean }) {
             </div>
             <div className="flex justify-end">
               <Button type="submit" loading={isPending}>
-                Change password
+                {t('changePassword')}
               </Button>
             </div>
           </CardContent>

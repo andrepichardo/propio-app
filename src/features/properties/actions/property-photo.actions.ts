@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+import { getTranslations } from 'next-intl/server';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { createOwnerAction } from '@/shared/lib/action';
 import { ValidationError } from '@/shared/lib/errors';
@@ -22,7 +23,8 @@ export async function uploadPropertyPhotoAction(
       .cuid()
       .safeParse(formData.get('propertyId'));
     if (!propertyId.success) {
-      throw new ValidationError('Missing property reference.');
+      const t = await getTranslations('properties.photos');
+      throw new ValidationError(t('missingRef'));
     }
 
     const file = await readUploadedFile(formData.get('file'), {

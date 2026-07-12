@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { getTranslations } from 'next-intl/server';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { createOwnerAction } from '@/shared/lib/action';
 import { ValidationError } from '@/shared/lib/errors';
@@ -27,8 +28,9 @@ export async function uploadDocumentAction(
 
     const file = formData.get('file');
     if (!(file instanceof File) || file.size === 0) {
-      throw new ValidationError('Choose a file to upload.', {
-        file: ['Choose a file to upload.'],
+      const tv = await getTranslations('validation');
+      throw new ValidationError(tv('fileRequired'), {
+        file: ['fileRequired'],
       });
     }
 

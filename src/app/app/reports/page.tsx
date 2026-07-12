@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
+import { getTranslations } from 'next-intl/server';
 import { DoorOpen, TrendingDown, TrendingUp, Wallet } from 'lucide-react';
 import { requireUser } from '@/shared/lib/auth/session';
 import { getUserPreferences } from '@/shared/lib/auth/preferences';
@@ -21,7 +22,10 @@ import {
 } from '@/shared/components/ui/card';
 import { formatCurrency, formatPercent } from '@/shared/lib/format';
 
-export const metadata: Metadata = { title: 'Reports' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return { title: t('reports') };
+}
 
 async function ReportContent({
   ownerId,
@@ -33,6 +37,7 @@ async function ReportContent({
   year: number;
 }) {
   const report = await getYearlyReport(ownerId, year);
+  const t = await getTranslations('reports');
   const totalUnits =
     report.occupancy.occupied +
     report.occupancy.available +
@@ -44,36 +49,41 @@ async function ReportContent({
     <div className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          label={`Revenue ${year}`}
+          label={t('revenue', { year })}
           value={formatCurrency(report.totals.revenue, currency)}
           icon={TrendingUp}
           accent="success"
         />
         <StatCard
-          label={`Expenses ${year}`}
+          label={t('expensesTotal', { year })}
           value={formatCurrency(report.totals.expenses, currency)}
           icon={TrendingDown}
           accent="warning"
         />
         <StatCard
-          label={`Net profit ${year}`}
+          label={t('netProfit', { year })}
           value={formatCurrency(report.totals.profit, currency)}
           icon={Wallet}
           accent={report.totals.profit >= 0 ? 'default' : 'destructive'}
         />
         <StatCard
-          label="Occupancy"
+          label={t('occupancy')}
           value={formatPercent(occupancyRate)}
           icon={DoorOpen}
-          hint={`${report.occupancy.occupied}/${totalUnits} occupied`}
+          hint={t('occupiedOf', {
+            occupied: report.occupancy.occupied,
+            total: totalUnits,
+          })}
         />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Revenue vs expenses</CardTitle>
-            <CardDescription>Monthly, {year}</CardDescription>
+            <CardTitle className="text-base">
+              {t('revenueVsExpenses')}
+            </CardTitle>
+            <CardDescription>{t('monthlyYear', { year })}</CardDescription>
           </CardHeader>
           <CardContent>
             <ProfitBarChart data={report.monthly} currency={currency} />
@@ -81,8 +91,10 @@ async function ReportContent({
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Expenses by category</CardTitle>
-            <CardDescription>Where your money goes</CardDescription>
+            <CardTitle className="text-base">
+              {t('expensesByCategory')}
+            </CardTitle>
+            <CardDescription>{t('whereMoneyGoes')}</CardDescription>
           </CardHeader>
           <CardContent>
             <ExpenseBreakdownChart
@@ -105,12 +117,13 @@ export default async function ReportsPage({
   const { currency } = await getUserPreferences(user.id);
   const { year } = await searchParams;
   const selectedYear = Number(year) || new Date().getFullYear();
+  const t = await getTranslations('reports');
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Reports"
-        description="Financial performance across your portfolio."
+        title={t('title')}
+        description={t('subtitle')}
         actions={<YearSelector selectedYear={selectedYear} />}
       />
       <Suspense

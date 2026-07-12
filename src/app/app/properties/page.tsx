@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import { Plus } from 'lucide-react';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { propertyFiltersSchema } from '@/features/properties/validators/property.validators';
@@ -10,7 +11,10 @@ import { PageHeader } from '@/shared/components/page-header';
 import { Button } from '@/shared/components/ui/button';
 import { Skeleton } from '@/shared/components/ui/skeleton';
 
-export const metadata: Metadata = { title: 'Properties' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return { title: t('properties') };
+}
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -23,16 +27,17 @@ export default async function PropertiesPage({
   const raw = await searchParams;
   // Untrusted query string → validate/coerce before it reaches the service.
   const filters = propertyFiltersSchema.parse(raw);
+  const t = await getTranslations('properties');
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Properties"
-        description="Your entire portfolio in one place."
+        title={t('title')}
+        description={t('subtitle')}
         actions={
           <Button asChild>
             <Link href="/app/properties/new">
-              <Plus className="size-4" /> Add property
+              <Plus className="size-4" /> {t('add')}
             </Link>
           </Button>
         }

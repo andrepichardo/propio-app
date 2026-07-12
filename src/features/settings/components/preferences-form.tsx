@@ -4,6 +4,7 @@ import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import {
   updatePreferencesSchema,
@@ -34,6 +35,7 @@ export function PreferencesForm({
 }: {
   defaultValues: UpdatePreferencesInput;
 }) {
+  const t = useTranslations('settings');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -50,7 +52,7 @@ export function PreferencesForm({
         toast.error(result.error);
         return;
       }
-      toast.success('Preferences updated.');
+      toast.success(t('preferencesUpdated'));
       router.refresh();
     });
   }
@@ -60,7 +62,7 @@ export function PreferencesForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Formatting</CardTitle>
+            <CardTitle className="text-base">{t('formatting')}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-5 sm:grid-cols-3">
             <FormField
@@ -68,11 +70,11 @@ export function PreferencesForm({
               name="currency"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Currency</FormLabel>
+                  <FormLabel>{t('currency')}</FormLabel>
                   <FormControl>
                     <Input placeholder="USD" maxLength={3} {...field} />
                   </FormControl>
-                  <FormDescription>ISO 4217 code.</FormDescription>
+                  <FormDescription>{t('currencyHint')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -82,11 +84,11 @@ export function PreferencesForm({
               name="locale"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Locale</FormLabel>
+                  <FormLabel>{t('locale')}</FormLabel>
                   <FormControl>
                     <Input placeholder="en" {...field} />
                   </FormControl>
-                  <FormDescription>e.g. en, es, en-US.</FormDescription>
+                  <FormDescription>{t('localeHint')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -96,11 +98,11 @@ export function PreferencesForm({
               name="timezone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Timezone</FormLabel>
+                  <FormLabel>{t('timezone')}</FormLabel>
                   <FormControl>
                     <Input placeholder="America/Santo_Domingo" {...field} />
                   </FormControl>
-                  <FormDescription>IANA identifier.</FormDescription>
+                  <FormDescription>{t('timezoneHint')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -110,7 +112,7 @@ export function PreferencesForm({
 
         <div className="flex justify-end">
           <Button type="submit" loading={isPending}>
-            Save changes
+            {t('save')}
           </Button>
         </div>
       </form>

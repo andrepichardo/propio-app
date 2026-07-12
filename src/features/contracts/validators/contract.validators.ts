@@ -3,13 +3,13 @@ import { ContractStatus } from '@prisma/client';
 
 export const contractBaseSchema = z
   .object({
-    propertyId: z.string().cuid('Select a property.'),
-    tenantId: z.string().cuid('Select a tenant.'),
-    startDate: z.coerce.date({ message: 'Start date is required.' }),
+    propertyId: z.string().cuid('selectProperty'),
+    tenantId: z.string().cuid('selectTenant'),
+    startDate: z.coerce.date({ message: 'startDateRequired' }),
     endDate: z.coerce.date().optional().nullable(),
     monthlyRent: z.coerce
       .number()
-      .positive('Rent must be greater than zero.')
+      .positive('rentPositive')
       .max(100_000_000),
     currency: z.string().length(3).default('USD'),
     dueDay: z.coerce.number().int().min(1).max(31).default(1),
@@ -26,7 +26,7 @@ export const contractBaseSchema = z
   .refine(
     (data) => !data.endDate || data.endDate > data.startDate,
     {
-      message: 'End date must be after the start date.',
+      message: 'endAfterStart',
       path: ['endDate'],
     },
   );

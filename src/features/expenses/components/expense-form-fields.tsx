@@ -1,9 +1,10 @@
 'use client';
 
 import { type UseFormReturn } from 'react-hook-form';
+import { useTranslations } from 'next-intl';
 import { format } from 'date-fns';
 import type { CreateExpenseInput } from '../validators/expense.validators';
-import { EXPENSE_CATEGORY_OPTIONS } from '../constants';
+import { EXPENSE_CATEGORY_VALUES } from '../constants';
 import type { OptionItem } from '@/features/contracts/components/contract-form';
 import {
   FormControl,
@@ -35,6 +36,7 @@ export function ExpenseFormFields({
   form: UseFormReturn<CreateExpenseInput>;
   properties: OptionItem[];
 }) {
+  const t = useTranslations('expenses');
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       <FormField
@@ -42,9 +44,9 @@ export function ExpenseFormFields({
         name="description"
         render={({ field }) => (
           <FormItem className="sm:col-span-2">
-            <FormLabel>Description</FormLabel>
+            <FormLabel>{t('form.description')}</FormLabel>
             <FormControl>
-              <Input placeholder="e.g. Plumbing repair" {...field} />
+              <Input placeholder={t('form.descriptionPlaceholder')} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -55,7 +57,7 @@ export function ExpenseFormFields({
         name="category"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Category</FormLabel>
+            <FormLabel>{t('form.category')}</FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
               <FormControl>
                 <SelectTrigger>
@@ -63,9 +65,9 @@ export function ExpenseFormFields({
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {EXPENSE_CATEGORY_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
+                {EXPENSE_CATEGORY_VALUES.map((value) => (
+                  <SelectItem key={value} value={value}>
+                    {t(`categories.${value}`)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -79,7 +81,7 @@ export function ExpenseFormFields({
         name="amount"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Amount</FormLabel>
+            <FormLabel>{t('form.amount')}</FormLabel>
             <FormControl>
               <Input type="number" step="0.01" min="0" {...field} />
             </FormControl>
@@ -92,7 +94,7 @@ export function ExpenseFormFields({
         name="incurredAt"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Date</FormLabel>
+            <FormLabel>{t('form.date')}</FormLabel>
             <FormControl>
               <Input
                 type="date"
@@ -111,7 +113,7 @@ export function ExpenseFormFields({
         name="propertyId"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Property</FormLabel>
+            <FormLabel>{t('form.property')}</FormLabel>
             <Select
               onValueChange={(value) =>
                 field.onChange(value === NONE ? undefined : value)
@@ -120,11 +122,11 @@ export function ExpenseFormFields({
             >
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue placeholder="Portfolio-wide" />
+                  <SelectValue placeholder={t('form.portfolioWide')} />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value={NONE}>Portfolio-wide</SelectItem>
+                <SelectItem value={NONE}>{t('form.portfolioWide')}</SelectItem>
                 {properties.map((p) => (
                   <SelectItem key={p.id} value={p.id}>
                     {p.label}
@@ -141,7 +143,7 @@ export function ExpenseFormFields({
         name="vendor"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Vendor</FormLabel>
+            <FormLabel>{t('form.vendor')}</FormLabel>
             <FormControl>
               <Input {...field} value={field.value ?? ''} />
             </FormControl>
@@ -154,7 +156,7 @@ export function ExpenseFormFields({
         name="notes"
         render={({ field }) => (
           <FormItem className="sm:col-span-2">
-            <FormLabel>Notes</FormLabel>
+            <FormLabel>{t('form.notes')}</FormLabel>
             <FormControl>
               <Textarea rows={2} {...field} value={field.value ?? ''} />
             </FormControl>

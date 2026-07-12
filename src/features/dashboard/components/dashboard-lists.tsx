@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import {
   CalendarClock,
   CircleDollarSign,
@@ -24,15 +25,16 @@ export function UpcomingPaymentsCard({
 }: {
   payments: UpcomingPayment[];
 }) {
+  const t = useTranslations('dashboard');
   return (
     <Card>
       <CardHeader className="flex-row items-center justify-between space-y-0">
-        <CardTitle className="text-base">Upcoming payments</CardTitle>
+        <CardTitle className="text-base">{t('upcomingPayments')}</CardTitle>
         <Link
           href="/app/payments"
           className="text-xs font-medium text-primary hover:underline"
         >
-          View all
+          {t('viewAll')}
         </Link>
       </CardHeader>
       <CardContent className="p-0">
@@ -40,8 +42,8 @@ export function UpcomingPaymentsCard({
           <div className="px-6 pb-6">
             <EmptyState
               icon={CircleDollarSign}
-              title="Nothing due soon"
-              description="Active contracts will show their next due date here."
+              title={t('nothingDue')}
+              description={t('nothingDueHint')}
               className="py-10"
             />
           </div>
@@ -65,7 +67,7 @@ export function UpcomingPaymentsCard({
                     {formatCurrency(payment.amount, payment.currency)}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Due {formatDate(payment.dueDate, 'MMM d')}
+                    {t('due', { date: formatDate(payment.dueDate, 'MMM d') })}
                   </p>
                 </div>
               </li>
@@ -82,15 +84,16 @@ export function ExpiringContractsCard({
 }: {
   contracts: ExpiringContract[];
 }) {
+  const t = useTranslations('dashboard');
   return (
     <Card>
       <CardHeader className="flex-row items-center justify-between space-y-0">
-        <CardTitle className="text-base">Contracts expiring soon</CardTitle>
+        <CardTitle className="text-base">{t('expiringContracts')}</CardTitle>
         <Link
           href="/app/contracts"
           className="text-xs font-medium text-primary hover:underline"
         >
-          View all
+          {t('viewAll')}
         </Link>
       </CardHeader>
       <CardContent className="p-0">
@@ -98,7 +101,7 @@ export function ExpiringContractsCard({
           <div className="px-6 pb-6">
             <EmptyState
               icon={FileSignature}
-              title="No expirations in the next 30 days"
+              title={t('noExpirations')}
               className="py-10"
             />
           </div>
@@ -135,18 +138,19 @@ export function RecentActivityCard({
 }: {
   activity: RecentActivityItem[];
 }) {
+  const t = useTranslations('dashboard');
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Recent activity</CardTitle>
+        <CardTitle className="text-base">{t('recentActivity')}</CardTitle>
       </CardHeader>
       <CardContent className="p-0">
         {activity.length === 0 ? (
           <div className="px-6 pb-6">
             <EmptyState
               icon={History}
-              title="No activity yet"
-              description="Your recent actions across Propio will appear here."
+              title={t('noActivity')}
+              description={t('noActivityHint')}
               className="py-10"
             />
           </div>

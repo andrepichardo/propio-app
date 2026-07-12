@@ -1,7 +1,7 @@
+import { getTranslations } from 'next-intl/server';
 import { Banknote, FileText } from 'lucide-react';
 import { expenseService } from '../services/expense.service';
 import type { ExpenseFilters } from '../validators/expense.validators';
-import { EXPENSE_CATEGORY_LABELS } from '../constants';
 import { DeleteExpenseButton } from './delete-expense-button';
 import { EditExpenseDialog } from './edit-expense-dialog';
 import type { OptionItem } from '@/features/contracts/components/contract-form';
@@ -31,13 +31,14 @@ export async function ExpensesList({
     ownerId,
     filters,
   );
+  const t = await getTranslations('expenses');
 
   if (items.length === 0) {
     return (
       <EmptyState
         icon={Banknote}
-        title="No expenses logged"
-        description="Track maintenance, utilities and other costs to see true profit per property."
+        title={t('emptyTitle')}
+        description={t('emptyDesc')}
       />
     );
   }
@@ -48,11 +49,11 @@ export async function ExpensesList({
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead>Date</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Property</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
+              <TableHead>{t('colDate')}</TableHead>
+              <TableHead>{t('colDescription')}</TableHead>
+              <TableHead>{t('colCategory')}</TableHead>
+              <TableHead>{t('colProperty')}</TableHead>
+              <TableHead className="text-right">{t('colAmount')}</TableHead>
               <TableHead className="w-20" />
             </TableRow>
           </TableHeader>
@@ -70,8 +71,8 @@ export async function ExpensesList({
                         href={expense.invoiceUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label="View invoice"
-                        title="View invoice"
+                        aria-label={t('viewInvoice')}
+                        title={t('viewInvoice')}
                         className="text-muted-foreground hover:text-primary"
                       >
                         <FileText className="size-3.5" />
@@ -86,11 +87,11 @@ export async function ExpensesList({
                 </TableCell>
                 <TableCell>
                   <Badge variant="secondary">
-                    {EXPENSE_CATEGORY_LABELS[expense.category]}
+                    {t(`categories.${expense.category}`)}
                   </Badge>
                 </TableCell>
                 <TableCell className="text-sm text-muted-foreground">
-                  {expense.property?.name ?? 'Portfolio-wide'}
+                  {expense.property?.name ?? t('portfolioWide')}
                 </TableCell>
                 <TableCell className="text-right font-semibold">
                   {formatCurrency(expense.amount.toString(), expense.currency)}

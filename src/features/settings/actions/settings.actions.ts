@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { getTranslations } from 'next-intl/server';
 import { prisma } from '@/shared/lib/prisma';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { createOwnerAction } from '@/shared/lib/action';
@@ -62,11 +63,8 @@ export const changePasswordAction = createOwnerAction(
 
     // OAuth-only accounts have no password to change.
     if (!user.hashedPassword) {
-      throw new AppError(
-        'Password sign-in is not enabled for this account.',
-        'NO_PASSWORD',
-        400,
-      );
+      const ts = await getTranslations('settings');
+      throw new AppError(ts('noPasswordError'), 'NO_PASSWORD', 400);
     }
 
     // Always verify the current password — a stolen open session must not be
@@ -76,8 +74,9 @@ export const changePasswordAction = createOwnerAction(
       user.hashedPassword,
     );
     if (!valid) {
-      throw new ValidationError('Incorrect current password.', {
-        currentPassword: ['Incorrect current password.'],
+      const tv = await getTranslations('validation');
+      throw new ValidationError(tv('incorrectCurrentPassword'), {
+        currentPassword: ['incorrectCurrentPassword'],
       });
     }
 

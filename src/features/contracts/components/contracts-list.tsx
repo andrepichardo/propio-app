@@ -1,11 +1,9 @@
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import { FileSignature, Plus } from 'lucide-react';
 import { contractService } from '../services/contract.service';
 import type { ContractFilters } from '../validators/contract.validators';
-import {
-  CONTRACT_STATUS_LABELS,
-  CONTRACT_STATUS_VARIANT,
-} from '../constants';
+import { CONTRACT_STATUS_VARIANT } from '../constants';
 import { EmptyState } from '@/shared/components/empty-state';
 import { Button } from '@/shared/components/ui/button';
 import { Badge } from '@/shared/components/ui/badge';
@@ -31,17 +29,18 @@ export async function ContractsList({
     ownerId,
     filters,
   );
+  const t = await getTranslations('contracts');
 
   if (items.length === 0) {
     return (
       <EmptyState
         icon={FileSignature}
-        title={filters.status ? 'No contracts match' : 'No contracts yet'}
-        description="Draft a contract to link a tenant to a property and start tracking rent."
+        title={filters.status ? t('emptyFilteredTitle') : t('emptyTitle')}
+        description={t('emptyDesc')}
         action={
           <Button asChild>
             <Link href="/app/contracts/new">
-              <Plus className="size-4" /> New contract
+              <Plus className="size-4" /> {t('add')}
             </Link>
           </Button>
         }
@@ -55,11 +54,11 @@ export async function ContractsList({
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead>Property</TableHead>
-              <TableHead>Tenant</TableHead>
-              <TableHead>Period</TableHead>
-              <TableHead className="text-right">Rent</TableHead>
-              <TableHead className="text-right">Status</TableHead>
+              <TableHead>{t('colProperty')}</TableHead>
+              <TableHead>{t('colTenant')}</TableHead>
+              <TableHead>{t('colPeriod')}</TableHead>
+              <TableHead className="text-right">{t('colRent')}</TableHead>
+              <TableHead className="text-right">{t('colStatus')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -81,7 +80,7 @@ export async function ContractsList({
                   {' – '}
                   {contract.endDate
                     ? formatDate(contract.endDate, 'MMM d, yyyy')
-                    : 'Open'}
+                    : t('open')}
                 </TableCell>
                 <TableCell className="text-right font-medium">
                   {formatCurrency(
@@ -91,7 +90,7 @@ export async function ContractsList({
                 </TableCell>
                 <TableCell className="text-right">
                   <Badge variant={CONTRACT_STATUS_VARIANT[contract.status]}>
-                    {CONTRACT_STATUS_LABELS[contract.status]}
+                    {t(`statuses.${contract.status}`)}
                   </Badge>
                 </TableCell>
               </TableRow>

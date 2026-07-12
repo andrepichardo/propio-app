@@ -5,7 +5,10 @@ import { Separator } from '@/shared/components/ui/separator';
 import { RegisterForm } from '@/features/auth/components/register-form';
 import { OAuthButtons } from '@/features/auth/components/oauth-buttons';
 
-export const metadata: Metadata = { title: 'Create account' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return { title: t('createAccount') };
+}
 
 export default async function RegisterPage() {
   const t = await getTranslations('auth');

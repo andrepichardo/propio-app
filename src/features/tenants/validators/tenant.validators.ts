@@ -9,12 +9,12 @@ const optional = (max: number) =>
     .transform((v) => (v === '' ? undefined : v));
 
 export const tenantBaseSchema = z.object({
-  firstName: z.string().trim().min(1, 'First name is required.').max(80),
-  lastName: z.string().trim().min(1, 'Last name is required.').max(80),
+  firstName: z.string().trim().min(1, 'firstNameRequired').max(80),
+  lastName: z.string().trim().min(1, 'lastNameRequired').max(80),
   email: z
     .string()
     .trim()
-    .email('Enter a valid email.')
+    .email('emailInvalid')
     .optional()
     .or(z.literal('')),
   phone: optional(40),

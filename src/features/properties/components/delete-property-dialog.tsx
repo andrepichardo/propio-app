@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -23,6 +24,7 @@ export function DeletePropertyDialog({
   propertyId: string;
   propertyName: string;
 }) {
+  const t = useTranslations('properties.delete');
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -34,7 +36,7 @@ export function DeletePropertyDialog({
         toast.error(result.error);
         return;
       }
-      toast.success('Property deleted.');
+      toast.success(t('deletedToast'));
       setOpen(false);
       router.push('/app/properties');
       router.refresh();
@@ -45,16 +47,14 @@ export function DeletePropertyDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="text-destructive">
-          <Trash2 className="size-4" /> Delete
+          <Trash2 className="size-4" /> {t('trigger')}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete this property?</DialogTitle>
+          <DialogTitle>{t('title')}</DialogTitle>
           <DialogDescription>
-            “{propertyName}” will be archived. Related contracts, payments and
-            documents are preserved for your records, but the property will no
-            longer appear in your portfolio.
+            {t('description', { name: propertyName })}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -63,14 +63,14 @@ export function DeletePropertyDialog({
             onClick={() => setOpen(false)}
             disabled={isPending}
           >
-            Cancel
+            {t('cancel')}
           </Button>
           <Button
             variant="destructive"
             onClick={handleDelete}
             loading={isPending}
           >
-            Delete property
+            {t('confirm')}
           </Button>
         </DialogFooter>
       </DialogContent>

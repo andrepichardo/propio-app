@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -21,6 +22,7 @@ export function DeleteContractDialog({
 }: {
   contractId: string;
 }) {
+  const t = useTranslations('contracts.delete');
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -32,7 +34,7 @@ export function DeleteContractDialog({
         toast.error(result.error);
         return;
       }
-      toast.success('Contract cancelled.');
+      toast.success(t('cancelledToast'));
       setOpen(false);
       router.push('/app/contracts');
       router.refresh();
@@ -43,16 +45,13 @@ export function DeleteContractDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="text-destructive">
-          <Trash2 className="size-4" /> Cancel
+          <Trash2 className="size-4" /> {t('trigger')}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Cancel this contract?</DialogTitle>
-          <DialogDescription>
-            The contract will be marked cancelled and archived. Recorded
-            payments and receipts are preserved for your records.
-          </DialogDescription>
+          <DialogTitle>{t('title')}</DialogTitle>
+          <DialogDescription>{t('description')}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button
@@ -60,14 +59,14 @@ export function DeleteContractDialog({
             onClick={() => setOpen(false)}
             disabled={isPending}
           >
-            Keep contract
+            {t('keep')}
           </Button>
           <Button
             variant="destructive"
             onClick={handleDelete}
             loading={isPending}
           >
-            Cancel contract
+            {t('confirm')}
           </Button>
         </DialogFooter>
       </DialogContent>

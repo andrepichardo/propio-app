@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import {
   Select,
   SelectContent,
@@ -8,11 +9,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import { CONTRACT_STATUS_OPTIONS } from '../constants';
+import { CONTRACT_STATUS_VALUES } from '../constants';
 
 const ALL = 'all';
 
 export function ContractStatusFilter() {
+  const t = useTranslations('contracts');
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -31,13 +33,13 @@ export function ContractStatusFilter() {
       onValueChange={onChange}
     >
       <SelectTrigger className="w-44">
-        <SelectValue placeholder="Status" />
+        <SelectValue placeholder={t('statusPlaceholder')} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value={ALL}>All statuses</SelectItem>
-        {CONTRACT_STATUS_OPTIONS.map((option) => (
-          <SelectItem key={option.value} value={option.value}>
-            {option.label}
+        <SelectItem value={ALL}>{t('allStatuses')}</SelectItem>
+        {CONTRACT_STATUS_VALUES.map((value) => (
+          <SelectItem key={value} value={value}>
+            {t(`statuses.${value}`)}
           </SelectItem>
         ))}
       </SelectContent>

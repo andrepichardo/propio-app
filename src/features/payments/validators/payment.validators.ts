@@ -2,10 +2,10 @@ import { z } from 'zod';
 import { PaymentMethod } from '@prisma/client';
 
 export const registerPaymentSchema = z.object({
-  contractId: z.string().cuid('Select a contract.'),
+  contractId: z.string().cuid('selectContract'),
   amount: z.coerce
     .number()
-    .positive('Amount must be greater than zero.')
+    .positive('amountPositive')
     .max(100_000_000),
   method: z.nativeEnum(PaymentMethod).default(PaymentMethod.TRANSFER),
   reference: z

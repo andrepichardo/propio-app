@@ -1,14 +1,12 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import { Pencil, Wallet } from 'lucide-react';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { NotFoundError } from '@/shared/lib/errors';
 import { contractService } from '@/features/contracts/services/contract.service';
-import {
-  CONTRACT_STATUS_LABELS,
-  CONTRACT_STATUS_VARIANT,
-} from '@/features/contracts/constants';
+import { CONTRACT_STATUS_VARIANT } from '@/features/contracts/constants';
 import { DeleteContractDialog } from '@/features/contracts/components/delete-contract-dialog';
 import { ContractPdfUpload } from '@/features/contracts/components/contract-pdf-upload';
 import { PageHeader } from '@/shared/components/page-header';
@@ -22,7 +20,10 @@ import {
 } from '@/shared/components/ui/card';
 import { formatCurrency, formatDate } from '@/shared/lib/format';
 
-export const metadata: Metadata = { title: 'Contract' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return { title: t('contract') };
+}
 
 export default async function ContractDetailPage({
   params,
@@ -39,27 +40,31 @@ export default async function ContractDetailPage({
       throw error;
     });
 
+  const t = await getTranslations('contracts.detail');
+
   const rows = [
     {
-      label: 'Monthly rent',
+      label: t('monthlyRent'),
       value: formatCurrency(contract.monthlyRent.toString(), contract.currency),
     },
     {
-      label: 'Security deposit',
+      label: t('securityDeposit'),
       value: formatCurrency(
         contract.securityDeposit.toString(),
         contract.currency,
       ),
     },
-    { label: 'Rent due day', value: `Day ${contract.dueDay}` },
+    { label: t('dueDay'), value: t('dueDayValue', { day: contract.dueDay }) },
     {
-      label: 'Maintenance included',
-      value: contract.maintenanceIncluded ? 'Yes' : 'No',
+      label: t('maintenanceIncluded'),
+      value: contract.maintenanceIncluded ? t('yes') : t('no'),
     },
-    { label: 'Start date', value: formatDate(contract.startDate) },
+    { label: t('startDate'), value: formatDate(contract.startDate) },
     {
-      label: 'End date',
-      value: contract.endDate ? formatDate(contract.endDate) : 'Open-ended',
+      label: t('endDate'),
+      value: contract.endDate
+        ? formatDate(contract.endDate)
+        : t('openEnded'),
     },
   ];
 
@@ -67,17 +72,19 @@ export default async function ContractDetailPage({
     <div className="space-y-6">
       <PageHeader
         title={contract.property.name}
-        description={`Contract with ${contract.tenant.firstName} ${contract.tenant.lastName}`}
+        description={t('with', {
+          name: `${contract.tenant.firstName} ${contract.tenant.lastName}`,
+        })}
         actions={
           <>
             <Button asChild>
               <Link href={`/app/payments/new?contractId=${contract.id}`}>
-                <Wallet className="size-4" /> Register payment
+                <Wallet className="size-4" /> {t('registerPayment')}
               </Link>
             </Button>
             <Button variant="outline" asChild>
               <Link href={`/app/contracts/${contract.id}/edit`}>
-                <Pencil className="size-4" /> Edit
+                <Pencil className="size-4" /> {t('edit')}
               </Link>
             </Button>
             <DeleteContractDialog contractId={contract.id} />
@@ -87,17 +94,17 @@ export default async function ContractDetailPage({
 
       <div className="flex items-center gap-2">
         <Badge variant={CONTRACT_STATUS_VARIANT[contract.status]}>
-          {CONTRACT_STATUS_LABELS[contract.status]}
+          {(await getTranslations('contracts.statuses'))(contract.status)}
         </Badge>
         <span className="text-sm text-muted-foreground">
-          {contract._count.payments} payments recorded
+          {t('paymentsRecorded', { count: contract._count.payments })}
         </span>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Terms</CardTitle>
+            <CardTitle className="text-base">{t('terms')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
             {rows.map((row) => (
@@ -120,7 +127,7 @@ export default async function ContractDetailPage({
           {contract.notes ? (
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Notes</CardTitle>
+                <CardTitle className="text-base">{t('notes')}</CardTitle>
               </CardHeader>
               <CardContent className="text-sm leading-relaxed text-foreground/90">
                 {contract.notes}

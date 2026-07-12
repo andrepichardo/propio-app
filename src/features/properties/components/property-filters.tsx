@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState, useTransition } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Search } from 'lucide-react';
 import { Input } from '@/shared/components/ui/input';
 import {
@@ -12,8 +13,8 @@ import {
   SelectValue,
 } from '@/shared/components/ui/select';
 import {
-  PROPERTY_STATUS_OPTIONS,
-  PROPERTY_TYPE_OPTIONS,
+  PROPERTY_STATUS_VALUES,
+  PROPERTY_TYPE_VALUES,
 } from '../constants';
 
 const ALL = 'all';
@@ -23,6 +24,7 @@ const ALL = 'all';
  * re-fetches, results are shareable/bookmarkable, and the back button works.
  */
 export function PropertyFilters() {
+  const t = useTranslations('properties');
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -61,7 +63,7 @@ export function PropertyFilters() {
         <Input
           value={search}
           onChange={(event) => setSearch(event.target.value)}
-          placeholder="Search by name, city or address…"
+          placeholder={t('searchPlaceholder')}
           className="pl-9"
           data-pending={isPending ? '' : undefined}
         />
@@ -71,13 +73,13 @@ export function PropertyFilters() {
         onValueChange={(value) => commit({ type: value })}
       >
         <SelectTrigger className="sm:w-44">
-          <SelectValue placeholder="Type" />
+          <SelectValue placeholder={t('type')} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value={ALL}>All types</SelectItem>
-          {PROPERTY_TYPE_OPTIONS.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
+          <SelectItem value={ALL}>{t('allTypes')}</SelectItem>
+          {PROPERTY_TYPE_VALUES.map((value) => (
+            <SelectItem key={value} value={value}>
+              {t(`types.${value}`)}
             </SelectItem>
           ))}
         </SelectContent>
@@ -87,13 +89,13 @@ export function PropertyFilters() {
         onValueChange={(value) => commit({ status: value })}
       >
         <SelectTrigger className="sm:w-40">
-          <SelectValue placeholder="Status" />
+          <SelectValue placeholder={t('status')} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value={ALL}>All statuses</SelectItem>
-          {PROPERTY_STATUS_OPTIONS.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
+          <SelectItem value={ALL}>{t('allStatuses')}</SelectItem>
+          {PROPERTY_STATUS_VALUES.map((value) => (
+            <SelectItem key={value} value={value}>
+              {t(`statuses.${value}`)}
             </SelectItem>
           ))}
         </SelectContent>

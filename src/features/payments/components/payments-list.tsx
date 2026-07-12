@@ -1,8 +1,8 @@
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import { Download, Plus, Wallet } from 'lucide-react';
 import { paymentService } from '../services/payment.service';
 import type { PaymentFilters } from '../validators/payment.validators';
-import { PAYMENT_METHOD_LABELS } from '../constants';
 import { EmptyState } from '@/shared/components/empty-state';
 import { Button } from '@/shared/components/ui/button';
 import { Badge } from '@/shared/components/ui/badge';
@@ -28,17 +28,18 @@ export async function PaymentsList({
     ownerId,
     filters,
   );
+  const t = await getTranslations('payments');
 
   if (items.length === 0) {
     return (
       <EmptyState
         icon={Wallet}
-        title="No payments recorded yet"
-        description="Register your first payment to generate a receipt and update your dashboard."
+        title={t('emptyTitle')}
+        description={t('emptyDesc')}
         action={
           <Button asChild>
             <Link href="/app/payments/new">
-              <Plus className="size-4" /> Register payment
+              <Plus className="size-4" /> {t('add')}
             </Link>
           </Button>
         }
@@ -52,11 +53,11 @@ export async function PaymentsList({
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead>Date</TableHead>
-              <TableHead>Property / Tenant</TableHead>
-              <TableHead>Method</TableHead>
-              <TableHead>Receipt</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
+              <TableHead>{t('colDate')}</TableHead>
+              <TableHead>{t('colPropertyTenant')}</TableHead>
+              <TableHead>{t('colMethod')}</TableHead>
+              <TableHead>{t('colReceipt')}</TableHead>
+              <TableHead className="text-right">{t('colAmount')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -77,7 +78,7 @@ export async function PaymentsList({
                 </TableCell>
                 <TableCell>
                   <Badge variant="secondary">
-                    {PAYMENT_METHOD_LABELS[payment.method]}
+                    {t(`methods.${payment.method}`)}
                   </Badge>
                 </TableCell>
                 <TableCell>

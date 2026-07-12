@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server';
 import { Download, ScrollText } from 'lucide-react';
 import { statementService } from '../services/statement.service';
 import type { StatementFilters } from '../validators/statement.validators';
@@ -26,13 +27,14 @@ export async function StatementsList({
     ownerId,
     filters,
   );
+  const t = await getTranslations('statements');
 
   if (items.length === 0) {
     return (
       <EmptyState
         icon={ScrollText}
-        title="No statements yet"
-        description="Generate a monthly statement to summarise charges, payments and outstanding balance for any contract."
+        title={t('emptyTitle')}
+        description={t('emptyDesc')}
       />
     );
   }
@@ -43,12 +45,14 @@ export async function StatementsList({
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead>Number</TableHead>
-              <TableHead>Period</TableHead>
-              <TableHead>Property / Tenant</TableHead>
-              <TableHead className="text-right">Paid</TableHead>
-              <TableHead className="text-right">Outstanding</TableHead>
-              <TableHead className="text-right">PDF</TableHead>
+              <TableHead>{t('colNumber')}</TableHead>
+              <TableHead>{t('colPeriod')}</TableHead>
+              <TableHead>{t('colPropertyTenant')}</TableHead>
+              <TableHead className="text-right">{t('colPaid')}</TableHead>
+              <TableHead className="text-right">
+                {t('colOutstanding')}
+              </TableHead>
+              <TableHead className="text-right">{t('colPdf')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -94,7 +98,7 @@ export async function StatementsList({
                       </Button>
                     ) : (
                       <span className="text-xs text-muted-foreground">
-                        Generating…
+                        {t('generating')}
                       </span>
                     )}
                   </TableCell>

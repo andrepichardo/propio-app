@@ -4,6 +4,7 @@ import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { PropertyStatus, PropertyType } from '@prisma/client';
 import {
@@ -11,8 +12,8 @@ import {
   type CreatePropertyInput,
 } from '../validators/property.validators';
 import {
-  PROPERTY_STATUS_OPTIONS,
-  PROPERTY_TYPE_OPTIONS,
+  PROPERTY_STATUS_VALUES,
+  PROPERTY_TYPE_VALUES,
 } from '../constants';
 import {
   createPropertyAction,
@@ -58,6 +59,7 @@ export function PropertyForm({
   propertyId,
   defaultValues,
 }: PropertyFormProps) {
+  const t = useTranslations('properties');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -91,7 +93,7 @@ export function PropertyForm({
       }
 
       toast.success(
-        mode === 'create' ? 'Property created.' : 'Property updated.',
+        mode === 'create' ? t('form.createdToast') : t('form.updatedToast'),
       );
       router.push(`/app/properties/${result.data.id}`);
       router.refresh();
@@ -103,7 +105,7 @@ export function PropertyForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Details</CardTitle>
+            <CardTitle className="text-base">{t('form.details')}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-5 sm:grid-cols-2">
             <FormField
@@ -111,9 +113,9 @@ export function PropertyForm({
               name="name"
               render={({ field }) => (
                 <FormItem className="sm:col-span-2">
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>{t('form.name')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Sunset Apartment 4B" {...field} />
+                    <Input placeholder={t('form.namePlaceholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -125,20 +127,20 @@ export function PropertyForm({
               name="type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Type</FormLabel>
+                  <FormLabel>{t('form.type')}</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select type" />
+                        <SelectValue placeholder={t('form.selectType')} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {PROPERTY_TYPE_OPTIONS.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
+                      {PROPERTY_TYPE_VALUES.map((value) => (
+                        <SelectItem key={value} value={value}>
+                          {t(`types.${value}`)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -153,20 +155,20 @@ export function PropertyForm({
               name="status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Status</FormLabel>
+                  <FormLabel>{t('form.status')}</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select status" />
+                        <SelectValue placeholder={t('form.selectStatus')} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {PROPERTY_STATUS_OPTIONS.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
+                      {PROPERTY_STATUS_VALUES.map((value) => (
+                        <SelectItem key={value} value={value}>
+                          {t(`statuses.${value}`)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -181,11 +183,11 @@ export function PropertyForm({
               name="description"
               render={({ field }) => (
                 <FormItem className="sm:col-span-2">
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>{t('form.description')}</FormLabel>
                   <FormControl>
                     <Textarea
                       rows={3}
-                      placeholder="Anything worth remembering about this property…"
+                      placeholder={t('form.descriptionPlaceholder')}
                       {...field}
                       value={field.value ?? ''}
                     />
@@ -199,7 +201,7 @@ export function PropertyForm({
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Features</CardTitle>
+            <CardTitle className="text-base">{t('form.features')}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-5 sm:grid-cols-3">
             <FormField
@@ -207,13 +209,13 @@ export function PropertyForm({
               name="bedrooms"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Bedrooms</FormLabel>
+                  <FormLabel>{t('form.bedrooms')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       inputMode="numeric"
                       min={0}
-                      placeholder="e.g. 2"
+                      placeholder="2"
                       {...field}
                       value={field.value ?? ''}
                     />
@@ -227,13 +229,13 @@ export function PropertyForm({
               name="bathrooms"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Bathrooms</FormLabel>
+                  <FormLabel>{t('form.bathrooms')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       inputMode="numeric"
                       min={0}
-                      placeholder="e.g. 2"
+                      placeholder="2"
                       {...field}
                       value={field.value ?? ''}
                     />
@@ -247,14 +249,14 @@ export function PropertyForm({
               name="areaSqm"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Area (m²)</FormLabel>
+                  <FormLabel>{t('form.area')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       inputMode="decimal"
                       min={0}
                       step="0.01"
-                      placeholder="e.g. 92"
+                      placeholder="92"
                       {...field}
                       value={field.value ?? ''}
                     />
@@ -268,7 +270,7 @@ export function PropertyForm({
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Location</CardTitle>
+            <CardTitle className="text-base">{t('form.location')}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-5 sm:grid-cols-2">
             <FormField
@@ -276,10 +278,10 @@ export function PropertyForm({
               name="addressLine"
               render={({ field }) => (
                 <FormItem className="sm:col-span-2">
-                  <FormLabel>Address</FormLabel>
+                  <FormLabel>{t('form.address')}</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="123 Ocean Drive"
+                      placeholder={t('form.addressPlaceholder')}
                       {...field}
                       value={field.value ?? ''}
                     />
@@ -293,7 +295,7 @@ export function PropertyForm({
               name="city"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>City</FormLabel>
+                  <FormLabel>{t('form.city')}</FormLabel>
                   <FormControl>
                     <Input {...field} value={field.value ?? ''} />
                   </FormControl>
@@ -306,7 +308,7 @@ export function PropertyForm({
               name="state"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>State / Region</FormLabel>
+                  <FormLabel>{t('form.state')}</FormLabel>
                   <FormControl>
                     <Input {...field} value={field.value ?? ''} />
                   </FormControl>
@@ -319,7 +321,7 @@ export function PropertyForm({
               name="postalCode"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Postal code</FormLabel>
+                  <FormLabel>{t('form.postalCode')}</FormLabel>
                   <FormControl>
                     <Input {...field} value={field.value ?? ''} />
                   </FormControl>
@@ -332,16 +334,16 @@ export function PropertyForm({
               name="country"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Country</FormLabel>
+                  <FormLabel>{t('form.country')}</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="US"
+                      placeholder="DO"
                       maxLength={2}
                       {...field}
                       value={field.value ?? ''}
                     />
                   </FormControl>
-                  <FormDescription>Two-letter country code.</FormDescription>
+                  <FormDescription>{t('form.countryHint')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -356,10 +358,10 @@ export function PropertyForm({
             onClick={() => router.back()}
             disabled={isPending}
           >
-            Cancel
+            {t('delete.cancel')}
           </Button>
           <Button type="submit" loading={isPending}>
-            {mode === 'create' ? 'Create property' : 'Save changes'}
+            {mode === 'create' ? t('form.create') : t('form.save')}
           </Button>
         </div>
       </form>

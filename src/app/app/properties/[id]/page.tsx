@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getTranslations } from 'next-intl/server';
 import {
   Building2,
   FileSignature,
@@ -13,9 +14,6 @@ import {
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { NotFoundError } from '@/shared/lib/errors';
 import { propertyService } from '@/features/properties/services/property.service';
-import {
-  PROPERTY_TYPE_LABELS,
-} from '@/features/properties/constants';
 import { PropertyStatusBadge } from '@/features/properties/components/property-status-badge';
 import { DeletePropertyDialog } from '@/features/properties/components/delete-property-dialog';
 import { PropertyPhotos } from '@/features/properties/components/property-photos';
@@ -24,7 +22,10 @@ import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { formatDate } from '@/shared/lib/format';
 
-export const metadata: Metadata = { title: 'Property' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return { title: t('property') };
+}
 
 export default async function PropertyDetailPage({
   params,
@@ -39,6 +40,8 @@ export default async function PropertyDetailPage({
     throw error;
   });
 
+  const t = await getTranslations('properties');
+
   const location = [
     property.addressLine,
     property.city,
@@ -50,24 +53,32 @@ export default async function PropertyDetailPage({
 
   const stats = [
     {
-      label: 'Contracts',
+      label: t('detail.contracts'),
       value: property._count.contracts,
       icon: FileSignature,
     },
-    { label: 'Documents', value: property._count.documents, icon: FolderClosed },
-    { label: 'Expenses', value: property._count.expenses, icon: ReceiptIcon },
+    {
+      label: t('detail.documents'),
+      value: property._count.documents,
+      icon: FolderClosed,
+    },
+    {
+      label: t('detail.expenses'),
+      value: property._count.expenses,
+      icon: ReceiptIcon,
+    },
   ];
 
   return (
     <div className="space-y-6">
       <PageHeader
         title={property.name}
-        description={PROPERTY_TYPE_LABELS[property.type]}
+        description={t(`types.${property.type}`)}
         actions={
           <>
             <Button variant="outline" asChild>
               <Link href={`/app/properties/${property.id}/edit`}>
-                <Pencil className="size-4" /> Edit
+                <Pencil className="size-4" /> {t('detail.edit')}
               </Link>
             </Button>
             <DeletePropertyDialog
@@ -101,7 +112,7 @@ export default async function PropertyDetailPage({
           <CardContent className="space-y-4 p-6">
             <div className="flex items-start gap-2 text-sm text-muted-foreground">
               <MapPin className="mt-0.5 size-4 shrink-0" />
-              <span>{location || 'No location set'}</span>
+              <span>{location || t('noLocation')}</span>
             </div>
             {property.description ? (
               <p className="text-sm leading-relaxed text-foreground/90">
@@ -109,11 +120,11 @@ export default async function PropertyDetailPage({
               </p>
             ) : (
               <p className="text-sm text-muted-foreground">
-                No description added yet.
+                {t('detail.noDescription')}
               </p>
             )}
             <p className="text-xs text-muted-foreground">
-              Added {formatDate(property.createdAt)}
+              {t('detail.added', { date: formatDate(property.createdAt) })}
             </p>
           </CardContent>
         </Card>
@@ -133,10 +144,16 @@ export default async function PropertyDetailPage({
 
           <Card>
             <CardContent className="space-y-3 p-6 text-sm">
-              <Detail label="Bedrooms" value={property.bedrooms ?? '—'} />
-              <Detail label="Bathrooms" value={property.bathrooms ?? '—'} />
               <Detail
-                label="Area"
+                label={t('detail.bedrooms')}
+                value={property.bedrooms ?? '—'}
+              />
+              <Detail
+                label={t('detail.bathrooms')}
+                value={property.bathrooms ?? '—'}
+              />
+              <Detail
+                label={t('detail.area')}
                 value={property.areaSqm ? `${property.areaSqm} m²` : '—'}
               />
             </CardContent>

@@ -5,7 +5,10 @@ import { MailCheck } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import { ResendVerificationForm } from '@/features/auth/components/resend-verification-form';
 
-export const metadata: Metadata = { title: 'Verify your email' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return { title: t('verifyEmail') };
+}
 
 export default async function VerifyEmailPage({
   searchParams,

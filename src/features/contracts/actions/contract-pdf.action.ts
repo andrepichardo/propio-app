@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+import { getTranslations } from 'next-intl/server';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { ValidationError } from '@/shared/lib/errors';
 import { type ActionResult, ok, toActionFailure } from '@/shared/lib/result';
@@ -21,7 +22,9 @@ export async function uploadContractPdfAction(
       .cuid()
       .safeParse(formData.get('contractId'));
     if (!contractId.success) {
-      throw new ValidationError('Missing contract reference.');
+      throw new ValidationError(
+        (await getTranslations('contracts.pdf'))('missingRef'),
+      );
     }
 
     const file = await readUploadedFile(formData.get('file'), {

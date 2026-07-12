@@ -3,7 +3,10 @@ import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { ForgotPasswordForm } from '@/features/auth/components/forgot-password-form';
 
-export const metadata: Metadata = { title: 'Forgot password' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return { title: t('forgotPassword') };
+}
 
 export default async function ForgotPasswordPage() {
   const t = await getTranslations('auth');

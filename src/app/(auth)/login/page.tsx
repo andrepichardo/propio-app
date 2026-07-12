@@ -6,7 +6,10 @@ import { Separator } from '@/shared/components/ui/separator';
 import { LoginForm } from '@/features/auth/components/login-form';
 import { OAuthButtons } from '@/features/auth/components/oauth-buttons';
 
-export const metadata: Metadata = { title: 'Sign in' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return { title: t('signIn') };
+}
 
 export default async function LoginPage({
   searchParams,

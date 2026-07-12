@@ -3,8 +3,10 @@ import {
   ActivityAction,
   NotificationType,
   type Prisma,
+  type PaymentMethod,
 } from '@prisma/client';
 import { format } from 'date-fns';
+import { getTranslations } from 'next-intl/server';
 import { prisma } from '@/shared/lib/prisma';
 import { paymentRepository } from '../repositories/payment.repository';
 import type {
@@ -17,7 +19,6 @@ import { formatCurrency } from '@/shared/lib/format';
 import { getStorage } from '@/shared/lib/storage';
 import { renderReceiptPdf } from '@/pdf/render';
 import { sendReceiptEmail } from '@/emails/send';
-import { PAYMENT_METHOD_LABELS } from '../constants';
 import { getUserPreferences } from '@/shared/lib/auth/preferences';
 import { clientEnv } from '@/shared/config/env';
 
@@ -170,7 +171,7 @@ export const paymentService = {
     amount: number;
     balanceAfter: number;
     currency: string;
-    method: keyof typeof PAYMENT_METHOD_LABELS;
+    method: PaymentMethod;
     reference?: string;
     issuedAt: Date;
     tenantName: string;
@@ -184,6 +185,10 @@ export const paymentService = {
         select: { name: true, email: true },
       });
       const prefs = await getUserPreferences(params.ownerId);
+      const tMethod = await getTranslations({
+        locale: prefs.locale,
+        namespace: 'payments.methods',
+      });
 
       const pdf = await renderReceiptPdf({
         number: params.number,
@@ -195,7 +200,7 @@ export const paymentService = {
           params.currency,
           prefs.locale,
         ),
-        method: PAYMENT_METHOD_LABELS[params.method],
+        method: tMethod(params.method),
         reference: params.reference,
         ownerName: owner?.name ?? owner?.email ?? 'Owner',
         tenantName: params.tenantName,

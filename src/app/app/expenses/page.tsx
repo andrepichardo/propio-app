@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
+import { getTranslations } from 'next-intl/server';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { propertyService } from '@/features/properties/services/property.service';
 import { expenseFiltersSchema } from '@/features/expenses/validators/expense.validators';
@@ -9,7 +10,10 @@ import { CreateExpenseDialog } from '@/features/expenses/components/create-expen
 import { PageHeader } from '@/shared/components/page-header';
 import { Skeleton } from '@/shared/components/ui/skeleton';
 
-export const metadata: Metadata = { title: 'Expenses' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
+  return { title: t('expenses') };
+}
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -28,12 +32,13 @@ export default async function ExpensesPage({
     id: p.id,
     label: p.name,
   }));
+  const t = await getTranslations('expenses');
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Expenses"
-        description="Track costs to understand true profit per property."
+        title={t('title')}
+        description={t('subtitle')}
         actions={<CreateExpenseDialog properties={propertyOptions} />}
       />
       <ExpenseCategoryFilter />

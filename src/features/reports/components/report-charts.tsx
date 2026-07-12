@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import {
   Bar,
   BarChart,
@@ -39,6 +40,9 @@ export function ProfitBarChart({
   data: MonthlyReportRow[];
   currency: string;
 }) {
+  const t = useTranslations('reports');
+  const seriesLabel = (name: string) =>
+    name === 'revenue' ? t('chartRevenue') : t('chartExpenses');
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart data={data} margin={{ top: 8, right: 8, left: 4, bottom: 0 }}>
@@ -67,12 +71,12 @@ export function ProfitBarChart({
           }}
           formatter={(value: number, name: string) => [
             formatCurrency(value, currency),
-            name.charAt(0).toUpperCase() + name.slice(1),
+            seriesLabel(name),
           ]}
         />
         <Legend
           wrapperStyle={{ fontSize: 12 }}
-          formatter={(v: string) => v.charAt(0).toUpperCase() + v.slice(1)}
+          formatter={(v: string) => seriesLabel(v)}
         />
         <Bar dataKey="revenue" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
         <Bar dataKey="expenses" fill="hsl(var(--warning))" radius={[4, 4, 0, 0]} />
@@ -88,10 +92,11 @@ export function ExpenseBreakdownChart({
   data: { label: string; value: number }[];
   currency: string;
 }) {
+  const t = useTranslations('reports');
   if (data.length === 0) {
     return (
       <div className="flex h-[300px] items-center justify-center text-sm text-muted-foreground">
-        No expenses recorded for this year.
+        {t('noExpenses')}
       </div>
     );
   }

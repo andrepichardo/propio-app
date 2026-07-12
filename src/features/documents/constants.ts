@@ -8,13 +8,9 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-export const DOCUMENT_TYPE_LABELS: Record<DocumentType, string> = {
-  [DocumentType.CONTRACT]: 'Contract',
-  [DocumentType.PHOTO]: 'Photo',
-  [DocumentType.INVOICE]: 'Invoice',
-  [DocumentType.ID]: 'Identification',
-  [DocumentType.OTHER]: 'Other',
-};
+/** Keys under `documents.types` are the enum values; translate with
+ * `t(\`types.${value}\`)`. */
+export const DOCUMENT_TYPE_VALUES = Object.values(DocumentType);
 
 export const DOCUMENT_TYPE_ICONS: Record<DocumentType, LucideIcon> = {
   [DocumentType.CONTRACT]: FileSignature,
@@ -23,10 +19,6 @@ export const DOCUMENT_TYPE_ICONS: Record<DocumentType, LucideIcon> = {
   [DocumentType.ID]: IdCard,
   [DocumentType.OTHER]: FileText,
 };
-
-export const DOCUMENT_TYPE_OPTIONS = Object.values(DocumentType).map(
-  (value) => ({ value, label: DOCUMENT_TYPE_LABELS[value] }),
-);
 
 export function formatFileSize(bytes?: number | null): string {
   if (!bytes) return '—';

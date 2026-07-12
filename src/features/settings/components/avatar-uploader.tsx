@@ -2,6 +2,7 @@
 
 import { useRef, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Camera, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -23,6 +24,7 @@ export function AvatarUploader({
   name?: string | null;
   image?: string | null;
 }) {
+  const t = useTranslations('settings');
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
@@ -37,7 +39,7 @@ export function AvatarUploader({
         toast.error(result.error);
         return;
       }
-      toast.success('Profile photo updated.');
+      toast.success(t('photoUpdated'));
       router.refresh();
     });
   }
@@ -49,7 +51,7 @@ export function AvatarUploader({
         toast.error(result.error);
         return;
       }
-      toast.success('Profile photo removed.');
+      toast.success(t('photoRemoved'));
       router.refresh();
     });
   }
@@ -71,7 +73,7 @@ export function AvatarUploader({
             loading={isPending}
             onClick={() => inputRef.current?.click()}
           >
-            <Camera className="size-4" /> Change photo
+            <Camera className="size-4" /> {t('changePhoto')}
           </Button>
           {image ? (
             <Button
@@ -81,13 +83,11 @@ export function AvatarUploader({
               disabled={isPending}
               onClick={onRemove}
             >
-              <Trash2 className="size-4" /> Remove
+              <Trash2 className="size-4" /> {t('remove')}
             </Button>
           ) : null}
         </div>
-        <p className="text-xs text-muted-foreground">
-          JPG, PNG or WebP — up to 2 MB.
-        </p>
+        <p className="text-xs text-muted-foreground">{t('photoHint')}</p>
       </div>
       <input
         ref={inputRef}

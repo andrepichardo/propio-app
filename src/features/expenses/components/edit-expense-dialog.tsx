@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Pencil } from 'lucide-react';
 import type { ExpenseCategory } from '@prisma/client';
@@ -46,6 +47,7 @@ export function EditExpenseDialog({
   expense: EditableExpense;
   properties: OptionItem[];
 }) {
+  const t = useTranslations('expenses');
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -72,7 +74,7 @@ export function EditExpenseDialog({
         toast.error(result.error);
         return;
       }
-      toast.success('Expense updated.');
+      toast.success(t('updatedToast'));
       setOpen(false);
       router.refresh();
     });
@@ -85,15 +87,15 @@ export function EditExpenseDialog({
           variant="ghost"
           size="icon"
           className="size-8 text-muted-foreground hover:text-foreground"
-          aria-label="Edit expense"
+          aria-label={t('editAria')}
         >
           <Pencil className="size-4" />
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>Edit expense</DialogTitle>
-          <DialogDescription>Update the expense details.</DialogDescription>
+          <DialogTitle>{t('edit.title')}</DialogTitle>
+          <DialogDescription>{t('edit.desc')}</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -105,10 +107,10 @@ export function EditExpenseDialog({
                 onClick={() => setOpen(false)}
                 disabled={isPending}
               >
-                Cancel
+                {t('edit.cancel')}
               </Button>
               <Button type="submit" loading={isPending}>
-                Save changes
+                {t('edit.save')}
               </Button>
             </DialogFooter>
           </form>

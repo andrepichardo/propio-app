@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ContractStatus } from '@prisma/client';
@@ -12,7 +13,7 @@ import {
   createContractSchema,
   type CreateContractInput,
 } from '../validators/contract.validators';
-import { CONTRACT_STATUS_OPTIONS } from '../constants';
+import { CONTRACT_STATUS_VALUES } from '../constants';
 import {
   createContractAction,
   updateContractAction,
@@ -70,6 +71,7 @@ export function ContractForm({
   tenants,
   defaultValues,
 }: ContractFormProps) {
+  const t = useTranslations('contracts');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -100,7 +102,9 @@ export function ContractForm({
         toast.error(result.error);
         return;
       }
-      toast.success(mode === 'create' ? 'Contract created.' : 'Contract updated.');
+      toast.success(
+        mode === 'create' ? t('form.createdToast') : t('form.updatedToast'),
+      );
       router.push(`/app/contracts/${result.data.id}`);
       router.refresh();
     });
@@ -110,15 +114,15 @@ export function ContractForm({
     return (
       <EmptyState
         icon={FileSignature}
-        title="You need a property and a tenant first"
-        description="Contracts link a tenant to a property. Create both, then come back to draft the contract."
+        title={t('needBoth.title')}
+        description={t('needBoth.desc')}
         action={
           <div className="flex gap-2">
             <Button asChild variant="outline">
-              <Link href="/app/properties/new">Add property</Link>
+              <Link href="/app/properties/new">{t('needBoth.addProperty')}</Link>
             </Button>
             <Button asChild>
-              <Link href="/app/tenants/new">Add tenant</Link>
+              <Link href="/app/tenants/new">{t('needBoth.addTenant')}</Link>
             </Button>
           </div>
         }
@@ -131,7 +135,7 @@ export function ContractForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Parties</CardTitle>
+            <CardTitle className="text-base">{t('form.parties')}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-5 sm:grid-cols-2">
             <FormField
@@ -139,11 +143,11 @@ export function ContractForm({
               name="propertyId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Property</FormLabel>
+                  <FormLabel>{t('form.property')}</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select property" />
+                        <SelectValue placeholder={t('form.selectProperty')} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -163,17 +167,17 @@ export function ContractForm({
               name="tenantId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tenant</FormLabel>
+                  <FormLabel>{t('form.tenant')}</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select tenant" />
+                        <SelectValue placeholder={t('form.selectTenant')} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {tenants.map((t) => (
-                        <SelectItem key={t.id} value={t.id}>
-                          {t.label}
+                      {tenants.map((tenant) => (
+                        <SelectItem key={tenant.id} value={tenant.id}>
+                          {tenant.label}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -187,7 +191,7 @@ export function ContractForm({
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Terms</CardTitle>
+            <CardTitle className="text-base">{t('form.terms')}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-5 sm:grid-cols-2">
             <FormField
@@ -195,7 +199,7 @@ export function ContractForm({
               name="startDate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Start date</FormLabel>
+                  <FormLabel>{t('form.startDate')}</FormLabel>
                   <FormControl>
                     <Input
                       type="date"
@@ -212,7 +216,7 @@ export function ContractForm({
               name="endDate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>End date</FormLabel>
+                  <FormLabel>{t('form.endDate')}</FormLabel>
                   <FormControl>
                     <Input
                       type="date"
@@ -222,7 +226,7 @@ export function ContractForm({
                       }
                     />
                   </FormControl>
-                  <FormDescription>Leave empty for open-ended.</FormDescription>
+                  <FormDescription>{t('form.openEnded')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -232,7 +236,7 @@ export function ContractForm({
               name="monthlyRent"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Monthly rent</FormLabel>
+                  <FormLabel>{t('form.monthlyRent')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -251,11 +255,11 @@ export function ContractForm({
               name="dueDay"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Rent due day</FormLabel>
+                  <FormLabel>{t('form.dueDay')}</FormLabel>
                   <FormControl>
                     <Input type="number" min="1" max="31" {...field} />
                   </FormControl>
-                  <FormDescription>Day of the month rent is due.</FormDescription>
+                  <FormDescription>{t('form.dueDayHint')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -265,7 +269,7 @@ export function ContractForm({
               name="securityDeposit"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Security deposit</FormLabel>
+                  <FormLabel>{t('form.securityDeposit')}</FormLabel>
                   <FormControl>
                     <Input type="number" step="0.01" min="0" {...field} />
                   </FormControl>
@@ -278,7 +282,7 @@ export function ContractForm({
               name="status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Status</FormLabel>
+                  <FormLabel>{t('form.status')}</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
@@ -286,9 +290,9 @@ export function ContractForm({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {CONTRACT_STATUS_OPTIONS.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
+                      {CONTRACT_STATUS_VALUES.map((value) => (
+                        <SelectItem key={value} value={value}>
+                          {t(`statuses.${value}`)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -303,9 +307,9 @@ export function ContractForm({
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3 sm:col-span-2">
                   <div>
-                    <FormLabel>Maintenance included</FormLabel>
+                    <FormLabel>{t('form.maintenanceIncluded')}</FormLabel>
                     <FormDescription>
-                      Rent covers routine maintenance.
+                      {t('form.maintenanceHint')}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -322,7 +326,7 @@ export function ContractForm({
               name="notes"
               render={({ field }) => (
                 <FormItem className="sm:col-span-2">
-                  <FormLabel>Notes</FormLabel>
+                  <FormLabel>{t('form.notes')}</FormLabel>
                   <FormControl>
                     <Textarea rows={3} {...field} value={field.value ?? ''} />
                   </FormControl>
@@ -340,10 +344,10 @@ export function ContractForm({
             onClick={() => router.back()}
             disabled={isPending}
           >
-            Cancel
+            {t('form.cancel')}
           </Button>
           <Button type="submit" loading={isPending}>
-            {mode === 'create' ? 'Create contract' : 'Save changes'}
+            {mode === 'create' ? t('form.create') : t('form.save')}
           </Button>
         </div>
       </form>

@@ -2,6 +2,7 @@
 
 import { useRef, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { FileText, Upload } from 'lucide-react';
 import { uploadContractPdfAction } from '../actions/contract-pdf.action';
@@ -20,6 +21,7 @@ export function ContractPdfUpload({
   contractId: string;
   pdfUrl?: string | null;
 }) {
+  const t = useTranslations('contracts.pdf');
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
@@ -39,7 +41,7 @@ export function ContractPdfUpload({
         toast.error(result.error);
         return;
       }
-      toast.success('Contract PDF attached.');
+      toast.success(t('attachedToast'));
       router.refresh();
     });
   }
@@ -47,7 +49,7 @@ export function ContractPdfUpload({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Signed contract</CardTitle>
+        <CardTitle className="text-base">{t('title')}</CardTitle>
       </CardHeader>
       <CardContent className="flex items-center justify-between gap-3">
         {pdfUrl ? (
@@ -57,12 +59,10 @@ export function ContractPdfUpload({
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
           >
-            <FileText className="size-4" /> View contract PDF
+            <FileText className="size-4" /> {t('view')}
           </a>
         ) : (
-          <p className="text-sm text-muted-foreground">
-            No signed contract attached yet.
-          </p>
+          <p className="text-sm text-muted-foreground">{t('none')}</p>
         )}
         <Button
           variant="outline"
@@ -71,7 +71,7 @@ export function ContractPdfUpload({
           onClick={() => inputRef.current?.click()}
         >
           {!isPending && <Upload className="size-4" />}
-          {pdfUrl ? 'Replace' : 'Upload PDF'}
+          {pdfUrl ? t('replace') : t('upload')}
         </Button>
         <input
           ref={inputRef}

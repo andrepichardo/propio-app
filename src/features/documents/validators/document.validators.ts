@@ -13,7 +13,7 @@ export const ALLOWED_MIME_TYPES = [
 ] as const;
 
 export const uploadDocumentSchema = z.object({
-  name: z.string().trim().min(1, 'Name is required.').max(160),
+  name: z.string().trim().min(1, 'documentNameRequired').max(160),
   type: z.nativeEnum(DocumentType).default(DocumentType.OTHER),
   propertyId: z
     .string()

@@ -4,6 +4,7 @@ import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import {
   updateProfileSchema,
@@ -39,6 +40,7 @@ export function ProfileForm({
   email: string;
   image?: string | null;
 }) {
+  const t = useTranslations('settings');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -55,7 +57,7 @@ export function ProfileForm({
         toast.error(result.error);
         return;
       }
-      toast.success('Profile updated.');
+      toast.success(t('profileUpdated'));
       router.refresh();
     });
   }
@@ -65,7 +67,7 @@ export function ProfileForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Photo</CardTitle>
+            <CardTitle className="text-base">{t('photo')}</CardTitle>
           </CardHeader>
           <CardContent>
             <AvatarUploader name={form.watch('name')} image={image} />
@@ -74,7 +76,7 @@ export function ProfileForm({
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Identity</CardTitle>
+            <CardTitle className="text-base">{t('identity')}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-5 sm:grid-cols-2">
             <FormField
@@ -82,7 +84,7 @@ export function ProfileForm({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full name</FormLabel>
+                  <FormLabel>{t('fullName')}</FormLabel>
                   <FormControl>
                     <Input autoComplete="name" {...field} />
                   </FormControl>
@@ -91,18 +93,16 @@ export function ProfileForm({
               )}
             />
             <div className="space-y-1.5">
-              <Label>Email</Label>
+              <Label>{t('email')}</Label>
               <Input value={email} disabled />
-              <p className="text-xs text-muted-foreground">
-                Contact support to change your sign-in email.
-              </p>
+              <p className="text-xs text-muted-foreground">{t('emailHint')}</p>
             </div>
           </CardContent>
         </Card>
 
         <div className="flex justify-end">
           <Button type="submit" loading={isPending}>
-            Save changes
+            {t('save')}
           </Button>
         </div>
       </form>

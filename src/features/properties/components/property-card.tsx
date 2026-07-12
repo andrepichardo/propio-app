@@ -1,12 +1,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { Building2, MapPin, FileSignature } from 'lucide-react';
 import type { PropertyListItem } from '../repositories/property.repository';
-import { PROPERTY_TYPE_LABELS } from '../constants';
 import { PropertyStatusBadge } from './property-status-badge';
 import { Card } from '@/shared/components/ui/card';
 
 export function PropertyCard({ property }: { property: PropertyListItem }) {
+  const t = useTranslations('properties');
   const location = [property.city, property.country]
     .filter(Boolean)
     .join(', ');
@@ -38,13 +39,13 @@ export function PropertyCard({ property }: { property: PropertyListItem }) {
               {property.name}
             </h3>
             <p className="text-xs text-muted-foreground">
-              {PROPERTY_TYPE_LABELS[property.type]}
+              {t(`types.${property.type}`)}
             </p>
           </div>
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1 truncate">
               <MapPin className="size-3.5 shrink-0" />
-              {location || 'No location set'}
+              {location || t('noLocation')}
             </span>
             <span className="inline-flex items-center gap-1 shrink-0">
               <FileSignature className="size-3.5" />

@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server';
 import {
   Building2,
   DoorOpen,
@@ -35,44 +36,52 @@ export async function DashboardOverview({
   currency: string;
 }) {
   const summary = await getDashboardSummary(ownerId);
+  const t = await getTranslations('dashboard');
 
   return (
     <div className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          label="Total properties"
+          label={t('totalProperties')}
           value={String(summary.properties.total)}
           icon={Building2}
-          hint={`${summary.properties.occupied} occupied · ${summary.properties.available} available`}
+          hint={t('occupiedAvailable', {
+            occupied: summary.properties.occupied,
+            available: summary.properties.available,
+          })}
         />
         <StatCard
-          label="Occupancy rate"
+          label={t('occupancyRate')}
           value={formatPercent(summary.occupancyRate)}
           icon={DoorOpen}
           accent="success"
-          hint={`${summary.properties.maintenance} in maintenance`}
+          hint={t('inMaintenance', { count: summary.properties.maintenance })}
         />
         <StatCard
-          label="Monthly revenue"
+          label={t('monthlyRevenue')}
           value={formatCurrency(summary.finance.monthlyRevenue, currency)}
           icon={TrendingUp}
           trend={summary.finance.revenueTrendPct}
           accent="success"
         />
         <StatCard
-          label="Net profit"
+          label={t('netProfit')}
           value={formatCurrency(summary.finance.netProfit, currency)}
           icon={summary.finance.netProfit >= 0 ? Wallet : TrendingDown}
           accent={summary.finance.netProfit >= 0 ? 'default' : 'destructive'}
-          hint={`${formatCurrency(summary.finance.monthlyExpenses, currency)} expenses`}
+          hint={t('expensesHint', {
+            amount: formatCurrency(summary.finance.monthlyExpenses, currency),
+          })}
         />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Revenue vs expenses</CardTitle>
-            <CardDescription>Last 6 months</CardDescription>
+            <CardTitle className="text-base">
+              {t('revenueVsExpenses')}
+            </CardTitle>
+            <CardDescription>{t('last6Months')}</CardDescription>
           </CardHeader>
           <CardContent>
             <RevenueChart data={summary.monthlySeries} currency={currency} />
