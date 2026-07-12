@@ -3,6 +3,7 @@
 import * as React from 'react';
 import type * as LabelPrimitive from '@radix-ui/react-label';
 import { Slot } from '@radix-ui/react-slot';
+import { useTranslations } from 'next-intl';
 import {
   Controller,
   type ControllerProps,
@@ -133,7 +134,12 @@ const FormMessage = React.forwardRef<
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField();
-  const body = error ? String(error?.message ?? '') : children;
+  const t = useTranslations('validation');
+  const raw = error ? String(error?.message ?? '') : children;
+  // Validator messages are i18n keys (e.g. "passwordMin"); translate them,
+  // falling back to the raw text for any plain-string message.
+  const body =
+    typeof raw === 'string' && raw.length > 0 && t.has(raw) ? t(raw) : raw;
   if (!body) return null;
   return (
     <p

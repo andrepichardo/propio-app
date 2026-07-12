@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { Bell, Plus } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import {
@@ -16,6 +17,7 @@ interface TopbarProps {
 }
 
 export function Topbar({ user, unreadCount = 0 }: TopbarProps) {
+  const t = useTranslations('topbar');
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-2 border-b bg-background/80 px-4 backdrop-blur sm:px-6">
       <MobileNav />
@@ -26,11 +28,13 @@ export function Topbar({ user, unreadCount = 0 }: TopbarProps) {
             <Button asChild size="sm" className="gap-1.5">
               <Link href="/app/payments/new">
                 <Plus className="size-4" />
-                <span className="hidden sm:inline">Register payment</span>
+                <span className="hidden sm:inline">
+                  {t('registerPayment')}
+                </span>
               </Link>
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Record a new payment</TooltipContent>
+          <TooltipContent>{t('recordPayment')}</TooltipContent>
         </Tooltip>
 
         <Tooltip>
@@ -46,11 +50,11 @@ export function Topbar({ user, unreadCount = 0 }: TopbarProps) {
                 {unreadCount > 0 ? (
                   <span className="absolute right-1.5 top-1.5 flex size-2 items-center justify-center rounded-full bg-destructive" />
                 ) : null}
-                <span className="sr-only">Notifications</span>
+                <span className="sr-only">{t('notifications')}</span>
               </Link>
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Notifications</TooltipContent>
+          <TooltipContent>{t('notifications')}</TooltipContent>
         </Tooltip>
 
         <div className="ml-1">

@@ -1,6 +1,7 @@
 'use server';
 
 import { randomBytes, createHash } from 'crypto';
+import { getTranslations } from 'next-intl/server';
 import { prisma } from '@/shared/lib/prisma';
 import { hashPassword } from '@/shared/lib/auth/password';
 import {
@@ -30,8 +31,9 @@ export async function forgotPasswordAction(
   try {
     const parsed = forgotPasswordSchema.safeParse(input);
     if (!parsed.success) {
-      throw new ValidationError('Enter a valid email address.', {
-        email: ['Enter a valid email address.'],
+      const t = await getTranslations('auth.errors');
+      throw new ValidationError(t('invalidEmail'), {
+        email: ['email'],
       });
     }
 
@@ -67,10 +69,11 @@ export async function resetPasswordAction(
   input: unknown & { email?: string },
 ): Promise<ActionResult<{ reset: true }>> {
   try {
+    const t = await getTranslations('auth.errors');
     const parsed = resetPasswordSchema.safeParse(input);
     if (!parsed.success) {
       throw new ValidationError(
-        'Please correct the highlighted fields.',
+        t('fixFields'),
         parsed.error.flatten().fieldErrors as Record<string, string[]>,
       );
     }
@@ -87,11 +90,7 @@ export async function resetPasswordAction(
     });
 
     if (!record || record.expires < new Date()) {
-      throw new AppError(
-        'This reset link is invalid or has expired.',
-        'INVALID_TOKEN',
-        400,
-      );
+      throw new AppError(t('resetLinkInvalid'), 'INVALID_TOKEN', 400);
     }
 
     const hashedPassword = await hashPassword(parsed.data.password);

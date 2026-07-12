@@ -9,6 +9,14 @@ const optionalTrimmed = (max: number) =>
     .optional()
     .transform((v) => (v === '' ? undefined : v));
 
+/** A number field that treats an empty input as "not set" (undefined), so
+ * clearing it never coerces to 0. */
+const optionalNumber = (schema: z.ZodNumber) =>
+  z.preprocess(
+    (v) => (v === '' || v === null ? undefined : v),
+    schema.optional(),
+  );
+
 export const propertyBaseSchema = z.object({
   name: z
     .string()
@@ -23,15 +31,9 @@ export const propertyBaseSchema = z.object({
   state: optionalTrimmed(120),
   postalCode: optionalTrimmed(20),
   country: optionalTrimmed(2),
-  bedrooms: z.coerce
-    .number()
-    .int()
-    .min(0)
-    .max(100)
-    .optional()
-    .or(z.literal(undefined)),
-  bathrooms: z.coerce.number().int().min(0).max(100).optional(),
-  areaSqm: z.coerce.number().min(0).max(1_000_000).optional(),
+  bedrooms: optionalNumber(z.coerce.number().int().min(0).max(100)),
+  bathrooms: optionalNumber(z.coerce.number().int().min(0).max(100)),
+  areaSqm: optionalNumber(z.coerce.number().min(0).max(1_000_000)),
   coverImageUrl: z.string().url().optional().or(z.literal('')),
 });
 

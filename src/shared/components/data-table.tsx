@@ -9,6 +9,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { useTranslations } from 'next-intl';
 import { ArrowDown, ArrowUp, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
 import {
@@ -39,6 +40,7 @@ export function DataTable<TData, TValue>({
   emptyState,
   onRowClick,
 }: DataTableProps<TData, TValue>) {
+  const t = useTranslations('common');
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const table = useReactTable({
@@ -116,7 +118,7 @@ export function DataTable<TData, TValue>({
               <TableCell colSpan={columns.length} className="p-0">
                 {emptyState ?? (
                   <div className="py-12 text-center text-sm text-muted-foreground">
-                    No results.
+                    {t('noResults')}
                   </div>
                 )}
               </TableCell>

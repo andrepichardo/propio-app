@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useTranslations } from 'next-intl';
 import { MailWarning } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/shared/components/ui/button';
@@ -11,6 +12,7 @@ import { resendVerificationEmailAction } from '@/features/auth/actions/resend-ve
  * prompt until they confirm their address. We never hard-block the app.
  */
 export function VerifyEmailBanner() {
+  const t = useTranslations('auth.banner');
   const [isPending, startTransition] = useTransition();
   const [sent, setSent] = useState(false);
 
@@ -22,7 +24,7 @@ export function VerifyEmailBanner() {
         return;
       }
       setSent(true);
-      toast.success('Verification email sent. Check your inbox.');
+      toast.success(t('sentToast'));
     });
   }
 
@@ -30,7 +32,7 @@ export function VerifyEmailBanner() {
     <div className="flex items-center justify-between gap-3 border-b bg-warning/10 px-4 py-2.5 text-sm sm:px-6">
       <p className="flex items-center gap-2 text-foreground/90">
         <MailWarning className="size-4 shrink-0 text-warning" />
-        Please verify your email address to secure your account.
+        {t('message')}
       </p>
       <Button
         size="sm"
@@ -39,7 +41,7 @@ export function VerifyEmailBanner() {
         loading={isPending}
         disabled={sent}
       >
-        {sent ? 'Email sent' : 'Resend link'}
+        {sent ? t('sent') : t('resend')}
       </Button>
     </div>
   );

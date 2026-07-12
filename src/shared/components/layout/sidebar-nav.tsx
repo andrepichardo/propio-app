@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { cn } from '@/shared/lib/utils';
 import { navSections } from './nav-config';
 
@@ -16,14 +17,15 @@ function isActive(pathname: string, href: string): boolean {
 
 export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
+  const t = useTranslations('nav');
 
   return (
     <nav className="flex flex-col gap-6 px-3 py-4">
       {navSections.map((section, index) => (
-        <div key={section.title ?? index} className="space-y-1">
-          {section.title ? (
+        <div key={section.titleKey ?? index} className="space-y-1">
+          {section.titleKey ? (
             <p className="px-3 pb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground/70">
-              {section.title}
+              {t(section.titleKey)}
             </p>
           ) : null}
           {section.items.map((item) => {
@@ -42,7 +44,7 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
                 )}
               >
                 <item.icon className="size-[18px] shrink-0" />
-                {item.label}
+                {t(item.labelKey)}
               </Link>
             );
           })}

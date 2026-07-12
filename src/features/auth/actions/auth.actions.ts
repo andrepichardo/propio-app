@@ -1,6 +1,7 @@
 'use server';
 
 import { AuthError } from 'next-auth';
+import { getTranslations } from 'next-intl/server';
 import { signIn, signOut } from '@/shared/lib/auth/auth';
 import { loginSchema } from '@/shared/lib/auth/auth.validators';
 import { ValidationError } from '@/shared/lib/errors';
@@ -14,11 +15,12 @@ import { type ActionResult, fail, ok, toActionFailure } from '@/shared/lib/resul
 export async function loginAction(
   input: unknown,
 ): Promise<ActionResult<{ redirectTo: string }>> {
+  const t = await getTranslations('auth.errors');
   try {
     const parsed = loginSchema.safeParse(input);
     if (!parsed.success) {
       throw new ValidationError(
-        'Please correct the highlighted fields.',
+        t('fixFields'),
         parsed.error.flatten().fieldErrors as Record<string, string[]>,
       );
     }
@@ -34,14 +36,11 @@ export async function loginAction(
     if (error instanceof AuthError) {
       if (error.type === 'CredentialsSignin') {
         if ('code' in error && error.code === 'email_not_verified') {
-          return fail(
-            'Please verify your email before signing in. Check your inbox for the verification link.',
-            'EMAIL_NOT_VERIFIED',
-          );
+          return fail(t('emailNotVerified'), 'EMAIL_NOT_VERIFIED');
         }
-        return fail('Invalid email or password.', 'INVALID_CREDENTIALS');
+        return fail(t('invalidCredentials'), 'INVALID_CREDENTIALS');
       }
-      return fail('Could not sign you in. Please try again.', 'AUTH_ERROR');
+      return fail(t('authError'), 'AUTH_ERROR');
     }
     return toActionFailure(error);
   }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/shared/components/ui/button';
 import { oauthSignInAction } from '../actions/auth.actions';
@@ -37,6 +38,7 @@ function GitHubIcon() {
 }
 
 export function OAuthButtons() {
+  const t = useTranslations('auth.oauth');
   const [isPending, startTransition] = useTransition();
   const [active, setActive] = useState<'google' | 'github' | null>(null);
 
@@ -46,7 +48,7 @@ export function OAuthButtons() {
       try {
         await oauthSignInAction(provider);
       } catch {
-        toast.error('Could not start sign in. Please try again.');
+        toast.error(t('error'));
         setActive(null);
       }
     });

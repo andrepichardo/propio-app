@@ -13,45 +13,46 @@ import {
   Bell,
 } from 'lucide-react';
 
+/** `labelKey`/`titleKey` index into the `nav` message namespace. */
 export type NavItem = {
-  label: string;
+  labelKey: string;
   href: string;
   icon: LucideIcon;
 };
 
 export type NavSection = {
-  title?: string;
+  titleKey?: string;
   items: NavItem[];
 };
 
 /** Single source of truth for the sidebar and command palette. */
 export const navSections: NavSection[] = [
   {
-    items: [{ label: 'Dashboard', href: '/app', icon: LayoutDashboard }],
+    items: [{ labelKey: 'dashboard', href: '/app', icon: LayoutDashboard }],
   },
   {
-    title: 'Manage',
+    titleKey: 'manage',
     items: [
-      { label: 'Properties', href: '/app/properties', icon: Building2 },
-      { label: 'Tenants', href: '/app/tenants', icon: Users },
-      { label: 'Contracts', href: '/app/contracts', icon: FileSignature },
+      { labelKey: 'properties', href: '/app/properties', icon: Building2 },
+      { labelKey: 'tenants', href: '/app/tenants', icon: Users },
+      { labelKey: 'contracts', href: '/app/contracts', icon: FileSignature },
     ],
   },
   {
-    title: 'Money',
+    titleKey: 'money',
     items: [
-      { label: 'Payments', href: '/app/payments', icon: Wallet },
-      { label: 'Receipts', href: '/app/receipts', icon: Receipt },
-      { label: 'Statements', href: '/app/statements', icon: ScrollText },
-      { label: 'Expenses', href: '/app/expenses', icon: Banknote },
+      { labelKey: 'payments', href: '/app/payments', icon: Wallet },
+      { labelKey: 'receipts', href: '/app/receipts', icon: Receipt },
+      { labelKey: 'statements', href: '/app/statements', icon: ScrollText },
+      { labelKey: 'expenses', href: '/app/expenses', icon: Banknote },
     ],
   },
   {
-    title: 'Insights',
+    titleKey: 'insights',
     items: [
-      { label: 'Reports', href: '/app/reports', icon: FileBarChart },
-      { label: 'Documents', href: '/app/documents', icon: FolderClosed },
-      { label: 'Notifications', href: '/app/notifications', icon: Bell },
+      { labelKey: 'reports', href: '/app/reports', icon: FileBarChart },
+      { labelKey: 'documents', href: '/app/documents', icon: FolderClosed },
+      { labelKey: 'notifications', href: '/app/notifications', icon: Bell },
     ],
   },
 ];

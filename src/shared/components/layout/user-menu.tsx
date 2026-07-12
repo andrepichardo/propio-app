@@ -2,6 +2,7 @@
 
 import { useTransition } from 'react';
 import { useTheme } from 'next-themes';
+import { useTranslations } from 'next-intl';
 import { LogOut, Settings, SunMoon, User as UserIcon } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -23,6 +24,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu';
+import { LanguageMenuSub } from '@/shared/components/language/language-switcher';
 import { getInitials } from '@/shared/lib/format';
 import { signOutAction } from '@/features/auth/actions/auth.actions';
 
@@ -33,6 +35,7 @@ type UserMenuProps = {
 };
 
 export function UserMenu({ name, email, image }: UserMenuProps) {
+  const t = useTranslations('userMenu');
   const [isPending, startTransition] = useTransition();
   const { theme, setTheme } = useTheme();
 
@@ -53,7 +56,7 @@ export function UserMenu({ name, email, image }: UserMenuProps) {
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col">
             <span className="text-sm font-medium text-foreground">
-              {name ?? 'Your account'}
+              {name ?? t('account')}
             </span>
             {email ? (
               <span className="truncate text-xs text-muted-foreground">
@@ -65,30 +68,34 @@ export function UserMenu({ name, email, image }: UserMenuProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link href="/app/settings/profile">
-            <UserIcon /> Profile
+            <UserIcon /> {t('profile')}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/app/settings">
-            <Settings /> Settings
+            <Settings /> {t('settings')}
           </Link>
         </DropdownMenuItem>
+
+        <LanguageMenuSub />
 
         {/* `theme` is undefined until next-themes hydrates, but the menu only
             renders once opened (client-side), so there's no SSR mismatch. */}
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
-            <SunMoon /> Theme
+            <SunMoon /> {t('theme')}
           </DropdownMenuSubTrigger>
           <DropdownMenuPortal>
             <DropdownMenuSubContent>
               <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
                 <DropdownMenuRadioItem value="light">
-                  Light
+                  {t('themeLight')}
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="dark">Dark</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="dark">
+                  {t('themeDark')}
+                </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="system">
-                  System
+                  {t('themeSystem')}
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuSubContent>
@@ -106,7 +113,7 @@ export function UserMenu({ name, email, image }: UserMenuProps) {
             });
           }}
         >
-          <LogOut /> Sign out
+          <LogOut /> {t('signOut')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { CheckCircle2 } from 'lucide-react';
 import {
@@ -31,6 +32,7 @@ export function ResetPasswordForm({
   token: string;
   email: string;
 }) {
+  const t = useTranslations('auth');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [done, setDone] = useState(false);
@@ -57,10 +59,8 @@ export function ResetPasswordForm({
     return (
       <div className="flex flex-col items-center gap-3 rounded-xl border bg-muted/30 p-6 text-center">
         <CheckCircle2 className="size-8 text-success" />
-        <p className="font-medium">Password updated</p>
-        <p className="text-sm text-muted-foreground">
-          Redirecting you to sign in…
-        </p>
+        <p className="font-medium">{t('reset.doneTitle')}</p>
+        <p className="text-sm text-muted-foreground">{t('reset.doneBody')}</p>
       </div>
     );
   }
@@ -73,12 +73,12 @@ export function ResetPasswordForm({
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>New password</FormLabel>
+              <FormLabel>{t('reset.newPasswordLabel')}</FormLabel>
               <FormControl>
                 <Input
                   type="password"
                   autoComplete="new-password"
-                  placeholder="At least 8 characters"
+                  placeholder={t('reset.newPasswordPlaceholder')}
                   {...field}
                 />
               </FormControl>
@@ -91,12 +91,12 @@ export function ResetPasswordForm({
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm new password</FormLabel>
+              <FormLabel>{t('reset.confirmLabel')}</FormLabel>
               <FormControl>
                 <Input
                   type="password"
                   autoComplete="new-password"
-                  placeholder="Re-enter your password"
+                  placeholder={t('reset.confirmPlaceholder')}
                   {...field}
                 />
               </FormControl>
@@ -105,11 +105,14 @@ export function ResetPasswordForm({
           )}
         />
         <Button type="submit" className="w-full" loading={isPending}>
-          Reset password
+          {t('reset.submit')}
         </Button>
         <p className="text-center text-sm text-muted-foreground">
-          <Link href="/login" className="font-medium text-primary hover:underline">
-            Back to sign in
+          <Link
+            href="/login"
+            className="font-medium text-primary hover:underline"
+          >
+            {t('reset.backToSignIn')}
           </Link>
         </p>
       </form>

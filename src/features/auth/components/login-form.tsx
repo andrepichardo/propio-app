@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import {
   loginSchema,
@@ -23,6 +24,7 @@ import { Button } from '@/shared/components/ui/button';
 import { loginAction } from '../actions/auth.actions';
 
 export function LoginForm() {
+  const t = useTranslations('auth');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null);
@@ -43,7 +45,7 @@ export function LoginForm() {
         form.setError('password', { message: ' ' });
         return;
       }
-      toast.success('Welcome back!');
+      toast.success(t('login.welcomeToast'));
       router.push(result.data.redirectTo);
       router.refresh();
     });
@@ -57,12 +59,12 @@ export function LoginForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t('emailLabel')}</FormLabel>
               <FormControl>
                 <Input
                   type="email"
                   autoComplete="email"
-                  placeholder="you@example.com"
+                  placeholder={t('emailPlaceholder')}
                   {...field}
                 />
               </FormControl>
@@ -76,12 +78,12 @@ export function LoginForm() {
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center justify-between">
-                <FormLabel>Password</FormLabel>
+                <FormLabel>{t('passwordLabel')}</FormLabel>
                 <Link
                   href="/forgot-password"
                   className="text-xs font-medium text-primary hover:underline"
                 >
-                  Forgot password?
+                  {t('login.forgotPassword')}
                 </Link>
               </div>
               <FormControl>
@@ -97,16 +99,16 @@ export function LoginForm() {
           )}
         />
         <Button type="submit" className="w-full" loading={isPending}>
-          Sign in
+          {t('login.submit')}
         </Button>
         {unverifiedEmail && (
           <p className="text-center text-sm text-muted-foreground">
-            Email not verified.{' '}
+            {t('login.emailNotVerified')}{' '}
             <Link
               href={`/verify-email?email=${encodeURIComponent(unverifiedEmail)}`}
               className="font-medium text-primary hover:underline"
             >
-              Resend verification link
+              {t('login.resendVerification')}
             </Link>
           </p>
         )}

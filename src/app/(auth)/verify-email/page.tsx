@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import { MailCheck } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import { ResendVerificationForm } from '@/features/auth/components/resend-verification-form';
@@ -12,6 +13,7 @@ export default async function VerifyEmailPage({
   searchParams: Promise<{ email?: string }>;
 }) {
   const { email } = await searchParams;
+  const t = await getTranslations('auth');
 
   return (
     <div className="flex flex-col items-center gap-4 text-center">
@@ -20,28 +22,25 @@ export default async function VerifyEmailPage({
       </div>
       <div className="space-y-1.5">
         <h1 className="text-2xl font-semibold tracking-tight">
-          Check your email
+          {t('verify.title')}
         </h1>
         <p className="text-sm text-muted-foreground">
-          {email ? (
-            <>
-              We’ve sent a verification link to{' '}
-              <span className="font-medium text-foreground">{email}</span>.
-              Click it to activate your account.
-            </>
-          ) : (
-            <>Enter your email below and we’ll send you a verification link.</>
-          )}
+          {email
+            ? t.rich('verify.bodyWithEmail', {
+                email,
+                b: (chunks) => (
+                  <span className="font-medium text-foreground">{chunks}</span>
+                ),
+              })
+            : t('verify.bodyNoEmail')}
         </p>
       </div>
       {email && (
-        <p className="text-xs text-muted-foreground">
-          Didn’t get it? Check your spam folder, or resend below.
-        </p>
+        <p className="text-xs text-muted-foreground">{t('verify.spamHint')}</p>
       )}
       <ResendVerificationForm initialEmail={email} />
       <Button variant="ghost" asChild>
-        <Link href="/login">Back to sign in</Link>
+        <Link href="/login">{t('verify.backToSignIn')}</Link>
       </Button>
     </div>
   );

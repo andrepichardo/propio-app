@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 
@@ -19,6 +20,7 @@ export function PaginationControls({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const t = useTranslations();
 
   function goTo(nextPage: number) {
     const params = new URLSearchParams(searchParams.toString());
@@ -32,7 +34,7 @@ export function PaginationControls({
   return (
     <div className="flex items-center justify-between pt-2">
       <p className="text-sm text-muted-foreground">
-        Page {page} of {pageCount} · {total} total
+        {t('pagination.pageInfo', { page, pageCount, total })}
       </p>
       <div className="flex items-center gap-2">
         <Button
@@ -41,7 +43,7 @@ export function PaginationControls({
           disabled={page <= 1}
           onClick={() => goTo(page - 1)}
         >
-          <ChevronLeft className="size-4" /> Previous
+          <ChevronLeft className="size-4" /> {t('common.previous')}
         </Button>
         <Button
           variant="outline"
@@ -49,7 +51,7 @@ export function PaginationControls({
           disabled={page >= pageCount}
           onClick={() => goTo(page + 1)}
         >
-          Next <ChevronRight className="size-4" />
+          {t('common.next')} <ChevronRight className="size-4" />
         </Button>
       </div>
     </div>

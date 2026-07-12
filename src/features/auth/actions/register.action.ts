@@ -1,5 +1,6 @@
 'use server';
 
+import { getTranslations } from 'next-intl/server';
 import { prisma } from '@/shared/lib/prisma';
 import { hashPassword } from '@/shared/lib/auth/password';
 import { registerSchema } from '@/shared/lib/auth/auth.validators';
@@ -16,11 +17,12 @@ import { issueVerificationEmail } from '../services/email-verification.service';
 export async function registerAction(
   input: unknown,
 ): Promise<ActionResult<{ id: string; email: string }>> {
+  const t = await getTranslations('auth.errors');
   try {
     const parsed = registerSchema.safeParse(input);
     if (!parsed.success) {
       throw new ValidationError(
-        'Please correct the highlighted fields.',
+        t('fixFields'),
         parsed.error.flatten().fieldErrors as Record<string, string[]>,
       );
     }
@@ -29,7 +31,7 @@ export async function registerAction(
 
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
-      throw new ConflictError('An account with this email already exists.');
+      throw new ConflictError(t('emailExists'));
     }
 
     const hashedPassword = await hashPassword(parsed.data.password);

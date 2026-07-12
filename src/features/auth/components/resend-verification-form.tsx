@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useTransition } from 'react';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
@@ -10,15 +11,12 @@ import { resendVerificationPublicAction } from '../actions/resend-verification-p
  * request the server would silently skip. */
 const COOLDOWN_SECONDS = 60;
 
-/** Generic message shown regardless of outcome, to avoid account enumeration. */
-const GENERIC_MESSAGE =
-  "If an unverified account exists for that email, we've sent a new link.";
-
 export function ResendVerificationForm({
   initialEmail,
 }: {
   initialEmail?: string;
 }) {
+  const t = useTranslations('auth');
   const knownEmail = Boolean(initialEmail);
   const [email, setEmail] = useState(initialEmail ?? '');
   // Arriving from registration means a verification email was just issued, so
@@ -44,7 +42,8 @@ export function ResendVerificationForm({
         toast.error(result.error);
         return;
       }
-      toast.success(GENERIC_MESSAGE);
+      // Generic message regardless of outcome, to avoid account enumeration.
+      toast.success(t('verify.resendGeneric'));
       setSecondsLeft(COOLDOWN_SECONDS);
     });
   }
@@ -57,7 +56,7 @@ export function ResendVerificationForm({
         <Input
           type="email"
           autoComplete="email"
-          placeholder="you@example.com"
+          placeholder={t('emailPlaceholder')}
           value={email}
           onChange={(event) => setEmail(event.target.value)}
         />
@@ -70,8 +69,8 @@ export function ResendVerificationForm({
         disabled={coolingDown || email.trim().length === 0}
       >
         {coolingDown
-          ? `Resend available in ${secondsLeft}s`
-          : 'Resend verification email'}
+          ? t('verify.resendCooldown', { seconds: secondsLeft })
+          : t('verify.resend')}
       </Button>
     </div>
   );

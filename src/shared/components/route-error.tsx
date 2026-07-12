@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { AlertTriangle, RotateCw } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 
@@ -11,12 +12,14 @@ import { Button } from '@/shared/components/ui/button';
 export function RouteError({
   error,
   reset,
-  title = 'Something went wrong',
+  title,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
   title?: string;
 }) {
+  const t = useTranslations('common');
+
   useEffect(() => {
     console.error(error);
   }, [error]);
@@ -27,13 +30,13 @@ export function RouteError({
         <AlertTriangle className="size-6" />
       </div>
       <div className="space-y-1">
-        <h2 className="text-lg font-semibold">{title}</h2>
+        <h2 className="text-lg font-semibold">{title ?? t('somethingWrong')}</h2>
         <p className="max-w-sm text-sm text-muted-foreground">
-          We hit an unexpected error. Try again — your data is safe.
+          {t('errorHint')}
         </p>
       </div>
       <Button onClick={reset}>
-        <RotateCw className="size-4" /> Try again
+        <RotateCw className="size-4" /> {t('tryAgain')}
       </Button>
     </div>
   );

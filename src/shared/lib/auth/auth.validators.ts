@@ -5,44 +5,43 @@ export const credentialsSchema = z.object({
   password: z.string().min(8),
 });
 
+// Validation messages are i18n keys (namespace `validation`); `FormMessage`
+// translates them at render time, so schemas stay shared between client & server.
 export const registerSchema = z
   .object({
-    name: z.string().min(2, 'Please enter your name.').max(80),
-    email: z.string().email('Enter a valid email address.'),
+    name: z.string().min(2, 'nameRequired').max(80),
+    email: z.string().email('email'),
     password: z
       .string()
-      .min(8, 'Password must be at least 8 characters.')
-      .max(72, 'Password is too long.')
-      .regex(/[a-z]/, 'Include a lowercase letter.')
-      .regex(/[A-Z]/, 'Include an uppercase letter.')
-      .regex(/[0-9]/, 'Include a number.'),
+      .min(8, 'passwordMin')
+      .max(72, 'passwordMax')
+      .regex(/[a-z]/, 'passwordLower')
+      .regex(/[A-Z]/, 'passwordUpper')
+      .regex(/[0-9]/, 'passwordNumber'),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match.',
+    message: 'passwordsMatch',
     path: ['confirmPassword'],
   });
 
 export const loginSchema = z.object({
-  email: z.string().email('Enter a valid email address.'),
-  password: z.string().min(1, 'Enter your password.'),
+  email: z.string().email('email'),
+  password: z.string().min(1, 'passwordRequired'),
 });
 
 export const forgotPasswordSchema = z.object({
-  email: z.string().email('Enter a valid email address.'),
+  email: z.string().email('email'),
 });
 
 export const resetPasswordSchema = z
   .object({
     token: z.string().min(1),
-    password: z
-      .string()
-      .min(8, 'Password must be at least 8 characters.')
-      .max(72),
+    password: z.string().min(8, 'passwordMin').max(72, 'passwordMax'),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match.',
+    message: 'passwordsMatch',
     path: ['confirmPassword'],
   });
 

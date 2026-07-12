@@ -1,0 +1,170 @@
+{
+  "common": {
+    "save": "Guardar",
+    "saveChanges": "Guardar cambios",
+    "cancel": "Cancelar",
+    "create": "Crear",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "remove": "Quitar",
+    "back": "Volver",
+    "loading": "Cargando…",
+    "search": "Buscar",
+    "optional": "Opcional",
+    "none": "Ninguno",
+    "all": "Todos",
+    "actions": "Acciones",
+    "somethingWrong": "Algo salió mal",
+    "errorHint": "Ocurrió un error inesperado. Inténtalo de nuevo — tus datos están a salvo.",
+    "tryAgain": "Reintentar",
+    "noResults": "Sin resultados.",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "searchPlaceholder": "Buscar…"
+  },
+  "pagination": {
+    "pageInfo": "Página {page} de {pageCount} · {total} en total"
+  },
+  "language": {
+    "label": "Idioma",
+    "english": "Inglés",
+    "spanish": "Español"
+  },
+  "nav": {
+    "dashboard": "Inicio",
+    "properties": "Propiedades",
+    "tenants": "Inquilinos",
+    "contracts": "Contratos",
+    "payments": "Pagos",
+    "receipts": "Recibos",
+    "statements": "Estados de cuenta",
+    "expenses": "Gastos",
+    "documents": "Documentos",
+    "reports": "Reportes",
+    "notifications": "Notificaciones",
+    "settings": "Configuración",
+    "manage": "Gestión",
+    "money": "Finanzas",
+    "insights": "Análisis",
+    "openMenu": "Abrir menú",
+    "menuTitle": "Navegación"
+  },
+  "userMenu": {
+    "account": "Tu cuenta",
+    "profile": "Perfil",
+    "settings": "Configuración",
+    "theme": "Tema",
+    "themeLight": "Claro",
+    "themeDark": "Oscuro",
+    "themeSystem": "Sistema",
+    "signOut": "Cerrar sesión"
+  },
+  "topbar": {
+    "registerPayment": "Registrar pago",
+    "recordPayment": "Registrar un nuevo pago",
+    "notifications": "Notificaciones"
+  },
+  "auth": {
+    "heroQuote": "“Propio reemplazó tres hojas de cálculo y una caja llena de recibos. Por fin veo todas mis propiedades en un solo lugar.”",
+    "heroAttribution": "— Un arrendador independiente, justo para quien lo hacemos",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "tu@ejemplo.com",
+    "passwordLabel": "Contraseña",
+    "login": {
+      "title": "Bienvenido de nuevo",
+      "subtitle": "Inicia sesión para continuar a tu panel",
+      "orContinueEmail": "o continúa con tu correo",
+      "submit": "Iniciar sesión",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "welcomeToast": "¡Bienvenido de nuevo!",
+      "noAccount": "¿No tienes una cuenta?",
+      "createOne": "Crea una",
+      "emailNotVerified": "Correo sin verificar.",
+      "resendVerification": "Reenviar enlace de verificación",
+      "verifiedBanner": "Correo verificado — ya puedes iniciar sesión.",
+      "linkInvalid": "Ese enlace de verificación es inválido o expiró.",
+      "requestNew": "Solicita uno nuevo"
+    },
+    "register": {
+      "title": "Crea tu cuenta",
+      "subtitle": "Empieza a gestionar tus propiedades en minutos",
+      "orSignUpEmail": "o regístrate con tu correo",
+      "submit": "Crear cuenta",
+      "createdToast": "Cuenta creada. Revisa tu correo para verificar tu cuenta.",
+      "haveAccount": "¿Ya tienes una cuenta?",
+      "signIn": "Inicia sesión",
+      "fullNameLabel": "Nombre completo",
+      "fullNamePlaceholder": "Juan Pérez",
+      "passwordPlaceholder": "Al menos 8 caracteres",
+      "confirmPasswordLabel": "Confirmar contraseña",
+      "confirmPasswordPlaceholder": "Vuelve a escribir tu contraseña"
+    },
+    "forgot": {
+      "title": "¿Olvidaste tu contraseña?",
+      "subtitle": "Ingresa tu correo y te enviaremos un enlace para restablecerla",
+      "submit": "Enviar enlace",
+      "remembered": "¿La recordaste?",
+      "backToSignIn": "Volver a iniciar sesión",
+      "sentTitle": "Revisa tu bandeja de entrada",
+      "sentBody": "Si existe una cuenta con ese correo, te enviamos un enlace para restablecer tu contraseña."
+    },
+    "reset": {
+      "title": "Crea una nueva contraseña",
+      "subtitle": "Elige una contraseña segura que no uses en otro sitio",
+      "newPasswordLabel": "Nueva contraseña",
+      "newPasswordPlaceholder": "Al menos 8 caracteres",
+      "confirmLabel": "Confirmar nueva contraseña",
+      "confirmPlaceholder": "Vuelve a escribir tu contraseña",
+      "submit": "Restablecer contraseña",
+      "backToSignIn": "Volver a iniciar sesión",
+      "doneTitle": "Contraseña actualizada",
+      "doneBody": "Redirigiéndote al inicio de sesión…",
+      "invalidTitle": "Enlace inválido",
+      "invalidBody": "A este enlace de restablecimiento le falta información o ya expiró.",
+      "requestNew": "Solicitar un nuevo enlace"
+    },
+    "verify": {
+      "title": "Revisa tu correo",
+      "bodyWithEmail": "Enviamos un enlace de verificación a <b>{email}</b>. Haz clic en él para activar tu cuenta.",
+      "bodyNoEmail": "Ingresa tu correo abajo y te enviaremos un enlace de verificación.",
+      "spamHint": "¿No te llegó? Revisa tu carpeta de spam, o reenvíalo abajo.",
+      "resend": "Reenviar correo de verificación",
+      "resendCooldown": "Podrás reenviar en {seconds}s",
+      "resendGeneric": "Si existe una cuenta sin verificar con ese correo, te enviamos un nuevo enlace.",
+      "backToSignIn": "Volver a iniciar sesión"
+    },
+    "banner": {
+      "message": "Verifica tu correo electrónico para proteger tu cuenta.",
+      "resend": "Reenviar enlace",
+      "sent": "Correo enviado",
+      "sentToast": "Correo de verificación enviado. Revisa tu bandeja de entrada."
+    },
+    "oauth": {
+      "error": "No se pudo iniciar sesión. Inténtalo de nuevo."
+    },
+    "errors": {
+      "invalidCredentials": "Correo o contraseña incorrectos.",
+      "emailNotVerified": "Verifica tu correo antes de iniciar sesión. Revisa tu bandeja de entrada para el enlace de verificación.",
+      "authError": "No se pudo iniciar tu sesión. Inténtalo de nuevo.",
+      "fixFields": "Corrige los campos marcados.",
+      "emailExists": "Ya existe una cuenta con este correo.",
+      "invalidEmail": "Ingresa un correo electrónico válido.",
+      "resetLinkInvalid": "Este enlace de restablecimiento es inválido o expiró."
+    }
+  },
+  "validation": {
+    "nameRequired": "Ingresa tu nombre.",
+    "nameMin": "El nombre debe tener al menos 2 caracteres.",
+    "email": "Ingresa un correo electrónico válido.",
+    "passwordMin": "La contraseña debe tener al menos 8 caracteres.",
+    "passwordMax": "La contraseña es demasiado larga.",
+    "passwordLower": "Incluye una letra minúscula.",
+    "passwordUpper": "Incluye una letra mayúscula.",
+    "passwordNumber": "Incluye un número.",
+    "passwordsMatch": "Las contraseñas no coinciden.",
+    "passwordRequired": "Ingresa tu contraseña.",
+    "currentPasswordRequired": "Ingresa tu contraseña actual.",
+    "passwordDifferent": "La nueva contraseña debe ser distinta de la actual.",
+    "incorrectCurrentPassword": "Contraseña actual incorrecta."
+  }
+}

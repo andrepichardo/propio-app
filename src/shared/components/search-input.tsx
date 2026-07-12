@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useTransition } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Search } from 'lucide-react';
 import { Input } from '@/shared/components/ui/input';
 import { cn } from '@/shared/lib/utils';
@@ -11,12 +12,13 @@ import { cn } from '@/shared/lib/utils';
  * the `search` query param and resets pagination.
  */
 export function SearchInput({
-  placeholder = 'Search…',
+  placeholder,
   className,
 }: {
   placeholder?: string;
   className?: string;
 }) {
+  const t = useTranslations('common');
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -42,7 +44,7 @@ export function SearchInput({
       <Input
         value={value}
         onChange={(event) => setValue(event.target.value)}
-        placeholder={placeholder}
+        placeholder={placeholder ?? t('searchPlaceholder')}
         className="pl-9"
       />
     </div>

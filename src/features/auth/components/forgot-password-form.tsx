@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { CheckCircle2 } from 'lucide-react';
 import {
   forgotPasswordSchema,
@@ -22,6 +23,7 @@ import { Button } from '@/shared/components/ui/button';
 import { forgotPasswordAction } from '../actions/password-reset.action';
 
 export function ForgotPasswordForm() {
+  const t = useTranslations('auth');
   const [isPending, startTransition] = useTransition();
   const [sent, setSent] = useState(false);
 
@@ -43,14 +45,11 @@ export function ForgotPasswordForm() {
       <div className="flex flex-col items-center gap-3 rounded-xl border bg-muted/30 p-6 text-center">
         <CheckCircle2 className="size-8 text-success" />
         <div className="space-y-1">
-          <p className="font-medium">Check your inbox</p>
-          <p className="text-sm text-muted-foreground">
-            If an account exists for that email, we’ve sent a link to reset your
-            password.
-          </p>
+          <p className="font-medium">{t('forgot.sentTitle')}</p>
+          <p className="text-sm text-muted-foreground">{t('forgot.sentBody')}</p>
         </div>
         <Button variant="outline" asChild className="mt-2">
-          <Link href="/login">Back to sign in</Link>
+          <Link href="/login">{t('forgot.backToSignIn')}</Link>
         </Button>
       </div>
     );
@@ -64,12 +63,12 @@ export function ForgotPasswordForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t('emailLabel')}</FormLabel>
               <FormControl>
                 <Input
                   type="email"
                   autoComplete="email"
-                  placeholder="you@example.com"
+                  placeholder={t('emailPlaceholder')}
                   {...field}
                 />
               </FormControl>
@@ -78,7 +77,7 @@ export function ForgotPasswordForm() {
           )}
         />
         <Button type="submit" className="w-full" loading={isPending}>
-          Send reset link
+          {t('forgot.submit')}
         </Button>
       </form>
     </Form>

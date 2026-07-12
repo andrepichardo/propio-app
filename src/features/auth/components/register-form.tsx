@@ -4,6 +4,7 @@ import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import {
   registerSchema,
@@ -25,6 +26,7 @@ import { Button } from '@/shared/components/ui/button';
 import { registerAction } from '../actions/register.action';
 
 export function RegisterForm() {
+  const t = useTranslations('auth');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -49,7 +51,7 @@ export function RegisterForm() {
 
       // Email verification is required before the account can sign in, so we
       // send the user to the "check your email" page instead of auto-logging in.
-      toast.success('Account created. Check your email to verify your account.');
+      toast.success(t('register.createdToast'));
       router.push(`/verify-email?email=${encodeURIComponent(values.email)}`);
     });
   }
@@ -62,9 +64,13 @@ export function RegisterForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full name</FormLabel>
+              <FormLabel>{t('register.fullNameLabel')}</FormLabel>
               <FormControl>
-                <Input autoComplete="name" placeholder="Jane Doe" {...field} />
+                <Input
+                  autoComplete="name"
+                  placeholder={t('register.fullNamePlaceholder')}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -75,12 +81,12 @@ export function RegisterForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t('emailLabel')}</FormLabel>
               <FormControl>
                 <Input
                   type="email"
                   autoComplete="email"
-                  placeholder="you@example.com"
+                  placeholder={t('emailPlaceholder')}
                   {...field}
                 />
               </FormControl>
@@ -93,12 +99,12 @@ export function RegisterForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t('passwordLabel')}</FormLabel>
               <FormControl>
                 <Input
                   type="password"
                   autoComplete="new-password"
-                  placeholder="At least 8 characters"
+                  placeholder={t('register.passwordPlaceholder')}
                   {...field}
                 />
               </FormControl>
@@ -111,12 +117,12 @@ export function RegisterForm() {
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm password</FormLabel>
+              <FormLabel>{t('register.confirmPasswordLabel')}</FormLabel>
               <FormControl>
                 <Input
                   type="password"
                   autoComplete="new-password"
-                  placeholder="Re-enter your password"
+                  placeholder={t('register.confirmPasswordPlaceholder')}
                   {...field}
                 />
               </FormControl>
@@ -125,7 +131,7 @@ export function RegisterForm() {
           )}
         />
         <Button type="submit" className="w-full" loading={isPending}>
-          Create account
+          {t('register.submit')}
         </Button>
       </form>
     </Form>

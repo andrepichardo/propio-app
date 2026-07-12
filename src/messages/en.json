@@ -1,0 +1,170 @@
+{
+  "common": {
+    "save": "Save",
+    "saveChanges": "Save changes",
+    "cancel": "Cancel",
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "remove": "Remove",
+    "back": "Back",
+    "loading": "Loading…",
+    "search": "Search",
+    "optional": "Optional",
+    "none": "None",
+    "all": "All",
+    "actions": "Actions",
+    "somethingWrong": "Something went wrong",
+    "errorHint": "We hit an unexpected error. Try again — your data is safe.",
+    "tryAgain": "Try again",
+    "noResults": "No results.",
+    "previous": "Previous",
+    "next": "Next",
+    "searchPlaceholder": "Search…"
+  },
+  "pagination": {
+    "pageInfo": "Page {page} of {pageCount} · {total} total"
+  },
+  "language": {
+    "label": "Language",
+    "english": "English",
+    "spanish": "Spanish"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "properties": "Properties",
+    "tenants": "Tenants",
+    "contracts": "Contracts",
+    "payments": "Payments",
+    "receipts": "Receipts",
+    "statements": "Statements",
+    "expenses": "Expenses",
+    "documents": "Documents",
+    "reports": "Reports",
+    "notifications": "Notifications",
+    "settings": "Settings",
+    "manage": "Manage",
+    "money": "Money",
+    "insights": "Insights",
+    "openMenu": "Open menu",
+    "menuTitle": "Navigation"
+  },
+  "userMenu": {
+    "account": "Your account",
+    "profile": "Profile",
+    "settings": "Settings",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "signOut": "Sign out"
+  },
+  "topbar": {
+    "registerPayment": "Register payment",
+    "recordPayment": "Record a new payment",
+    "notifications": "Notifications"
+  },
+  "auth": {
+    "heroQuote": "“Propio replaced three spreadsheets and a shoebox of receipts. I finally see every property in one place.”",
+    "heroAttribution": "— An independent landlord, exactly who we build for",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to continue to your dashboard",
+      "orContinueEmail": "or continue with email",
+      "submit": "Sign in",
+      "forgotPassword": "Forgot password?",
+      "welcomeToast": "Welcome back!",
+      "noAccount": "Don’t have an account?",
+      "createOne": "Create one",
+      "emailNotVerified": "Email not verified.",
+      "resendVerification": "Resend verification link",
+      "verifiedBanner": "Email verified — you can sign in now.",
+      "linkInvalid": "That verification link is invalid or has expired.",
+      "requestNew": "Request a new one"
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Start managing your properties in minutes",
+      "orSignUpEmail": "or sign up with email",
+      "submit": "Create account",
+      "createdToast": "Account created. Check your email to verify your account.",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "fullNameLabel": "Full name",
+      "fullNamePlaceholder": "Jane Doe",
+      "passwordPlaceholder": "At least 8 characters",
+      "confirmPasswordLabel": "Confirm password",
+      "confirmPasswordPlaceholder": "Re-enter your password"
+    },
+    "forgot": {
+      "title": "Forgot your password?",
+      "subtitle": "Enter your email and we’ll send you a reset link",
+      "submit": "Send reset link",
+      "remembered": "Remembered it?",
+      "backToSignIn": "Back to sign in",
+      "sentTitle": "Check your inbox",
+      "sentBody": "If an account exists for that email, we’ve sent a link to reset your password."
+    },
+    "reset": {
+      "title": "Set a new password",
+      "subtitle": "Choose a strong password you don’t use elsewhere",
+      "newPasswordLabel": "New password",
+      "newPasswordPlaceholder": "At least 8 characters",
+      "confirmLabel": "Confirm new password",
+      "confirmPlaceholder": "Re-enter your password",
+      "submit": "Reset password",
+      "backToSignIn": "Back to sign in",
+      "doneTitle": "Password updated",
+      "doneBody": "Redirecting you to sign in…",
+      "invalidTitle": "Invalid reset link",
+      "invalidBody": "This password reset link is missing information or has expired.",
+      "requestNew": "Request a new link"
+    },
+    "verify": {
+      "title": "Check your email",
+      "bodyWithEmail": "We’ve sent a verification link to <b>{email}</b>. Click it to activate your account.",
+      "bodyNoEmail": "Enter your email below and we’ll send you a verification link.",
+      "spamHint": "Didn’t get it? Check your spam folder, or resend below.",
+      "resend": "Resend verification email",
+      "resendCooldown": "Resend available in {seconds}s",
+      "resendGeneric": "If an unverified account exists for that email, we’ve sent a new link.",
+      "backToSignIn": "Back to sign in"
+    },
+    "banner": {
+      "message": "Please verify your email address to secure your account.",
+      "resend": "Resend link",
+      "sent": "Email sent",
+      "sentToast": "Verification email sent. Check your inbox."
+    },
+    "oauth": {
+      "error": "Could not start sign in. Please try again."
+    },
+    "errors": {
+      "invalidCredentials": "Invalid email or password.",
+      "emailNotVerified": "Please verify your email before signing in. Check your inbox for the verification link.",
+      "authError": "Could not sign you in. Please try again.",
+      "fixFields": "Please correct the highlighted fields.",
+      "emailExists": "An account with this email already exists.",
+      "invalidEmail": "Enter a valid email address.",
+      "resetLinkInvalid": "This reset link is invalid or has expired."
+    }
+  },
+  "validation": {
+    "nameRequired": "Please enter your name.",
+    "nameMin": "Name must be at least 2 characters.",
+    "email": "Enter a valid email address.",
+    "passwordMin": "Password must be at least 8 characters.",
+    "passwordMax": "Password is too long.",
+    "passwordLower": "Include a lowercase letter.",
+    "passwordUpper": "Include an uppercase letter.",
+    "passwordNumber": "Include a number.",
+    "passwordsMatch": "Passwords do not match.",
+    "passwordRequired": "Enter your password.",
+    "currentPasswordRequired": "Enter your current password.",
+    "passwordDifferent": "New password must be different from the current one.",
+    "incorrectCurrentPassword": "Incorrect current password."
+  }
+}
