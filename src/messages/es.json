@@ -689,6 +689,26 @@
     "passwordChanged": "Contraseña cambiada.",
     "noPasswordError": "El inicio de sesión con contraseña no está habilitado para esta cuenta."
   },
+  "landing": {
+    "goToDashboard": "Ir al panel",
+    "signIn": "Iniciar sesión",
+    "getStarted": "Empezar",
+    "badge": "Hecho para arrendadores independientes",
+    "heroTitle": "Gestiona tus propiedades con confianza",
+    "heroSubtitle": "Propio es el sistema todo-en-uno para arrendadores con 1 a 50 propiedades. Alquileres, inquilinos, contratos, pagos y reportes — un panel tranquilo y rápido.",
+    "startFree": "Empieza gratis",
+    "footerNote": "Gestiona tus propiedades con confianza.",
+    "features": {
+      "paymentsTitle": "Pagos que se concilian solos",
+      "paymentsDesc": "Registra un pago una vez — Propio marca el alquiler como pagado, actualiza los saldos y archiva el recibo automáticamente.",
+      "receiptsTitle": "Recibos y estados de cuenta impecables",
+      "receiptsDesc": "Genera recibos en PDF y estados de cuenta mensuales que tus inquilinos van a agradecer.",
+      "reportsTitle": "Reportes que entiendes de un vistazo",
+      "reportsDesc": "Ingresos, gastos, ganancia y ocupación — visualizados en todas tus propiedades.",
+      "documentsTitle": "Cada documento, en un solo lugar",
+      "documentsDesc": "Contratos, identificaciones, facturas y fotos, organizados por propiedad y siempre a un clic."
+    }
+  },
   "meta": {
     "signIn": "Iniciar sesión",
     "createAccount": "Crear cuenta",

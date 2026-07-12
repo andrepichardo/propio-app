@@ -686,6 +686,26 @@
     "passwordChanged": "Password changed.",
     "noPasswordError": "Password sign-in is not enabled for this account."
   },
+  "landing": {
+    "goToDashboard": "Go to dashboard",
+    "signIn": "Sign in",
+    "getStarted": "Get started",
+    "badge": "Built for independent landlords",
+    "heroTitle": "Manage your properties with confidence",
+    "heroSubtitle": "Propio is the all-in-one operating system for landlords with 1 to 50 properties. Rentals, tenants, contracts, payments and reports — one calm, fast dashboard.",
+    "startFree": "Start managing free",
+    "footerNote": "Manage your properties with confidence.",
+    "features": {
+      "paymentsTitle": "Payments that reconcile themselves",
+      "paymentsDesc": "Register a payment once — Propio marks rent as paid, updates balances, and files the receipt automatically.",
+      "receiptsTitle": "Beautiful receipts & statements",
+      "receiptsDesc": "Generate polished PDF receipts and monthly statements your tenants will actually appreciate.",
+      "reportsTitle": "Reports you understand at a glance",
+      "reportsDesc": "Revenue, expenses, profit, and occupancy — visualised across every property you own.",
+      "documentsTitle": "Every document, one place",
+      "documentsDesc": "Contracts, IDs, invoices and photos, organised per property and always a click away."
+    }
+  },
   "meta": {
     "signIn": "Sign in",
     "createAccount": "Create account",

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import {
   ArrowRight,
   BarChart3,
@@ -9,37 +10,19 @@ import {
 } from 'lucide-react';
 import { Logo } from '@/shared/components/brand/logo';
 import { Button } from '@/shared/components/ui/button';
+import { LanguageSwitcher } from '@/shared/components/language/language-switcher';
 import { getCurrentUser } from '@/shared/lib/auth/session';
 
 const features = [
-  {
-    icon: Wallet,
-    title: 'Payments that reconcile themselves',
-    description:
-      'Register a payment once — Propio marks rent as paid, updates balances, and files the receipt automatically.',
-  },
-  {
-    icon: Receipt,
-    title: 'Beautiful receipts & statements',
-    description:
-      'Generate polished PDF receipts and monthly statements your tenants will actually appreciate.',
-  },
-  {
-    icon: BarChart3,
-    title: 'Reports you understand at a glance',
-    description:
-      'Revenue, expenses, profit, and occupancy — visualised across every property you own.',
-  },
-  {
-    icon: FileText,
-    title: 'Every document, one place',
-    description:
-      'Contracts, IDs, invoices and photos, organised per property and always a click away.',
-  },
-];
+  { icon: Wallet, key: 'payments' },
+  { icon: Receipt, key: 'receipts' },
+  { icon: BarChart3, key: 'reports' },
+  { icon: FileText, key: 'documents' },
+] as const;
 
 export default async function LandingPage() {
   const user = await getCurrentUser();
+  const t = await getTranslations('landing');
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -47,19 +30,20 @@ export default async function LandingPage() {
         <div className="container flex h-16 items-center justify-between">
           <Logo />
           <nav className="flex items-center gap-2">
+            <LanguageSwitcher />
             {user ? (
               <Button asChild>
                 <Link href="/app">
-                  Go to dashboard <ArrowRight className="size-4" />
+                  {t('goToDashboard')} <ArrowRight className="size-4" />
                 </Link>
               </Button>
             ) : (
               <>
                 <Button variant="ghost" asChild>
-                  <Link href="/login">Sign in</Link>
+                  <Link href="/login">{t('signIn')}</Link>
                 </Button>
                 <Button asChild>
-                  <Link href="/register">Get started</Link>
+                  <Link href="/register">{t('getStarted')}</Link>
                 </Button>
               </>
             )}
@@ -71,24 +55,22 @@ export default async function LandingPage() {
         <section className="container flex flex-col items-center py-24 text-center">
           <span className="mb-5 inline-flex items-center gap-1.5 rounded-full border bg-muted/40 px-3 py-1 text-xs font-medium text-muted-foreground">
             <ShieldCheck className="size-3.5 text-primary" />
-            Built for independent landlords
+            {t('badge')}
           </span>
           <h1 className="max-w-3xl text-balance text-4xl font-semibold tracking-tight sm:text-6xl">
-            Manage your properties with confidence
+            {t('heroTitle')}
           </h1>
           <p className="mt-6 max-w-2xl text-balance text-lg text-muted-foreground">
-            Propio is the all-in-one operating system for landlords with 1 to 50
-            properties. Rentals, tenants, contracts, payments and reports — one
-            calm, fast dashboard.
+            {t('heroSubtitle')}
           </p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <Button size="lg" asChild>
               <Link href={user ? '/app' : '/register'}>
-                Start managing free <ArrowRight className="size-4" />
+                {t('startFree')} <ArrowRight className="size-4" />
               </Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link href="/login">Sign in</Link>
+              <Link href="/login">{t('signIn')}</Link>
             </Button>
           </div>
         </section>
@@ -97,15 +79,17 @@ export default async function LandingPage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {features.map((feature) => (
               <div
-                key={feature.title}
+                key={feature.key}
                 className="animate-fade-in-up rounded-xl border bg-card p-6 shadow-soft"
               >
                 <span className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <feature.icon className="size-5" />
                 </span>
-                <h3 className="mt-4 font-semibold">{feature.title}</h3>
+                <h3 className="mt-4 font-semibold">
+                  {t(`features.${feature.key}Title`)}
+                </h3>
                 <p className="mt-1.5 text-sm text-muted-foreground">
-                  {feature.description}
+                  {t(`features.${feature.key}Desc`)}
                 </p>
               </div>
             ))}
@@ -117,8 +101,7 @@ export default async function LandingPage() {
         <div className="container flex flex-col items-center justify-between gap-4 py-8 sm:flex-row">
           <Logo />
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Propio. Manage your properties with
-            confidence.
+            © {new Date().getFullYear()} Propio. {t('footerNote')}
           </p>
         </div>
       </footer>
