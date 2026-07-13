@@ -27,9 +27,9 @@ export default async function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
-        <div className="container flex h-16 items-center justify-between">
+        <div className="container flex h-16 items-center justify-between gap-3">
           <Logo />
-          <nav className="flex items-center gap-2">
+          <nav className="flex shrink-0 items-center gap-2">
             <LanguageSwitcher />
             {user ? (
               <Button asChild>
@@ -39,7 +39,7 @@ export default async function LandingPage() {
               </Button>
             ) : (
               <>
-                <Button variant="ghost" asChild>
+                <Button variant="ghost" asChild className="hidden sm:inline-flex">
                   <Link href="/login">{t('signIn')}</Link>
                 </Button>
                 <Button asChild>
@@ -100,7 +100,7 @@ export default async function LandingPage() {
       <footer className="border-t">
         <div className="container flex flex-col items-center justify-between gap-4 py-8 sm:flex-row">
           <Logo />
-          <p className="text-sm text-muted-foreground">
+          <p className="text-center text-sm text-muted-foreground sm:text-right">
             © {new Date().getFullYear()} Propio. {t('footerNote')}
           </p>
         </div>

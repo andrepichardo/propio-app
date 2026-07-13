@@ -56,13 +56,14 @@ export function LanguageSwitcher({ className }: { className?: string }) {
     <DropdownMenu>
       <DropdownMenuTrigger
         disabled={isPending}
+        aria-label={t('label')}
         className={cn(
           'inline-flex items-center gap-2 rounded-md border px-2.5 py-1.5 text-sm font-medium outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring',
           className,
         )}
       >
         <current.Flag />
-        <span>{t(current.labelKey)}</span>
+        <span className="hidden sm:inline">{t(current.labelKey)}</span>
         <ChevronDown className="size-3.5 text-muted-foreground" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-44">
