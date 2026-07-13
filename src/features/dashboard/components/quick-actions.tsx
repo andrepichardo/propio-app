@@ -21,12 +21,15 @@ export function QuickActions() {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       {actions.map((action) => (
-        <Link key={action.href} href={action.href}>
-          <Card className="flex flex-col items-center gap-2 p-4 text-center transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-card">
-            <span className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+        <Link key={action.href} href={action.href} className="h-full">
+          <Card className="flex h-full flex-col items-center gap-2 p-4 text-center transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-card">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
               <action.icon className="size-5" />
             </span>
-            <span className="text-sm font-medium">{t(action.labelKey)}</span>
+            {/* min-h-[2lh] reserves two lines so cards match even when a label wraps. */}
+            <span className="flex min-h-[2lh] items-center justify-center text-sm font-medium">
+              {t(action.labelKey)}
+            </span>
           </Card>
         </Link>
       ))}
