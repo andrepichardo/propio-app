@@ -121,6 +121,19 @@ function nextDueDate(dueDay: number, reference = new Date()): Date {
   return thisMonth >= reference ? thisMonth : addMonths(thisMonth, 1);
 }
 
+/**
+ * Month bucket a payment counts toward: its rent period, else when paid.
+ * Date-only values (periodStart, form-picked paidAt) live at UTC midnight;
+ * reading them with local getters west of UTC would land on the previous
+ * month at month boundaries, so those use their UTC parts.
+ */
+function monthKey(date: Date): string {
+  const isUtcMidnight = date.getTime() % 86_400_000 === 0;
+  const year = isUtcMidnight ? date.getUTCFullYear() : date.getFullYear();
+  const month = isUtcMidnight ? date.getUTCMonth() : date.getMonth();
+  return `${year}-${month}`;
+}
+
 export async function getDashboardSummary(
   ownerId: string,
 ): Promise<DashboardSummary> {
@@ -198,15 +211,48 @@ export async function getDashboardSummary(
         ? 100
         : 0;
 
+  // Payments already recorded around the current period, bucketed per
+  // contract+month, so paid rents drop out of "upcoming payments".
+  const recentPayments = await prisma.payment.findMany({
+    where: {
+      ownerId,
+      deletedAt: null,
+      status: PaymentStatus.COMPLETED,
+      contractId: { in: activeContracts.map((c) => c.id) },
+      paidAt: { gte: subMonths(monthStart, 1) },
+    },
+    select: { contractId: true, amount: true, paidAt: true, periodStart: true },
+  });
+  const paidByContractMonth = new Map<string, number>();
+  for (const payment of recentPayments) {
+    const key = `${payment.contractId}:${monthKey(payment.periodStart ?? payment.paidAt)}`;
+    paidByContractMonth.set(
+      key,
+      (paidByContractMonth.get(key) ?? 0) + toNumber(payment.amount.toString()),
+    );
+  }
+
   const upcomingPayments: UpcomingPayment[] = activeContracts
-    .map((contract) => ({
-      contractId: contract.id,
-      propertyName: contract.property.name,
-      tenantName: `${contract.tenant.firstName} ${contract.tenant.lastName}`,
-      amount: toNumber(contract.monthlyRent.toString()),
-      currency: contract.currency,
-      dueDate: nextDueDate(contract.dueDay, now),
-    }))
+    .map((contract) => {
+      const rent = toNumber(contract.monthlyRent.toString());
+      // Skip due dates whose month is already covered by recorded payments
+      // (a single payment may bundle rent + deposits, hence >= rent).
+      let dueDate = nextDueDate(contract.dueDay, now);
+      for (let i = 0; i < 3; i++) {
+        const paid =
+          paidByContractMonth.get(`${contract.id}:${monthKey(dueDate)}`) ?? 0;
+        if (paid < rent) break;
+        dueDate = addMonths(dueDate, 1);
+      }
+      return {
+        contractId: contract.id,
+        propertyName: contract.property.name,
+        tenantName: `${contract.tenant.firstName} ${contract.tenant.lastName}`,
+        amount: rent,
+        currency: contract.currency,
+        dueDate,
+      };
+    })
     .sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime())
     .slice(0, 5);
 
