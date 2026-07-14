@@ -73,24 +73,27 @@ export function ChangePasswordForm({ hasPassword }: { hasPassword: boolean }) {
             <CardTitle className="text-base">{t('security')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
-            <FormField
-              control={form.control}
-              name="currentPassword"
-              render={({ field }) => (
-                <FormItem className="sm:max-w-sm">
-                  <FormLabel>{t('currentPassword')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      autoComplete="current-password"
-                      placeholder="••••••••"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Same 2-col grid as below so the field aligns with "new password". */}
+            <div className="grid gap-5 sm:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="currentPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('currentPassword')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        autoComplete="current-password"
+                        placeholder="••••••••"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <div className="grid gap-5 sm:grid-cols-2">
               <FormField
                 control={form.control}
