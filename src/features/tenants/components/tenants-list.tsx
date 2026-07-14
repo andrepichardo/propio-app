@@ -67,11 +67,12 @@ export async function TenantsList({
           </TableHeader>
           <TableBody>
             {items.map((tenant) => (
-              <TableRow key={tenant.id} className="cursor-pointer">
+              <TableRow key={tenant.id} className="relative cursor-pointer">
                 <TableCell>
+                  {/* Stretched link: the ::after overlay makes the whole row navigate. */}
                   <Link
                     href={`/app/tenants/${tenant.id}`}
-                    className="flex items-center gap-3"
+                    className="flex items-center gap-3 after:absolute after:inset-0"
                   >
                     <Avatar>
                       {tenant.avatarUrl ? (
