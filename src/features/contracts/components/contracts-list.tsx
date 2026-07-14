@@ -63,11 +63,12 @@ export async function ContractsList({
           </TableHeader>
           <TableBody>
             {items.map((contract) => (
-              <TableRow key={contract.id} className="cursor-pointer">
+              <TableRow key={contract.id} className="relative cursor-pointer">
                 <TableCell>
+                  {/* Stretched link: the ::after overlay makes the whole row navigate. */}
                   <Link
                     href={`/app/contracts/${contract.id}`}
-                    className="font-medium hover:text-primary"
+                    className="font-medium after:absolute after:inset-0"
                   >
                     {contract.property.name}
                   </Link>
