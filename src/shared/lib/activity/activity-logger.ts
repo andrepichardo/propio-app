@@ -7,10 +7,22 @@ type LogActivityInput = {
   action: ActivityAction;
   entityType: string;
   entityId: string;
+  /** Plain-English fallback shown for rows recorded before i18n existed. */
   summary: string;
-  metadata?: Prisma.InputJsonValue;
+  /**
+   * Key inside the `activity` message namespace + its interpolation params.
+   * Stored in `metadata` so the feed can render in the viewer's language.
+   */
+  messageKey?: string;
+  params?: Record<string, string>;
   /** Reuse an open transaction so the log is atomic with its cause. */
   tx?: Prisma.TransactionClient;
+};
+
+/** Shape persisted in `Activity.metadata` for translatable entries. */
+export type ActivityMessageMetadata = {
+  key: string;
+  params?: Record<string, string>;
 };
 
 /**
@@ -28,7 +40,12 @@ export async function logActivity(input: LogActivityInput): Promise<void> {
         entityType: input.entityType,
         entityId: input.entityId,
         summary: input.summary,
-        metadata: input.metadata,
+        metadata: input.messageKey
+          ? ({
+              key: input.messageKey,
+              params: input.params,
+            } satisfies ActivityMessageMetadata)
+          : undefined,
       },
     });
   } catch (error) {

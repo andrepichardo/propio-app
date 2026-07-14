@@ -54,6 +54,11 @@ export const expenseService = {
       entityType: 'Expense',
       entityId: expense.id,
       summary: `Logged ${formatCurrency(input.amount, input.currency)} expense — ${input.description}`,
+      messageKey: 'expenseLogged',
+      params: {
+        amount: formatCurrency(input.amount, input.currency),
+        description: input.description,
+      },
     });
 
     return expense;
@@ -73,6 +78,7 @@ export const expenseService = {
       entityType: 'Expense',
       entityId: updated.id,
       summary: 'Updated an expense',
+      messageKey: 'expenseUpdated',
     });
     return updated;
   },
@@ -86,6 +92,7 @@ export const expenseService = {
       entityType: 'Expense',
       entityId: id,
       summary: 'Deleted an expense',
+      messageKey: 'expenseDeleted',
     });
     return { id };
   },

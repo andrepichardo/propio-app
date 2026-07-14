@@ -189,6 +189,26 @@
     "identificationTooLong": "Máximo 20 caracteres.",
     "identificationInvalid": "Solo letras, números y guiones."
   },
+  "activity": {
+    "tenantAdded": "Agregaste al inquilino {name}",
+    "tenantUpdated": "Actualizaste al inquilino {name}",
+    "tenantDeleted": "Eliminaste un inquilino",
+    "paymentRegistered": "Registraste {amount} de {tenant}",
+    "paymentVoided": "Anulaste un pago",
+    "expenseLogged": "Registraste un gasto de {amount} — {description}",
+    "expenseUpdated": "Actualizaste un gasto",
+    "expenseDeleted": "Eliminaste un gasto",
+    "contractCreated": "Creaste un nuevo contrato",
+    "contractUpdated": "Actualizaste un contrato",
+    "contractCancelled": "Cancelaste un contrato",
+    "contractPdfAttached": "Adjuntaste el PDF del contrato firmado",
+    "propertyAdded": "Agregaste la propiedad «{name}»",
+    "propertyUpdated": "Actualizaste la propiedad «{name}»",
+    "propertyDeleted": "Eliminaste una propiedad",
+    "documentUploaded": "Subiste el documento «{name}»",
+    "documentDeleted": "Eliminaste el documento «{name}»",
+    "statementGenerated": "Generaste el estado de cuenta {number} de {property}"
+  },
   "pdf": {
     "receipt": {
       "title": "Recibo de pago",

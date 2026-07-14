@@ -53,6 +53,8 @@ export const tenantService = {
       entityType: 'Tenant',
       entityId: tenant.id,
       summary: `Added tenant ${tenant.firstName} ${tenant.lastName}`,
+      messageKey: 'tenantAdded',
+      params: { name: `${tenant.firstName} ${tenant.lastName}` },
     });
     return tenant;
   },
@@ -67,6 +69,8 @@ export const tenantService = {
       entityType: 'Tenant',
       entityId: updated.id,
       summary: `Updated tenant ${updated.firstName} ${updated.lastName}`,
+      messageKey: 'tenantUpdated',
+      params: { name: `${updated.firstName} ${updated.lastName}` },
     });
     return updated;
   },
@@ -80,6 +84,7 @@ export const tenantService = {
       entityType: 'Tenant',
       entityId: id,
       summary: 'Deleted a tenant',
+      messageKey: 'tenantDeleted',
     });
     return { id };
   },

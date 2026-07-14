@@ -114,6 +114,11 @@ export const paymentService = {
         entityType: 'Payment',
         entityId: payment.id,
         summary: `Registered ${formatCurrency(input.amount, contract.currency)} from ${contract.tenant.firstName} ${contract.tenant.lastName}`,
+        messageKey: 'paymentRegistered',
+        params: {
+          amount: formatCurrency(input.amount, contract.currency),
+          tenant: `${contract.tenant.firstName} ${contract.tenant.lastName}`,
+        },
       });
 
       return { payment, receipt };
@@ -193,6 +198,7 @@ export const paymentService = {
       entityType: 'Payment',
       entityId: id,
       summary: 'Voided a payment',
+      messageKey: 'paymentVoided',
     });
     return { id };
   },

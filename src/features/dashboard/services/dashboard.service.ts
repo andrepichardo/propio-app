@@ -48,9 +48,13 @@ export type ExpiringContract = {
 
 export type RecentActivityItem = {
   id: string;
+  /** Legacy English text; fallback for rows recorded before i18n. */
   summary: string;
   action: string;
   createdAt: Date;
+  /** `activity` namespace key + params for locale-aware rendering. */
+  messageKey?: string;
+  params?: Record<string, string>;
 };
 
 /** Sum completed payments within an inclusive date window. */
@@ -190,7 +194,13 @@ export async function getDashboardSummary(
       where: { ownerId },
       orderBy: { createdAt: 'desc' },
       take: 6,
-      select: { id: true, summary: true, action: true, createdAt: true },
+      select: {
+        id: true,
+        summary: true,
+        action: true,
+        createdAt: true,
+        metadata: true,
+      },
     }),
   ]);
 
@@ -280,6 +290,19 @@ export async function getDashboardSummary(
         tenantName: `${c.tenant.firstName} ${c.tenant.lastName}`,
         endDate: c.endDate as Date,
       })),
-    recentActivity: activity,
+    recentActivity: activity.map((item) => {
+      const meta = item.metadata as {
+        key?: unknown;
+        params?: Record<string, string>;
+      } | null;
+      return {
+        id: item.id,
+        summary: item.summary,
+        action: item.action,
+        createdAt: item.createdAt,
+        messageKey: typeof meta?.key === 'string' ? meta.key : undefined,
+        params: meta?.params,
+      };
+    }),
   };
 }

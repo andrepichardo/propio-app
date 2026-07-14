@@ -55,6 +55,8 @@ export const propertyService = {
       entityType: 'Property',
       entityId: property.id,
       summary: `Added property “${property.name}”`,
+      messageKey: 'propertyAdded',
+      params: { name: property.name },
     });
 
     return property;
@@ -75,6 +77,8 @@ export const propertyService = {
       entityType: 'Property',
       entityId: updated.id,
       summary: `Updated property “${updated.name}”`,
+      messageKey: 'propertyUpdated',
+      params: { name: updated.name },
     });
 
     return updated;
@@ -90,6 +94,7 @@ export const propertyService = {
       entityType: 'Property',
       entityId: id,
       summary: 'Deleted a property',
+      messageKey: 'propertyDeleted',
     });
 
     return { id };

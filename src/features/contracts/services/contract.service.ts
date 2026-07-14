@@ -80,6 +80,7 @@ export const contractService = {
       entityType: 'Contract',
       entityId: contract.id,
       summary: 'Created a new contract',
+      messageKey: 'contractCreated',
     });
 
     return contract;
@@ -102,6 +103,7 @@ export const contractService = {
       entityType: 'Contract',
       entityId: updated.id,
       summary: 'Updated a contract',
+      messageKey: 'contractUpdated',
     });
 
     return updated;
@@ -116,6 +118,7 @@ export const contractService = {
       entityType: 'Contract',
       entityId: id,
       summary: 'Cancelled a contract',
+      messageKey: 'contractCancelled',
     });
     return { id };
   },
@@ -143,6 +146,7 @@ export const contractService = {
       entityType: 'Contract',
       entityId: id,
       summary: 'Attached the signed contract PDF',
+      messageKey: 'contractPdfAttached',
     });
 
     return { id };

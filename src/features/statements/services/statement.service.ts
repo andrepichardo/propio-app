@@ -161,6 +161,8 @@ export const statementService = {
         entityType: 'Statement',
         entityId: created.id,
         summary: `Generated statement ${number} for ${contract.property.name}`,
+        messageKey: 'statementGenerated',
+        params: { number, property: contract.property.name },
       });
 
       return created;

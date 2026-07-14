@@ -139,6 +139,7 @@ export function RecentActivityCard({
   activity: RecentActivityItem[];
 }) {
   const t = useTranslations('dashboard');
+  const tActivity = useTranslations('activity');
   return (
     <Card>
       <CardHeader>
@@ -160,7 +161,12 @@ export function RecentActivityCard({
               <li key={item.id} className="flex gap-3">
                 <span className="mt-1.5 size-2 shrink-0 rounded-full bg-primary/60" />
                 <div className="min-w-0">
-                  <p className="text-sm">{item.summary}</p>
+                  {/* Rows recorded before i18n only carry the English summary. */}
+                  <p className="text-sm">
+                    {item.messageKey && tActivity.has(item.messageKey)
+                      ? tActivity(item.messageKey, item.params)
+                      : item.summary}
+                  </p>
                   <p className="text-xs text-muted-foreground">
                     {formatRelative(item.createdAt)}
                   </p>

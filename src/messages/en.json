@@ -189,6 +189,26 @@
     "identificationTooLong": "20 characters max.",
     "identificationInvalid": "Only letters, numbers and hyphens."
   },
+  "activity": {
+    "tenantAdded": "Added tenant {name}",
+    "tenantUpdated": "Updated tenant {name}",
+    "tenantDeleted": "Deleted a tenant",
+    "paymentRegistered": "Registered {amount} from {tenant}",
+    "paymentVoided": "Voided a payment",
+    "expenseLogged": "Logged a {amount} expense — {description}",
+    "expenseUpdated": "Updated an expense",
+    "expenseDeleted": "Deleted an expense",
+    "contractCreated": "Created a new contract",
+    "contractUpdated": "Updated a contract",
+    "contractCancelled": "Cancelled a contract",
+    "contractPdfAttached": "Attached the signed contract PDF",
+    "propertyAdded": "Added property “{name}”",
+    "propertyUpdated": "Updated property “{name}”",
+    "propertyDeleted": "Deleted a property",
+    "documentUploaded": "Uploaded document “{name}”",
+    "documentDeleted": "Deleted document “{name}”",
+    "statementGenerated": "Generated statement {number} for {property}"
+  },
   "pdf": {
     "receipt": {
       "title": "Payment receipt",

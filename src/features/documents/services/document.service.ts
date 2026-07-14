@@ -98,6 +98,8 @@ export const documentService = {
       entityType: 'Document',
       entityId: document.id,
       summary: `Uploaded document “${input.name}”`,
+      messageKey: 'documentUploaded',
+      params: { name: input.name },
     });
 
     return document;
@@ -123,6 +125,8 @@ export const documentService = {
       entityType: 'Document',
       entityId: id,
       summary: `Deleted document “${document.name}”`,
+      messageKey: 'documentDeleted',
+      params: { name: document.name },
     });
 
     return { id };
