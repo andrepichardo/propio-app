@@ -431,6 +431,8 @@
       "endDate": "End date",
       "openEnded": "Leave empty for open-ended.",
       "monthlyRent": "Monthly rent",
+      "currency": "Currency",
+      "currencyHint": "3-letter ISO code (DOP, USD…).",
       "dueDay": "Rent due day",
       "dueDayHint": "Day of the month rent is due.",
       "securityDeposit": "Security deposit",

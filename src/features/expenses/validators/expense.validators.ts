@@ -14,7 +14,12 @@ export const expenseBaseSchema = z.object({
     .number()
     .positive('amountPositive')
     .max(100_000_000),
-  currency: z.string().length(3).default('USD'),
+  currency: z
+    .string()
+    .trim()
+    .length(3, 'currencyCode')
+    .transform((v) => v.toUpperCase())
+    .default('USD'),
   incurredAt: z.coerce.date().default(() => new Date()),
   vendor: z
     .string()

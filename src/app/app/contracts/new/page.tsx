@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { requireOwnerId } from '@/shared/lib/auth/session';
+import { getUserPreferences } from '@/shared/lib/auth/preferences';
 import { propertyService } from '@/features/properties/services/property.service';
 import { tenantService } from '@/features/tenants/services/tenant.service';
 import { ContractForm } from '@/features/contracts/components/contract-form';
@@ -13,9 +14,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function NewContractPage() {
   const ownerId = await requireOwnerId();
-  const [properties, tenants] = await Promise.all([
+  const [properties, tenants, prefs] = await Promise.all([
     propertyService.options(ownerId),
     tenantService.options(ownerId),
+    getUserPreferences(ownerId),
   ]);
 
   const t = await getTranslations('contracts.new');
@@ -30,6 +32,7 @@ export default async function NewContractPage() {
           id: t.id,
           label: `${t.firstName} ${t.lastName}`,
         }))}
+        defaultValues={{ currency: prefs.currency }}
       />
     </div>
   );

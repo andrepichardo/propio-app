@@ -24,7 +24,7 @@ describe('toNumber', () => {
 });
 
 describe('formatCurrency', () => {
-  it('formats USD with two decimals', () => {
+  it('formats USD with a bare $ and two decimals', () => {
     expect(formatCurrency(1200, 'USD')).toBe('$1,200.00');
   });
 
@@ -32,8 +32,16 @@ describe('formatCurrency', () => {
     expect(formatCurrency('99.9', 'USD')).toBe('$99.90');
   });
 
-  it('formats other currencies', () => {
-    expect(formatCurrency(50, 'EUR')).toContain('50');
+  it('formats DOP with the RD$ prefix', () => {
+    expect(formatCurrency(40_000, 'DOP')).toBe('RD$40,000.00');
+  });
+
+  it('keeps the sign in front of the symbol', () => {
+    expect(formatCurrency(-1200, 'DOP')).toBe('-RD$1,200.00');
+  });
+
+  it('falls back to Intl for unlisted currencies', () => {
+    expect(formatCurrency(50, 'JPY')).toContain('50');
   });
 });
 

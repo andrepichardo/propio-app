@@ -434,6 +434,8 @@
       "endDate": "Fecha de fin",
       "openEnded": "Déjala vacía para un contrato sin fecha de fin.",
       "monthlyRent": "Alquiler mensual",
+      "currency": "Moneda",
+      "currencyHint": "Código ISO de 3 letras (DOP, USD…).",
       "dueDay": "Día de pago",
       "dueDayHint": "Día del mes en que vence el alquiler.",
       "securityDeposit": "Depósito de garantía",

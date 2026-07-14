@@ -246,6 +246,25 @@ export function ContractForm({
             />
             <FormField
               control={form.control}
+              name="currency"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('form.currency')}</FormLabel>
+                  <FormControl>
+                    <Input
+                      maxLength={3}
+                      className="uppercase"
+                      {...field}
+                      value={field.value ?? ''}
+                    />
+                  </FormControl>
+                  <FormDescription>{t('form.currencyHint')}</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="dueDay"
               render={({ field }) => (
                 <FormItem>

@@ -14,17 +14,45 @@ export function toNumber(value: Numeric): number {
   return Number.isFinite(n) ? n : 0;
 }
 
+/**
+ * Short symbols for the currencies we expect. USD is deliberately a bare "$"
+ * (the app default needs no disambiguation); everything else carries its
+ * local prefix so mixed portfolios stay readable. Unlisted codes fall back
+ * to Intl's own formatting ("XYZ 1,200.00").
+ */
+const CURRENCY_SYMBOLS: Record<string, string> = {
+  USD: '$',
+  DOP: 'RD$',
+  EUR: '€',
+  MXN: 'MX$',
+  COP: 'CO$',
+  PEN: 'S/',
+  CLP: 'CL$',
+  ARS: 'AR$',
+  GTQ: 'Q',
+  CRC: '₡',
+};
+
 export function formatCurrency(
   value: Numeric,
   currency = 'USD',
   locale = 'en-US',
 ): string {
-  return new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency,
+  const n = toNumber(value);
+  const symbol = CURRENCY_SYMBOLS[currency];
+  if (!symbol) {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(n);
+  }
+  const digits = new Intl.NumberFormat(locale, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(toNumber(value));
+  }).format(Math.abs(n));
+  return `${n < 0 ? '-' : ''}${symbol}${digits}`;
 }
 
 export function formatCompactCurrency(
@@ -32,12 +60,21 @@ export function formatCompactCurrency(
   currency = 'USD',
   locale = 'en-US',
 ): string {
-  return new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency,
+  const n = toNumber(value);
+  const symbol = CURRENCY_SYMBOLS[currency];
+  if (!symbol) {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency,
+      notation: 'compact',
+      maximumFractionDigits: 1,
+    }).format(n);
+  }
+  const digits = new Intl.NumberFormat(locale, {
     notation: 'compact',
     maximumFractionDigits: 1,
-  }).format(toNumber(value));
+  }).format(Math.abs(n));
+  return `${n < 0 ? '-' : ''}${symbol}${digits}`;
 }
 
 export function formatPercent(value: Numeric, locale = 'en-US'): string {

@@ -30,8 +30,10 @@ import {
 
 export function CreateExpenseDialog({
   properties,
+  defaultCurrency = 'USD',
 }: {
   properties: OptionItem[];
+  defaultCurrency?: string;
 }) {
   const t = useTranslations('expenses');
   const router = useRouter();
@@ -44,7 +46,7 @@ export function CreateExpenseDialog({
       description: '',
       category: ExpenseCategory.MAINTENANCE,
       amount: 0,
-      currency: 'USD',
+      currency: defaultCurrency,
       incurredAt: new Date(),
       vendor: '',
       notes: '',

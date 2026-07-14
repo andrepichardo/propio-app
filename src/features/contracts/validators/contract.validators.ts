@@ -11,7 +11,12 @@ export const contractBaseSchema = z
       .number()
       .positive('rentPositive')
       .max(100_000_000),
-    currency: z.string().length(3).default('USD'),
+    currency: z
+      .string()
+      .trim()
+      .length(3, 'currencyCode')
+      .transform((v) => v.toUpperCase())
+      .default('USD'),
     dueDay: z.coerce.number().int().min(1).max(31).default(1),
     securityDeposit: z.coerce.number().min(0).max(100_000_000).default(0),
     maintenanceIncluded: z.boolean().default(false),
@@ -41,7 +46,12 @@ export const updateContractSchema = z
     startDate: z.coerce.date().optional(),
     endDate: z.coerce.date().optional().nullable(),
     monthlyRent: z.coerce.number().positive().max(100_000_000).optional(),
-    currency: z.string().length(3).optional(),
+    currency: z
+      .string()
+      .trim()
+      .length(3, 'currencyCode')
+      .transform((v) => v.toUpperCase())
+      .optional(),
     dueDay: z.coerce.number().int().min(1).max(31).optional(),
     securityDeposit: z.coerce.number().min(0).max(100_000_000).optional(),
     maintenanceIncluded: z.boolean().optional(),
