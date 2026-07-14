@@ -14,7 +14,7 @@ export default async function ProfileSettingsPage() {
   const sessionUser = await requireUser();
   const user = await prisma.user.findUniqueOrThrow({
     where: { id: sessionUser.id },
-    select: { name: true, email: true, image: true },
+    select: { name: true, email: true, image: true, signatureUrl: true },
   });
 
   const t = await getTranslations('settings');
@@ -25,6 +25,7 @@ export default async function ProfileSettingsPage() {
       <ProfileForm
         email={user.email}
         image={user.image}
+        signatureUrl={user.signatureUrl}
         defaultValues={{ name: user.name ?? '' }}
       />
     </div>

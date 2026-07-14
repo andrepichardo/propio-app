@@ -25,6 +25,10 @@ function avatarKey(ownerId: string): string {
   return `avatars/${ownerId}`;
 }
 
+function signatureKey(ownerId: string): string {
+  return `signatures/${ownerId}`;
+}
+
 export const updateProfileAction = createOwnerAction(
   updateProfileSchema,
   async (input, { ownerId }) => {
@@ -130,6 +134,56 @@ export async function removeAvatarAction(): Promise<
     await prisma.user.update({
       where: { id: ownerId },
       data: { image: null },
+    });
+
+    revalidatePath('/app', 'layout');
+    return ok({ ok: true });
+  } catch (error) {
+    return toActionFailure(error);
+  }
+}
+
+export async function updateSignatureAction(
+  formData: FormData,
+): Promise<ActionResult<{ url: string }>> {
+  try {
+    const ownerId = await requireOwnerId();
+
+    const file = await readUploadedFile(formData.get('file'), {
+      maxBytes: MAX_AVATAR_BYTES,
+      mimeTypes: IMAGE_MIME_TYPES,
+    });
+
+    const { url } = await getStorage().upload({
+      key: signatureKey(ownerId),
+      body: file.bytes,
+      contentType: file.type,
+      upsert: true,
+    });
+
+    const versionedUrl = `${url}?v=${Date.now()}`;
+    await prisma.user.update({
+      where: { id: ownerId },
+      data: { signatureUrl: versionedUrl },
+    });
+
+    revalidatePath('/app', 'layout');
+    return ok({ url: versionedUrl });
+  } catch (error) {
+    return toActionFailure(error);
+  }
+}
+
+export async function removeSignatureAction(): Promise<
+  ActionResult<{ ok: true }>
+> {
+  try {
+    const ownerId = await requireOwnerId();
+
+    await getStorage().remove(signatureKey(ownerId));
+    await prisma.user.update({
+      where: { id: ownerId },
+      data: { signatureUrl: null },
     });
 
     revalidatePath('/app', 'layout');

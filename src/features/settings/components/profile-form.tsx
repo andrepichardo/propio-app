@@ -30,15 +30,18 @@ import {
   CardTitle,
 } from '@/shared/components/ui/card';
 import { AvatarUploader } from './avatar-uploader';
+import { SignatureUploader } from './signature-uploader';
 
 export function ProfileForm({
   defaultValues,
   email,
   image,
+  signatureUrl,
 }: {
   defaultValues: UpdateProfileInput;
   email: string;
   image?: string | null;
+  signatureUrl?: string | null;
 }) {
   const t = useTranslations('settings');
   const router = useRouter();
@@ -71,6 +74,15 @@ export function ProfileForm({
           </CardHeader>
           <CardContent>
             <AvatarUploader name={form.watch('name')} image={image} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">{t('signature')}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <SignatureUploader signatureUrl={signatureUrl} />
           </CardContent>
         </Card>
 
