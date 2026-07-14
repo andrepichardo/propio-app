@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import { requireUser } from '@/shared/lib/auth/session';
 import { getUserPreferences } from '@/shared/lib/auth/preferences';
 import { DashboardOverview } from '@/features/dashboard/components/dashboard-overview';
+import { WelcomeToast } from '@/features/auth/components/welcome-toast';
 import { PageHeader } from '@/shared/components/page-header';
 import { QuickActions } from '@/features/dashboard/components/quick-actions';
 import { Skeleton } from '@/shared/components/ui/skeleton';
@@ -48,6 +49,10 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      <Suspense fallback={null}>
+        <WelcomeToast />
+      </Suspense>
+
       <PageHeader title={title} description={t('subtitle')} />
 
       <QuickActions />

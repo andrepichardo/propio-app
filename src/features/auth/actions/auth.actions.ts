@@ -50,7 +50,8 @@ export async function loginAction(
 export async function oauthSignInAction(
   provider: 'google' | 'github',
 ): Promise<void> {
-  await signIn(provider, { redirectTo: '/app' });
+  // `welcome=1` lets the dashboard fire the sign-in toast post-redirect.
+  await signIn(provider, { redirectTo: '/app?welcome=1' });
 }
 
 export async function signOutAction(): Promise<void> {

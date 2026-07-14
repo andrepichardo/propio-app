@@ -54,11 +54,14 @@ export function StatCard({
           ) : null}
         </div>
         <div className="mt-3 flex items-end justify-between gap-2">
-          <p className="text-2xl font-semibold tracking-tight">{value}</p>
+          {/* min-w-0 + break-words keep long amounts inside the card. */}
+          <p className="min-w-0 break-words text-xl font-semibold tracking-tight xl:text-2xl">
+            {value}
+          </p>
           {hasTrend ? (
             <span
               className={cn(
-                'inline-flex items-center gap-0.5 text-xs font-medium',
+                'inline-flex shrink-0 items-center gap-0.5 text-xs font-medium',
                 isPositive ? 'text-success' : 'text-destructive',
               )}
             >
