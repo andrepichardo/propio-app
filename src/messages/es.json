@@ -712,7 +712,7 @@
     "identity": "Identidad",
     "fullName": "Nombre completo",
     "email": "Correo electrónico",
-    "emailHint": "Contacta a soporte para cambiar tu correo de inicio de sesión.",
+    "emailHint": "El correo de inicio de sesión no se puede cambiar.",
     "changePhoto": "Cambiar foto",
     "remove": "Quitar",
     "photoHint": "JPG, PNG o WebP — hasta 2 MB.",

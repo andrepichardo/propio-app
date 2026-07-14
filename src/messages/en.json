@@ -709,7 +709,7 @@
     "identity": "Identity",
     "fullName": "Full name",
     "email": "Email",
-    "emailHint": "Contact support to change your sign-in email.",
+    "emailHint": "Your sign-in email can't be changed.",
     "changePhoto": "Change photo",
     "remove": "Remove",
     "photoHint": "JPG, PNG or WebP — up to 2 MB.",
