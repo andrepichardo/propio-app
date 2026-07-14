@@ -77,7 +77,12 @@ export function UploadDocumentDialog({
         </DialogHeader>
         <form ref={formRef} onSubmit={onSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="doc-file">{t('dialog.file')}</Label>
+            <Label htmlFor="doc-file">
+              {t('dialog.file')}
+              <span aria-hidden className="ml-0.5 text-destructive">
+                *
+              </span>
+            </Label>
             <Input
               id="doc-file"
               name="file"

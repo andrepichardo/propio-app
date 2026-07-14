@@ -24,6 +24,7 @@ import {
   FormMessage,
 } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
+import { PhoneInput } from '@/shared/components/ui/phone-input';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Button } from '@/shared/components/ui/button';
 import {
@@ -93,7 +94,7 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
               name="firstName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('firstName')}</FormLabel>
+                  <FormLabel required>{t('firstName')}</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -106,7 +107,7 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
               name="lastName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('lastName')}</FormLabel>
+                  <FormLabel required>{t('lastName')}</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -134,7 +135,12 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
                 <FormItem>
                   <FormLabel>{t('phone')}</FormLabel>
                   <FormControl>
-                    <Input {...field} value={field.value ?? ''} />
+                    <PhoneInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -149,6 +155,7 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
                   <FormControl>
                     <Input
                       placeholder={t('identificationPlaceholder')}
+                      maxLength={20}
                       {...field}
                       value={field.value ?? ''}
                     />
@@ -185,7 +192,12 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
                 <FormItem>
                   <FormLabel>{t('phone')}</FormLabel>
                   <FormControl>
-                    <Input {...field} value={field.value ?? ''} />
+                    <PhoneInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

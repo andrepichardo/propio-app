@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { isPossiblePhoneNumber } from 'libphonenumber-js';
 
 const optional = (max: number) =>
   z
@@ -7,6 +8,24 @@ const optional = (max: number) =>
     .max(max)
     .optional()
     .transform((v) => (v === '' ? undefined : v));
+
+/** E.164 from the phone input; legacy formatted values still parse. */
+const phone = z
+  .string()
+  .trim()
+  .max(20, 'phoneInvalid')
+  .refine((v) => v === '' || isPossiblePhoneNumber(v), 'phoneInvalid')
+  .optional()
+  .transform((v) => (v === '' ? undefined : v));
+
+/** Cédula (000-0000000-0) or passport: letters, digits and hyphens only. */
+const identification = z
+  .string()
+  .trim()
+  .max(20, 'identificationTooLong')
+  .regex(/^[A-Za-z0-9-]*$/, 'identificationInvalid')
+  .optional()
+  .transform((v) => (v === '' ? undefined : v));
 
 export const tenantBaseSchema = z.object({
   firstName: z.string().trim().min(1, 'firstNameRequired').max(80),
@@ -17,11 +36,11 @@ export const tenantBaseSchema = z.object({
     .email('emailInvalid')
     .optional()
     .or(z.literal('')),
-  phone: optional(40),
-  identification: optional(60),
+  phone,
+  identification,
   avatarUrl: z.string().url().optional().or(z.literal('')),
   emergencyName: optional(120),
-  emergencyPhone: optional(40),
+  emergencyPhone: phone,
   emergencyRelation: optional(60),
   notes: optional(2000),
 });

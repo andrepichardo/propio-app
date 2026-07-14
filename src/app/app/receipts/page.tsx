@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
+import { after } from 'next/server';
 import { getTranslations } from 'next-intl/server';
 import { Download, Receipt } from 'lucide-react';
 import { requireOwnerId } from '@/shared/lib/auth/session';
@@ -35,6 +36,21 @@ async function ReceiptsTable({
     page,
   });
   const t = await getTranslations('receipts');
+
+  // Self-healing: seeded rows or failed post-payment renders leave pdfUrl
+  // empty. Backfill them after the response so the next visit has the PDF.
+  const missingPdf = items.filter((r) => !r.pdfUrl);
+  if (missingPdf.length > 0) {
+    after(async () => {
+      for (const receipt of missingPdf) {
+        try {
+          await receiptService.generatePdf(ownerId, receipt.id);
+        } catch (error) {
+          console.error('[receipts] PDF backfill failed', receipt.id, error);
+        }
+      }
+    });
+  }
 
   if (items.length === 0) {
     return (

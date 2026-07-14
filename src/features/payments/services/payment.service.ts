@@ -3,10 +3,8 @@ import {
   ActivityAction,
   NotificationType,
   type Prisma,
-  type PaymentMethod,
 } from '@prisma/client';
 import { format } from 'date-fns';
-import { getTranslations } from 'next-intl/server';
 import { prisma } from '@/shared/lib/prisma';
 import { paymentRepository } from '../repositories/payment.repository';
 import type {
@@ -16,11 +14,9 @@ import type {
 import { ForbiddenError, NotFoundError } from '@/shared/lib/errors';
 import { logActivity } from '@/shared/lib/activity/activity-logger';
 import { formatCurrency } from '@/shared/lib/format';
-import { getStorage } from '@/shared/lib/storage';
-import { renderReceiptPdf } from '@/pdf/render';
+import { receiptService } from '@/features/receipts/services/receipt.service';
 import { sendReceiptEmail } from '@/emails/send';
 import { getUserPreferences } from '@/shared/lib/auth/preferences';
-import { clientEnv } from '@/shared/config/env';
 
 /**
  * Generate the next per-owner receipt number for the current year, e.g.
@@ -128,16 +124,10 @@ export const paymentService = {
       ownerId,
       receiptId: receipt.id,
       number: receipt.number,
-      concept,
       amount: input.amount,
-      balanceAfter,
       currency: contract.currency,
-      method: input.method,
-      reference: input.reference,
-      issuedAt: input.paidAt,
       tenantName: `${contract.tenant.firstName} ${contract.tenant.lastName}`,
       tenantEmail: contract.tenant.email,
-      propertyName: contract.property.name,
       sendReceipt: input.sendReceipt,
     });
 
@@ -159,73 +149,34 @@ export const paymentService = {
   },
 
   /**
-   * Render the receipt PDF, persist it to storage, cache the URL, and email it
-   * to the tenant when requested. Isolated so failures here never surface to
-   * the payment registration path.
+   * Render + store the receipt PDF (via receiptService.generatePdf) and email
+   * it to the tenant when requested. Isolated so failures here never surface
+   * to the payment registration path.
    */
   async finalizeReceipt(params: {
     ownerId: string;
     receiptId: string;
     number: string;
-    concept: string;
     amount: number;
-    balanceAfter: number;
     currency: string;
-    method: PaymentMethod;
-    reference?: string;
-    issuedAt: Date;
     tenantName: string;
     tenantEmail?: string | null;
-    propertyName: string;
     sendReceipt: boolean;
   }): Promise<void> {
     try {
-      const owner = await prisma.user.findUnique({
-        where: { id: params.ownerId },
-        select: { name: true, email: true },
-      });
-      const prefs = await getUserPreferences(params.ownerId);
-      const tMethod = await getTranslations({
-        locale: prefs.locale,
-        namespace: 'payments.methods',
-      });
-
-      const pdf = await renderReceiptPdf({
-        number: params.number,
-        issuedAt: format(params.issuedAt, 'PPP'),
-        concept: params.concept,
-        amount: formatCurrency(params.amount, params.currency, prefs.locale),
-        balanceAfter: formatCurrency(
-          params.balanceAfter,
-          params.currency,
-          prefs.locale,
-        ),
-        method: tMethod(params.method),
-        reference: params.reference,
-        ownerName: owner?.name ?? owner?.email ?? 'Owner',
-        tenantName: params.tenantName,
-        propertyName: params.propertyName,
-        appName: clientEnv.NEXT_PUBLIC_APP_NAME,
-      });
-
-      const { url } = await getStorage().upload({
-        key: `receipts/${params.ownerId}/${params.number}.pdf`,
-        body: pdf,
-        contentType: 'application/pdf',
-      });
-
-      await prisma.receipt.update({
-        where: { id: params.receiptId },
-        data: { pdfUrl: url },
-      });
+      const result = await receiptService.generatePdf(
+        params.ownerId,
+        params.receiptId,
+      );
 
       if (params.sendReceipt && params.tenantEmail) {
+        const prefs = await getUserPreferences(params.ownerId);
         await sendReceiptEmail({
           to: params.tenantEmail,
           tenantName: params.tenantName,
           amount: formatCurrency(params.amount, params.currency, prefs.locale),
           receiptNumber: params.number,
-          pdf,
+          pdf: result?.pdf,
         });
       }
     } catch (error) {

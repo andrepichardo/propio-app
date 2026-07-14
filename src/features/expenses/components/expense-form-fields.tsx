@@ -2,7 +2,6 @@
 
 import { type UseFormReturn } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
-import { format } from 'date-fns';
 import type { CreateExpenseInput } from '../validators/expense.validators';
 import { EXPENSE_CATEGORY_VALUES } from '../constants';
 import type { OptionItem } from '@/features/contracts/components/contract-form';
@@ -14,6 +13,7 @@ import {
   FormMessage,
 } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
+import { toDateInputValue } from '@/shared/lib/format';
 import { Textarea } from '@/shared/components/ui/textarea';
 import {
   Select,
@@ -44,7 +44,7 @@ export function ExpenseFormFields({
         name="description"
         render={({ field }) => (
           <FormItem className="sm:col-span-2">
-            <FormLabel>{t('form.description')}</FormLabel>
+            <FormLabel required>{t('form.description')}</FormLabel>
             <FormControl>
               <Input placeholder={t('form.descriptionPlaceholder')} {...field} />
             </FormControl>
@@ -81,7 +81,7 @@ export function ExpenseFormFields({
         name="amount"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>{t('form.amount')}</FormLabel>
+            <FormLabel required>{t('form.amount')}</FormLabel>
             <FormControl>
               <Input type="number" step="0.01" min="0" {...field} />
             </FormControl>
@@ -94,13 +94,11 @@ export function ExpenseFormFields({
         name="incurredAt"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>{t('form.date')}</FormLabel>
+            <FormLabel required>{t('form.date')}</FormLabel>
             <FormControl>
               <Input
                 type="date"
-                value={
-                  field.value ? format(new Date(field.value), 'yyyy-MM-dd') : ''
-                }
+                value={toDateInputValue(field.value)}
                 onChange={(e) => field.onChange(e.target.value)}
               />
             </FormControl>

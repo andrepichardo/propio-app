@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { format } from 'date-fns';
 import { PaymentMethod } from '@prisma/client';
 import { Wallet } from 'lucide-react';
 import {
@@ -17,6 +16,7 @@ import {
 import { PAYMENT_METHOD_VALUES } from '../constants';
 import { registerPaymentAction } from '../actions/payment.actions';
 import { applyFieldErrors } from '@/shared/hooks/use-server-action';
+import { toDateInputValue } from '@/shared/lib/format';
 import {
   Form,
   FormControl,
@@ -125,7 +125,7 @@ export function PaymentForm({
               name="contractId"
               render={({ field }) => (
                 <FormItem className="sm:col-span-2">
-                  <FormLabel>{t('form.contract')}</FormLabel>
+                  <FormLabel required>{t('form.contract')}</FormLabel>
                   <Select
                     onValueChange={(value) => {
                       field.onChange(value);
@@ -156,7 +156,7 @@ export function PaymentForm({
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('form.amount')}</FormLabel>
+                  <FormLabel required>{t('form.amount')}</FormLabel>
                   <FormControl>
                     <Input type="number" step="0.01" min="0" {...field} />
                   </FormControl>
@@ -193,15 +193,11 @@ export function PaymentForm({
               name="paidAt"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('form.date')}</FormLabel>
+                  <FormLabel required>{t('form.date')}</FormLabel>
                   <FormControl>
                     <Input
                       type="date"
-                      value={
-                        field.value
-                          ? format(new Date(field.value), 'yyyy-MM-dd')
-                          : ''
-                      }
+                      value={toDateInputValue(field.value)}
                       onChange={(e) => field.onChange(e.target.value)}
                     />
                   </FormControl>

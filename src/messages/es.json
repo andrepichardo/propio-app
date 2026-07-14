@@ -31,7 +31,7 @@
     "spanish": "Español"
   },
   "nav": {
-    "dashboard": "Inicio",
+    "dashboard": "Panel",
     "properties": "Propiedades",
     "tenants": "Inquilinos",
     "contracts": "Contratos",
@@ -184,7 +184,26 @@
     "startDateRequired": "La fecha de inicio es obligatoria.",
     "rentPositive": "El alquiler debe ser mayor que cero.",
     "selectContract": "Selecciona un contrato.",
-    "documentNameRequired": "El nombre es obligatorio."
+    "documentNameRequired": "El nombre es obligatorio.",
+    "phoneInvalid": "Ingresa un número de teléfono válido.",
+    "identificationTooLong": "Máximo 20 caracteres.",
+    "identificationInvalid": "Solo letras, números y guiones."
+  },
+  "pdf": {
+    "receipt": {
+      "paymentReceipt": "Recibo de pago",
+      "receipt": "Recibo",
+      "paid": "PAGADO",
+      "receivedFrom": "Recibido de",
+      "receivedBy": "Recibido por",
+      "concept": "Concepto",
+      "amount": "Monto",
+      "totalPaid": "Total pagado",
+      "method": "Método de pago",
+      "balance": "Balance pendiente",
+      "reference": "Referencia",
+      "footer": "Generado por {app}. Este recibo confirma el pago detallado arriba."
+    }
   },
   "dashboard": {
     "greetingMorning": "Buenos días",
@@ -358,7 +377,13 @@
       "identification": "Identificación",
       "emergencyContact": "Contacto de emergencia",
       "contact": "Contacto",
-      "notes": "Notas"
+      "notes": "Notas",
+      "since": "Inquilino desde el {date}",
+      "stats": {
+        "contracts": "Contratos",
+        "payments": "Pagos",
+        "documents": "Documentos"
+      }
     }
   },
   "contracts": {
@@ -720,7 +745,7 @@
     "forgotPassword": "Olvidé mi contraseña",
     "resetPassword": "Restablecer contraseña",
     "verifyEmail": "Verifica tu correo",
-    "dashboard": "Inicio",
+    "dashboard": "Panel",
     "properties": "Propiedades",
     "newProperty": "Nueva propiedad",
     "property": "Propiedad",

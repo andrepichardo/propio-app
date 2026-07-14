@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getTranslations } from 'next-intl/server';
+import { getFormatter, getTranslations } from 'next-intl/server';
 import { Mail, Pencil, Phone, ShieldAlert, IdCard } from 'lucide-react';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { NotFoundError } from '@/shared/lib/errors';
@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from '@/shared/components/ui/card';
 import { TenantAvatarUpload } from '@/features/tenants/components/tenant-avatar-upload';
-import { getInitials } from '@/shared/lib/format';
+import { formatPhone, getInitials } from '@/shared/lib/format';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('meta');
@@ -36,6 +36,7 @@ export default async function TenantDetailPage({
   });
 
   const t = await getTranslations('tenants.detail');
+  const formatter = await getFormatter();
   const fullName = `${tenant.firstName} ${tenant.lastName}`;
 
   return (
@@ -56,19 +57,42 @@ export default async function TenantDetailPage({
       />
 
       <div className="grid gap-6 lg:grid-cols-[1fr_1.4fr]">
-        <Card>
-          <CardContent className="flex flex-col items-center gap-3 p-6 text-center">
-            <TenantAvatarUpload
-              tenantId={tenant.id}
-              avatarUrl={tenant.avatarUrl}
-              initials={getInitials(fullName)}
-            />
-            <div>
-              <p className="font-semibold">{fullName}</p>
-              {tenant.email ? (
-                <p className="text-sm text-muted-foreground">{tenant.email}</p>
-              ) : null}
+        <Card className="flex flex-col">
+          <CardContent className="flex h-full flex-col items-center gap-4 p-6 text-center">
+            <div className="flex flex-1 flex-col items-center justify-center gap-4">
+              <TenantAvatarUpload
+                tenantId={tenant.id}
+                avatarUrl={tenant.avatarUrl}
+                initials={getInitials(fullName)}
+              />
+              <div className="space-y-0.5">
+                <p className="font-semibold">{fullName}</p>
+                {tenant.email ? (
+                  <p className="text-sm text-muted-foreground">
+                    {tenant.email}
+                  </p>
+                ) : null}
+                {tenant.phone ? (
+                  <p className="text-sm text-muted-foreground">
+                    {formatPhone(tenant.phone)}
+                  </p>
+                ) : null}
+              </div>
             </div>
+            <div className="grid w-full grid-cols-3 gap-2 border-t pt-4">
+              <Stat
+                value={tenant._count.contracts}
+                label={t('stats.contracts')}
+              />
+              <Stat value={tenant._count.payments} label={t('stats.payments')} />
+              <Stat
+                value={tenant._count.documents}
+                label={t('stats.documents')}
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {t('since', { date: formatter.dateTime(tenant.createdAt, { dateStyle: 'medium' }) })}
+            </p>
           </CardContent>
         </Card>
 
@@ -79,7 +103,11 @@ export default async function TenantDetailPage({
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
               <Row icon={Mail} label={t('email')} value={tenant.email} />
-              <Row icon={Phone} label={t('phone')} value={tenant.phone} />
+              <Row
+                icon={Phone}
+                label={t('phone')}
+                value={tenant.phone ? formatPhone(tenant.phone) : null}
+              />
               <Row
                 icon={IdCard}
                 label={t('identification')}
@@ -104,7 +132,11 @@ export default async function TenantDetailPage({
                 <Row
                   icon={Phone}
                   label={t('phone')}
-                  value={tenant.emergencyPhone}
+                  value={
+                    tenant.emergencyPhone
+                      ? formatPhone(tenant.emergencyPhone)
+                      : null
+                  }
                 />
               </CardContent>
             </Card>
@@ -122,6 +154,15 @@ export default async function TenantDetailPage({
           ) : null}
         </div>
       </div>
+    </div>
+  );
+}
+
+function Stat({ value, label }: { value: number; label: string }) {
+  return (
+    <div className="rounded-lg bg-muted/40 px-2 py-2.5">
+      <p className="text-lg font-semibold leading-none">{value}</p>
+      <p className="mt-1 truncate text-xs text-muted-foreground">{label}</p>
     </div>
   );
 }

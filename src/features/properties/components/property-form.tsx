@@ -113,7 +113,7 @@ export function PropertyForm({
               name="name"
               render={({ field }) => (
                 <FormItem className="sm:col-span-2">
-                  <FormLabel>{t('form.name')}</FormLabel>
+                  <FormLabel required>{t('form.name')}</FormLabel>
                   <FormControl>
                     <Input placeholder={t('form.namePlaceholder')} {...field} />
                   </FormControl>

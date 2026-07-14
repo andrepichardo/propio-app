@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { format } from 'date-fns';
 import { ContractStatus } from '@prisma/client';
 import {
   createContractSchema,
@@ -19,6 +18,7 @@ import {
   updateContractAction,
 } from '../actions/contract.actions';
 import { applyFieldErrors } from '@/shared/hooks/use-server-action';
+import { toDateInputValue } from '@/shared/lib/format';
 import {
   Form,
   FormControl,
@@ -56,12 +56,6 @@ interface ContractFormProps {
   properties: OptionItem[];
   tenants: OptionItem[];
   defaultValues?: Partial<CreateContractInput>;
-}
-
-function toDateInput(value?: Date | string): string {
-  if (!value) return '';
-  const date = typeof value === 'string' ? new Date(value) : value;
-  return Number.isNaN(date.getTime()) ? '' : format(date, 'yyyy-MM-dd');
 }
 
 export function ContractForm({
@@ -143,7 +137,7 @@ export function ContractForm({
               name="propertyId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('form.property')}</FormLabel>
+                  <FormLabel required>{t('form.property')}</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
@@ -167,7 +161,7 @@ export function ContractForm({
               name="tenantId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('form.tenant')}</FormLabel>
+                  <FormLabel required>{t('form.tenant')}</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
@@ -199,11 +193,11 @@ export function ContractForm({
               name="startDate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('form.startDate')}</FormLabel>
+                  <FormLabel required>{t('form.startDate')}</FormLabel>
                   <FormControl>
                     <Input
                       type="date"
-                      value={toDateInput(field.value)}
+                      value={toDateInputValue(field.value)}
                       onChange={(e) => field.onChange(e.target.value)}
                     />
                   </FormControl>
@@ -220,7 +214,7 @@ export function ContractForm({
                   <FormControl>
                     <Input
                       type="date"
-                      value={toDateInput(field.value ?? undefined)}
+                      value={toDateInputValue(field.value)}
                       onChange={(e) =>
                         field.onChange(e.target.value || undefined)
                       }
@@ -236,7 +230,7 @@ export function ContractForm({
               name="monthlyRent"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('form.monthlyRent')}</FormLabel>
+                  <FormLabel required>{t('form.monthlyRent')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"

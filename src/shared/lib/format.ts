@@ -1,4 +1,5 @@
 import { format, formatDistanceToNow } from 'date-fns';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
 
 /**
  * Money is stored as Prisma `Decimal` (serialised to string over the wire).
@@ -46,6 +47,19 @@ export function formatPercent(value: Numeric, locale = 'en-US'): string {
   }).format(toNumber(value));
 }
 
+/**
+ * Date-only values (contract start, payment date…) are persisted at UTC
+ * midnight. Formatting them with local-time getters west of UTC (e.g.
+ * UTC-4) would show the previous day, so those are rebuilt from their UTC
+ * parts before formatting. Real timestamps pass through untouched.
+ */
+function toDisplayDate(date: Date): Date {
+  const isUtcMidnight = date.getTime() % 86_400_000 === 0;
+  return isUtcMidnight
+    ? new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+    : date;
+}
+
 export function formatDate(
   value: Date | string | null | undefined,
   pattern = 'MMM d, yyyy',
@@ -53,7 +67,27 @@ export function formatDate(
   if (!value) return '—';
   const date = typeof value === 'string' ? new Date(value) : value;
   if (Number.isNaN(date.getTime())) return '—';
-  return format(date, pattern);
+  return format(toDisplayDate(date), pattern);
+}
+
+/** Value for `<input type="date">` (`yyyy-MM-dd`), timezone-shift safe. */
+export function toDateInputValue(
+  value: Date | string | null | undefined,
+): string {
+  if (!value) return '';
+  if (typeof value === 'string') {
+    const match = /^\d{4}-\d{2}-\d{2}/.exec(value);
+    if (match) return match[0];
+  }
+  const date = typeof value === 'string' ? new Date(value) : value;
+  if (Number.isNaN(date.getTime())) return '';
+  return format(toDisplayDate(date), 'yyyy-MM-dd');
+}
+
+/** Human-readable international phone (`+1 809 555 1234`); raw fallback. */
+export function formatPhone(value?: string | null): string {
+  if (!value) return '—';
+  return parsePhoneNumberFromString(value)?.formatInternational() ?? value;
 }
 
 export function formatRelative(

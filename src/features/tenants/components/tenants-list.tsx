@@ -20,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui/table';
-import { getInitials } from '@/shared/lib/format';
+import { formatPhone, getInitials } from '@/shared/lib/format';
 
 export async function TenantsList({
   ownerId,
@@ -95,7 +95,8 @@ export async function TenantsList({
                     ) : null}
                     {tenant.phone ? (
                       <span className="flex items-center gap-1.5">
-                        <Phone className="size-3.5" /> {tenant.phone}
+                        <Phone className="size-3.5" />{' '}
+                        {formatPhone(tenant.phone)}
                       </span>
                     ) : null}
                     {!tenant.email && !tenant.phone ? '—' : null}
