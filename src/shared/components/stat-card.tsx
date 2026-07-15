@@ -53,29 +53,32 @@ export function StatCard({
             </span>
           ) : null}
         </div>
-        <div className="mt-3 flex items-end justify-between gap-2">
-          {/* min-w-0 + break-words keep long amounts inside the card. */}
-          <p className="min-w-0 break-words text-xl font-semibold tracking-tight xl:text-2xl">
-            {value}
-          </p>
-          {hasTrend ? (
-            <span
-              className={cn(
-                'inline-flex shrink-0 items-center gap-0.5 text-xs font-medium',
-                isPositive ? 'text-success' : 'text-destructive',
-              )}
-            >
-              {isPositive ? (
-                <ArrowUpRight className="size-3.5" />
-              ) : (
-                <ArrowDownRight className="size-3.5" />
-              )}
-              {Math.abs(trend ?? 0).toFixed(1)}%
-            </span>
-          ) : null}
-        </div>
-        {hint ? (
-          <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
+        {/* The value owns the full card width; trend/hint live below so long
+            amounts only wrap as a last resort. */}
+        <p className="mt-3 min-w-0 break-words text-xl font-semibold tracking-tight xl:text-2xl">
+          {value}
+        </p>
+        {hasTrend || hint ? (
+          <div className="mt-1 flex items-center gap-2">
+            {hasTrend ? (
+              <span
+                className={cn(
+                  'inline-flex shrink-0 items-center gap-0.5 text-xs font-medium',
+                  isPositive ? 'text-success' : 'text-destructive',
+                )}
+              >
+                {isPositive ? (
+                  <ArrowUpRight className="size-3.5" />
+                ) : (
+                  <ArrowDownRight className="size-3.5" />
+                )}
+                {Math.abs(trend ?? 0).toFixed(1)}%
+              </span>
+            ) : null}
+            {hint ? (
+              <p className="text-xs text-muted-foreground">{hint}</p>
+            ) : null}
+          </div>
         ) : null}
       </CardContent>
     </Card>
