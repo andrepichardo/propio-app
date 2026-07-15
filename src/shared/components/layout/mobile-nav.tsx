@@ -26,12 +26,14 @@ export function MobileNav() {
           <span className="sr-only">{t('openMenu')}</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="left-0 top-0 h-full max-w-[17rem] translate-x-0 translate-y-0 rounded-none border-r p-0 sm:rounded-none">
+      {/* flex-col overrides the dialog's base grid, which would otherwise
+          spread the leftover height and float the nav mid-panel. */}
+      <DialogContent className="left-0 top-0 flex h-full max-w-[17rem] translate-x-0 translate-y-0 flex-col gap-0 rounded-none border-r p-0 sm:rounded-none">
         <DialogTitle className="sr-only">{t('menuTitle')}</DialogTitle>
-        <div className="flex h-16 items-center border-b px-5">
+        <div className="flex h-16 shrink-0 items-center border-b px-5">
           <Logo />
         </div>
-        <div className="overflow-y-auto scrollbar-thin">
+        <div className="flex-1 overflow-y-auto scrollbar-thin">
           <SidebarNav onNavigate={() => setOpen(false)} />
         </div>
       </DialogContent>
