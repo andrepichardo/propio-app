@@ -1,5 +1,6 @@
 import 'server-only';
 import { getTranslations } from 'next-intl/server';
+import type { Locale } from '@/i18n/config';
 import { clientEnv } from '@/shared/config/env';
 import { EMAIL_FROM, getResend } from './client';
 import {
@@ -14,9 +15,15 @@ type Attachment = { filename: string; content: Buffer };
 const APP = clientEnv.NEXT_PUBLIC_APP_NAME;
 const APP_URL = clientEnv.NEXT_PUBLIC_APP_URL;
 
-/** Email copy follows the request locale (the acting user's language). */
-function emailTranslations() {
-  return getTranslations('emails');
+/**
+ * Email copy follows the request locale (the acting user's language). Callers
+ * running inside `after()` are outside the request scope, so the cookie
+ * fallback doesn't apply there — they must pass the locale explicitly.
+ */
+function emailTranslations(locale?: Locale) {
+  return locale
+    ? getTranslations({ locale, namespace: 'emails' })
+    : getTranslations('emails');
 }
 
 async function deliver(params: {
@@ -48,8 +55,9 @@ async function deliver(params: {
 export async function sendWelcomeEmail(params: {
   to: string;
   name?: string | null;
+  locale?: Locale;
 }): Promise<void> {
-  const t = await emailTranslations();
+  const t = await emailTranslations(params.locale);
   const { subject, html } = welcomeEmail({
     subject: t('welcomeSubject', { app: APP }),
     title: params.name
@@ -82,8 +90,9 @@ export async function sendResetPasswordEmail(params: {
 export async function sendVerifyEmail(params: {
   to: string;
   verifyUrl: string;
+  locale?: Locale;
 }): Promise<void> {
-  const t = await emailTranslations();
+  const t = await emailTranslations(params.locale);
   const { subject, html } = verifyEmail({
     subject: t('verifySubject', { app: APP }),
     title: t('verifyTitle'),

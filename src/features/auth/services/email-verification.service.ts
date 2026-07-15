@@ -1,7 +1,10 @@
 import 'server-only';
 import { createHash, randomBytes } from 'crypto';
+import { after } from 'next/server';
 import { prisma } from '@/shared/lib/prisma';
 import { clientEnv } from '@/shared/config/env';
+import type { Locale } from '@/i18n/config';
+import { getUserLocale } from '@/i18n/locale';
 import { sendVerifyEmail, sendWelcomeEmail } from '@/emails/send';
 
 const IDENTIFIER_PREFIX = 'email-verify:';
@@ -15,9 +18,14 @@ function hashToken(token: string): string {
 
 /**
  * Issue (or re-issue) a verification token for an email and send the link.
- * Previous outstanding tokens are invalidated. Safe to fire-and-forget.
+ * Previous outstanding tokens are invalidated. Callers must await this (or run
+ * it inside `after()`, passing `locale` explicitly) — a dangling promise gets
+ * killed when Vercel freezes the function, and the email never sends.
  */
-export async function issueVerificationEmail(email: string): Promise<void> {
+export async function issueVerificationEmail(
+  email: string,
+  locale?: Locale,
+): Promise<void> {
   const normalized = email.toLowerCase();
   const identifier = `${IDENTIFIER_PREFIX}${normalized}`;
   const token = randomBytes(32).toString('hex');
@@ -32,7 +40,7 @@ export async function issueVerificationEmail(email: string): Promise<void> {
   });
 
   const verifyUrl = `${clientEnv.NEXT_PUBLIC_APP_URL}/api/verify-email?token=${token}&email=${encodeURIComponent(normalized)}`;
-  await sendVerifyEmail({ to: normalized, verifyUrl });
+  await sendVerifyEmail({ to: normalized, verifyUrl, locale });
 }
 
 /**
@@ -81,8 +89,18 @@ export async function verifyEmailToken(
     prisma.verificationToken.deleteMany({ where: { identifier } }),
   ]);
 
-  // The account is now usable — greet the user. Fire-and-forget.
-  void sendWelcomeEmail({ to: user.email, name: user.name });
+  // The account is now usable — greet the user without delaying the redirect.
+  // `after()` keeps the serverless function alive until the send completes;
+  // the locale must be captured now because the request scope (cookies) is
+  // gone by the time the callback runs.
+  const locale = await getUserLocale();
+  after(async () => {
+    try {
+      await sendWelcomeEmail({ to: user.email, name: user.name, locale });
+    } catch (error) {
+      console.error('[email] failed to send welcome email', error);
+    }
+  });
 
   return true;
 }

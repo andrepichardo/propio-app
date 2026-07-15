@@ -1,6 +1,8 @@
 'use server';
 
+import { after } from 'next/server';
 import { getTranslations } from 'next-intl/server';
+import { getUserLocale } from '@/i18n/locale';
 import { prisma } from '@/shared/lib/prisma';
 import { hashPassword } from '@/shared/lib/auth/password';
 import { registerSchema } from '@/shared/lib/auth/auth.validators';
@@ -45,10 +47,20 @@ export async function registerAction(
       select: { id: true, email: true, name: true },
     });
 
-    // Fire-and-forget; never block registration on delivery. Only the
+    // Never block registration on delivery, but a plain fire-and-forget dies
+    // when Vercel freezes the function after the response — `after()` keeps it
+    // alive until the send completes. The locale must be captured here: inside
+    // the callback the request scope (cookies) is already gone. Only the
     // verification email goes out now — the welcome email is sent after the
     // address is verified (when the account is actually usable).
-    void issueVerificationEmail(user.email);
+    const locale = await getUserLocale();
+    after(async () => {
+      try {
+        await issueVerificationEmail(user.email, locale);
+      } catch (error) {
+        console.error('[email] failed to send verification email', error);
+      }
+    });
 
     return ok({ id: user.id, email: user.email });
   } catch (error) {
