@@ -1,6 +1,6 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -8,13 +8,20 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { PaymentMethod } from '@prisma/client';
-import { Wallet } from 'lucide-react';
+import { Paperclip, Wallet } from 'lucide-react';
 import {
   registerPaymentSchema,
   type RegisterPaymentInput,
 } from '../validators/payment.validators';
-import { PAYMENT_METHOD_VALUES } from '../constants';
-import { registerPaymentAction } from '../actions/payment.actions';
+import {
+  MAX_PAYMENT_PROOF_MB,
+  PAYMENT_METHOD_VALUES,
+  PAYMENT_PROOF_ACCEPT,
+} from '../constants';
+import {
+  registerPaymentAction,
+  uploadPaymentProofAction,
+} from '../actions/payment.actions';
 import { applyFieldErrors } from '@/shared/hooks/use-server-action';
 import { toDateInputValue } from '@/shared/lib/format';
 import {
@@ -64,6 +71,9 @@ export function PaymentForm({
   const t = useTranslations('payments');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const proofInputRef = useRef<HTMLInputElement>(null);
+  const [proofUploading, setProofUploading] = useState(false);
+  const [proofName, setProofName] = useState<string | null>(null);
 
   const preselected = contracts.find((c) => c.id === defaultContractId);
 
@@ -77,9 +87,39 @@ export function PaymentForm({
       concept: '',
       paidAt: new Date(),
       notes: '',
+      proofUrl: '',
       sendReceipt: false,
     },
   });
+
+  const proofUrl = form.watch('proofUrl');
+
+  /** Upload as soon as a file is picked so registration only carries the URL. */
+  async function onProofChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.set('file', file);
+
+    setProofUploading(true);
+    const result = await uploadPaymentProofAction(formData);
+    setProofUploading(false);
+
+    if (!result.success) {
+      toast.error(result.error);
+      event.target.value = '';
+      return;
+    }
+    form.setValue('proofUrl', result.data.url);
+    setProofName(file.name);
+  }
+
+  function removeProof() {
+    form.setValue('proofUrl', '');
+    setProofName(null);
+    if (proofInputRef.current) proofInputRef.current.value = '';
+  }
 
   function onSubmit(values: RegisterPaymentInput) {
     startTransition(async () => {
@@ -254,6 +294,55 @@ export function PaymentForm({
             />
             <FormField
               control={form.control}
+              name="proofUrl"
+              render={() => (
+                <FormItem className="sm:col-span-2">
+                  <FormLabel>{t('form.proof')}</FormLabel>
+                  {proofUrl ? (
+                    <div className="flex items-center justify-between gap-3 rounded-lg border p-3">
+                      <a
+                        href={proofUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-w-0 items-center gap-2 text-sm font-medium text-primary hover:underline"
+                      >
+                        <Paperclip className="size-4 shrink-0" />
+                        <span className="truncate">
+                          {proofName ?? t('form.proofView')}
+                        </span>
+                      </a>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={removeProof}
+                        disabled={isPending}
+                      >
+                        {t('form.proofRemove')}
+                      </Button>
+                    </div>
+                  ) : (
+                    <FormControl>
+                      <Input
+                        ref={proofInputRef}
+                        type="file"
+                        accept={PAYMENT_PROOF_ACCEPT}
+                        disabled={proofUploading}
+                        onChange={onProofChange}
+                      />
+                    </FormControl>
+                  )}
+                  <FormDescription>
+                    {proofUploading
+                      ? t('form.proofUploading')
+                      : t('form.proofHint', { mb: MAX_PAYMENT_PROOF_MB })}
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="sendReceipt"
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-3 sm:col-span-2">
@@ -284,7 +373,7 @@ export function PaymentForm({
           >
             {t('form.cancel')}
           </Button>
-          <Button type="submit" loading={isPending}>
+          <Button type="submit" loading={isPending} disabled={proofUploading}>
             {t('form.submit')}
           </Button>
         </div>

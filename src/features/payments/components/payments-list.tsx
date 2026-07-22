@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
-import { Download, Plus, Wallet } from 'lucide-react';
+import { Download, Paperclip, Plus, Wallet } from 'lucide-react';
 import { paymentService } from '../services/payment.service';
 import type { PaymentFilters } from '../validators/payment.validators';
 import { EmptyState } from '@/shared/components/empty-state';
@@ -57,6 +57,7 @@ export async function PaymentsList({
               <TableHead>{t('colPropertyTenant')}</TableHead>
               <TableHead>{t('colMethod')}</TableHead>
               <TableHead>{t('colReceipt')}</TableHead>
+              <TableHead>{t('colProof')}</TableHead>
               <TableHead className="text-right">{t('colAmount')}</TableHead>
             </TableRow>
           </TableHeader>
@@ -96,6 +97,21 @@ export async function PaymentsList({
                     <span className="text-xs text-muted-foreground">
                       {payment.receipt?.number ?? '—'}
                     </span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {payment.proofUrl ? (
+                    <a
+                      href={payment.proofUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                    >
+                      <Paperclip className="size-3.5" />
+                      {t('viewProof')}
+                    </a>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">—</span>
                   )}
                 </TableCell>
                 <TableCell className="text-right font-semibold">

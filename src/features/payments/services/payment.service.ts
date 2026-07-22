@@ -1,4 +1,5 @@
 import 'server-only';
+import { randomUUID } from 'crypto';
 import {
   ActivityAction,
   NotificationType,
@@ -6,6 +7,8 @@ import {
 } from '@prisma/client';
 import { format } from 'date-fns';
 import { prisma } from '@/shared/lib/prisma';
+import { getStorage } from '@/shared/lib/storage';
+import { fileExtension, type UploadedFile } from '@/shared/lib/uploads';
 import { paymentRepository } from '../repositories/payment.repository';
 import type {
   PaymentFilters,
@@ -84,6 +87,7 @@ export const paymentService = {
           status: 'COMPLETED',
           reference: input.reference,
           concept,
+          proofUrl: input.proofUrl || undefined,
           periodStart: input.periodStart,
           paidAt: input.paidAt,
           notes: input.notes,
@@ -187,6 +191,25 @@ export const paymentService = {
     } catch (error) {
       console.error('[payments] finalizeReceipt failed', error);
     }
+  },
+
+  /**
+   * Store an uploaded proof of payment and hand back its public URL. The URL
+   * travels with the registration payload, so the blob lands in storage before
+   * the payment row exists — a form the user abandons leaves an orphan blob,
+   * the same trade-off documents/avatars already accept.
+   */
+  async uploadProof(
+    ownerId: string,
+    file: UploadedFile,
+  ): Promise<{ url: string }> {
+    const key = `payments/${ownerId}/${randomUUID()}${fileExtension(file.name)}`;
+    const { url } = await getStorage().upload({
+      key,
+      body: file.bytes,
+      contentType: file.type,
+    });
+    return { url };
   },
 
   async remove(ownerId: string, id: string) {

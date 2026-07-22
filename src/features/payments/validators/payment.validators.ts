@@ -29,6 +29,8 @@ export const registerPaymentSchema = z.object({
     .max(2000)
     .optional()
     .transform((v) => (v === '' ? undefined : v)),
+  /** Storage URL of an uploaded proof of payment, set by the upload action. */
+  proofUrl: z.string().url().optional().or(z.literal('')),
   /** Whether to email the receipt PDF to the tenant. */
   sendReceipt: z.boolean().default(false),
 });

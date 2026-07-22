@@ -292,6 +292,7 @@ model Payment {
   status    PaymentStatus @default(COMPLETED)
   reference String? // bank ref / check number
   concept   String? // "Rent — March 2026"
+  proofUrl  String? // uploaded proof of payment (transfer screenshot / bank receipt)
 
   // The rent period this payment settles (first day of the month).
   periodStart DateTime?
