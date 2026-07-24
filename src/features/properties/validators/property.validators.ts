@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { PropertyStatus, PropertyType } from '@prisma/client';
+import { FurnishingType, PropertyStatus, PropertyType } from '@prisma/client';
 
 const optionalTrimmed = (max: number) =>
   z
@@ -30,6 +30,14 @@ export const propertyBaseSchema = z.object({
   bedrooms: optionalNumber(z.coerce.number().int().min(0).max(100)),
   bathrooms: optionalNumber(z.coerce.number().int().min(0).max(100)),
   areaSqm: optionalNumber(z.coerce.number().min(0).max(1_000_000)),
+  furnishing: z
+    .nativeEnum(FurnishingType)
+    .default(FurnishingType.UNFURNISHED),
+  parkingSpaces: optionalNumber(z.coerce.number().int().min(0).max(50)),
+  petsAllowed: z.boolean().default(false),
+  hasPowerBackup: z.boolean().default(false),
+  hasWaterTank: z.boolean().default(false),
+  hasAirConditioning: z.boolean().default(false),
   coverImageUrl: z.string().url().optional().or(z.literal('')),
 });
 

@@ -6,12 +6,14 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { PropertyStatus, PropertyType } from '@prisma/client';
+import { FurnishingType, PropertyStatus, PropertyType } from '@prisma/client';
 import {
   createPropertySchema,
   type CreatePropertyInput,
 } from '../validators/property.validators';
 import {
+  FURNISHING_VALUES,
+  PROPERTY_AMENITIES,
   PROPERTY_STATUS_VALUES,
   PROPERTY_TYPE_VALUES,
 } from '../constants';
@@ -32,6 +34,7 @@ import {
 import { Input } from '@/shared/components/ui/input';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Button } from '@/shared/components/ui/button';
+import { Switch } from '@/shared/components/ui/switch';
 import {
   Select,
   SelectContent,
@@ -75,6 +78,11 @@ export function PropertyForm({
       state: '',
       postalCode: '',
       country: '',
+      furnishing: FurnishingType.UNFURNISHED,
+      petsAllowed: false,
+      hasPowerBackup: false,
+      hasWaterTank: false,
+      hasAirConditioning: false,
       ...defaultValues,
     },
   });
@@ -265,6 +273,75 @@ export function PropertyForm({
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="furnishing"
+              render={({ field }) => (
+                <FormItem className="sm:col-span-2">
+                  <FormLabel>{t('form.furnishing')}</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {FURNISHING_VALUES.map((value) => (
+                        <SelectItem key={value} value={value}>
+                          {t(`furnishing.${value}`)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="parkingSpaces"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('form.parkingSpaces')}</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      inputMode="numeric"
+                      min={0}
+                      placeholder="1"
+                      {...field}
+                      value={field.value ?? ''}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="space-y-3 sm:col-span-3">
+              <p className="text-sm font-medium">{t('form.amenities')}</p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {PROPERTY_AMENITIES.map((amenity) => (
+                  <FormField
+                    key={amenity}
+                    control={form.control}
+                    name={amenity}
+                    render={({ field }) => (
+                      <FormItem className="flex items-center justify-between rounded-lg border p-3">
+                        <FormLabel className="font-normal">
+                          {t(`amenities.${amenity}`)}
+                        </FormLabel>
+                        <FormControl>
+                          <Switch
+                            checked={field.value ?? false}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                ))}
+              </div>
+            </div>
           </CardContent>
         </Card>
 

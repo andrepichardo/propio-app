@@ -14,6 +14,7 @@ import { paymentRepository } from '../repositories/payment.repository';
 import type {
   PaymentFilters,
   RegisterPaymentInput,
+  UpdatePaymentInput,
 } from '../validators/payment.validators';
 import { ForbiddenError, NotFoundError } from '@/shared/lib/errors';
 import { logActivity } from '@/shared/lib/activity/activity-logger';
@@ -234,6 +235,91 @@ export const paymentService = {
       contentType: file.type,
     });
     return { url };
+  },
+
+  /**
+   * Correct a recorded payment.
+   *
+   * The issued receipt is corrected in step with it — same receipt number, new
+   * figures — and its cached PDF is dropped so the next render rebuilds it
+   * (`generatePdf` returns early while `pdfUrl` is set). The tenant is NOT
+   * re-emailed: re-sending a receipt they already have is the owner's call.
+   */
+  async update(ownerId: string, input: UpdatePaymentInput) {
+    const payment = await prisma.payment.findFirst({
+      where: { id: input.id, ownerId, deletedAt: null },
+      include: {
+        receipt: { select: { id: true, number: true } },
+        contract: { select: { monthlyRent: true, currency: true } },
+      },
+    });
+    if (!payment) throw new NotFoundError('Payment');
+
+    const isDeposit = input.type === PaymentType.DEPOSIT;
+    const monthlyRent = Number(payment.contract.monthlyRent);
+    const balanceAfter = isDeposit
+      ? 0
+      : Math.max(0, monthlyRent - input.amount);
+    const concept =
+      input.concept ??
+      (isDeposit
+        ? 'Security deposit'
+        : `Rent — ${format(input.periodStart ?? input.paidAt, 'MMMM yyyy')}`);
+
+    await prisma.$transaction(async (tx) => {
+      await tx.payment.update({
+        where: { id: payment.id },
+        data: {
+          amount: input.amount,
+          type: input.type,
+          method: input.method,
+          reference: input.reference ?? null,
+          concept,
+          proofUrl: input.proofUrl || null,
+          periodStart: isDeposit ? null : (input.periodStart ?? null),
+          paidAt: input.paidAt,
+          notes: input.notes ?? null,
+        },
+      });
+
+      if (payment.receipt) {
+        await tx.receipt.update({
+          where: { id: payment.receipt.id },
+          data: {
+            amount: input.amount,
+            concept,
+            balanceAfter,
+            issuedAt: input.paidAt,
+            // Force a re-render with the corrected figures.
+            pdfUrl: null,
+          },
+        });
+      }
+
+      await logActivity({
+        tx,
+        ownerId,
+        action: ActivityAction.UPDATED,
+        entityType: 'Payment',
+        entityId: payment.id,
+        summary: `Corrected a payment to ${formatCurrency(input.amount, payment.contract.currency)}`,
+        messageKey: 'paymentUpdated',
+        params: {
+          amount: formatCurrency(input.amount, payment.contract.currency),
+        },
+      });
+    });
+
+    // Rebuild the PDF post-commit so a slow render never blocks the write.
+    if (payment.receipt) {
+      void receiptService
+        .generatePdf(ownerId, payment.receipt.id)
+        .catch((error) =>
+          console.error('[payments] receipt re-render failed', error),
+        );
+    }
+
+    return { id: payment.id };
   },
 
   async remove(ownerId: string, id: string) {

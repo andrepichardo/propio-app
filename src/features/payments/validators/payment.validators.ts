@@ -36,6 +36,15 @@ export const registerPaymentSchema = z.object({
   sendReceipt: z.boolean().default(false),
 });
 
+/**
+ * Correcting a recorded payment. The contract can't change — that would move
+ * the money to a different tenant/property and invalidate the issued receipt;
+ * void and re-register instead.
+ */
+export const updatePaymentSchema = registerPaymentSchema
+  .omit({ contractId: true, sendReceipt: true })
+  .extend({ id: z.string().cuid() });
+
 export const deletePaymentSchema = z.object({ id: z.string().cuid() });
 
 export const paymentFiltersSchema = z.object({
@@ -47,4 +56,5 @@ export const paymentFiltersSchema = z.object({
 });
 
 export type RegisterPaymentInput = z.infer<typeof registerPaymentSchema>;
+export type UpdatePaymentInput = z.infer<typeof updatePaymentSchema>;
 export type PaymentFilters = z.infer<typeof paymentFiltersSchema>;

@@ -1,4 +1,4 @@
-import { PropertyStatus, PropertyType } from '@prisma/client';
+import { FurnishingType, PropertyStatus, PropertyType } from '@prisma/client';
 import type { BadgeProps } from '@/shared/components/ui/badge';
 
 /**
@@ -7,6 +7,22 @@ import type { BadgeProps } from '@/shared/components/ui/badge';
  */
 export const PROPERTY_TYPE_VALUES = Object.values(PropertyType);
 export const PROPERTY_STATUS_VALUES = Object.values(PropertyStatus);
+/** Keys under `properties.furnishing`; render with `t(\`furnishing.${value}\`)`. */
+export const FURNISHING_VALUES = Object.values(FurnishingType);
+
+/**
+ * Boolean amenities, rendered as a checklist in the form and as badges on the
+ * detail page. Adding one here wires it into both — the field must exist on
+ * the Property model and in the validator.
+ */
+export const PROPERTY_AMENITIES = [
+  'petsAllowed',
+  'hasPowerBackup',
+  'hasWaterTank',
+  'hasAirConditioning',
+] as const;
+
+export type PropertyAmenity = (typeof PROPERTY_AMENITIES)[number];
 
 /**
  * Gallery uploads. Kept here (not in the server-only uploads lib) so the

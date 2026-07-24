@@ -16,6 +16,8 @@ export type PaymentListItem = Prisma.PaymentGetPayload<{
     type: true;
     status: true;
     concept: true;
+    reference: true;
+    notes: true;
     paidAt: true;
     proofUrl: true;
     property: { select: { id: true; name: true } };
@@ -40,6 +42,8 @@ const listSelect = {
   type: true,
   status: true,
   concept: true,
+  reference: true,
+  notes: true,
   paidAt: true,
   proofUrl: true,
   property: { select: { id: true, name: true } },

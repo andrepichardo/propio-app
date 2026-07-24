@@ -6,10 +6,15 @@ import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Upload } from 'lucide-react';
 import { DocumentType } from '@prisma/client';
-import { DOCUMENT_TYPE_VALUES } from '../constants';
+import {
+  DOCUMENT_ACCEPT,
+  DOCUMENT_TYPE_VALUES,
+  MAX_DOCUMENT_MB,
+} from '../constants';
 import { uploadDocumentAction } from '../actions/document.actions';
 import type { OptionItem } from '@/features/contracts/components/contract-form';
 import { Button } from '@/shared/components/ui/button';
+import { FileDropzone } from '@/shared/components/ui/file-dropzone';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
 import {
@@ -43,10 +48,18 @@ export function UploadDocumentDialog({
   const [isPending, startTransition] = useTransition();
   const [docType, setDocType] = useState<DocumentType>(DocumentType.OTHER);
   const [propertyId, setPropertyId] = useState<string>(NONE);
+  // Held in state instead of a native file input: the dropzone owns the file.
+  const [file, setFile] = useState<File | null>(null);
 
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!file) {
+      toast.error(t('dialog.fileRequired'));
+      return;
+    }
+
     const formData = new FormData(event.currentTarget);
+    formData.set('file', file);
     formData.set('type', docType);
     if (propertyId !== NONE) formData.set('propertyId', propertyId);
 
@@ -59,6 +72,7 @@ export function UploadDocumentDialog({
       toast.success(t('uploadedToast'));
       setOpen(false);
       formRef.current?.reset();
+      setFile(null);
       router.refresh();
     });
   }
@@ -77,18 +91,19 @@ export function UploadDocumentDialog({
         </DialogHeader>
         <form ref={formRef} onSubmit={onSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="doc-file">
+            <Label>
               {t('dialog.file')}
               <span aria-hidden className="ml-0.5 text-destructive">
                 *
               </span>
             </Label>
-            <Input
-              id="doc-file"
-              name="file"
-              type="file"
-              required
-              accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx"
+            <FileDropzone
+              accept={DOCUMENT_ACCEPT}
+              maxMb={MAX_DOCUMENT_MB}
+              value={file ? { name: file.name } : null}
+              disabled={isPending}
+              onSelect={setFile}
+              onRemove={() => setFile(null)}
             />
           </div>
           <div className="space-y-1.5">

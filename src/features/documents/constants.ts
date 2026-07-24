@@ -12,6 +12,10 @@ import {
  * `t(\`types.${value}\`)`. */
 export const DOCUMENT_TYPE_VALUES = Object.values(DocumentType);
 
+/** Mirrors MAX_DOCUMENT_SIZE_BYTES; kept here for the client-side hint. */
+export const MAX_DOCUMENT_MB = 10;
+export const DOCUMENT_ACCEPT = '.pdf,.jpg,.jpeg,.png,.webp,.doc,.docx';
+
 export const DOCUMENT_TYPE_ICONS: Record<DocumentType, LucideIcon> = {
   [DocumentType.CONTRACT]: FileSignature,
   [DocumentType.PHOTO]: FileImage,

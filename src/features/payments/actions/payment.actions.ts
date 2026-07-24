@@ -14,6 +14,7 @@ import { MAX_PAYMENT_PROOF_MB } from '../constants';
 import {
   deletePaymentSchema,
   registerPaymentSchema,
+  updatePaymentSchema,
 } from '../validators/payment.validators';
 
 export const registerPaymentAction = createOwnerAction(
@@ -47,11 +48,23 @@ export async function uploadPaymentProofAction(
   }
 }
 
+export const updatePaymentAction = createOwnerAction(
+  updatePaymentSchema,
+  async (input, { ownerId }) => {
+    const result = await paymentService.update(ownerId, input);
+    revalidatePath('/app/payments');
+    revalidatePath('/app/receipts');
+    revalidatePath('/app');
+    return result;
+  },
+);
+
 export const deletePaymentAction = createOwnerAction(
   deletePaymentSchema,
   async ({ id }, { ownerId }) => {
     const result = await paymentService.remove(ownerId, id);
     revalidatePath('/app/payments');
+    revalidatePath('/app/receipts');
     revalidatePath('/app');
     return result;
   },

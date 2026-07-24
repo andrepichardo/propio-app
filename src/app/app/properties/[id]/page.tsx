@@ -17,7 +17,9 @@ import { propertyService } from '@/features/properties/services/property.service
 import { PropertyStatusBadge } from '@/features/properties/components/property-status-badge';
 import { DeletePropertyDialog } from '@/features/properties/components/delete-property-dialog';
 import { PropertyPhotos } from '@/features/properties/components/property-photos';
+import { PROPERTY_AMENITIES } from '@/features/properties/constants';
 import { PageHeader } from '@/shared/components/page-header';
+import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { formatDate } from '@/shared/lib/format';
@@ -156,6 +158,23 @@ export default async function PropertyDetailPage({
                 label={t('detail.area')}
                 value={property.areaSqm ? `${property.areaSqm} m²` : '—'}
               />
+              <Detail
+                label={t('detail.furnishing')}
+                value={t(`furnishing.${property.furnishing}`)}
+              />
+              <Detail
+                label={t('detail.parkingSpaces')}
+                value={property.parkingSpaces ?? '—'}
+              />
+              {PROPERTY_AMENITIES.some((a) => property[a]) && (
+                <div className="flex flex-wrap gap-1.5 border-t pt-3">
+                  {PROPERTY_AMENITIES.filter((a) => property[a]).map((a) => (
+                    <Badge key={a} variant="secondary">
+                      {t(`amenities.${a}`)}
+                    </Badge>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

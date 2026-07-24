@@ -50,7 +50,33 @@ export type SchedulerResult = {
   upcoming: number;
   late: number;
   expiring: number;
+  /** Contracts closed automatically because their end date passed. */
+  expired: number;
 };
+
+/**
+ * Close contracts whose end date has passed without being renewed.
+ *
+ * Renewing already marks the previous contract EXPIRED; this covers the other
+ * path — a lease that simply runs out — so the contract list doesn't fill up
+ * with "active" leases that ended months ago.
+ *
+ * Open-ended contracts (`endDate: null`) are month-to-month by definition and
+ * are never closed here. The property's status is deliberately left alone: a
+ * lapsed contract doesn't prove the tenant moved out, and guessing would show
+ * an occupied unit as available.
+ */
+async function expireLapsedContracts(now: Date): Promise<number> {
+  const { count } = await prisma.contract.updateMany({
+    where: {
+      deletedAt: null,
+      status: ContractStatus.ACTIVE,
+      endDate: { not: null, lt: now },
+    },
+    data: { status: ContractStatus.EXPIRED },
+  });
+  return count;
+}
 
 /**
  * System-level job that fans reminder notifications out to every owner:
@@ -63,7 +89,13 @@ export type SchedulerResult = {
  */
 export async function runNotificationScheduler(): Promise<SchedulerResult> {
   const now = new Date();
-  const result: SchedulerResult = { upcoming: 0, late: 0, expiring: 0 };
+  const result: SchedulerResult = {
+    upcoming: 0,
+    late: 0,
+    expiring: 0,
+    // Runs first so a lapsed contract isn't also reminded about below.
+    expired: await expireLapsedContracts(now),
+  };
 
   const contracts = await prisma.contract.findMany({
     where: { deletedAt: null, status: ContractStatus.ACTIVE },

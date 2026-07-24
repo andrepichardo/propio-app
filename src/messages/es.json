@@ -212,6 +212,7 @@
     "tenantDeleted": "Eliminaste un inquilino",
     "paymentRegistered": "Registraste {amount} de {tenant}",
     "paymentVoided": "Anulaste un pago",
+    "paymentUpdated": "Corregiste un pago a {amount}",
     "expenseLogged": "Registraste un gasto de {amount} — {description}",
     "expenseUpdated": "Actualizaste un gasto",
     "expenseDeleted": "Eliminaste un gasto",
@@ -329,6 +330,9 @@
       "bedrooms": "Habitaciones",
       "bathrooms": "Baños",
       "area": "Área (m²)",
+      "furnishing": "Qué incluye",
+      "parkingSpaces": "Parqueos",
+      "amenities": "Comodidades",
       "location": "Ubicación",
       "address": "Dirección",
       "addressPlaceholder": "Av. del Malecón 123",
@@ -350,8 +354,21 @@
       "bedrooms": "Habitaciones",
       "bathrooms": "Baños",
       "area": "Área",
+      "furnishing": "Incluye",
+      "parkingSpaces": "Parqueos",
       "added": "Agregada el {date}",
       "noDescription": "Aún no se ha agregado una descripción."
+    },
+    "furnishing": {
+      "UNFURNISHED": "Vacío",
+      "APPLIANCES_ONLY": "Línea blanca",
+      "FURNISHED": "Amueblado"
+    },
+    "amenities": {
+      "petsAllowed": "Acepta mascotas",
+      "hasPowerBackup": "Planta eléctrica",
+      "hasWaterTank": "Cisterna",
+      "hasAirConditioning": "Aire acondicionado"
     },
     "delete": {
       "trigger": "Eliminar",
@@ -564,7 +581,25 @@
     "colAmount": "Monto",
     "viewProof": "Ver",
     "depositBadge": "Depósito",
+    "colActions": "Acciones",
+    "editAria": "Editar pago",
     "recordedToast": "Pago registrado — recibo {number}.",
+    "updatedToast": "Pago actualizado.",
+    "edit": {
+      "title": "Editar pago",
+      "desc": "Corrige un pago registrado por error. Para moverlo a otro contrato, anúlalo y regístralo de nuevo.",
+      "receiptNote": "El recibo emitido conserva su número y se actualiza con las cifras nuevas. No se le vuelve a enviar correo al inquilino — mándaselo desde la página de recibos si hace falta.",
+      "cancel": "Cancelar",
+      "save": "Guardar cambios"
+    },
+    "delete": {
+      "trigger": "Anular pago",
+      "title": "¿Anular este pago?",
+      "description": "Deja de contar en tus ingresos y su recibo se retira. El registro se archiva, no se borra.",
+      "keep": "Mantenerlo",
+      "confirm": "Anular pago",
+      "voidedToast": "Pago anulado."
+    },
     "methods": {
       "CASH": "Efectivo",
       "TRANSFER": "Transferencia bancaria",
@@ -729,6 +764,7 @@
       "title": "Subir un documento",
       "desc": "PDF, imágenes y documentos de Word de hasta 10 MB.",
       "file": "Archivo",
+      "fileRequired": "Elige un archivo para subir.",
       "name": "Nombre",
       "namePlaceholder": "Por defecto, el nombre del archivo",
       "type": "Tipo",

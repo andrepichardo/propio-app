@@ -49,6 +49,12 @@ export default async function EditPropertyPage({
           bedrooms: property.bedrooms ?? undefined,
           bathrooms: property.bathrooms ?? undefined,
           areaSqm: property.areaSqm ? Number(property.areaSqm) : undefined,
+          furnishing: property.furnishing,
+          parkingSpaces: property.parkingSpaces ?? undefined,
+          petsAllowed: property.petsAllowed,
+          hasPowerBackup: property.hasPowerBackup,
+          hasWaterTank: property.hasWaterTank,
+          hasAirConditioning: property.hasAirConditioning,
         }}
       />
     </div>

@@ -212,6 +212,7 @@
     "tenantDeleted": "Deleted a tenant",
     "paymentRegistered": "Registered {amount} from {tenant}",
     "paymentVoided": "Voided a payment",
+    "paymentUpdated": "Corrected a payment to {amount}",
     "expenseLogged": "Logged a {amount} expense — {description}",
     "expenseUpdated": "Updated an expense",
     "expenseDeleted": "Deleted an expense",
@@ -329,6 +330,9 @@
       "bedrooms": "Bedrooms",
       "bathrooms": "Bathrooms",
       "area": "Area (m²)",
+      "furnishing": "What it comes with",
+      "parkingSpaces": "Parking spaces",
+      "amenities": "Amenities",
       "location": "Location",
       "address": "Address",
       "addressPlaceholder": "123 Ocean Drive",
@@ -350,8 +354,21 @@
       "bedrooms": "Bedrooms",
       "bathrooms": "Bathrooms",
       "area": "Area",
+      "furnishing": "Comes with",
+      "parkingSpaces": "Parking",
       "added": "Added {date}",
       "noDescription": "No description added yet."
+    },
+    "furnishing": {
+      "UNFURNISHED": "Empty",
+      "APPLIANCES_ONLY": "Appliances only",
+      "FURNISHED": "Furnished"
+    },
+    "amenities": {
+      "petsAllowed": "Pets allowed",
+      "hasPowerBackup": "Backup power",
+      "hasWaterTank": "Water tank",
+      "hasAirConditioning": "Air conditioning"
     },
     "delete": {
       "trigger": "Delete",
@@ -561,7 +578,25 @@
     "colAmount": "Amount",
     "viewProof": "View",
     "depositBadge": "Deposit",
+    "colActions": "Actions",
+    "editAria": "Edit payment",
     "recordedToast": "Payment recorded — receipt {number}.",
+    "updatedToast": "Payment updated.",
+    "edit": {
+      "title": "Edit payment",
+      "desc": "Correct a payment recorded by mistake. To move it to another contract, void it and register it again.",
+      "receiptNote": "The issued receipt keeps its number and is updated with the new figures. The tenant isn’t emailed again — send it from the receipts page if you need to.",
+      "cancel": "Cancel",
+      "save": "Save changes"
+    },
+    "delete": {
+      "trigger": "Void payment",
+      "title": "Void this payment?",
+      "description": "It stops counting towards your income and its receipt is withdrawn. The record is archived, not erased.",
+      "keep": "Keep it",
+      "confirm": "Void payment",
+      "voidedToast": "Payment voided."
+    },
     "methods": {
       "CASH": "Cash",
       "TRANSFER": "Bank transfer",
@@ -726,6 +761,7 @@
       "title": "Upload a document",
       "desc": "PDFs, images and Word documents up to 10 MB.",
       "file": "File",
+      "fileRequired": "Choose a file to upload.",
       "name": "Name",
       "namePlaceholder": "Defaults to the file name",
       "type": "Type",

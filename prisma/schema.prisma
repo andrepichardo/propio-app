@@ -136,6 +136,18 @@ model Property {
   bathrooms Int?
   areaSqm   Decimal? @db.Decimal(10, 2)
 
+  // What the unit comes with. Mutually exclusive, hence an enum rather than
+  // booleans: a unit is empty, appliances-only, or fully furnished.
+  furnishing    FurnishingType @default(UNFURNISHED)
+  parkingSpaces Int?
+
+  // Amenities worth recording for a DR rental. Additive booleans — more can
+  // be appended later without touching existing rows.
+  petsAllowed        Boolean @default(false)
+  hasPowerBackup     Boolean @default(false) // planta eléctrica / inversor
+  hasWaterTank       Boolean @default(false) // cisterna / tinaco
+  hasAirConditioning Boolean @default(false)
+
   coverImageUrl String?
 
   createdAt DateTime  @default(now())
@@ -171,6 +183,16 @@ enum PropertyStatus {
   AVAILABLE
   OCCUPIED
   MAINTENANCE
+}
+
+/**
+ * What the unit includes. APPLIANCES_ONLY is DR's "línea blanca": fridge,
+ * stove and washer, but no furniture.
+ */
+enum FurnishingType {
+  UNFURNISHED
+  APPLIANCES_ONLY
+  FURNISHED
 }
 
 model PropertyPhoto {

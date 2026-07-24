@@ -3,6 +3,8 @@ import { getTranslations } from 'next-intl/server';
 import { Download, Paperclip, Plus, Wallet } from 'lucide-react';
 import { paymentService } from '../services/payment.service';
 import type { PaymentFilters } from '../validators/payment.validators';
+import { EditPaymentDialog } from './edit-payment-dialog';
+import { DeletePaymentDialog } from './delete-payment-dialog';
 import { EmptyState } from '@/shared/components/empty-state';
 import { Button } from '@/shared/components/ui/button';
 import { Badge } from '@/shared/components/ui/badge';
@@ -59,6 +61,9 @@ export async function PaymentsList({
               <TableHead>{t('colReceipt')}</TableHead>
               <TableHead>{t('colProof')}</TableHead>
               <TableHead className="text-right">{t('colAmount')}</TableHead>
+              <TableHead className="w-[88px]">
+                <span className="sr-only">{t('colActions')}</span>
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -119,6 +124,24 @@ export async function PaymentsList({
                 </TableCell>
                 <TableCell className="text-right font-semibold">
                   {formatCurrency(payment.amount.toString(), payment.currency)}
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center justify-end gap-1">
+                    <EditPaymentDialog
+                      payment={{
+                        id: payment.id,
+                        amount: Number(payment.amount),
+                        type: payment.type,
+                        method: payment.method,
+                        reference: payment.reference,
+                        concept: payment.concept,
+                        notes: payment.notes,
+                        proofUrl: payment.proofUrl,
+                        paidAt: payment.paidAt.toISOString(),
+                      }}
+                    />
+                    <DeletePaymentDialog paymentId={payment.id} />
+                  </div>
                 </TableCell>
               </TableRow>
             ))}

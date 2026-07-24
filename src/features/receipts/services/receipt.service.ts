@@ -30,7 +30,7 @@ export const receiptService = {
     const { page, pageSize, skip, take } = normalizePagination(params);
     const [items, total] = await Promise.all([
       fetchReceipts(ownerId, skip, take),
-      prisma.receipt.count({ where: { ownerId } }),
+      prisma.receipt.count({ where: { ownerId, ...liveReceipt } }),
     ]);
     return buildPaginatedResult(items, total, page, pageSize);
   },
@@ -200,9 +200,12 @@ function nextRentDueDate(
   return nextDue;
 }
 
+/** Receipts whose payment is still live — a voided payment has no receipt. */
+const liveReceipt = { payment: { deletedAt: null } };
+
 function fetchReceipts(ownerId: string, skip: number, take: number) {
   return prisma.receipt.findMany({
-    where: { ownerId },
+    where: { ownerId, ...liveReceipt },
     orderBy: { issuedAt: 'desc' },
     skip,
     take,
