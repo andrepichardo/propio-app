@@ -59,6 +59,30 @@ export const updateContractSchema = z
     notes: z.string().trim().max(2000).optional(),
   });
 
+/**
+ * Renewing a contract creates a NEW one carrying the previous terms forward,
+ * so only what actually changes is submitted. The rent is the source of truth
+ * (a percentage bump is a UI helper that writes into it), because the increase
+ * is sometimes a clean percentage and sometimes a negotiated figure.
+ */
+export const renewContractSchema = z
+  .object({
+    contractId: z.string().cuid(),
+    startDate: z.coerce.date({ message: 'startDateRequired' }),
+    endDate: z.coerce.date().optional().nullable(),
+    monthlyRent: z.coerce.number().positive('rentPositive').max(100_000_000),
+    notes: z
+      .string()
+      .trim()
+      .max(2000)
+      .optional()
+      .transform((v) => (v === '' ? undefined : v)),
+  })
+  .refine((data) => !data.endDate || data.endDate > data.startDate, {
+    message: 'endAfterStart',
+    path: ['endDate'],
+  });
+
 export const deleteContractSchema = z.object({ id: z.string().cuid() });
 
 export const contractFiltersSchema = z.object({
@@ -70,4 +94,5 @@ export const contractFiltersSchema = z.object({
 
 export type CreateContractInput = z.infer<typeof createContractSchema>;
 export type UpdateContractInput = z.infer<typeof updateContractSchema>;
+export type RenewContractInput = z.infer<typeof renewContractSchema>;
 export type ContractFilters = z.infer<typeof contractFiltersSchema>;

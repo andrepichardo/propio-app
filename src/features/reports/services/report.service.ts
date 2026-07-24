@@ -7,11 +7,12 @@ import {
   startOfMonth,
   startOfYear,
 } from 'date-fns';
-import { PaymentStatus } from '@prisma/client';
+import { PaymentStatus, PaymentType } from '@prisma/client';
 import { getTranslations } from 'next-intl/server';
 import { prisma } from '@/shared/lib/prisma';
 import { propertyRepository } from '@/features/properties/repositories/property.repository';
 import { expenseRepository } from '@/features/expenses/repositories/expense.repository';
+import { depositRepository } from '@/features/deposits/repositories/deposit.repository';
 
 export type MonthlyReportRow = {
   month: string;
@@ -35,16 +36,22 @@ async function sumInWindow(
   to: Date,
 ): Promise<number> {
   if (model === 'payment') {
-    const r = await prisma.payment.aggregate({
-      where: {
-        ownerId,
-        deletedAt: null,
-        status: PaymentStatus.COMPLETED,
-        paidAt: { gte: from, lte: to },
-      },
-      _sum: { amount: true },
-    });
-    return Number(r._sum.amount ?? 0);
+    // Revenue = rent + deposit the owner kept at settlement. A deposit while
+    // held is a liability; only the retained part ever becomes income.
+    const [r, retained] = await Promise.all([
+      prisma.payment.aggregate({
+        where: {
+          ownerId,
+          deletedAt: null,
+          status: PaymentStatus.COMPLETED,
+          type: { not: PaymentType.DEPOSIT },
+          paidAt: { gte: from, lte: to },
+        },
+        _sum: { amount: true },
+      }),
+      depositRepository.sumRetained(ownerId, from, to),
+    ]);
+    return Number(r._sum.amount ?? 0) + retained;
   }
   const r = await prisma.expense.aggregate({
     where: { ownerId, deletedAt: null, incurredAt: { gte: from, lte: to } },

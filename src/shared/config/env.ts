@@ -38,7 +38,7 @@ const serverSchema = z.object({
   AUTH_GITHUB_SECRET: optionalString,
 
   RESEND_API_KEY: optionalString,
-  EMAIL_FROM: z.string().default('Propio <no-reply@propio.app>'),
+  EMAIL_FROM: z.string().default('Propio <no-reply@usepropio.com>'),
 
   SUPABASE_SERVICE_ROLE_KEY: optionalString,
   SUPABASE_STORAGE_BUCKET: z.string().default('propio'),

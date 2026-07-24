@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { PaymentMethod } from '@prisma/client';
+import { PaymentMethod, PaymentType } from '@prisma/client';
 
 export const registerPaymentSchema = z.object({
   contractId: z.string().cuid('selectContract'),
@@ -7,6 +7,7 @@ export const registerPaymentSchema = z.object({
     .number()
     .positive('amountPositive')
     .max(100_000_000),
+  type: z.nativeEnum(PaymentType).default(PaymentType.RENT),
   method: z.nativeEnum(PaymentMethod).default(PaymentMethod.TRANSFER),
   reference: z
     .string()

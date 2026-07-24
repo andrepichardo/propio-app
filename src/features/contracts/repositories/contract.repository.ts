@@ -75,6 +75,13 @@ export const contractRepository = {
         tenant: {
           select: { id: true, firstName: true, lastName: true, email: true },
         },
+        // Renewal chain neighbours, so the detail page can walk the history.
+        renewedFrom: {
+          select: { id: true, startDate: true, endDate: true, monthlyRent: true },
+        },
+        renewedTo: {
+          select: { id: true, startDate: true, endDate: true, monthlyRent: true },
+        },
         _count: { select: { payments: true } },
       },
     });

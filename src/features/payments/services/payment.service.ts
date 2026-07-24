@@ -3,6 +3,7 @@ import { randomUUID } from 'crypto';
 import {
   ActivityAction,
   NotificationType,
+  PaymentType,
   type Prisma,
 } from '@prisma/client';
 import { format } from 'date-fns';
@@ -67,11 +68,17 @@ export const paymentService = {
       throw new ForbiddenError('Contract not found in your account.');
     }
 
+    const isDeposit = input.type === PaymentType.DEPOSIT;
     const monthlyRent = Number(contract.monthlyRent);
-    const balanceAfter = Math.max(0, monthlyRent - input.amount);
+    // A deposit doesn't settle rent, so it never leaves a rent balance.
+    const balanceAfter = isDeposit
+      ? 0
+      : Math.max(0, monthlyRent - input.amount);
     const concept =
       input.concept ??
-      `Rent — ${format(input.periodStart ?? input.paidAt, 'MMMM yyyy')}`;
+      (isDeposit
+        ? 'Security deposit'
+        : `Rent — ${format(input.periodStart ?? input.paidAt, 'MMMM yyyy')}`);
 
     // --- Atomic write: payment + receipt + activity -------------------------
     const { payment, receipt } = await prisma.$transaction(async (tx) => {
@@ -84,11 +91,13 @@ export const paymentService = {
           amount: input.amount,
           currency: contract.currency,
           method: input.method,
+          type: input.type,
           status: 'COMPLETED',
           reference: input.reference,
           concept,
           proofUrl: input.proofUrl || undefined,
-          periodStart: input.periodStart,
+          // A deposit settles no rent period.
+          periodStart: isDeposit ? undefined : input.periodStart,
           paidAt: input.paidAt,
           notes: input.notes,
         },
@@ -140,7 +149,7 @@ export const paymentService = {
       sendReceipt: input.sendReceipt,
     });
 
-    if (balanceAfter > 0) {
+    if (!isDeposit && balanceAfter > 0) {
       await prisma.notification.create({
         data: {
           ownerId,

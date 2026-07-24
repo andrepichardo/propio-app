@@ -152,6 +152,20 @@
       "resetLinkInvalid": "Este enlace de restablecimiento es inválido o expiró."
     }
   },
+  "dropzone": {
+    "cta": "Arrastra un archivo aquí, o haz clic para buscarlo",
+    "ctaMany": "Arrastra archivos aquí, o haz clic para buscarlos",
+    "dropHere": "Suelta el archivo para adjuntarlo",
+    "dropHereMany": "Suelta los archivos para adjuntarlos",
+    "hint": "Un archivo, hasta {mb} MB",
+    "hintMany": "Puedes seleccionar varios a la vez, hasta {mb} MB cada uno",
+    "uploading": "Subiendo…",
+    "remove": "Quitar archivo",
+    "onlyOne": "Solo un archivo a la vez — suelta uno solo.",
+    "tooLarge": "Ese archivo pesa más de {mb} MB.",
+    "wrongType": "Ese tipo de archivo no está permitido.",
+    "someRejected": "{count, plural, one {Se omitió # archivo} other {Se omitieron # archivos}}: {names}"
+  },
   "validation": {
     "nameRequired": "Ingresa tu nombre.",
     "nameMin": "El nombre debe tener al menos 2 caracteres.",
@@ -172,6 +186,9 @@
     "propertyNameMin": "El nombre debe tener al menos 2 caracteres.",
     "required": "Este campo es obligatorio.",
     "amountPositive": "Ingresa un monto mayor que 0.",
+    "amountNotNegative": "Ingresa 0 o un monto positivo.",
+    "retainedExceedsDeposit": "No puedes retener más de lo que se recibió de depósito.",
+    "renewalBeforePrevious": "La renovación no puede empezar antes del contrato que renueva.",
     "currencyCode": "Usa un código ISO de 3 letras (ej. USD).",
     "descriptionRequired": "Ingresa una descripción.",
     "selectProperty": "Selecciona una propiedad.",
@@ -201,13 +218,15 @@
     "contractCreated": "Creaste un nuevo contrato",
     "contractUpdated": "Actualizaste un contrato",
     "contractCancelled": "Cancelaste un contrato",
+    "contractRenewed": "Renovaste el contrato de {property}",
     "contractPdfAttached": "Adjuntaste el PDF del contrato firmado",
     "propertyAdded": "Agregaste la propiedad «{name}»",
     "propertyUpdated": "Actualizaste la propiedad «{name}»",
     "propertyDeleted": "Eliminaste una propiedad",
     "documentUploaded": "Subiste el documento «{name}»",
     "documentDeleted": "Eliminaste el documento «{name}»",
-    "statementGenerated": "Generaste el estado de cuenta {number} de {property}"
+    "statementGenerated": "Generaste el estado de cuenta {number} de {property}",
+    "depositSettled": "Liquidaste el depósito de {property} — devolviste {returned}, retuviste {retained}"
   },
   "pdf": {
     "receipt": {
@@ -242,6 +261,8 @@
     "occupancyRate": "Tasa de ocupación",
     "monthlyRevenue": "Ingresos mensuales",
     "netProfit": "Ganancia neta",
+    "depositsHeld": "Depósitos retenidos",
+    "depositsHeldHint": "Retenidos por cuenta de los inquilinos (un pasivo)",
     "occupiedAvailable": "{occupied} ocupadas · {available} disponibles",
     "inMaintenance": "{count} en mantenimiento",
     "expensesHint": "{amount} en gastos",
@@ -342,8 +363,9 @@
     "photos": {
       "title": "Fotos",
       "add": "Agregar foto",
+      "hint": "Sugerencia: sube fotos del inmueble lo más cercano posible a la fecha de entrega. Te servirán como evidencia de su estado si surge una disputa por el depósito.",
       "empty": "Aún no hay fotos. La primera se convierte en la portada.",
-      "addedToast": "Foto agregada.",
+      "addedToast": "{count, plural, one {Foto agregada.} other {# fotos agregadas.}}",
       "removedToast": "Foto eliminada.",
       "deleteAria": "Eliminar foto",
       "missingRef": "Falta la referencia de la propiedad."
@@ -483,6 +505,8 @@
       "registerPayment": "Registrar pago",
       "edit": "Editar",
       "paymentsRecorded": "{count} pagos registrados",
+      "renewedFrom": "Renovado desde {rent}",
+      "renewedTo": "Renovado a {rent}",
       "terms": "Términos",
       "notes": "Notas",
       "monthlyRent": "Alquiler mensual",
@@ -503,6 +527,26 @@
       "keep": "Mantener contrato",
       "confirm": "Cancelar contrato",
       "cancelledToast": "Contrato cancelado."
+    },
+    "renew": {
+      "trigger": "Renovar",
+      "title": "Renovar este contrato",
+      "description": "Los términos nuevos se guardan como un contrato propio enlazado a este, para que el alquiler y los recibos pasados sigan reflejando lo que realmente se acordó.",
+      "currentRent": "Alquiler actual",
+      "increase": "Aumento del alquiler",
+      "increaseHint": "Es un atajo — siempre puedes escribir abajo el monto que negociaron.",
+      "noIncrease": "Sin aumento",
+      "newRent": "Nuevo alquiler mensual",
+      "impliedChange": "{pct}% respecto al alquiler actual",
+      "sameRent": "Igual al alquiler actual",
+      "startDate": "Nueva fecha de inicio",
+      "endDate": "Nueva fecha de fin",
+      "endDateHint": "Déjala vacía para mes a mes.",
+      "notes": "Notas",
+      "depositNote": "El depósito de garantía se traspasa — no lo registres de nuevo. Lo liquidarás cuando el inquilino se mude de verdad.",
+      "cancel": "Cancelar",
+      "confirm": "Renovar contrato",
+      "renewedToast": "Contrato renovado."
     }
   },
   "payments": {
@@ -518,6 +562,7 @@
     "colProof": "Comprobante",
     "colAmount": "Monto",
     "viewProof": "Ver",
+    "depositBadge": "Depósito",
     "recordedToast": "Pago registrado — recibo {number}.",
     "methods": {
       "CASH": "Efectivo",
@@ -539,6 +584,8 @@
       "contract": "Contrato",
       "selectContract": "Selecciona un contrato",
       "amount": "Monto",
+      "isDeposit": "Este pago es un depósito de garantía",
+      "isDepositHint": "Los depósitos se retienen como pasivo y no cuentan como ingreso.",
       "method": "Método",
       "date": "Fecha del pago",
       "reference": "Referencia",
@@ -548,14 +595,36 @@
       "notes": "Notas",
       "proof": "Comprobante de pago",
       "proofHint": "Opcional. Captura de la transferencia o recibo del banco (PDF o imagen, máx. {mb} MB).",
-      "proofUploading": "Subiendo…",
       "proofView": "Ver comprobante",
-      "proofRemove": "Quitar",
       "emailReceipt": "Enviar recibo por correo al inquilino",
       "emailReceiptHint": "Adjuntaremos el recibo en PDF generado.",
       "cancel": "Cancelar",
       "submit": "Registrar pago"
     }
+  },
+  "deposits": {
+    "title": "Depósito de garantía",
+    "heldDescription": "Retenido por cuenta del inquilino hasta la entrega.",
+    "noneCollected": "No hay depósito registrado para este contrato. Regístralo como un pago y márcalo como depósito.",
+    "collected": "Depósito recibido",
+    "liabilityNote": "Este dinero no es ingreso — es del inquilino hasta que lo liquides en la entrega.",
+    "settle": "Liquidar depósito",
+    "settleTitle": "Liquidar el depósito",
+    "settleDescription": "Al momento de la entrega, indica cuánto retienes por reparaciones o montos pendientes. El resto se le devuelve al inquilino.",
+    "retained": "Monto que retienes",
+    "retainedHint": "Por daños, limpieza o renta pendiente. Deja 0 para devolver el depósito completo.",
+    "toReturn": "Se le devuelve al inquilino",
+    "exceedsDeposit": "Excede el depósito",
+    "reason": "Motivo",
+    "reasonPlaceholder": "ej. Repintar la pared de la sala, limpieza profunda",
+    "settledAt": "Fecha de liquidación",
+    "cancel": "Cancelar",
+    "confirmSettle": "Liquidar depósito",
+    "settledToast": "Depósito liquidado.",
+    "settledOn": "Liquidado el {date}",
+    "returnedToTenant": "Devuelto al inquilino",
+    "retainedByOwner": "Retenido por ti",
+    "countsAsIncome": "Cuenta como ingreso"
   },
   "receipts": {
     "title": "Recibos",

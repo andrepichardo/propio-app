@@ -14,7 +14,7 @@ SaaS for independent landlords. Next.js 15 App Router · React 19 · TS strict �
 - **Vercel never touches the DB** — deploys run `prisma generate && next build` only. Schema changes must be applied to prod manually (`prisma db push` with prod `DATABASE_URL`/`DIRECT_URL` in the process env), ideally BEFORE pushing the code that needs them. Additive columns are safe with the old code still live.
 - `prisma/seed.ts` has `assertNotProduction()` — never bypass it. Never run destructive scripts against prod credentials.
 - Storage bucket `propio` (public) exists in both projects.
-- Resend is in no-domain mode: emails only deliver to the account owner's address until a custom domain is verified. `EMAIL_FROM=onboarding@resend.dev`.
+- Resend: **prod** sends from the verified domain `usepropio.com` (`EMAIL_FROM="Propio <no-reply@usepropio.com>"`, set in Vercel). **Dev** stays on `EMAIL_FROM=onboarding@resend.dev` (no-domain mode) on purpose — it only delivers to the Resend account owner, so local runs can't email a real tenant. Same Resend account/key for both. `no-reply@` has no mailbox and the code sends no `reply_to`, so tenant replies are lost.
 
 ## Architecture rules (follow these when adding code)
 

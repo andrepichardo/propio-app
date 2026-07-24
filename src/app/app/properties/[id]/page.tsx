@@ -167,6 +167,7 @@ export default async function PropertyDetailPage({
           id: photo.id,
           url: photo.url,
           caption: photo.caption,
+          createdAt: photo.createdAt,
         }))}
       />
     </div>

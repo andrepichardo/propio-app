@@ -69,8 +69,11 @@ export async function PaymentsList({
                 </TableCell>
                 <TableCell>
                   <div>
-                    <p className="text-sm font-medium">
+                    <p className="flex items-center gap-2 text-sm font-medium">
                       {payment.property.name}
+                      {payment.type === 'DEPOSIT' && (
+                        <Badge variant="outline">{t('depositBadge')}</Badge>
+                      )}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {payment.tenant.firstName} {payment.tenant.lastName}

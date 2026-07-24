@@ -9,10 +9,12 @@ import {
 import {
   ContractStatus,
   PaymentStatus,
+  PaymentType,
   PropertyStatus,
 } from '@prisma/client';
 import { prisma } from '@/shared/lib/prisma';
 import { propertyRepository } from '@/features/properties/repositories/property.repository';
+import { depositRepository } from '@/features/deposits/repositories/deposit.repository';
 import { toNumber } from '@/shared/lib/format';
 
 export type DashboardSummary = {
@@ -22,6 +24,8 @@ export type DashboardSummary = {
     monthlyExpenses: number;
     netProfit: number;
     revenueTrendPct: number;
+    /** Deposits currently held on behalf of tenants (a liability). */
+    depositsHeld: number;
   };
   occupancyRate: number;
   monthlySeries: { month: string; revenue: number; expenses: number }[];
@@ -68,11 +72,49 @@ async function sumPayments(
       ownerId,
       deletedAt: null,
       status: PaymentStatus.COMPLETED,
+      // Deposits are a liability, not income — keep them out of revenue.
+      type: { not: PaymentType.DEPOSIT },
       paidAt: { gte: from, lte: to },
     },
     _sum: { amount: true },
   });
   return toNumber(result._sum.amount?.toString());
+}
+
+/**
+ * Revenue for a window: rent plus any deposit the owner kept at settlement
+ * (retained deposit stops being a liability and becomes income on that date).
+ */
+async function sumRevenue(
+  ownerId: string,
+  from: Date,
+  to: Date,
+): Promise<number> {
+  const [rent, retained] = await Promise.all([
+    sumPayments(ownerId, from, to),
+    depositRepository.sumRetained(ownerId, from, to),
+  ]);
+  return rent + retained;
+}
+
+/**
+ * Deposits still held on behalf of tenants (a liability): everything collected
+ * minus whatever has already been settled at move-out.
+ */
+async function sumDepositsHeld(ownerId: string): Promise<number> {
+  const [collected, settled] = await Promise.all([
+    prisma.payment.aggregate({
+      where: {
+        ownerId,
+        deletedAt: null,
+        status: PaymentStatus.COMPLETED,
+        type: PaymentType.DEPOSIT,
+      },
+      _sum: { amount: true },
+    }),
+    depositRepository.totalSettled(ownerId),
+  ]);
+  return Math.max(0, toNumber(collected._sum.amount?.toString()) - settled);
 }
 
 async function sumExpenses(
@@ -104,7 +146,7 @@ async function buildMonthlySeries(
     months.map(async (start) => {
       const end = endOfMonth(start);
       const [revenue, expenses] = await Promise.all([
-        sumPayments(ownerId, start, end),
+        sumRevenue(ownerId, start, end),
         sumExpenses(ownerId, start, end),
       ]);
       return { month: format(start, 'MMM'), revenue, expenses };
@@ -153,15 +195,17 @@ export async function getDashboardSummary(
     monthlyRevenue,
     prevRevenue,
     monthlyExpenses,
+    depositsHeld,
     monthlySeries,
     activeContracts,
     expiring,
     activity,
   ] = await Promise.all([
     propertyRepository.statusCounts(ownerId),
-    sumPayments(ownerId, monthStart, monthEnd),
-    sumPayments(ownerId, prevStart, prevEnd),
+    sumRevenue(ownerId, monthStart, monthEnd),
+    sumRevenue(ownerId, prevStart, prevEnd),
     sumExpenses(ownerId, monthStart, monthEnd),
+    sumDepositsHeld(ownerId),
     buildMonthlySeries(ownerId),
     prisma.contract.findMany({
       where: { ownerId, deletedAt: null, status: ContractStatus.ACTIVE },
@@ -228,6 +272,8 @@ export async function getDashboardSummary(
       ownerId,
       deletedAt: null,
       status: PaymentStatus.COMPLETED,
+      // Only rent payments settle a month's due rent; deposits don't.
+      type: { not: PaymentType.DEPOSIT },
       contractId: { in: activeContracts.map((c) => c.id) },
       paidAt: { gte: subMonths(monthStart, 1) },
     },
@@ -245,8 +291,8 @@ export async function getDashboardSummary(
   const upcomingPayments: UpcomingPayment[] = activeContracts
     .map((contract) => {
       const rent = toNumber(contract.monthlyRent.toString());
-      // Skip due dates whose month is already covered by recorded payments
-      // (a single payment may bundle rent + deposits, hence >= rent).
+      // Skip due dates whose month is already covered by recorded rent
+      // payments (an overpayment can exceed the month's rent, hence >=).
       let dueDate = nextDueDate(contract.dueDay, now);
       for (let i = 0; i < 3; i++) {
         const paid =
@@ -278,6 +324,7 @@ export async function getDashboardSummary(
       monthlyExpenses,
       netProfit: monthlyRevenue - monthlyExpenses,
       revenueTrendPct,
+      depositsHeld,
     },
     occupancyRate,
     monthlySeries,

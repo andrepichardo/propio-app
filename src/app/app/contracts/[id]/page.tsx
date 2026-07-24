@@ -2,13 +2,15 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
-import { Pencil, Wallet } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Pencil, Wallet } from 'lucide-react';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { NotFoundError } from '@/shared/lib/errors';
 import { contractService } from '@/features/contracts/services/contract.service';
 import { CONTRACT_STATUS_VARIANT } from '@/features/contracts/constants';
 import { DeleteContractDialog } from '@/features/contracts/components/delete-contract-dialog';
 import { ContractPdfUpload } from '@/features/contracts/components/contract-pdf-upload';
+import { DepositCard } from '@/features/deposits/components/deposit-card';
+import { RenewContractDialog } from '@/features/contracts/components/renew-contract-dialog';
 import { PageHeader } from '@/shared/components/page-header';
 import { Button } from '@/shared/components/ui/button';
 import { Badge } from '@/shared/components/ui/badge';
@@ -82,6 +84,14 @@ export default async function ContractDetailPage({
                 <Wallet className="size-4" /> {t('registerPayment')}
               </Link>
             </Button>
+            {!contract.renewedTo && contract.status !== 'CANCELLED' && (
+              <RenewContractDialog
+                contractId={contract.id}
+                currentRent={Number(contract.monthlyRent)}
+                currency={contract.currency}
+                previousEndDate={contract.endDate}
+              />
+            )}
             <Button variant="outline" asChild>
               <Link href={`/app/contracts/${contract.id}/edit`}>
                 <Pencil className="size-4" /> {t('edit')}
@@ -92,13 +102,41 @@ export default async function ContractDetailPage({
         }
       />
 
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <Badge variant={CONTRACT_STATUS_VARIANT[contract.status]}>
           {(await getTranslations('contracts.statuses'))(contract.status)}
         </Badge>
         <span className="text-sm text-muted-foreground">
           {t('paymentsRecorded', { count: contract._count.payments })}
         </span>
+        {contract.renewedFrom && (
+          <Link
+            href={`/app/contracts/${contract.renewedFrom.id}`}
+            className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+          >
+            <ArrowLeft className="size-3.5" />
+            {t('renewedFrom', {
+              rent: formatCurrency(
+                contract.renewedFrom.monthlyRent.toString(),
+                contract.currency,
+              ),
+            })}
+          </Link>
+        )}
+        {contract.renewedTo && (
+          <Link
+            href={`/app/contracts/${contract.renewedTo.id}`}
+            className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+          >
+            {t('renewedTo', {
+              rent: formatCurrency(
+                contract.renewedTo.monthlyRent.toString(),
+                contract.currency,
+              ),
+            })}
+            <ArrowRight className="size-3.5" />
+          </Link>
+        )}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -120,6 +158,11 @@ export default async function ContractDetailPage({
         </Card>
 
         <div className="space-y-4">
+          <DepositCard
+            ownerId={ownerId}
+            contractId={contract.id}
+            currency={contract.currency}
+          />
           <ContractPdfUpload
             contractId={contract.id}
             pdfUrl={contract.contractPdfUrl}

@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { createContractSchema } from '../contract.validators';
+import {
+  createContractSchema,
+  renewContractSchema,
+} from '../contract.validators';
 
 const validInput = {
   propertyId: 'clxxxxxxxxxxxxxxxxxxxxxxx',
@@ -55,6 +58,47 @@ describe('createContractSchema', () => {
   it('rejects malformed ids', () => {
     expect(
       createContractSchema.safeParse({ ...validInput, propertyId: 'nope' })
+        .success,
+    ).toBe(false);
+  });
+});
+
+const validRenewal = {
+  contractId: 'clxxxxxxxxxxxxxxxxxxxxxxx',
+  startDate: '2027-01-01',
+  monthlyRent: 1320,
+};
+
+describe('renewContractSchema', () => {
+  it('accepts a renewal with a new rent', () => {
+    const result = renewContractSchema.safeParse(validRenewal);
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.monthlyRent).toBe(1320);
+      expect(result.data.startDate).toBeInstanceOf(Date);
+    }
+  });
+
+  it('accepts an open-ended renewal (month-to-month)', () => {
+    const result = renewContractSchema.safeParse({
+      ...validRenewal,
+      endDate: null,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects an end date before the start date', () => {
+    expect(
+      renewContractSchema.safeParse({
+        ...validRenewal,
+        endDate: '2026-06-01',
+      }).success,
+    ).toBe(false);
+  });
+
+  it('rejects a non-positive rent', () => {
+    expect(
+      renewContractSchema.safeParse({ ...validRenewal, monthlyRent: 0 })
         .success,
     ).toBe(false);
   });

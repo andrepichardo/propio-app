@@ -13,6 +13,7 @@ export type PaymentListItem = Prisma.PaymentGetPayload<{
     amount: true;
     currency: true;
     method: true;
+    type: true;
     status: true;
     concept: true;
     paidAt: true;
@@ -36,6 +37,7 @@ const listSelect = {
   amount: true,
   currency: true,
   method: true,
+  type: true,
   status: true,
   concept: true,
   paidAt: true,

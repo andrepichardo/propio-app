@@ -6,6 +6,7 @@ import { contractService } from '../services/contract.service';
 import {
   createContractSchema,
   deleteContractSchema,
+  renewContractSchema,
   updateContractSchema,
 } from '../validators/contract.validators';
 
@@ -26,6 +27,17 @@ export const updateContractAction = createOwnerAction(
     revalidatePath('/app/contracts');
     revalidatePath(`/app/contracts/${contract.id}`);
     return { id: contract.id };
+  },
+);
+
+export const renewContractAction = createOwnerAction(
+  renewContractSchema,
+  async (input, { ownerId }) => {
+    const result = await contractService.renew(ownerId, input);
+    revalidatePath('/app/contracts');
+    revalidatePath(`/app/contracts/${input.contractId}`);
+    revalidatePath('/app');
+    return result;
   },
 );
 

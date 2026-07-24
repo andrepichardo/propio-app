@@ -1,27 +1,34 @@
 'use client';
 
-import { useRef, useTransition } from 'react';
+import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { ImagePlus, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import {
   deletePropertyPhotoAction,
   uploadPropertyPhotoAction,
 } from '../actions/property-photo.actions';
-import { Button } from '@/shared/components/ui/button';
+import {
+  MAX_PROPERTY_PHOTO_MB,
+  PROPERTY_PHOTO_ACCEPT,
+} from '../constants';
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/shared/components/ui/card';
+import { FileDropzone } from '@/shared/components/ui/file-dropzone';
+import { formatDate } from '@/shared/lib/format';
 
 export type PropertyPhotoItem = {
   id: string;
   url: string;
   caption?: string | null;
+  createdAt: Date;
 };
 
 export function PropertyPhotos({
@@ -33,26 +40,33 @@ export function PropertyPhotos({
 }) {
   const t = useTranslations('properties.photos');
   const router = useRouter();
-  const inputRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
 
-  function onFileChosen(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    event.target.value = '';
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.set('propertyId', propertyId);
-    formData.set('file', file);
-
+  /**
+   * Uploaded one at a time on purpose: the server derives each photo's
+   * `position` from how many the property already has, so parallel uploads
+   * would race and collide on the same index.
+   */
+  function onFilesChosen(files: File[]) {
     startTransition(async () => {
-      const result = await uploadPropertyPhotoAction(formData);
-      if (!result.success) {
-        toast.error(result.error);
-        return;
+      let uploaded = 0;
+      for (const file of files) {
+        const formData = new FormData();
+        formData.set('propertyId', propertyId);
+        formData.set('file', file);
+
+        const result = await uploadPropertyPhotoAction(formData);
+        if (!result.success) {
+          toast.error(result.error);
+          break;
+        }
+        uploaded += 1;
       }
-      toast.success(t('addedToast'));
-      router.refresh();
+
+      if (uploaded > 0) {
+        toast.success(t('addedToast', { count: uploaded }));
+        router.refresh();
+      }
     });
   }
 
@@ -70,25 +84,20 @@ export function PropertyPhotos({
 
   return (
     <Card>
-      <CardHeader className="flex-row items-center justify-between space-y-0">
+      <CardHeader>
         <CardTitle className="text-base">{t('title')}</CardTitle>
-        <Button
-          variant="outline"
-          size="sm"
-          loading={isPending}
-          onClick={() => inputRef.current?.click()}
-        >
-          {!isPending && <ImagePlus className="size-4" />} {t('add')}
-        </Button>
-        <input
-          ref={inputRef}
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          className="hidden"
-          onChange={onFileChosen}
-        />
       </CardHeader>
       <CardContent>
+        <CardDescription className="mb-4">{t('hint')}</CardDescription>
+        <div className="mb-5">
+          <FileDropzone
+            multiple
+            accept={PROPERTY_PHOTO_ACCEPT}
+            maxMb={MAX_PROPERTY_PHOTO_MB}
+            uploading={isPending}
+            onSelect={onFilesChosen}
+          />
+        </div>
         {photos.length === 0 ? (
           <p className="py-6 text-center text-sm text-muted-foreground">
             {t('empty')}
@@ -107,6 +116,9 @@ export function PropertyPhotos({
                   sizes="(max-width: 640px) 50vw, 25vw"
                   className="object-cover"
                 />
+                <span className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-2 py-1 text-xs font-medium text-white">
+                  {formatDate(photo.createdAt)}
+                </span>
                 <button
                   type="button"
                   onClick={() => removePhoto(photo.id)}

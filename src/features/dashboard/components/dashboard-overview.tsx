@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import {
   Building2,
   DoorOpen,
+  PiggyBank,
   TrendingDown,
   TrendingUp,
   Wallet,
@@ -73,6 +74,14 @@ export async function DashboardOverview({
             amount: formatCurrency(summary.finance.monthlyExpenses, currency),
           })}
         />
+        {summary.finance.depositsHeld > 0 && (
+          <StatCard
+            label={t('depositsHeld')}
+            value={formatCurrency(summary.finance.depositsHeld, currency)}
+            icon={PiggyBank}
+            hint={t('depositsHeldHint')}
+          />
+        )}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">

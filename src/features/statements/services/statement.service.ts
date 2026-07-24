@@ -8,6 +8,7 @@ import {
 import {
   ActivityAction,
   PaymentStatus,
+  PaymentType,
   type Prisma,
 } from '@prisma/client';
 import { prisma } from '@/shared/lib/prisma';
@@ -118,6 +119,8 @@ export const statementService = {
         contractId: contract.id,
         deletedAt: null,
         status: PaymentStatus.COMPLETED,
+        // A rent statement reflects rent paid, not deposits held.
+        type: { not: PaymentType.DEPOSIT },
         paidAt: { gte: periodStart, lte: periodEnd },
       },
       orderBy: { paidAt: 'asc' },

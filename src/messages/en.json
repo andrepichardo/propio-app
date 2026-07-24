@@ -152,6 +152,20 @@
       "resetLinkInvalid": "This reset link is invalid or has expired."
     }
   },
+  "dropzone": {
+    "cta": "Drag a file here, or click to browse",
+    "ctaMany": "Drag files here, or click to browse",
+    "dropHere": "Drop the file to attach it",
+    "dropHereMany": "Drop the files to attach them",
+    "hint": "One file, up to {mb} MB",
+    "hintMany": "You can select several at once, up to {mb} MB each",
+    "uploading": "Uploading…",
+    "remove": "Remove file",
+    "onlyOne": "Only one file at a time — drop a single file.",
+    "tooLarge": "That file is larger than {mb} MB.",
+    "wrongType": "That file type isn’t allowed.",
+    "someRejected": "{count, plural, one {# file was skipped} other {# files were skipped}}: {names}"
+  },
   "validation": {
     "nameRequired": "Please enter your name.",
     "nameMin": "Name must be at least 2 characters.",
@@ -172,6 +186,9 @@
     "propertyNameMin": "Name must be at least 2 characters.",
     "required": "This field is required.",
     "amountPositive": "Enter an amount greater than 0.",
+    "amountNotNegative": "Enter 0 or a positive amount.",
+    "retainedExceedsDeposit": "You can’t keep more than the deposit collected.",
+    "renewalBeforePrevious": "The renewal can’t start before the contract it renews.",
     "currencyCode": "Use a 3-letter ISO code (e.g. USD).",
     "descriptionRequired": "Enter a description.",
     "selectProperty": "Select a property.",
@@ -201,13 +218,15 @@
     "contractCreated": "Created a new contract",
     "contractUpdated": "Updated a contract",
     "contractCancelled": "Cancelled a contract",
+    "contractRenewed": "Renewed the contract for {property}",
     "contractPdfAttached": "Attached the signed contract PDF",
     "propertyAdded": "Added property “{name}”",
     "propertyUpdated": "Updated property “{name}”",
     "propertyDeleted": "Deleted a property",
     "documentUploaded": "Uploaded document “{name}”",
     "documentDeleted": "Deleted document “{name}”",
-    "statementGenerated": "Generated statement {number} for {property}"
+    "statementGenerated": "Generated statement {number} for {property}",
+    "depositSettled": "Settled the deposit for {property} — returned {returned}, kept {retained}"
   },
   "pdf": {
     "receipt": {
@@ -242,6 +261,8 @@
     "occupancyRate": "Occupancy rate",
     "monthlyRevenue": "Monthly revenue",
     "netProfit": "Net profit",
+    "depositsHeld": "Deposits held",
+    "depositsHeldHint": "Held on behalf of tenants (a liability)",
     "occupiedAvailable": "{occupied} occupied · {available} available",
     "inMaintenance": "{count} in maintenance",
     "expensesHint": "{amount} expenses",
@@ -342,8 +363,9 @@
     "photos": {
       "title": "Photos",
       "add": "Add photo",
+      "hint": "Tip: upload photos of the property as close as possible to the handover date. They serve as evidence of its condition if there’s ever a deposit dispute.",
       "empty": "No photos yet. The first photo becomes the cover image.",
-      "addedToast": "Photo added.",
+      "addedToast": "{count, plural, one {Photo added.} other {# photos added.}}",
       "removedToast": "Photo removed.",
       "deleteAria": "Delete photo",
       "missingRef": "Missing property reference."
@@ -480,6 +502,8 @@
       "registerPayment": "Register payment",
       "edit": "Edit",
       "paymentsRecorded": "{count} payments recorded",
+      "renewedFrom": "Renewed from {rent}",
+      "renewedTo": "Renewed to {rent}",
       "terms": "Terms",
       "notes": "Notes",
       "monthlyRent": "Monthly rent",
@@ -500,6 +524,26 @@
       "keep": "Keep contract",
       "confirm": "Cancel contract",
       "cancelledToast": "Contract cancelled."
+    },
+    "renew": {
+      "trigger": "Renew",
+      "title": "Renew this contract",
+      "description": "The new terms become their own contract linked to this one, so past rent and receipts keep reflecting what was actually agreed.",
+      "currentRent": "Current rent",
+      "increase": "Rent increase",
+      "increaseHint": "A shortcut — you can always type the negotiated amount below.",
+      "noIncrease": "No increase",
+      "newRent": "New monthly rent",
+      "impliedChange": "{pct}% vs the current rent",
+      "sameRent": "Same as the current rent",
+      "startDate": "New start date",
+      "endDate": "New end date",
+      "endDateHint": "Leave empty for month-to-month.",
+      "notes": "Notes",
+      "depositNote": "The security deposit carries over — don’t record it again. You’ll settle it when the tenant actually moves out.",
+      "cancel": "Cancel",
+      "confirm": "Renew contract",
+      "renewedToast": "Contract renewed."
     }
   },
   "payments": {
@@ -515,6 +559,7 @@
     "colProof": "Proof",
     "colAmount": "Amount",
     "viewProof": "View",
+    "depositBadge": "Deposit",
     "recordedToast": "Payment recorded — receipt {number}.",
     "methods": {
       "CASH": "Cash",
@@ -536,6 +581,8 @@
       "contract": "Contract",
       "selectContract": "Select contract",
       "amount": "Amount",
+      "isDeposit": "This is a security deposit",
+      "isDepositHint": "Deposits are held as a liability and don’t count as income.",
       "method": "Method",
       "date": "Payment date",
       "reference": "Reference",
@@ -545,14 +592,36 @@
       "notes": "Notes",
       "proof": "Proof of payment",
       "proofHint": "Optional. Transfer screenshot or bank receipt (PDF or image, max {mb} MB).",
-      "proofUploading": "Uploading…",
       "proofView": "View proof",
-      "proofRemove": "Remove",
       "emailReceipt": "Email receipt to tenant",
       "emailReceiptHint": "We’ll attach the generated PDF receipt.",
       "cancel": "Cancel",
       "submit": "Register payment"
     }
+  },
+  "deposits": {
+    "title": "Security deposit",
+    "heldDescription": "Held on behalf of the tenant until move-out.",
+    "noneCollected": "No deposit has been recorded for this contract. Register it as a payment and mark it as a deposit.",
+    "collected": "Deposit collected",
+    "liabilityNote": "This money isn’t income — it belongs to the tenant until you settle it at move-out.",
+    "settle": "Settle deposit",
+    "settleTitle": "Settle the deposit",
+    "settleDescription": "At handover, enter how much you’re keeping for repairs or unpaid amounts. The rest goes back to the tenant.",
+    "retained": "Amount you keep",
+    "retainedHint": "For damages, cleaning or unpaid rent. Leave 0 to return the full deposit.",
+    "toReturn": "Goes back to the tenant",
+    "exceedsDeposit": "Exceeds the deposit",
+    "reason": "Reason",
+    "reasonPlaceholder": "e.g. Repainting the living room wall, deep cleaning",
+    "settledAt": "Settlement date",
+    "cancel": "Cancel",
+    "confirmSettle": "Settle deposit",
+    "settledToast": "Deposit settled.",
+    "settledOn": "Settled on {date}",
+    "returnedToTenant": "Returned to tenant",
+    "retainedByOwner": "Kept by you",
+    "countsAsIncome": "Counts as income"
   },
   "receipts": {
     "title": "Receipts",

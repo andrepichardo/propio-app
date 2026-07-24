@@ -48,16 +48,17 @@ model User {
   sessions Session[]
 
   // Tenant-owned data (all cascade: deleting an owner removes their world)
-  properties    Property[]
-  tenants       Tenant[]
-  contracts     Contract[]
-  payments      Payment[]
-  receipts      Receipt[]
-  statements    Statement[]
-  expenses      Expense[]
-  documents     Document[]
-  notifications Notification[]
-  activities    Activity[]
+  properties         Property[]
+  tenants            Tenant[]
+  contracts          Contract[]
+  payments           Payment[]
+  receipts           Receipt[]
+  statements         Statement[]
+  expenses           Expense[]
+  documents          Document[]
+  notifications      Notification[]
+  activities         Activity[]
+  depositSettlements DepositSettlement[]
 
   @@index([email])
   @@map("users")
@@ -143,13 +144,14 @@ model Property {
 
   owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
-  photos     PropertyPhoto[]
-  contracts  Contract[]
-  payments   Payment[]
-  expenses   Expense[]
-  documents  Document[]
-  receipts   Receipt[]
-  statements Statement[]
+  photos             PropertyPhoto[]
+  contracts          Contract[]
+  payments           Payment[]
+  expenses           Expense[]
+  documents          Document[]
+  receipts           Receipt[]
+  statements         Statement[]
+  depositSettlements DepositSettlement[]
 
   @@index([ownerId])
   @@index([ownerId, status])
@@ -214,11 +216,12 @@ model Tenant {
 
   owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
-  contracts  Contract[]
-  payments   Payment[]
-  documents  Document[]
-  receipts   Receipt[]
-  statements Statement[]
+  contracts          Contract[]
+  payments           Payment[]
+  documents          Document[]
+  receipts           Receipt[]
+  statements         Statement[]
+  depositSettlements DepositSettlement[]
 
   @@index([ownerId])
   @@index([ownerId, deletedAt])
@@ -248,6 +251,16 @@ model Contract {
   contractPdfUrl String?
   notes          String?        @db.Text
 
+  /**
+   * Renewal chain. A renewal is a NEW contract (immutable terms per period)
+   * linked back to the one it replaces, so rent history is never overwritten.
+   * Unique => a contract has at most one successor, keeping the chain linear.
+   * The security deposit follows the chain instead of being re-collected.
+   */
+  renewedFromId String?   @unique
+  renewedFrom   Contract? @relation("ContractRenewal", fields: [renewedFromId], references: [id], onDelete: SetNull)
+  renewedTo     Contract? @relation("ContractRenewal")
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
@@ -256,9 +269,10 @@ model Contract {
   property Property @relation(fields: [propertyId], references: [id], onDelete: Restrict)
   tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
 
-  payments   Payment[]
-  receipts   Receipt[]
-  statements Statement[]
+  payments          Payment[]
+  receipts          Receipt[]
+  statements        Statement[]
+  depositSettlement DepositSettlement?
 
   @@index([ownerId])
   @@index([ownerId, status])
@@ -289,6 +303,7 @@ model Payment {
   amount    Decimal       @db.Decimal(12, 2)
   currency  String        @default("USD")
   method    PaymentMethod @default(TRANSFER)
+  type      PaymentType   @default(RENT) // DEPOSIT is a liability, excluded from income
   status    PaymentStatus @default(COMPLETED)
   reference String? // bank ref / check number
   concept   String? // "Rent — March 2026"
@@ -334,6 +349,57 @@ enum PaymentStatus {
   COMPLETED
   FAILED
   REFUNDED
+}
+
+enum PaymentType {
+  RENT
+  DEPOSIT
+}
+
+// ===========================================================================
+// DEPOSIT SETTLEMENTS
+// ===========================================================================
+
+/**
+ * Closing the deposit cycle for a contract: what went back to the tenant and
+ * what the owner kept (e.g. to cover damages). One settlement per contract.
+ * Accounting: `amountReturned` is neither income nor expense (it is the
+ * tenant's own money going back), while `amountRetained` becomes income on
+ * `settledAt`. Invariant enforced in the service:
+ * amountReturned + amountRetained == depositHeld
+ */
+model DepositSettlement {
+  id         String @id @default(cuid())
+  ownerId    String
+  contractId String @unique
+  propertyId String
+  tenantId   String
+
+  /**
+   * Snapshot of the deposit collected for this contract at settlement time.
+   */
+  depositHeld    Decimal @db.Decimal(12, 2)
+  amountReturned Decimal @db.Decimal(12, 2)
+  amountRetained Decimal @db.Decimal(12, 2)
+  currency       String  @default("USD")
+
+  /**
+   * Why the owner kept part of it (damages, cleaning, unpaid rent…).
+   */
+  reason    String?  @db.Text
+  settledAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner    User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  contract Contract @relation(fields: [contractId], references: [id], onDelete: Restrict)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  @@index([ownerId])
+  @@index([ownerId, settledAt])
+  @@map("deposit_settlements")
 }
 
 // ===========================================================================

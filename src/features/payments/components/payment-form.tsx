@@ -1,14 +1,14 @@
 'use client';
 
-import { useRef, useState, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { PaymentMethod } from '@prisma/client';
-import { Paperclip, Wallet } from 'lucide-react';
+import { PaymentMethod, PaymentType } from '@prisma/client';
+import { Wallet } from 'lucide-react';
 import {
   registerPaymentSchema,
   type RegisterPaymentInput,
@@ -34,6 +34,7 @@ import {
   FormMessage,
 } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
+import { FileDropzone } from '@/shared/components/ui/file-dropzone';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Button } from '@/shared/components/ui/button';
 import { Switch } from '@/shared/components/ui/switch';
@@ -71,7 +72,6 @@ export function PaymentForm({
   const t = useTranslations('payments');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const proofInputRef = useRef<HTMLInputElement>(null);
   const [proofUploading, setProofUploading] = useState(false);
   const [proofName, setProofName] = useState<string | null>(null);
 
@@ -82,6 +82,7 @@ export function PaymentForm({
     defaultValues: {
       contractId: defaultContractId ?? '',
       amount: preselected?.rent ?? 0,
+      type: PaymentType.RENT,
       method: PaymentMethod.TRANSFER,
       reference: '',
       concept: '',
@@ -95,10 +96,7 @@ export function PaymentForm({
   const proofUrl = form.watch('proofUrl');
 
   /** Upload as soon as a file is picked so registration only carries the URL. */
-  async function onProofChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
+  async function uploadProof(file: File) {
     const formData = new FormData();
     formData.set('file', file);
 
@@ -108,7 +106,6 @@ export function PaymentForm({
 
     if (!result.success) {
       toast.error(result.error);
-      event.target.value = '';
       return;
     }
     form.setValue('proofUrl', result.data.url);
@@ -118,7 +115,6 @@ export function PaymentForm({
   function removeProof() {
     form.setValue('proofUrl', '');
     setProofName(null);
-    if (proofInputRef.current) proofInputRef.current.value = '';
   }
 
   function onSubmit(values: RegisterPaymentInput) {
@@ -188,6 +184,30 @@ export function PaymentForm({
                     </SelectContent>
                   </Select>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between rounded-lg border p-3 sm:col-span-2">
+                  <div>
+                    <FormLabel>{t('form.isDeposit')}</FormLabel>
+                    <FormDescription>
+                      {t('form.isDepositHint')}
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value === PaymentType.DEPOSIT}
+                      onCheckedChange={(checked) =>
+                        field.onChange(
+                          checked ? PaymentType.DEPOSIT : PaymentType.RENT,
+                        )
+                      }
+                    />
+                  </FormControl>
                 </FormItem>
               )}
             />
@@ -298,45 +318,23 @@ export function PaymentForm({
               render={() => (
                 <FormItem className="sm:col-span-2">
                   <FormLabel>{t('form.proof')}</FormLabel>
-                  {proofUrl ? (
-                    <div className="flex items-center justify-between gap-3 rounded-lg border p-3">
-                      <a
-                        href={proofUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex min-w-0 items-center gap-2 text-sm font-medium text-primary hover:underline"
-                      >
-                        <Paperclip className="size-4 shrink-0" />
-                        <span className="truncate">
-                          {proofName ?? t('form.proofView')}
-                        </span>
-                      </a>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={removeProof}
-                        disabled={isPending}
-                      >
-                        {t('form.proofRemove')}
-                      </Button>
-                    </div>
-                  ) : (
-                    <FormControl>
-                      <Input
-                        ref={proofInputRef}
-                        type="file"
-                        accept={PAYMENT_PROOF_ACCEPT}
-                        disabled={proofUploading}
-                        onChange={onProofChange}
-                      />
-                    </FormControl>
-                  )}
-                  <FormDescription>
-                    {proofUploading
-                      ? t('form.proofUploading')
-                      : t('form.proofHint', { mb: MAX_PAYMENT_PROOF_MB })}
-                  </FormDescription>
+                  <FileDropzone
+                    accept={PAYMENT_PROOF_ACCEPT}
+                    maxMb={MAX_PAYMENT_PROOF_MB}
+                    uploading={proofUploading}
+                    disabled={isPending}
+                    value={
+                      proofUrl
+                        ? {
+                            name: proofName ?? t('form.proofView'),
+                            url: proofUrl,
+                          }
+                        : null
+                    }
+                    onSelect={uploadProof}
+                    onRemove={removeProof}
+                    hint={t('form.proofHint', { mb: MAX_PAYMENT_PROOF_MB })}
+                  />
                   <FormMessage />
                 </FormItem>
               )}

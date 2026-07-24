@@ -1,13 +1,19 @@
 import 'server-only';
-import { ActivityAction, PropertyStatus } from '@prisma/client';
+import { ActivityAction, ContractStatus, PropertyStatus } from '@prisma/client';
 import { prisma } from '@/shared/lib/prisma';
 import { contractRepository } from '../repositories/contract.repository';
 import type {
   ContractFilters,
   CreateContractInput,
+  RenewContractInput,
   UpdateContractInput,
 } from '../validators/contract.validators';
-import { ForbiddenError, NotFoundError } from '@/shared/lib/errors';
+import {
+  ConflictError,
+  ForbiddenError,
+  NotFoundError,
+  ValidationError,
+} from '@/shared/lib/errors';
 import { logActivity } from '@/shared/lib/activity/activity-logger';
 import { getStorage } from '@/shared/lib/storage';
 import type { UploadedFile } from '@/shared/lib/uploads';
@@ -107,6 +113,80 @@ export const contractService = {
     });
 
     return updated;
+  },
+
+  /**
+   * Renew a contract: the new terms become their OWN contract linked back to
+   * the one it replaces, and the previous one is closed as EXPIRED.
+   *
+   * Terms are never edited in place — a past statement or dashboard month must
+   * keep resolving the rent that was actually in force back then. The security
+   * deposit is deliberately NOT re-collected or settled: the tenant stays, so
+   * it carries forward along the renewal chain.
+   */
+  async renew(ownerId: string, input: RenewContractInput) {
+    const previous = await prisma.contract.findFirst({
+      where: { id: input.contractId, ownerId, deletedAt: null },
+      include: {
+        property: { select: { id: true, name: true } },
+        renewedTo: { select: { id: true } },
+      },
+    });
+    if (!previous) throw new NotFoundError('Contract');
+
+    if (previous.renewedTo) {
+      throw new ConflictError('This contract has already been renewed.');
+    }
+    if (previous.status === ContractStatus.CANCELLED) {
+      throw new ValidationError('A cancelled contract cannot be renewed.');
+    }
+    if (input.startDate < previous.startDate) {
+      throw new ValidationError(
+        'The renewal cannot start before the contract it renews.',
+        { startDate: ['renewalBeforePrevious'] },
+      );
+    }
+
+    const renewed = await prisma.$transaction(async (tx) => {
+      const created = await tx.contract.create({
+        data: {
+          ownerId,
+          propertyId: previous.propertyId,
+          tenantId: previous.tenantId,
+          startDate: input.startDate,
+          endDate: input.endDate ?? null,
+          monthlyRent: input.monthlyRent,
+          currency: previous.currency,
+          dueDay: previous.dueDay,
+          // Carried over, not re-collected — the deposit follows the chain.
+          securityDeposit: previous.securityDeposit,
+          maintenanceIncluded: previous.maintenanceIncluded,
+          status: ContractStatus.ACTIVE,
+          notes: input.notes,
+          renewedFromId: previous.id,
+        },
+      });
+
+      await tx.contract.update({
+        where: { id: previous.id },
+        data: { status: ContractStatus.EXPIRED },
+      });
+
+      await logActivity({
+        tx,
+        ownerId,
+        action: ActivityAction.CREATED,
+        entityType: 'Contract',
+        entityId: created.id,
+        summary: `Renewed the contract for ${previous.property.name}`,
+        messageKey: 'contractRenewed',
+        params: { property: previous.property.name },
+      });
+
+      return created;
+    });
+
+    return { id: renewed.id };
   },
 
   async remove(ownerId: string, id: string) {
