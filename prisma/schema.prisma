@@ -269,10 +269,10 @@ model Contract {
   property Property @relation(fields: [propertyId], references: [id], onDelete: Restrict)
   tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
 
-  payments          Payment[]
-  receipts          Receipt[]
-  statements        Statement[]
-  depositSettlement DepositSettlement?
+  payments           Payment[]
+  receipts           Receipt[]
+  statements         Statement[]
+  depositSettlements DepositSettlement[]
 
   @@index([ownerId])
   @@index([ownerId, status])
@@ -371,7 +371,13 @@ enum PaymentType {
 model DepositSettlement {
   id         String @id @default(cuid())
   ownerId    String
-  contractId String @unique
+  /**
+   * NOT unique: a voided settlement keeps its row (soft delete), so the
+   * "one settlement per contract" rule is enforced in the service against
+   * live rows only — a unique constraint here would block re-settling after
+   * a correction.
+   */
+  contractId String
   propertyId String
   tenantId   String
 
@@ -389,8 +395,12 @@ model DepositSettlement {
   reason    String?  @db.Text
   settledAt DateTime
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  /**
+   * Voided correction: excluded from balances so the deposit is held again.
+   */
+  deletedAt DateTime?
 
   owner    User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   contract Contract @relation(fields: [contractId], references: [id], onDelete: Restrict)
@@ -399,6 +409,7 @@ model DepositSettlement {
 
   @@index([ownerId])
   @@index([ownerId, settledAt])
+  @@index([contractId])
   @@map("deposit_settlements")
 }
 

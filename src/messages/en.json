@@ -226,7 +226,8 @@
     "documentUploaded": "Uploaded document “{name}”",
     "documentDeleted": "Deleted document “{name}”",
     "statementGenerated": "Generated statement {number} for {property}",
-    "depositSettled": "Settled the deposit for {property} — returned {returned}, kept {retained}"
+    "depositSettled": "Settled the deposit for {property} — returned {returned}, kept {retained}",
+    "depositSettlementVoided": "Undid a deposit settlement"
   },
   "pdf": {
     "receipt": {
@@ -621,7 +622,15 @@
     "settledOn": "Settled on {date}",
     "returnedToTenant": "Returned to tenant",
     "retainedByOwner": "Kept by you",
-    "countsAsIncome": "Counts as income"
+    "countsAsIncome": "Counts as income",
+    "void": {
+      "trigger": "Undo",
+      "title": "Undo this settlement?",
+      "description": "The deposit goes back to being held, and any amount you kept stops counting as income. You can then settle it again with the right figures.",
+      "keep": "Keep it",
+      "confirm": "Undo settlement",
+      "voidedToast": "Settlement undone — the deposit is held again."
+    }
   },
   "receipts": {
     "title": "Receipts",
@@ -890,6 +899,7 @@
     "verifyCta": "Verify email",
     "receiptSubject": "Receipt {number}",
     "receiptTitle": "Payment received",
-    "receiptBody": "Hi {name}, we’ve recorded your payment of {amount}. Your receipt {number} is attached."
+    "receiptBody": "Hi {name}, we’ve recorded your payment of {amount} for {property}. Your receipt {number} is attached.",
+    "receiptFrom": "Sent by {owner}."
   }
 }

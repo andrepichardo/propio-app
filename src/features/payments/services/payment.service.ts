@@ -21,6 +21,7 @@ import { formatCurrency } from '@/shared/lib/format';
 import { receiptService } from '@/features/receipts/services/receipt.service';
 import { sendReceiptEmail } from '@/emails/send';
 import { getUserPreferences } from '@/shared/lib/auth/preferences';
+import { isLocale } from '@/i18n/config';
 
 /**
  * Generate the next per-owner receipt number for the current year, e.g.
@@ -146,6 +147,7 @@ export const paymentService = {
       currency: contract.currency,
       tenantName: `${contract.tenant.firstName} ${contract.tenant.lastName}`,
       tenantEmail: contract.tenant.email,
+      propertyName: contract.property.name,
       sendReceipt: input.sendReceipt,
     });
 
@@ -179,6 +181,7 @@ export const paymentService = {
     currency: string;
     tenantName: string;
     tenantEmail?: string | null;
+    propertyName: string;
     sendReceipt: boolean;
   }): Promise<void> {
     try {
@@ -188,13 +191,25 @@ export const paymentService = {
       );
 
       if (params.sendReceipt && params.tenantEmail) {
-        const prefs = await getUserPreferences(params.ownerId);
+        const [prefs, owner] = await Promise.all([
+          getUserPreferences(params.ownerId),
+          prisma.user.findUnique({
+            where: { id: params.ownerId },
+            select: { name: true },
+          }),
+        ]);
+        // Runs post-commit (outside the request scope), so the owner's locale
+        // has to travel explicitly — the cookie fallback doesn't apply here.
+        const locale = prefs.locale.slice(0, 2);
         await sendReceiptEmail({
           to: params.tenantEmail,
           tenantName: params.tenantName,
           amount: formatCurrency(params.amount, params.currency, prefs.locale),
           receiptNumber: params.number,
+          propertyName: params.propertyName,
+          ownerName: owner?.name,
           pdf: result?.pdf,
+          locale: isLocale(locale) ? locale : undefined,
         });
       }
     } catch (error) {

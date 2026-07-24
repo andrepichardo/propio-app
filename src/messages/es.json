@@ -226,7 +226,8 @@
     "documentUploaded": "Subiste el documento «{name}»",
     "documentDeleted": "Eliminaste el documento «{name}»",
     "statementGenerated": "Generaste el estado de cuenta {number} de {property}",
-    "depositSettled": "Liquidaste el depósito de {property} — devolviste {returned}, retuviste {retained}"
+    "depositSettled": "Liquidaste el depósito de {property} — devolviste {returned}, retuviste {retained}",
+    "depositSettlementVoided": "Deshiciste una liquidación de depósito"
   },
   "pdf": {
     "receipt": {
@@ -624,7 +625,15 @@
     "settledOn": "Liquidado el {date}",
     "returnedToTenant": "Devuelto al inquilino",
     "retainedByOwner": "Retenido por ti",
-    "countsAsIncome": "Cuenta como ingreso"
+    "countsAsIncome": "Cuenta como ingreso",
+    "void": {
+      "trigger": "Deshacer",
+      "title": "¿Deshacer esta liquidación?",
+      "description": "El depósito vuelve a quedar retenido y lo que hayas retenido deja de contar como ingreso. Luego puedes liquidarlo de nuevo con las cifras correctas.",
+      "keep": "Mantenerla",
+      "confirm": "Deshacer liquidación",
+      "voidedToast": "Liquidación deshecha — el depósito vuelve a estar retenido."
+    }
   },
   "receipts": {
     "title": "Recibos",
@@ -893,6 +902,7 @@
     "verifyCta": "Verificar correo",
     "receiptSubject": "Recibo {number}",
     "receiptTitle": "Pago recibido",
-    "receiptBody": "Hola {name}, registramos tu pago de {amount}. Tu recibo {number} está adjunto."
+    "receiptBody": "Hola {name}, registramos tu pago de {amount} correspondiente a {property}. Tu recibo {number} está adjunto.",
+    "receiptFrom": "Enviado por {owner}."
   }
 }

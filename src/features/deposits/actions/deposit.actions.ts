@@ -3,7 +3,10 @@
 import { revalidatePath } from 'next/cache';
 import { createOwnerAction } from '@/shared/lib/action';
 import { depositService } from '../services/deposit.service';
-import { settleDepositSchema } from '../validators/deposit.validators';
+import {
+  settleDepositSchema,
+  voidSettlementSchema,
+} from '../validators/deposit.validators';
 
 export const settleDepositAction = createOwnerAction(
   settleDepositSchema,
@@ -12,6 +15,19 @@ export const settleDepositAction = createOwnerAction(
     revalidatePath(`/app/contracts/${input.contractId}`);
     revalidatePath('/app/contracts');
     revalidatePath('/app');
+    return result;
+  },
+);
+
+export const voidSettlementAction = createOwnerAction(
+  voidSettlementSchema,
+  async ({ id, contractId }, { ownerId }) => {
+    const result = await depositService.voidSettlement(ownerId, id);
+    revalidatePath(`/app/contracts/${contractId}`);
+    revalidatePath('/app/contracts');
+    // Revenue and "deposits held" both shift back.
+    revalidatePath('/app');
+    revalidatePath('/app/reports');
     return result;
   },
 );

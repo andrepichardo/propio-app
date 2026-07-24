@@ -109,9 +109,14 @@ export async function sendReceiptEmail(params: {
   tenantName: string;
   amount: string;
   receiptNumber: string;
+  /** Property the payment settles — tells the tenant what this is about. */
+  propertyName: string;
+  /** Landlord's name, so the tenant knows who the receipt came from. */
+  ownerName?: string | null;
   pdf?: Buffer;
+  locale?: Locale;
 }): Promise<void> {
-  const t = await emailTranslations();
+  const t = await emailTranslations(params.locale);
   const { subject, html } = receiptEmail({
     subject: t('receiptSubject', { number: params.receiptNumber }),
     title: t('receiptTitle'),
@@ -119,7 +124,11 @@ export async function sendReceiptEmail(params: {
       name: params.tenantName,
       amount: `<strong>${params.amount}</strong>`,
       number: params.receiptNumber,
+      property: params.propertyName,
     }),
+    from: params.ownerName
+      ? t('receiptFrom', { owner: params.ownerName })
+      : undefined,
     footer: t('footer'),
   });
   await deliver({

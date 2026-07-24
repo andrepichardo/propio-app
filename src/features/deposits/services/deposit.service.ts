@@ -6,6 +6,7 @@ import type { SettleDepositInput } from '../validators/deposit.validators';
 import {
   ConflictError,
   ForbiddenError,
+  NotFoundError,
   ValidationError,
 } from '@/shared/lib/errors';
 import { logActivity } from '@/shared/lib/activity/activity-logger';
@@ -16,6 +17,7 @@ export type DepositSummary = {
   held: number;
   currency: string;
   settlement: {
+    id: string;
     depositHeld: number;
     amountReturned: number;
     amountRetained: number;
@@ -41,6 +43,7 @@ export const depositService = {
       currency,
       settlement: settlement
         ? {
+            id: settlement.id,
             depositHeld: Number(settlement.depositHeld),
             amountReturned: Number(settlement.amountReturned),
             amountRetained: Number(settlement.amountRetained),
@@ -126,5 +129,29 @@ export const depositService = {
     });
 
     return { id: settlement.id, amountReturned, amountRetained };
+  },
+
+  /**
+   * Void a settlement recorded by mistake.
+   *
+   * Soft-deleted rather than edited: the retained amount already counted as
+   * income, so leaving the reversal on the record is more honest than
+   * silently rewriting the numbers. Voiding puts the deposit back in "held"
+   * and drops that income, freeing the owner to settle again correctly.
+   */
+  async voidSettlement(ownerId: string, id: string) {
+    const voided = await depositRepository.softDelete(ownerId, id);
+    if (!voided) throw new NotFoundError('Deposit settlement');
+
+    await logActivity({
+      ownerId,
+      action: ActivityAction.DELETED,
+      entityType: 'DepositSettlement',
+      entityId: id,
+      summary: 'Voided a deposit settlement',
+      messageKey: 'depositSettlementVoided',
+    });
+
+    return { id };
   },
 };

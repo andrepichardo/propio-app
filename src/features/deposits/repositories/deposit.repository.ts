@@ -61,11 +61,14 @@ export const depositRepository = {
     return Number(result._sum.amount ?? 0);
   },
 
-  /** A settlement anywhere in the chain closes the deposit for all of it. */
+  /**
+   * The live settlement for the chain, if any. A voided one is ignored, which
+   * is what lets the owner correct a mistake and settle again.
+   */
   async findByContract(ownerId: string, contractId: string) {
     const contractIds = await chainIds(ownerId, contractId);
     return prisma.depositSettlement.findFirst({
-      where: { ownerId, contractId: { in: contractIds } },
+      where: { ownerId, contractId: { in: contractIds }, deletedAt: null },
     });
   },
 
@@ -76,13 +79,22 @@ export const depositRepository = {
     return tx.depositSettlement.create({ data });
   },
 
+  /** Void a settlement, releasing the deposit back into "held". */
+  async softDelete(ownerId: string, id: string): Promise<boolean> {
+    const { count } = await prisma.depositSettlement.updateMany({
+      where: { id, ownerId, deletedAt: null },
+      data: { deletedAt: new Date() },
+    });
+    return count > 0;
+  },
+
   /**
    * Deposits already settled (returned + retained). Subtracted from collected
    * deposits to get what the owner still holds.
    */
   async totalSettled(ownerId: string): Promise<number> {
     const result = await prisma.depositSettlement.aggregate({
-      where: { ownerId },
+      where: { ownerId, deletedAt: null },
       _sum: { depositHeld: true },
     });
     return Number(result._sum.depositHeld ?? 0);
@@ -91,7 +103,7 @@ export const depositRepository = {
   /** Retained deposit becomes income on `settledAt`. */
   async sumRetained(ownerId: string, from: Date, to: Date): Promise<number> {
     const result = await prisma.depositSettlement.aggregate({
-      where: { ownerId, settledAt: { gte: from, lte: to } },
+      where: { ownerId, deletedAt: null, settledAt: { gte: from, lte: to } },
       _sum: { amountRetained: true },
     });
     return Number(result._sum.amountRetained ?? 0);

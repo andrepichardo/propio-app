@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { depositService } from '../services/deposit.service';
 import { SettleDepositDialog } from './settle-deposit-dialog';
+import { VoidSettlementDialog } from './void-settlement-dialog';
 import {
   Card,
   CardContent,
@@ -44,12 +45,19 @@ export async function DepositCard({
             }) : t('heldDescription')}
           </CardDescription>
         </div>
-        {!settlement && held > 0 && (
-          <SettleDepositDialog
+        {settlement ? (
+          <VoidSettlementDialog
+            settlementId={settlement.id}
             contractId={contractId}
-            held={held}
-            currency={currency}
           />
+        ) : (
+          held > 0 && (
+            <SettleDepositDialog
+              contractId={contractId}
+              held={held}
+              currency={currency}
+            />
+          )
         )}
       </CardHeader>
 

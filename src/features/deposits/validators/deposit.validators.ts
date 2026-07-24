@@ -20,4 +20,11 @@ export const settleDepositSchema = z.object({
   settledAt: z.coerce.date().default(() => new Date()),
 });
 
+/** Voiding a settlement recorded by mistake, so it can be redone correctly. */
+export const voidSettlementSchema = z.object({
+  id: z.string().cuid(),
+  contractId: z.string().cuid(),
+});
+
 export type SettleDepositInput = z.infer<typeof settleDepositSchema>;
+export type VoidSettlementInput = z.infer<typeof voidSettlementSchema>;
