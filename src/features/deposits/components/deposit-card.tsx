@@ -122,10 +122,10 @@ function Row({
   return (
     <div className="flex items-center justify-between gap-3">
       <span className="text-muted-foreground">{label}</span>
-      <span className="flex items-center gap-2 font-medium">
+      <div className="flex items-center gap-2 font-medium">
         {hint}
         {value}
-      </span>
+      </div>
     </div>
   );
 }

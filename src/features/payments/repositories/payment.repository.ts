@@ -68,7 +68,9 @@ export const paymentRepository = {
     const [items, total] = await Promise.all([
       prisma.payment.findMany({
         where,
-        orderBy: { paidAt: 'desc' },
+        // createdAt breaks ties so same-day payments keep newest-first
+        // (insertion) order instead of an undefined one.
+        orderBy: [{ paidAt: 'desc' }, { createdAt: 'desc' }],
         skip,
         take,
         select: listSelect,
@@ -107,11 +109,12 @@ export const paymentRepository = {
     return Number(result._sum.amount ?? 0);
   },
 
-  async softDelete(ownerId: string, id: string): Promise<boolean> {
-    const result = await prisma.payment.updateMany({
-      where: { id, ownerId, deletedAt: null },
-      data: { deletedAt: new Date() },
-    });
+  /**
+   * Permanently delete a payment. The `ownerId` in the filter keeps it tenant-
+   * scoped, and the receipt row is removed by the DB via `onDelete: Cascade`.
+   */
+  async hardDelete(ownerId: string, id: string): Promise<boolean> {
+    const result = await prisma.payment.deleteMany({ where: { id, ownerId } });
     return result.count > 0;
   },
 };

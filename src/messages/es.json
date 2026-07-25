@@ -212,6 +212,7 @@
     "tenantDeleted": "Eliminaste un inquilino",
     "paymentRegistered": "Registraste {amount} de {tenant}",
     "paymentVoided": "Anulaste un pago",
+    "paymentDeleted": "Eliminaste un pago",
     "paymentUpdated": "Corregiste un pago a {amount}",
     "expenseLogged": "Registraste un gasto de {amount} — {description}",
     "expenseUpdated": "Actualizaste un gasto",
@@ -264,7 +265,7 @@
     "monthlyRevenue": "Ingresos mensuales",
     "netProfit": "Ganancia neta",
     "depositsHeld": "Depósitos retenidos",
-    "depositsHeldHint": "Retenidos por cuenta de los inquilinos (un pasivo)",
+    "depositsHeldHint": "Retenidos por cuenta de los inquilinos",
     "occupiedAvailable": "{occupied} ocupadas · {available} disponibles",
     "inMaintenance": "{count} en mantenimiento",
     "expensesHint": "{amount} en gastos",
@@ -386,6 +387,11 @@
       "addedToast": "{count, plural, one {Foto agregada.} other {# fotos agregadas.}}",
       "removedToast": "Foto eliminada.",
       "deleteAria": "Eliminar foto",
+      "view": "Ver foto",
+      "viewerAria": "Visor de fotos",
+      "close": "Cerrar",
+      "previous": "Foto anterior",
+      "next": "Foto siguiente",
       "missingRef": "Falta la referencia de la propiedad."
     }
   },
@@ -593,12 +599,12 @@
       "save": "Guardar cambios"
     },
     "delete": {
-      "trigger": "Anular pago",
-      "title": "¿Anular este pago?",
-      "description": "Deja de contar en tus ingresos y su recibo se retira. El registro se archiva, no se borra.",
+      "trigger": "Eliminar pago",
+      "title": "¿Eliminar este pago permanentemente?",
+      "description": "El pago, su recibo y ambos PDF se borrarán para siempre — esto no se puede deshacer. También deja de contar en tus ingresos.",
       "keep": "Mantenerlo",
-      "confirm": "Anular pago",
-      "voidedToast": "Pago anulado."
+      "confirm": "Eliminar permanentemente",
+      "deletedToast": "Pago eliminado."
     },
     "methods": {
       "CASH": "Efectivo",
@@ -627,7 +633,7 @@
       "reference": "Referencia",
       "referencePlaceholder": "Número de transferencia / cheque",
       "concept": "Concepto",
-      "conceptPlaceholder": "Déjalo vacío para autocompletar el mes del alquiler",
+      "conceptPlaceholder": "Déjalo vacío para autocompletar el período del alquiler",
       "notes": "Notas",
       "proof": "Comprobante de pago",
       "proofHint": "Opcional. Captura de la transferencia o recibo del banco (PDF o imagen, máx. {mb} MB).",

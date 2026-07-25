@@ -1,6 +1,6 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
@@ -14,6 +14,7 @@ import {
   MAX_PROPERTY_PHOTO_MB,
   PROPERTY_PHOTO_ACCEPT,
 } from '../constants';
+import { PhotoLightbox } from './photo-lightbox';
 import {
   Card,
   CardContent,
@@ -40,7 +41,11 @@ export function PropertyPhotos({
 }) {
   const t = useTranslations('properties.photos');
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  // Separate transitions so deleting never lights up the dropzone's
+  // "uploading" state (and vice versa).
+  const [uploadPending, startUpload] = useTransition();
+  const [deletePending, startDelete] = useTransition();
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   /**
    * Uploaded one at a time on purpose: the server derives each photo's
@@ -48,7 +53,7 @@ export function PropertyPhotos({
    * would race and collide on the same index.
    */
   function onFilesChosen(files: File[]) {
-    startTransition(async () => {
+    startUpload(async () => {
       let uploaded = 0;
       for (const file of files) {
         const formData = new FormData();
@@ -71,7 +76,7 @@ export function PropertyPhotos({
   }
 
   function removePhoto(id: string) {
-    startTransition(async () => {
+    startDelete(async () => {
       const result = await deletePropertyPhotoAction({ id, propertyId });
       if (!result.success) {
         toast.error(result.error);
@@ -94,7 +99,7 @@ export function PropertyPhotos({
             multiple
             accept={PROPERTY_PHOTO_ACCEPT}
             maxMb={MAX_PROPERTY_PHOTO_MB}
-            uploading={isPending}
+            uploading={uploadPending}
             onSelect={onFilesChosen}
           />
         </div>
@@ -104,7 +109,7 @@ export function PropertyPhotos({
           </p>
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {photos.map((photo) => (
+            {photos.map((photo, index) => (
               <div
                 key={photo.id}
                 className="group relative aspect-[4/3] overflow-hidden rounded-lg border bg-muted"
@@ -116,15 +121,22 @@ export function PropertyPhotos({
                   sizes="(max-width: 640px) 50vw, 25vw"
                   className="object-cover"
                 />
-                <span className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-2 py-1 text-xs font-medium text-white">
+                {/* Overlay button opens the viewer; sits below the controls. */}
+                <button
+                  type="button"
+                  onClick={() => setLightboxIndex(index)}
+                  aria-label={t('view')}
+                  className="absolute inset-0 z-10 cursor-zoom-in"
+                />
+                <span className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black/70 to-transparent px-2 py-1 text-xs font-medium text-white">
                   {formatDate(photo.createdAt)}
                 </span>
                 <button
                   type="button"
                   onClick={() => removePhoto(photo.id)}
-                  disabled={isPending}
+                  disabled={deletePending}
                   aria-label={t('deleteAria')}
-                  className="absolute right-2 top-2 rounded-md bg-background/90 p-1.5 opacity-0 shadow-soft transition-opacity hover:text-destructive focus-visible:opacity-100 group-hover:opacity-100"
+                  className="absolute right-2 top-2 z-20 rounded-md bg-background/90 p-1.5 opacity-0 shadow-soft transition-opacity hover:text-destructive focus-visible:opacity-100 group-hover:opacity-100"
                 >
                   <Trash2 className="size-4" />
                 </button>
@@ -133,6 +145,13 @@ export function PropertyPhotos({
           </div>
         )}
       </CardContent>
+
+      <PhotoLightbox
+        photos={photos}
+        index={lightboxIndex}
+        onClose={() => setLightboxIndex(null)}
+        onNavigate={setLightboxIndex}
+      />
     </Card>
   );
 }

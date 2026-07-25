@@ -18,8 +18,8 @@ import {
 import { Button } from '@/shared/components/ui/button';
 
 /**
- * Confirmed rather than one-click: voiding a payment also pulls its receipt
- * and shifts reported income.
+ * Confirmed rather than one-click: this permanently deletes the payment, its
+ * receipt and both PDFs, and shifts reported income. There is no undo.
  */
 export function DeletePaymentDialog({ paymentId }: { paymentId: string }) {
   const t = useTranslations('payments.delete');
@@ -34,7 +34,7 @@ export function DeletePaymentDialog({ paymentId }: { paymentId: string }) {
         toast.error(result.error);
         return;
       }
-      toast.success(t('voidedToast'));
+      toast.success(t('deletedToast'));
       setOpen(false);
       router.refresh();
     });

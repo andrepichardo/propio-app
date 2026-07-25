@@ -6,7 +6,8 @@ import {
   PaymentType,
   type Prisma,
 } from '@prisma/client';
-import { format } from 'date-fns';
+import { addMonths, format } from 'date-fns';
+import { es as esDateLocale } from 'date-fns/locale';
 import { prisma } from '@/shared/lib/prisma';
 import { getStorage } from '@/shared/lib/storage';
 import { fileExtension, type UploadedFile } from '@/shared/lib/uploads';
@@ -26,18 +27,65 @@ import { isLocale } from '@/i18n/config';
 
 /**
  * Generate the next per-owner receipt number for the current year, e.g.
- * `REC-2026-0007`. Runs inside the payment transaction so the count can't race
- * with a concurrent registration.
+ * `REC-2026-0007`. Runs inside the payment transaction so it can't race with a
+ * concurrent registration.
+ *
+ * Derived from the HIGHEST existing number, not a row count: payments can be
+ * permanently deleted, and a count would reuse a live number after a gap and
+ * collide with `@@unique([ownerId, number])`. Zero-padding to 4 digits keeps
+ * the lexical `desc` order numeric for realistic per-year volumes.
  */
+/**
+ * Recover a storage key from a Supabase public URL. The proof key uses a random
+ * UUID and only the URL is persisted, so deleting the blob means parsing it out
+ * of `.../object/public/{bucket}/{key}`. Returns null for anything unexpected.
+ */
+function storageKeyFromPublicUrl(url?: string | null): string | null {
+  if (!url) return null;
+  const marker = '/object/public/';
+  const at = url.indexOf(marker);
+  if (at === -1) return null;
+  const afterBucket = url.slice(at + marker.length).split('?')[0] ?? '';
+  const slash = afterBucket.indexOf('/');
+  if (slash === -1) return null;
+  return decodeURIComponent(afterBucket.slice(slash + 1));
+}
+
+/**
+ * Localized default concept, used when the owner leaves the field blank. Rent
+ * shows the period it covers as a date range ("Alquiler 15 de julio – 15 de
+ * agosto" / "Rent July 15 – August 15"); a deposit is just labelled. Stored
+ * verbatim, so it's built in the owner's language at creation — not
+ * re-translated at render.
+ */
+function defaultConcept(
+  baseDate: Date,
+  isDeposit: boolean,
+  locale: string,
+): string {
+  const isEs = locale.startsWith('es');
+  if (isDeposit) return isEs ? 'Depósito de garantía' : 'Security deposit';
+
+  const pattern = isEs ? "d 'de' MMMM" : 'MMMM d';
+  const opts = isEs ? { locale: esDateLocale } : undefined;
+  const start = format(baseDate, pattern, opts);
+  const end = format(addMonths(baseDate, 1), pattern, opts);
+  return `${isEs ? 'Alquiler' : 'Rent'} ${start} – ${end}`;
+}
+
 async function nextReceiptNumber(
   tx: Prisma.TransactionClient,
   ownerId: string,
 ): Promise<string> {
   const year = new Date().getFullYear();
-  const count = await tx.receipt.count({
-    where: { ownerId, number: { startsWith: `REC-${year}-` } },
+  const prefix = `REC-${year}-`;
+  const latest = await tx.receipt.findFirst({
+    where: { ownerId, number: { startsWith: prefix } },
+    orderBy: { number: 'desc' },
+    select: { number: true },
   });
-  return `REC-${year}-${String(count + 1).padStart(4, '0')}`;
+  const nextSeq = latest ? Number(latest.number.slice(prefix.length)) + 1 : 1;
+  return `${prefix}${String(nextSeq).padStart(4, '0')}`;
 }
 
 export const paymentService = {
@@ -76,11 +124,14 @@ export const paymentService = {
     const balanceAfter = isDeposit
       ? 0
       : Math.max(0, monthlyRent - input.amount);
+    const prefs = await getUserPreferences(ownerId);
     const concept =
       input.concept ??
-      (isDeposit
-        ? 'Security deposit'
-        : `Rent — ${format(input.periodStart ?? input.paidAt, 'MMMM yyyy')}`);
+      defaultConcept(
+        input.periodStart ?? input.paidAt,
+        isDeposit,
+        prefs.locale,
+      );
 
     // --- Atomic write: payment + receipt + activity -------------------------
     const { payment, receipt } = await prisma.$transaction(async (tx) => {
@@ -260,11 +311,14 @@ export const paymentService = {
     const balanceAfter = isDeposit
       ? 0
       : Math.max(0, monthlyRent - input.amount);
+    const prefs = await getUserPreferences(ownerId);
     const concept =
       input.concept ??
-      (isDeposit
-        ? 'Security deposit'
-        : `Rent — ${format(input.periodStart ?? input.paidAt, 'MMMM yyyy')}`);
+      defaultConcept(
+        input.periodStart ?? input.paidAt,
+        isDeposit,
+        prefs.locale,
+      );
 
     await prisma.$transaction(async (tx) => {
       await tx.payment.update({
@@ -322,16 +376,52 @@ export const paymentService = {
     return { id: payment.id };
   },
 
+  /**
+   * Permanently delete a payment, its receipt and both blobs (receipt PDF +
+   * uploaded proof). A deliberate exception to the app's soft-delete rule: the
+   * owner wants voided payments gone, not archived.
+   *
+   * Order matters — rows first, blobs after. If storage cleanup fails we're
+   * left with orphan blobs (harmless, sweepable later); deleting blobs first
+   * could strand a live receipt pointing at a missing PDF.
+   */
   async remove(ownerId: string, id: string) {
-    const deleted = await paymentRepository.softDelete(ownerId, id);
-    if (!deleted) throw new NotFoundError('Payment');
+    // Capture what we need to locate the blobs before the rows disappear.
+    const payment = await prisma.payment.findFirst({
+      where: { id, ownerId, deletedAt: null },
+      select: {
+        id: true,
+        proofUrl: true,
+        receipt: { select: { number: true } },
+      },
+    });
+    if (!payment) throw new NotFoundError('Payment');
+
+    // Cascades the receipt row (Receipt.payment onDelete: Cascade).
+    await paymentRepository.hardDelete(ownerId, id);
+
+    const keys: string[] = [];
+    if (payment.receipt) {
+      keys.push(`receipts/${ownerId}/${payment.receipt.number}.pdf`);
+    }
+    const proofKey = storageKeyFromPublicUrl(payment.proofUrl);
+    if (proofKey) keys.push(proofKey);
+
+    if (keys.length > 0) {
+      try {
+        await getStorage().remove(keys);
+      } catch (error) {
+        console.error('[payments] blob cleanup after delete failed', error);
+      }
+    }
+
     await logActivity({
       ownerId,
       action: ActivityAction.DELETED,
       entityType: 'Payment',
       entityId: id,
-      summary: 'Voided a payment',
-      messageKey: 'paymentVoided',
+      summary: 'Deleted a payment',
+      messageKey: 'paymentDeleted',
     });
     return { id };
   },

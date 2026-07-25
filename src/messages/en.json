@@ -212,6 +212,7 @@
     "tenantDeleted": "Deleted a tenant",
     "paymentRegistered": "Registered {amount} from {tenant}",
     "paymentVoided": "Voided a payment",
+    "paymentDeleted": "Deleted a payment",
     "paymentUpdated": "Corrected a payment to {amount}",
     "expenseLogged": "Logged a {amount} expense — {description}",
     "expenseUpdated": "Updated an expense",
@@ -386,6 +387,11 @@
       "addedToast": "{count, plural, one {Photo added.} other {# photos added.}}",
       "removedToast": "Photo removed.",
       "deleteAria": "Delete photo",
+      "view": "View photo",
+      "viewerAria": "Photo viewer",
+      "close": "Close",
+      "previous": "Previous photo",
+      "next": "Next photo",
       "missingRef": "Missing property reference."
     }
   },
@@ -590,12 +596,12 @@
       "save": "Save changes"
     },
     "delete": {
-      "trigger": "Void payment",
-      "title": "Void this payment?",
-      "description": "It stops counting towards your income and its receipt is withdrawn. The record is archived, not erased.",
+      "trigger": "Delete payment",
+      "title": "Delete this payment permanently?",
+      "description": "The payment, its receipt and both PDFs will be erased for good — this can’t be undone. It also stops counting towards your income.",
       "keep": "Keep it",
-      "confirm": "Void payment",
-      "voidedToast": "Payment voided."
+      "confirm": "Delete permanently",
+      "deletedToast": "Payment deleted."
     },
     "methods": {
       "CASH": "Cash",
@@ -624,7 +630,7 @@
       "reference": "Reference",
       "referencePlaceholder": "Transfer / check number",
       "concept": "Concept",
-      "conceptPlaceholder": "Leave empty to auto-fill the rent month",
+      "conceptPlaceholder": "Leave empty to auto-fill the rent period",
       "notes": "Notes",
       "proof": "Proof of payment",
       "proofHint": "Optional. Transfer screenshot or bank receipt (PDF or image, max {mb} MB).",
