@@ -30,8 +30,18 @@ export type DashboardSummary = {
   occupancyRate: number;
   monthlySeries: { month: string; revenue: number; expenses: number }[];
   upcomingPayments: UpcomingPayment[];
+  /** Held deposits per tenant/property, so the total can be itemised. */
+  depositsBreakdown: DepositBreakdownItem[];
   expiringContracts: ExpiringContract[];
   recentActivity: RecentActivityItem[];
+};
+
+export type DepositBreakdownItem = {
+  propertyId: string;
+  tenantId: string;
+  property: string;
+  tenant: string;
+  amount: number;
 };
 
 export type UpcomingPayment = {
@@ -95,26 +105,6 @@ async function sumRevenue(
     depositRepository.sumRetained(ownerId, from, to),
   ]);
   return rent + retained;
-}
-
-/**
- * Deposits still held on behalf of tenants (a liability): everything collected
- * minus whatever has already been settled at move-out.
- */
-async function sumDepositsHeld(ownerId: string): Promise<number> {
-  const [collected, settled] = await Promise.all([
-    prisma.payment.aggregate({
-      where: {
-        ownerId,
-        deletedAt: null,
-        status: PaymentStatus.COMPLETED,
-        type: PaymentType.DEPOSIT,
-      },
-      _sum: { amount: true },
-    }),
-    depositRepository.totalSettled(ownerId),
-  ]);
-  return Math.max(0, toNumber(collected._sum.amount?.toString()) - settled);
 }
 
 async function sumExpenses(
@@ -195,7 +185,7 @@ export async function getDashboardSummary(
     monthlyRevenue,
     prevRevenue,
     monthlyExpenses,
-    depositsHeld,
+    depositsBreakdown,
     monthlySeries,
     activeContracts,
     expiring,
@@ -205,7 +195,7 @@ export async function getDashboardSummary(
     sumRevenue(ownerId, monthStart, monthEnd),
     sumRevenue(ownerId, prevStart, prevEnd),
     sumExpenses(ownerId, monthStart, monthEnd),
-    sumDepositsHeld(ownerId),
+    depositRepository.heldBreakdown(ownerId),
     buildMonthlySeries(ownerId),
     prisma.contract.findMany({
       where: { ownerId, deletedAt: null, status: ContractStatus.ACTIVE },
@@ -324,11 +314,12 @@ export async function getDashboardSummary(
       monthlyExpenses,
       netProfit: monthlyRevenue - monthlyExpenses,
       revenueTrendPct,
-      depositsHeld,
+      depositsHeld: depositsBreakdown.reduce((sum, d) => sum + d.amount, 0),
     },
     occupancyRate,
     monthlySeries,
     upcomingPayments,
+    depositsBreakdown,
     expiringContracts: expiring
       .filter((c) => c.endDate)
       .map((c) => ({

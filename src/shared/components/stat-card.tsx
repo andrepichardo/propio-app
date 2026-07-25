@@ -38,8 +38,10 @@ export function StatCard({
   const isPositive = (trend ?? 0) >= 0;
 
   return (
-    <Card className={cn('transition-shadow hover:shadow-card', className)}>
-      <CardContent className="p-5">
+    <Card
+      className={cn('h-full transition-shadow hover:shadow-card', className)}
+    >
+      <CardContent className="flex h-full flex-col p-5">
         <div className="flex items-start justify-between">
           <p className="text-sm font-medium text-muted-foreground">{label}</p>
           {Icon ? (
@@ -58,8 +60,10 @@ export function StatCard({
         <p className="mt-3 min-w-0 break-words text-xl font-semibold tracking-tight xl:text-2xl">
           {value}
         </p>
+        {/* mt-auto pins the footer to the bottom so secondary text aligns
+            across cards of unequal content. */}
         {hasTrend || hint ? (
-          <div className="mt-1 flex items-center gap-2">
+          <div className="mt-auto flex items-center gap-2 pt-1">
             {hasTrend ? (
               <span
                 className={cn(

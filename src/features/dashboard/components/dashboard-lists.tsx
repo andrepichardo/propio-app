@@ -5,8 +5,10 @@ import {
   CircleDollarSign,
   FileSignature,
   History,
+  PiggyBank,
 } from 'lucide-react';
 import type {
+  DepositBreakdownItem,
   ExpiringContract,
   RecentActivityItem,
   UpcomingPayment,
@@ -19,6 +21,7 @@ import {
 } from '@/shared/components/ui/card';
 import { EmptyState } from '@/shared/components/empty-state';
 import { formatCurrency, formatDate, formatRelative } from '@/shared/lib/format';
+import { cn } from '@/shared/lib/utils';
 
 export function UpcomingPaymentsCard({
   payments,
@@ -28,7 +31,7 @@ export function UpcomingPaymentsCard({
   const t = useTranslations('dashboard');
   return (
     <Card>
-      <CardHeader className="flex-row items-center justify-between space-y-0">
+      <CardHeader className="flex-row items-center justify-between space-y-0 py-4">
         <CardTitle className="text-base">{t('upcomingPayments')}</CardTitle>
         <Link
           href="/app/payments"
@@ -39,7 +42,7 @@ export function UpcomingPaymentsCard({
       </CardHeader>
       <CardContent className="p-0">
         {payments.length === 0 ? (
-          <div className="px-6 pb-6">
+          <div className="border-t px-6 pb-6">
             <EmptyState
               icon={CircleDollarSign}
               title={t('nothingDue')}
@@ -48,7 +51,7 @@ export function UpcomingPaymentsCard({
             />
           </div>
         ) : (
-          <ul className="divide-y">
+          <ul className="divide-y border-t">
             {payments.map((payment) => (
               <li
                 key={payment.contractId}
@@ -79,6 +82,64 @@ export function UpcomingPaymentsCard({
   );
 }
 
+export function DepositsHeldCard({
+  total,
+  currency,
+  items,
+  className,
+}: {
+  total: number;
+  currency: string;
+  items: DepositBreakdownItem[];
+  className?: string;
+}) {
+  const t = useTranslations('dashboard');
+  return (
+    <Card className={cn('flex flex-col', className)}>
+      <CardHeader className="flex-row items-center justify-between space-y-0 py-4">
+        <CardTitle className="text-base">{t('depositsHeld')}</CardTitle>
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <PiggyBank className="size-[18px]" />
+        </span>
+      </CardHeader>
+      <CardContent className="flex flex-1 flex-col p-0">
+        <ul className="divide-y border-t">
+          {items.map((item) => (
+            <li
+              key={`${item.propertyId}:${item.tenantId}`}
+              className="flex items-center justify-between gap-3 px-6 py-3"
+            >
+              <div className="min-w-0">
+                <p className="truncate text-sm font-medium">{item.property}</p>
+                <p className="truncate text-xs text-muted-foreground">
+                  {item.tenant}
+                </p>
+              </div>
+              <p className="shrink-0 text-sm font-semibold">
+                {formatCurrency(item.amount, currency)}
+              </p>
+            </li>
+          ))}
+        </ul>
+        {/* Total only earns its own row once there's more than one holder. */}
+        {items.length > 1 ? (
+          <div className="flex items-center justify-between border-t px-6 py-3">
+            <span className="text-sm font-medium text-muted-foreground">
+              {t('depositsTotal')}
+            </span>
+            <span className="text-sm font-semibold">
+              {formatCurrency(total, currency)}
+            </span>
+          </div>
+        ) : null}
+        <p className="mt-auto border-t px-6 py-3 text-xs text-muted-foreground">
+          {t('depositsHeldHint')}
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
 export function ExpiringContractsCard({
   contracts,
 }: {
@@ -87,7 +148,7 @@ export function ExpiringContractsCard({
   const t = useTranslations('dashboard');
   return (
     <Card>
-      <CardHeader className="flex-row items-center justify-between space-y-0">
+      <CardHeader className="flex-row items-center justify-between space-y-0 py-4">
         <CardTitle className="text-base">{t('expiringContracts')}</CardTitle>
         <Link
           href="/app/contracts"
@@ -98,7 +159,7 @@ export function ExpiringContractsCard({
       </CardHeader>
       <CardContent className="p-0">
         {contracts.length === 0 ? (
-          <div className="px-6 pb-6">
+          <div className="border-t px-6 pb-6">
             <EmptyState
               icon={FileSignature}
               title={t('noExpirations')}
@@ -106,7 +167,7 @@ export function ExpiringContractsCard({
             />
           </div>
         ) : (
-          <ul className="divide-y">
+          <ul className="divide-y border-t">
             {contracts.map((contract) => (
               <li
                 key={contract.contractId}
@@ -142,12 +203,12 @@ export function RecentActivityCard({
   const tActivity = useTranslations('activity');
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="py-4">
         <CardTitle className="text-base">{t('recentActivity')}</CardTitle>
       </CardHeader>
       <CardContent className="p-0">
         {activity.length === 0 ? (
-          <div className="px-6 pb-6">
+          <div className="border-t px-6 pb-6">
             <EmptyState
               icon={History}
               title={t('noActivity')}
@@ -156,7 +217,7 @@ export function RecentActivityCard({
             />
           </div>
         ) : (
-          <ul className="space-y-4 px-6 pb-6">
+          <ul className="space-y-4 border-t px-6 pb-6 pt-4">
             {activity.map((item) => (
               <li key={item.id} className="flex gap-3">
                 <span className="mt-1.5 size-2 shrink-0 rounded-full bg-primary/60" />

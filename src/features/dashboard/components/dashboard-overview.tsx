@@ -2,7 +2,6 @@ import { getTranslations } from 'next-intl/server';
 import {
   Building2,
   DoorOpen,
-  PiggyBank,
   TrendingDown,
   TrendingUp,
   Wallet,
@@ -10,6 +9,7 @@ import {
 import { getDashboardSummary } from '../services/dashboard.service';
 import { RevenueChart } from './revenue-chart';
 import {
+  DepositsHeldCard,
   ExpiringContractsCard,
   RecentActivityCard,
   UpcomingPaymentsCard,
@@ -38,6 +38,8 @@ export async function DashboardOverview({
 }) {
   const summary = await getDashboardSummary(ownerId);
   const t = await getTranslations('dashboard');
+
+  const hasDeposits = summary.finance.depositsHeld > 0;
 
   return (
     <div className="space-y-6">
@@ -74,14 +76,6 @@ export async function DashboardOverview({
             amount: formatCurrency(summary.finance.monthlyExpenses, currency),
           })}
         />
-        {summary.finance.depositsHeld > 0 && (
-          <StatCard
-            label={t('depositsHeld')}
-            value={formatCurrency(summary.finance.depositsHeld, currency)}
-            icon={PiggyBank}
-            hint={t('depositsHeldHint')}
-          />
-        )}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
@@ -96,7 +90,22 @@ export async function DashboardOverview({
             <RevenueChart data={summary.monthlySeries} currency={currency} />
           </CardContent>
         </Card>
-        <UpcomingPaymentsCard payments={summary.upcomingPayments} />
+        {/* Right column. When deposits exist it stretches to the chart's
+            height and the breakdown card grows (flex-1) to fill the space
+            instead of leaving a gap below "upcoming payments". */}
+        {hasDeposits ? (
+          <div className="flex h-full flex-col gap-6">
+            <UpcomingPaymentsCard payments={summary.upcomingPayments} />
+            <DepositsHeldCard
+              total={summary.finance.depositsHeld}
+              currency={currency}
+              items={summary.depositsBreakdown}
+              className="flex-1"
+            />
+          </div>
+        ) : (
+          <UpcomingPaymentsCard payments={summary.upcomingPayments} />
+        )}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">

@@ -88,18 +88,6 @@ export const depositRepository = {
     return count > 0;
   },
 
-  /**
-   * Deposits already settled (returned + retained). Subtracted from collected
-   * deposits to get what the owner still holds.
-   */
-  async totalSettled(ownerId: string): Promise<number> {
-    const result = await prisma.depositSettlement.aggregate({
-      where: { ownerId, deletedAt: null },
-      _sum: { depositHeld: true },
-    });
-    return Number(result._sum.depositHeld ?? 0);
-  },
-
   /** Retained deposit becomes income on `settledAt`. */
   async sumRetained(ownerId: string, from: Date, to: Date): Promise<number> {
     const result = await prisma.depositSettlement.aggregate({
@@ -107,5 +95,77 @@ export const depositRepository = {
       _sum: { amountRetained: true },
     });
     return Number(result._sum.amountRetained ?? 0);
+  },
+
+  /**
+   * Held deposits broken down by tenant + property, so the dashboard can show
+   * whose money each amount is. Grouped by property+tenant (not contract) so a
+   * deposit carried across renewals nets against its settlement regardless of
+   * which contract in the chain it sits on.
+   */
+  async heldBreakdown(
+    ownerId: string,
+  ): Promise<
+    { propertyId: string; tenantId: string; property: string; tenant: string; amount: number }[]
+  > {
+    const [collected, settled] = await Promise.all([
+      prisma.payment.groupBy({
+        by: ['propertyId', 'tenantId'],
+        where: {
+          ownerId,
+          deletedAt: null,
+          status: PaymentStatus.COMPLETED,
+          type: PaymentType.DEPOSIT,
+        },
+        _sum: { amount: true },
+      }),
+      prisma.depositSettlement.groupBy({
+        by: ['propertyId', 'tenantId'],
+        where: { ownerId, deletedAt: null },
+        _sum: { depositHeld: true },
+      }),
+    ]);
+
+    const settledMap = new Map(
+      settled.map((s) => [
+        `${s.propertyId}:${s.tenantId}`,
+        Number(s._sum.depositHeld ?? 0),
+      ]),
+    );
+
+    const held = collected
+      .map((c) => ({
+        propertyId: c.propertyId,
+        tenantId: c.tenantId,
+        amount:
+          Number(c._sum.amount ?? 0) -
+          (settledMap.get(`${c.propertyId}:${c.tenantId}`) ?? 0),
+      }))
+      // Ignore fully-settled (or rounding-noise) groups.
+      .filter((h) => h.amount > 0.005)
+      .sort((a, b) => b.amount - a.amount);
+
+    if (held.length === 0) return [];
+
+    const [properties, tenants] = await Promise.all([
+      prisma.property.findMany({
+        where: { id: { in: held.map((h) => h.propertyId) }, ownerId },
+        select: { id: true, name: true },
+      }),
+      prisma.tenant.findMany({
+        where: { id: { in: held.map((h) => h.tenantId) }, ownerId },
+        select: { id: true, firstName: true, lastName: true },
+      }),
+    ]);
+    const propertyName = new Map(properties.map((p) => [p.id, p.name]));
+    const tenantName = new Map(
+      tenants.map((t) => [t.id, `${t.firstName} ${t.lastName}`]),
+    );
+
+    return held.map((h) => ({
+      ...h,
+      property: propertyName.get(h.propertyId) ?? '',
+      tenant: tenantName.get(h.tenantId) ?? '',
+    }));
   },
 };
