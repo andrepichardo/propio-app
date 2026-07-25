@@ -43,7 +43,7 @@ export function UpcomingPaymentsCard({
       </CardHeader>
       <CardContent className="flex min-h-0 flex-1 flex-col p-0">
         {payments.length === 0 ? (
-          <div className="flex flex-1 items-center justify-center border-t p-6">
+          <div className="flex flex-1 flex-col justify-center border-t p-6">
             <EmptyState
               icon={CircleDollarSign}
               title={t('nothingDue')}
@@ -153,7 +153,7 @@ export function ExpiringContractsCard({
       </CardHeader>
       <CardContent className="flex min-h-0 flex-1 flex-col p-0">
         {contracts.length === 0 ? (
-          <div className="flex flex-1 items-center justify-center border-t p-6">
+          <div className="flex flex-1 flex-col justify-center border-t p-6">
             <EmptyState icon={FileSignature} title={t('noExpirations')} />
           </div>
         ) : (
@@ -202,7 +202,7 @@ export function RecentActivityCard({
       </CardHeader>
       <CardContent className="flex min-h-0 flex-1 flex-col p-0">
         {activity.length === 0 ? (
-          <div className="flex flex-1 items-center justify-center border-t p-6">
+          <div className="flex flex-1 flex-col justify-center border-t p-6">
             <EmptyState
               icon={History}
               title={t('noActivity')}
