@@ -88,7 +88,7 @@ export function PropertyFilters() {
         defaultValue={searchParams.get('status') ?? ALL}
         onValueChange={(value) => commit({ status: value })}
       >
-        <SelectTrigger className="sm:w-40">
+        <SelectTrigger className="sm:w-44">
           <SelectValue placeholder={t('status')} />
         </SelectTrigger>
         <SelectContent>

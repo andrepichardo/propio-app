@@ -206,7 +206,8 @@ const liveReceipt = { payment: { deletedAt: null } };
 function fetchReceipts(ownerId: string, skip: number, take: number) {
   return prisma.receipt.findMany({
     where: { ownerId, ...liveReceipt },
-    orderBy: { issuedAt: 'desc' },
+    // createdAt breaks ties so same-day receipts keep newest-first order.
+    orderBy: [{ issuedAt: 'desc' }, { createdAt: 'desc' }],
     skip,
     take,
     select: {
