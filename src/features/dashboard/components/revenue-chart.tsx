@@ -27,7 +27,7 @@ export function RevenueChart({
 }) {
   const t = useTranslations('dashboard');
   return (
-    <ResponsiveContainer width="100%" height={280}>
+    <ResponsiveContainer width="100%" height="100%" minHeight={240}>
       <AreaChart
         data={data}
         margin={{ top: 8, right: 8, left: 4, bottom: 0 }}

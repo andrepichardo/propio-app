@@ -5,7 +5,6 @@ import {
   CircleDollarSign,
   FileSignature,
   History,
-  PiggyBank,
 } from 'lucide-react';
 import type {
   DepositBreakdownItem,
@@ -25,12 +24,14 @@ import { cn } from '@/shared/lib/utils';
 
 export function UpcomingPaymentsCard({
   payments,
+  className,
 }: {
   payments: UpcomingPayment[];
+  className?: string;
 }) {
   const t = useTranslations('dashboard');
   return (
-    <Card>
+    <Card className={cn('flex flex-col overflow-hidden', className)}>
       <CardHeader className="flex-row items-center justify-between space-y-0 py-4">
         <CardTitle className="text-base">{t('upcomingPayments')}</CardTitle>
         <Link
@@ -40,18 +41,17 @@ export function UpcomingPaymentsCard({
           {t('viewAll')}
         </Link>
       </CardHeader>
-      <CardContent className="p-0">
+      <CardContent className="flex min-h-0 flex-1 flex-col p-0">
         {payments.length === 0 ? (
-          <div className="border-t px-6 pb-6">
+          <div className="flex flex-1 items-center justify-center border-t p-6">
             <EmptyState
               icon={CircleDollarSign}
               title={t('nothingDue')}
               description={t('nothingDueHint')}
-              className="py-10"
             />
           </div>
         ) : (
-          <ul className="divide-y border-t">
+          <ul className="min-h-0 flex-1 divide-y overflow-y-auto border-t">
             {payments.map((payment) => (
               <li
                 key={payment.contractId}
@@ -95,15 +95,21 @@ export function DepositsHeldCard({
 }) {
   const t = useTranslations('dashboard');
   return (
-    <Card className={cn('flex flex-col', className)}>
+    <Card className={cn('flex flex-col overflow-hidden', className)}>
+      {/* Total lives in the header so the scrolling list gets the full body. */}
       <CardHeader className="flex-row items-center justify-between space-y-0 py-4">
         <CardTitle className="text-base">{t('depositsHeld')}</CardTitle>
-        <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-          <PiggyBank className="size-[18px]" />
-        </span>
+        <div className="text-right leading-tight">
+          <p className="text-sm font-semibold">
+            {formatCurrency(total, currency)}
+          </p>
+          <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
+            {t('depositsTotal')}
+          </p>
+        </div>
       </CardHeader>
-      <CardContent className="flex flex-1 flex-col p-0">
-        <ul className="divide-y border-t">
+      <CardContent className="flex min-h-0 flex-1 flex-col p-0">
+        <ul className="min-h-0 flex-1 divide-y overflow-y-auto border-t">
           {items.map((item) => (
             <li
               key={`${item.propertyId}:${item.tenantId}`}
@@ -121,20 +127,6 @@ export function DepositsHeldCard({
             </li>
           ))}
         </ul>
-        {/* Total only earns its own row once there's more than one holder. */}
-        {items.length > 1 ? (
-          <div className="flex items-center justify-between border-t px-6 py-3">
-            <span className="text-sm font-medium text-muted-foreground">
-              {t('depositsTotal')}
-            </span>
-            <span className="text-sm font-semibold">
-              {formatCurrency(total, currency)}
-            </span>
-          </div>
-        ) : null}
-        <p className="mt-auto border-t px-6 py-3 text-xs text-muted-foreground">
-          {t('depositsHeldHint')}
-        </p>
       </CardContent>
     </Card>
   );
@@ -142,12 +134,14 @@ export function DepositsHeldCard({
 
 export function ExpiringContractsCard({
   contracts,
+  className,
 }: {
   contracts: ExpiringContract[];
+  className?: string;
 }) {
   const t = useTranslations('dashboard');
   return (
-    <Card>
+    <Card className={cn('flex flex-col overflow-hidden', className)}>
       <CardHeader className="flex-row items-center justify-between space-y-0 py-4">
         <CardTitle className="text-base">{t('expiringContracts')}</CardTitle>
         <Link
@@ -157,34 +151,32 @@ export function ExpiringContractsCard({
           {t('viewAll')}
         </Link>
       </CardHeader>
-      <CardContent className="p-0">
+      <CardContent className="flex min-h-0 flex-1 flex-col p-0">
         {contracts.length === 0 ? (
-          <div className="border-t px-6 pb-6">
-            <EmptyState
-              icon={FileSignature}
-              title={t('noExpirations')}
-              className="py-10"
-            />
+          <div className="flex flex-1 items-center justify-center border-t p-6">
+            <EmptyState icon={FileSignature} title={t('noExpirations')} />
           </div>
         ) : (
-          <ul className="divide-y border-t">
+          <ul className="min-h-0 flex-1 divide-y overflow-y-auto border-t">
             {contracts.map((contract) => (
-              <li
-                key={contract.contractId}
-                className="flex items-center justify-between gap-3 px-6 py-3"
-              >
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium">
-                    {contract.propertyName}
-                  </p>
-                  <p className="truncate text-xs text-muted-foreground">
-                    {contract.tenantName}
-                  </p>
-                </div>
-                <span className="inline-flex items-center gap-1 text-xs text-warning">
-                  <CalendarClock className="size-3.5" />
-                  {formatDate(contract.endDate, 'MMM d')}
-                </span>
+              <li key={contract.contractId}>
+                <Link
+                  href={`/app/contracts/${contract.contractId}`}
+                  className="flex items-center justify-between gap-3 px-6 py-3 transition-colors hover:bg-muted/50"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium">
+                      {contract.propertyName}
+                    </p>
+                    <p className="truncate text-xs text-muted-foreground">
+                      {contract.tenantName}
+                    </p>
+                  </div>
+                  <span className="inline-flex shrink-0 items-center gap-1 text-xs text-warning">
+                    <CalendarClock className="size-3.5" />
+                    {formatDate(contract.endDate, 'MMM d')}
+                  </span>
+                </Link>
               </li>
             ))}
           </ul>
@@ -196,28 +188,29 @@ export function ExpiringContractsCard({
 
 export function RecentActivityCard({
   activity,
+  className,
 }: {
   activity: RecentActivityItem[];
+  className?: string;
 }) {
   const t = useTranslations('dashboard');
   const tActivity = useTranslations('activity');
   return (
-    <Card>
+    <Card className={cn('flex flex-col overflow-hidden', className)}>
       <CardHeader className="py-4">
         <CardTitle className="text-base">{t('recentActivity')}</CardTitle>
       </CardHeader>
-      <CardContent className="p-0">
+      <CardContent className="flex min-h-0 flex-1 flex-col p-0">
         {activity.length === 0 ? (
-          <div className="border-t px-6 pb-6">
+          <div className="flex flex-1 items-center justify-center border-t p-6">
             <EmptyState
               icon={History}
               title={t('noActivity')}
               description={t('noActivityHint')}
-              className="py-10"
             />
           </div>
         ) : (
-          <ul className="space-y-4 border-t px-6 pb-6 pt-4">
+          <ul className="min-h-0 flex-1 space-y-4 overflow-y-auto border-t px-6 pb-6 pt-4">
             {activity.map((item) => (
               <li key={item.id} className="flex gap-3">
                 <span className="mt-1.5 size-2 shrink-0 rounded-full bg-primary/60" />

@@ -78,29 +78,34 @@ export async function DashboardOverview({
         />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-        <Card>
+      {/* The chart has a fixed height on lg; the right column matches it and
+          splits into two equal halves that each scroll. items-start keeps the
+          chart from being stretched by anything taller beside it. */}
+      <div className="grid items-start gap-6 lg:grid-cols-[1.6fr_1fr]">
+        <Card className="flex flex-col lg:h-[26rem]">
           <CardHeader>
             <CardTitle className="text-base">
               {t('revenueVsExpenses')}
             </CardTitle>
             <CardDescription>{t('last6Months')}</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="min-h-0 flex-1">
             <RevenueChart data={summary.monthlySeries} currency={currency} />
           </CardContent>
         </Card>
-        {/* Right column. When deposits exist it stretches to the chart's
-            height and the breakdown card grows (flex-1) to fill the space
-            instead of leaving a gap below "upcoming payments". */}
         {hasDeposits ? (
-          <div className="flex h-full flex-col gap-6">
-            <UpcomingPaymentsCard payments={summary.upcomingPayments} />
+          <div className="flex flex-col gap-6 lg:grid lg:h-[26rem] lg:grid-rows-2">
+            {/* Capped on mobile too so a long list doesn't run down the page;
+                on lg the grid-rows-2 height takes over (max-h-none). */}
+            <UpcomingPaymentsCard
+              className="max-h-80 lg:max-h-none lg:min-h-0"
+              payments={summary.upcomingPayments}
+            />
             <DepositsHeldCard
+              className="max-h-80 lg:max-h-none lg:min-h-0"
               total={summary.finance.depositsHeld}
               currency={currency}
               items={summary.depositsBreakdown}
-              className="flex-1"
             />
           </div>
         ) : (
@@ -108,9 +113,17 @@ export async function DashboardOverview({
         )}
       </div>
 
+      {/* Fixed, equal height on lg so both cards line up; each scrolls its own
+          list. Capped (not fixed) on mobile so they don't run down the page. */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <ExpiringContractsCard contracts={summary.expiringContracts} />
-        <RecentActivityCard activity={summary.recentActivity} />
+        <ExpiringContractsCard
+          className="max-h-[22rem] lg:h-[22rem]"
+          contracts={summary.expiringContracts}
+        />
+        <RecentActivityCard
+          className="max-h-[22rem] lg:h-[22rem]"
+          activity={summary.recentActivity}
+        />
       </div>
     </div>
   );

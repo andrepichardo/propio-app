@@ -215,8 +215,8 @@ export async function getDashboardSummary(
         status: ContractStatus.ACTIVE,
         endDate: { gte: now, lte: soon },
       },
+      // All expiring within the window; the card caps the height and scrolls.
       orderBy: { endDate: 'asc' },
-      take: 5,
       select: {
         id: true,
         endDate: true,
