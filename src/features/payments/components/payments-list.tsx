@@ -90,7 +90,7 @@ export async function PaymentsList({
                     {t(`methods.${payment.method}`)}
                   </Badge>
                 </TableCell>
-                <TableCell>
+                <TableCell className="whitespace-nowrap">
                   {payment.receipt?.pdfUrl ? (
                     <a
                       href={payment.receipt.pdfUrl}
@@ -98,7 +98,7 @@ export async function PaymentsList({
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
                     >
-                      <Download className="size-3.5" />
+                      <Download className="size-3.5 shrink-0" />
                       {payment.receipt.number}
                     </a>
                   ) : (
