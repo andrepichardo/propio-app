@@ -83,11 +83,17 @@ export default async function TenantDetailPage({
               <Stat
                 value={tenant._count.contracts}
                 label={t('stats.contracts')}
+                href={`/app/contracts?tenantId=${tenant.id}`}
               />
-              <Stat value={tenant._count.payments} label={t('stats.payments')} />
+              <Stat
+                value={tenant._count.payments}
+                label={t('stats.payments')}
+                href={`/app/payments?tenantId=${tenant.id}`}
+              />
               <Stat
                 value={tenant._count.documents}
                 label={t('stats.documents')}
+                href={`/app/documents?tenantId=${tenant.id}`}
               />
             </div>
             <p className="text-xs text-muted-foreground">
@@ -158,12 +164,23 @@ export default async function TenantDetailPage({
   );
 }
 
-function Stat({ value, label }: { value: number; label: string }) {
+function Stat({
+  value,
+  label,
+  href,
+}: {
+  value: number;
+  label: string;
+  href: string;
+}) {
   return (
-    <div className="rounded-lg bg-muted/40 px-2 py-2.5">
+    <Link
+      href={href}
+      className="rounded-lg bg-muted/40 px-2 py-2.5 text-center transition-colors hover:bg-muted"
+    >
       <p className="text-lg font-semibold leading-none">{value}</p>
       <p className="mt-1 truncate text-xs text-muted-foreground">{label}</p>
-    </div>
+    </Link>
   );
 }
 

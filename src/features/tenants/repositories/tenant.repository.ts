@@ -90,6 +90,7 @@ export const tenantRepository = {
     });
   },
 
+
   create(ownerId: string, data: Omit<Prisma.TenantCreateInput, 'owner'>) {
     return prisma.tenant.create({
       data: { ...data, owner: { connect: { id: ownerId } } },

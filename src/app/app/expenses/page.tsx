@@ -9,6 +9,7 @@ import { ExpensesList } from '@/features/expenses/components/expenses-list';
 import { ExpenseCategoryFilter } from '@/features/expenses/components/expense-category-filter';
 import { CreateExpenseDialog } from '@/features/expenses/components/create-expense-dialog';
 import { PageHeader } from '@/shared/components/page-header';
+import { QueryFilterSelect } from '@/shared/components/query-filter-select';
 import { Skeleton } from '@/shared/components/ui/skeleton';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -34,7 +35,10 @@ export default async function ExpensesPage({
     id: p.id,
     label: p.name,
   }));
-  const t = await getTranslations('expenses');
+  const [t, tCommon] = await Promise.all([
+    getTranslations('expenses'),
+    getTranslations('common'),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -48,7 +52,14 @@ export default async function ExpensesPage({
           />
         }
       />
-      <ExpenseCategoryFilter />
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <ExpenseCategoryFilter />
+        <QueryFilterSelect
+          param="propertyId"
+          allLabel={tCommon('allProperties')}
+          options={propertyOptions}
+        />
+      </div>
       <Suspense
         key={JSON.stringify(filters)}
         fallback={<Skeleton className="h-72 rounded-xl" />}

@@ -88,6 +88,7 @@ export const deleteContractSchema = z.object({ id: z.string().cuid() });
 export const contractFiltersSchema = z.object({
   status: z.nativeEnum(ContractStatus).optional(),
   propertyId: z.string().cuid().optional(),
+  tenantId: z.string().cuid().optional(),
   page: z.coerce.number().int().min(1).optional(),
   pageSize: z.coerce.number().int().min(1).max(100).optional(),
 });

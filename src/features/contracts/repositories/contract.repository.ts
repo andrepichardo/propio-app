@@ -24,6 +24,7 @@ export type ContractListItem = Prisma.ContractGetPayload<{
 type ListParams = {
   status?: ContractStatus;
   propertyId?: string;
+  tenantId?: string;
   page?: number;
   pageSize?: number;
 };
@@ -51,6 +52,7 @@ export const contractRepository = {
       deletedAt: null,
       ...(params.status ? { status: params.status } : {}),
       ...(params.propertyId ? { propertyId: params.propertyId } : {}),
+      ...(params.tenantId ? { tenantId: params.tenantId } : {}),
     };
 
     const [items, total] = await Promise.all([

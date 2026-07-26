@@ -32,7 +32,7 @@ export function ExpenseCategoryFilter() {
       defaultValue={searchParams.get('category') ?? ALL}
       onValueChange={onChange}
     >
-      <SelectTrigger className="w-48">
+      <SelectTrigger className="w-full sm:w-52">
         <SelectValue placeholder={t('category')} />
       </SelectTrigger>
       <SelectContent>

@@ -50,6 +50,7 @@ export const deletePaymentSchema = z.object({ id: z.string().cuid() });
 export const paymentFiltersSchema = z.object({
   contractId: z.string().cuid().optional(),
   propertyId: z.string().cuid().optional(),
+  tenantId: z.string().cuid().optional(),
   method: z.nativeEnum(PaymentMethod).optional(),
   page: z.coerce.number().int().min(1).optional(),
   pageSize: z.coerce.number().int().min(1).max(100).optional(),

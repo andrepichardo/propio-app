@@ -7,7 +7,10 @@ import { requireOwnerId } from '@/shared/lib/auth/session';
 import { contractFiltersSchema } from '@/features/contracts/validators/contract.validators';
 import { ContractsList } from '@/features/contracts/components/contracts-list';
 import { ContractStatusFilter } from '@/features/contracts/components/contract-status-filter';
+import { propertyService } from '@/features/properties/services/property.service';
+import { tenantService } from '@/features/tenants/services/tenant.service';
 import { PageHeader } from '@/shared/components/page-header';
+import { QueryFilterSelect } from '@/shared/components/query-filter-select';
 import { Button } from '@/shared/components/ui/button';
 import { Skeleton } from '@/shared/components/ui/skeleton';
 
@@ -24,8 +27,13 @@ export default async function ContractsPage({
   searchParams: SearchParams;
 }) {
   const ownerId = await requireOwnerId();
-  const filters = contractFiltersSchema.parse(await searchParams);
-  const t = await getTranslations('contracts');
+  const [filters, properties, tenants, t, tCommon] = await Promise.all([
+    contractFiltersSchema.parse(await searchParams),
+    propertyService.options(ownerId),
+    tenantService.options(ownerId),
+    getTranslations('contracts'),
+    getTranslations('common'),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -40,7 +48,22 @@ export default async function ContractsPage({
           </Button>
         }
       />
-      <ContractStatusFilter />
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <ContractStatusFilter />
+        <QueryFilterSelect
+          param="propertyId"
+          allLabel={tCommon('allProperties')}
+          options={properties.map((p) => ({ id: p.id, label: p.name }))}
+        />
+        <QueryFilterSelect
+          param="tenantId"
+          allLabel={tCommon('allTenants')}
+          options={tenants.map((tenant) => ({
+            id: tenant.id,
+            label: `${tenant.firstName} ${tenant.lastName}`,
+          }))}
+        />
+      </div>
       <Suspense
         key={JSON.stringify(filters)}
         fallback={<Skeleton className="h-72 rounded-xl" />}

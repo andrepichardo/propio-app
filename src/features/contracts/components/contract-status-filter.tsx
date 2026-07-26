@@ -32,7 +32,7 @@ export function ContractStatusFilter() {
       defaultValue={searchParams.get('status') ?? ALL}
       onValueChange={onChange}
     >
-      <SelectTrigger className="w-44">
+      <SelectTrigger className="w-full sm:w-52">
         <SelectValue placeholder={t('statusPlaceholder')} />
       </SelectTrigger>
       <SelectContent>

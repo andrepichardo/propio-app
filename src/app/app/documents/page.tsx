@@ -8,6 +8,7 @@ import { documentFiltersSchema } from '@/features/documents/validators/document.
 import { DocumentsList } from '@/features/documents/components/documents-list';
 import { UploadDocumentDialog } from '@/features/documents/components/upload-document-dialog';
 import { PageHeader } from '@/shared/components/page-header';
+import { QueryFilterSelect } from '@/shared/components/query-filter-select';
 import { Skeleton } from '@/shared/components/ui/skeleton';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -29,7 +30,16 @@ export default async function DocumentsPage({
     tenantService.options(ownerId),
   ]);
 
-  const t = await getTranslations('documents');
+  const [t, tCommon] = await Promise.all([
+    getTranslations('documents'),
+    getTranslations('common'),
+  ]);
+
+  const propertyOptions = properties.map((p) => ({ id: p.id, label: p.name }));
+  const tenantOptions = tenants.map((tenant) => ({
+    id: tenant.id,
+    label: `${tenant.firstName} ${tenant.lastName}`,
+  }));
 
   return (
     <div className="space-y-6">
@@ -38,14 +48,23 @@ export default async function DocumentsPage({
         description={t('subtitle')}
         actions={
           <UploadDocumentDialog
-            properties={properties.map((p) => ({ id: p.id, label: p.name }))}
-            tenants={tenants.map((t) => ({
-              id: t.id,
-              label: `${t.firstName} ${t.lastName}`,
-            }))}
+            properties={propertyOptions}
+            tenants={tenantOptions}
           />
         }
       />
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <QueryFilterSelect
+          param="propertyId"
+          allLabel={tCommon('allProperties')}
+          options={propertyOptions}
+        />
+        <QueryFilterSelect
+          param="tenantId"
+          allLabel={tCommon('allTenants')}
+          options={tenantOptions}
+        />
+      </div>
       <Suspense
         key={JSON.stringify(filters)}
         fallback={<Skeleton className="h-72 rounded-xl" />}

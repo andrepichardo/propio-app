@@ -24,6 +24,7 @@ export type DocumentListItem = Prisma.DocumentGetPayload<{
 type ListParams = {
   type?: DocumentType;
   propertyId?: string;
+  tenantId?: string;
   page?: number;
   pageSize?: number;
 };
@@ -39,6 +40,7 @@ export const documentRepository = {
       deletedAt: null,
       ...(params.type ? { type: params.type } : {}),
       ...(params.propertyId ? { propertyId: params.propertyId } : {}),
+      ...(params.tenantId ? { tenantId: params.tenantId } : {}),
     };
 
     const [items, total] = await Promise.all([

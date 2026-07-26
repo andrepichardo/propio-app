@@ -29,6 +29,7 @@ export type PaymentListItem = Prisma.PaymentGetPayload<{
 type ListParams = {
   contractId?: string;
   propertyId?: string;
+  tenantId?: string;
   method?: PaymentMethod;
   page?: number;
   pageSize?: number;
@@ -62,6 +63,7 @@ export const paymentRepository = {
       deletedAt: null,
       ...(params.contractId ? { contractId: params.contractId } : {}),
       ...(params.propertyId ? { propertyId: params.propertyId } : {}),
+      ...(params.tenantId ? { tenantId: params.tenantId } : {}),
       ...(params.method ? { method: params.method } : {}),
     };
 

@@ -58,16 +58,19 @@ export default async function PropertyDetailPage({
       label: t('detail.contracts'),
       value: property._count.contracts,
       icon: FileSignature,
+      href: `/app/contracts?propertyId=${property.id}`,
     },
     {
       label: t('detail.documents'),
       value: property._count.documents,
       icon: FolderClosed,
+      href: `/app/documents?propertyId=${property.id}`,
     },
     {
       label: t('detail.expenses'),
       value: property._count.expenses,
       icon: ReceiptIcon,
+      href: `/app/expenses?propertyId=${property.id}`,
     },
   ];
 
@@ -134,13 +137,15 @@ export default async function PropertyDetailPage({
         <div className="space-y-4">
           <div className="grid grid-cols-3 gap-3">
             {stats.map((stat) => (
-              <Card key={stat.label}>
-                <CardContent className="flex flex-col items-center gap-1 p-4 text-center">
-                  <stat.icon className="size-5 text-muted-foreground" />
-                  <p className="text-xl font-semibold">{stat.value}</p>
-                  <p className="text-xs text-muted-foreground">{stat.label}</p>
-                </CardContent>
-              </Card>
+              <Link key={stat.label} href={stat.href} className="group">
+                <Card className="transition-colors group-hover:border-primary/40 group-hover:bg-muted/40">
+                  <CardContent className="flex flex-col items-center gap-1 p-4 text-center">
+                    <stat.icon className="size-5 text-muted-foreground transition-colors group-hover:text-primary" />
+                    <p className="text-xl font-semibold">{stat.value}</p>
+                    <p className="text-xs text-muted-foreground">{stat.label}</p>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
 
