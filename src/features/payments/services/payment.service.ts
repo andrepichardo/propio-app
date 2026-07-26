@@ -210,6 +210,14 @@ export const paymentService = {
           type: NotificationType.PAYMENT_UPCOMING,
           title: 'Partial payment recorded',
           body: `${contract.tenant.firstName} still owes ${formatCurrency(balanceAfter, contract.currency)} on ${contract.property.name}.`,
+          metadata: {
+            key: 'paymentPartial',
+            params: {
+              tenant: contract.tenant.firstName,
+              amount: formatCurrency(balanceAfter, contract.currency),
+              property: contract.property.name,
+            },
+          },
           entityType: 'Contract',
           entityId: contract.id,
           actionUrl: `/app/contracts/${contract.id}`,

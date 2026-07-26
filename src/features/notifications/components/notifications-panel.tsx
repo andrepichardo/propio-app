@@ -19,11 +19,19 @@ import { formatRelative } from '@/shared/lib/format';
 export type NotificationItem = {
   id: string;
   type: NotificationType;
+  /** English fallback used for legacy rows without a translatable key. */
   title: string;
   body: string | null;
+  /** `{ key, params }` for locale-aware rendering; Prisma JsonValue. */
+  metadata: unknown;
   actionUrl: string | null;
   readAt: Date | null;
   createdAt: Date;
+};
+
+type NotificationMeta = {
+  key?: string;
+  params?: Record<string, string | number>;
 };
 
 export function NotificationsPanel({
@@ -36,6 +44,19 @@ export function NotificationsPanel({
   const [isPending, startTransition] = useTransition();
 
   const hasUnread = notifications.some((n) => !n.readAt);
+
+  // Prefer the translated key+params; fall back to the stored English text for
+  // legacy rows recorded before notifications carried a message key.
+  function resolveText(notification: NotificationItem) {
+    const meta = notification.metadata as NotificationMeta | null;
+    if (meta?.key && t.has(`${meta.key}.title`)) {
+      return {
+        title: t(`${meta.key}.title`, meta.params),
+        body: t(`${meta.key}.body`, meta.params),
+      };
+    }
+    return { title: notification.title, body: notification.body };
+  }
 
   function markAllRead() {
     startTransition(async () => {
@@ -72,6 +93,7 @@ export function NotificationsPanel({
         {notifications.map((notification) => {
           const Icon = NOTIFICATION_ICONS[notification.type];
           const unread = !notification.readAt;
+          const { title, body } = resolveText(notification);
           return (
             <li
               key={notification.id}
@@ -92,15 +114,13 @@ export function NotificationsPanel({
               </span>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <p className="text-sm font-medium">{notification.title}</p>
+                  <p className="text-sm font-medium">{title}</p>
                   {unread ? (
                     <span className="size-1.5 rounded-full bg-primary" />
                   ) : null}
                 </div>
-                {notification.body ? (
-                  <p className="text-sm text-muted-foreground">
-                    {notification.body}
-                  </p>
+                {body ? (
+                  <p className="text-sm text-muted-foreground">{body}</p>
                 ) : null}
                 <div className="mt-1 flex items-center gap-3">
                   <span className="text-xs text-muted-foreground">

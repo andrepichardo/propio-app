@@ -608,6 +608,9 @@ model Notification {
   type       NotificationType
   title      String
   body       String?          @db.Text
+  // `{ key, params }` for locale-aware rendering (title/body are the English
+  // fallback for legacy rows), mirroring the Activity feed.
+  metadata   Json?
   // Loose reference to the entity that triggered the notification.
   entityType String?
   entityId   String?

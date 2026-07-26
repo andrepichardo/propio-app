@@ -138,6 +138,14 @@ export async function runNotificationScheduler(): Promise<SchedulerResult> {
             type: NotificationType.CONTRACT_EXPIRING,
             title: 'Contract expiring soon',
             body: `The lease for ${contract.property.name} with ${tenantName} ends in ${daysLeft} day${daysLeft === 1 ? '' : 's'}.`,
+            metadata: {
+              key: 'contractExpiring',
+              params: {
+                property: contract.property.name,
+                tenant: tenantName,
+                days: daysLeft,
+              },
+            },
             entityType: 'Contract',
             entityId: contract.id,
             actionUrl,
@@ -183,6 +191,15 @@ export async function runNotificationScheduler(): Promise<SchedulerResult> {
             type: NotificationType.PAYMENT_LATE,
             title: 'Rent payment overdue',
             body: `${tenantName} hasn’t paid ${rent} for ${contract.property.name} (was due day ${contract.dueDay}).`,
+            metadata: {
+              key: 'paymentLate',
+              params: {
+                tenant: tenantName,
+                amount: rent,
+                property: contract.property.name,
+                dueDay: contract.dueDay,
+              },
+            },
             entityType: 'Contract',
             entityId: contract.id,
             actionUrl,
@@ -212,6 +229,15 @@ export async function runNotificationScheduler(): Promise<SchedulerResult> {
             type: NotificationType.PAYMENT_UPCOMING,
             title: 'Rent payment due soon',
             body: `${rent} from ${tenantName} for ${contract.property.name} is due in ${differenceInCalendarDays(nextDue, now)} day(s).`,
+            metadata: {
+              key: 'paymentUpcoming',
+              params: {
+                amount: rent,
+                tenant: tenantName,
+                property: contract.property.name,
+                days: differenceInCalendarDays(nextDue, now),
+              },
+            },
             entityType: 'Contract',
             entityId: contract.id,
             actionUrl,

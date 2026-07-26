@@ -857,7 +857,23 @@
     "view": "Ver",
     "markRead": "Marcar como leído",
     "emptyTitle": "Estás al día",
-    "emptyDesc": "Los recordatorios sobre pagos y contratos aparecerán aquí."
+    "emptyDesc": "Los recordatorios sobre pagos y contratos aparecerán aquí.",
+    "contractExpiring": {
+      "title": "Contrato por vencer",
+      "body": "El contrato de {property} con {tenant} vence en {days, plural, one {# día} other {# días}}."
+    },
+    "paymentLate": {
+      "title": "Renta atrasada",
+      "body": "{tenant} no ha pagado {amount} de {property} (vencía el día {dueDay})."
+    },
+    "paymentUpcoming": {
+      "title": "Renta por vencer",
+      "body": "{amount} de {tenant} por {property} vence en {days, plural, one {# día} other {# días}}."
+    },
+    "paymentPartial": {
+      "title": "Pago parcial registrado",
+      "body": "{tenant} aún debe {amount} de {property}."
+    }
   },
   "settings": {
     "title": "Configuración",

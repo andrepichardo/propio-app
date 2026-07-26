@@ -854,7 +854,23 @@
     "view": "View",
     "markRead": "Mark read",
     "emptyTitle": "You’re all caught up",
-    "emptyDesc": "Reminders about payments and contracts will appear here."
+    "emptyDesc": "Reminders about payments and contracts will appear here.",
+    "contractExpiring": {
+      "title": "Contract expiring soon",
+      "body": "The lease for {property} with {tenant} ends in {days, plural, one {# day} other {# days}}."
+    },
+    "paymentLate": {
+      "title": "Rent payment overdue",
+      "body": "{tenant} hasn’t paid {amount} for {property} (was due day {dueDay})."
+    },
+    "paymentUpcoming": {
+      "title": "Rent payment due soon",
+      "body": "{amount} from {tenant} for {property} is due in {days, plural, one {# day} other {# days}}."
+    },
+    "paymentPartial": {
+      "title": "Partial payment recorded",
+      "body": "{tenant} still owes {amount} on {property}."
+    }
   },
   "settings": {
     "title": "Settings",
