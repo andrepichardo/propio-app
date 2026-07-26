@@ -24,14 +24,24 @@ function greetingKey(): 'greetingMorning' | 'greetingAfternoon' | 'greetingEveni
 function DashboardSkeleton() {
   return (
     <div className="space-y-6">
+      {/* KPI tiles */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="h-28 rounded-xl" />
+          <Skeleton key={i} className="h-32 rounded-xl" />
         ))}
       </div>
+      {/* Chart + right column (upcoming payments / deposits stacked) */}
       <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-        <Skeleton className="h-80 rounded-xl" />
-        <Skeleton className="h-80 rounded-xl" />
+        <Skeleton className="h-[26rem] rounded-xl" />
+        <div className="flex flex-col gap-6 lg:grid lg:h-[26rem] lg:grid-rows-2">
+          <Skeleton className="h-44 rounded-xl lg:h-auto" />
+          <Skeleton className="h-44 rounded-xl lg:h-auto" />
+        </div>
+      </div>
+      {/* Expiring contracts + recent activity */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Skeleton className="h-[22rem] rounded-xl" />
+        <Skeleton className="h-[22rem] rounded-xl" />
       </div>
     </div>
   );

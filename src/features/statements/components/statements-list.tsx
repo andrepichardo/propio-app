@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { Download, ScrollText } from 'lucide-react';
 import { statementService } from '../services/statement.service';
 import type { StatementFilters } from '../validators/statement.validators';
+import { DeleteStatementDialog } from './delete-statement-dialog';
 import { EmptyState } from '@/shared/components/empty-state';
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
@@ -53,6 +54,9 @@ export async function StatementsList({
                 {t('colOutstanding')}
               </TableHead>
               <TableHead className="text-right">{t('colPdf')}</TableHead>
+              <TableHead className="w-[52px]">
+                <span className="sr-only">{t('colActions')}</span>
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -101,6 +105,9 @@ export async function StatementsList({
                         {t('generating')}
                       </span>
                     )}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <DeleteStatementDialog statementId={statement.id} />
                   </TableCell>
                 </TableRow>
               );

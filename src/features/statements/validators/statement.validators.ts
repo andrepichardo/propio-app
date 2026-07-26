@@ -6,6 +6,8 @@ export const generateStatementSchema = z.object({
   month: z.coerce.date({ message: 'Select a month.' }),
 });
 
+export const deleteStatementSchema = z.object({ id: z.string().cuid() });
+
 export const statementFiltersSchema = z.object({
   page: z.coerce.number().int().min(1).optional(),
   pageSize: z.coerce.number().int().min(1).max(100).optional(),

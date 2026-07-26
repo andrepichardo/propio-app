@@ -228,6 +228,7 @@
     "documentUploaded": "Subiste el documento «{name}»",
     "documentDeleted": "Eliminaste el documento «{name}»",
     "statementGenerated": "Generaste el estado de cuenta {number} de {property}",
+    "statementDeleted": "Eliminaste un estado de cuenta",
     "depositSettled": "Liquidaste el depósito de {property} — devolviste {returned}, retuviste {retained}",
     "depositSettlementVoided": "Deshiciste una liquidación de depósito"
   },
@@ -248,6 +249,21 @@
       "reference": "Referencia",
       "autoNote": "Correspondiente al pago recibido mediante {method} el día {date}.",
       "autoNoteNextDue": "Fecha límite de pago próxima renta: {date}."
+    },
+    "statement": {
+      "title": "Estado de cuenta",
+      "subtitle": "Estado de cuenta mensual",
+      "tenant": "Inquilino",
+      "owner": "Propietario",
+      "date": "Fecha",
+      "concept": "Concepto",
+      "amount": "Monto",
+      "noPayments": "No se registraron pagos en este período.",
+      "totalCharged": "Total facturado",
+      "totalPaid": "Total pagado",
+      "outstanding": "Pendiente",
+      "nextDue": "Próximo pago vence el {date}",
+      "generatedBy": "Generado por {app}."
     }
   },
   "dashboard": {
@@ -793,9 +809,18 @@
     "colPaid": "Pagado",
     "colOutstanding": "Pendiente",
     "colPdf": "PDF",
+    "colActions": "Acciones",
     "generating": "Generando…",
     "generatedToast": "Estado de cuenta {number} generado.",
     "selectContractError": "Selecciona un contrato.",
+    "delete": {
+      "trigger": "Eliminar estado de cuenta",
+      "title": "¿Eliminar este estado de cuenta?",
+      "description": "El estado de cuenta y su PDF se eliminarán permanentemente. Puedes volver a generarlo para el mismo período cuando lo necesites.",
+      "keep": "Mantenerlo",
+      "confirm": "Eliminar permanentemente",
+      "deletedToast": "Estado de cuenta eliminado."
+    },
     "dialog": {
       "title": "Generar un estado de cuenta mensual",
       "desc": "Resume los cargos, pagos y saldo pendiente de un contrato en el mes seleccionado.",
