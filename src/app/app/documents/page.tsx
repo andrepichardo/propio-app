@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { propertyService } from '@/features/properties/services/property.service';
+import { tenantService } from '@/features/tenants/services/tenant.service';
 import { documentFiltersSchema } from '@/features/documents/validators/document.validators';
 import { DocumentsList } from '@/features/documents/components/documents-list';
 import { UploadDocumentDialog } from '@/features/documents/components/upload-document-dialog';
@@ -22,9 +23,10 @@ export default async function DocumentsPage({
   searchParams: SearchParams;
 }) {
   const ownerId = await requireOwnerId();
-  const [filters, properties] = await Promise.all([
+  const [filters, properties, tenants] = await Promise.all([
     documentFiltersSchema.parse(await searchParams),
     propertyService.options(ownerId),
+    tenantService.options(ownerId),
   ]);
 
   const t = await getTranslations('documents');
@@ -37,6 +39,10 @@ export default async function DocumentsPage({
         actions={
           <UploadDocumentDialog
             properties={properties.map((p) => ({ id: p.id, label: p.name }))}
+            tenants={tenants.map((t) => ({
+              id: t.id,
+              label: `${t.firstName} ${t.lastName}`,
+            }))}
           />
         }
       />

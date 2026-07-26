@@ -38,8 +38,10 @@ const NONE = 'none';
 
 export function UploadDocumentDialog({
   properties,
+  tenants,
 }: {
   properties: OptionItem[];
+  tenants: OptionItem[];
 }) {
   const t = useTranslations('documents');
   const router = useRouter();
@@ -48,6 +50,7 @@ export function UploadDocumentDialog({
   const [isPending, startTransition] = useTransition();
   const [docType, setDocType] = useState<DocumentType>(DocumentType.OTHER);
   const [propertyId, setPropertyId] = useState<string>(NONE);
+  const [tenantId, setTenantId] = useState<string>(NONE);
   // Held in state instead of a native file input: the dropzone owns the file.
   const [file, setFile] = useState<File | null>(null);
 
@@ -62,6 +65,7 @@ export function UploadDocumentDialog({
     formData.set('file', file);
     formData.set('type', docType);
     if (propertyId !== NONE) formData.set('propertyId', propertyId);
+    if (tenantId !== NONE) formData.set('tenantId', tenantId);
 
     startTransition(async () => {
       const result = await uploadDocumentAction(formData);
@@ -73,6 +77,9 @@ export function UploadDocumentDialog({
       setOpen(false);
       formRef.current?.reset();
       setFile(null);
+      setDocType(DocumentType.OTHER);
+      setPropertyId(NONE);
+      setTenantId(NONE);
       router.refresh();
     });
   }
@@ -149,6 +156,22 @@ export function UploadDocumentDialog({
                 </SelectContent>
               </Select>
             </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label>{t('dialog.tenant')}</Label>
+            <Select value={tenantId} onValueChange={setTenantId}>
+              <SelectTrigger>
+                <SelectValue placeholder={t('dialog.unlinked')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={NONE}>{t('dialog.unlinked')}</SelectItem>
+                {tenants.map((tenant) => (
+                  <SelectItem key={tenant.id} value={tenant.id}>
+                    {tenant.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <DialogFooter>
             <Button

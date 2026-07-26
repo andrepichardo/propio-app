@@ -792,6 +792,7 @@
       "namePlaceholder": "Por defecto, el nombre del archivo",
       "type": "Tipo",
       "property": "Propiedad",
+      "tenant": "Inquilino",
       "unlinked": "Sin vincular",
       "cancel": "Cancelar",
       "submit": "Subir"

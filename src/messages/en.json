@@ -789,6 +789,7 @@
       "namePlaceholder": "Defaults to the file name",
       "type": "Type",
       "property": "Property",
+      "tenant": "Tenant",
       "unlinked": "Unlinked",
       "cancel": "Cancel",
       "submit": "Upload"
