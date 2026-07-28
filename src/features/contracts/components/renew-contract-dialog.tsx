@@ -49,11 +49,13 @@ export function RenewContractDialog({
   currentRent,
   currency,
   previousEndDate,
+  className,
 }: {
   contractId: string;
   currentRent: number;
   currency: string;
   previousEndDate: Date | null;
+  className?: string;
 }) {
   const t = useTranslations('contracts.renew');
   const router = useRouter();
@@ -104,7 +106,7 @@ export function RenewContractDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" className={className}>
           <RefreshCw className="size-4" /> {t('trigger')}
         </Button>
       </DialogTrigger>

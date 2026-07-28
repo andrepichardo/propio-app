@@ -34,34 +34,38 @@ export async function DepositCard({
 
   const { held, settlement } = summary;
 
+  // Rendered in two slots — top-right on desktop, bottom CTA on mobile — with
+  // only one visible per breakpoint. Each instance owns its own dialog state.
+  const action = settlement ? (
+    <VoidSettlementDialog
+      settlementId={settlement.id}
+      contractId={contractId}
+      className="w-full sm:w-auto"
+    />
+  ) : held > 0 ? (
+    <SettleDepositDialog
+      contractId={contractId}
+      held={held}
+      currency={currency}
+      className="w-full sm:w-auto"
+    />
+  ) : null;
+
   return (
-    <Card>
+    <Card className="flex flex-col">
       <CardHeader className="flex-row items-start justify-between space-y-0 gap-3">
         <div className="space-y-1.5">
           <CardTitle className="text-base">{t('title')}</CardTitle>
-          <CardDescription>
+          <CardDescription className="text-pretty">
             {settlement ? t('settledOn', {
               date: formatDate(settlement.settledAt),
             }) : t('heldDescription')}
           </CardDescription>
         </div>
-        {settlement ? (
-          <VoidSettlementDialog
-            settlementId={settlement.id}
-            contractId={contractId}
-          />
-        ) : (
-          held > 0 && (
-            <SettleDepositDialog
-              contractId={contractId}
-              held={held}
-              currency={currency}
-            />
-          )
-        )}
+        {action ? <div className="hidden shrink-0 sm:block">{action}</div> : null}
       </CardHeader>
 
-      <CardContent className="space-y-3 text-sm">
+      <CardContent className="flex flex-1 flex-col space-y-3 text-sm">
         {held <= 0 && !settlement ? (
           <p className="py-2 text-muted-foreground">{t('noneCollected')}</p>
         ) : settlement ? (
@@ -105,6 +109,9 @@ export async function DepositCard({
             </p>
           </>
         )}
+        {action ? (
+          <div className="mt-auto pt-4 sm:hidden">{action}</div>
+        ) : null}
       </CardContent>
     </Card>
   );

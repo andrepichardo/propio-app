@@ -16,13 +16,16 @@ import {
   DialogTrigger,
 } from '@/shared/components/ui/dialog';
 import { Button } from '@/shared/components/ui/button';
+import { cn } from '@/shared/lib/utils';
 
 export function VoidSettlementDialog({
   settlementId,
   contractId,
+  className,
 }: {
   settlementId: string;
   contractId: string;
+  className?: string;
 }) {
   const t = useTranslations('deposits.void');
   const router = useRouter();
@@ -48,7 +51,7 @@ export function VoidSettlementDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm">
+        <Button variant="ghost" size="sm" className={cn(className)}>
           <Undo2 className="size-4" /> {t('trigger')}
         </Button>
       </DialogTrigger>

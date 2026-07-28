@@ -15,12 +15,15 @@ import {
   DialogTrigger,
 } from '@/shared/components/ui/dialog';
 import { Button } from '@/shared/components/ui/button';
+import { cn } from '@/shared/lib/utils';
 import { deleteContractAction } from '../actions/contract.actions';
 
 export function DeleteContractDialog({
   contractId,
+  className,
 }: {
   contractId: string;
+  className?: string;
 }) {
   const t = useTranslations('contracts.delete');
   const router = useRouter();
@@ -44,7 +47,7 @@ export function DeleteContractDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="text-destructive">
+        <Button variant="outline" className={cn('text-destructive', className)}>
           <Trash2 className="size-4" /> {t('trigger')}
         </Button>
       </DialogTrigger>

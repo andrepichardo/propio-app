@@ -40,10 +40,12 @@ export function SettleDepositDialog({
   contractId,
   held,
   currency,
+  className,
 }: {
   contractId: string;
   held: number;
   currency: string;
+  className?: string;
 }) {
   const t = useTranslations('deposits');
   const router = useRouter();
@@ -82,7 +84,7 @@ export function SettleDepositDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button className={className}>
           <HandCoins className="size-4" /> {t('settle')}
         </Button>
       </DialogTrigger>
