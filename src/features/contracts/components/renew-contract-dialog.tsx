@@ -140,7 +140,9 @@ export function RenewContractDialog({
                   </Button>
                 ))}
               </div>
-              <FormDescription>{t('increaseHint')}</FormDescription>
+              <p className="text-xs text-muted-foreground">
+                {t('increaseHint')}
+              </p>
             </div>
 
             <FormField
