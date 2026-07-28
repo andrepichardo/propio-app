@@ -1,21 +1,18 @@
 import { Skeleton } from '@/shared/components/ui/skeleton';
+import { ReportsDataSkeleton } from '@/features/reports/components/reports-skeleton';
 
 export default function ReportsLoading() {
   return (
     <div className="space-y-6">
-      <div className="space-y-2">
-        <Skeleton className="h-8 w-40" />
-        <Skeleton className="h-4 w-64" />
+      {/* Header: title + description on the left, year selector on the right */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-40" />
+          <Skeleton className="h-4 w-64 max-w-full" />
+        </div>
+        <Skeleton className="h-9 w-28 shrink-0" />
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="h-28 rounded-xl" />
-        ))}
-      </div>
-      <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-        <Skeleton className="h-96 rounded-xl" />
-        <Skeleton className="h-96 rounded-xl" />
-      </div>
+      <ReportsDataSkeleton />
     </div>
   );
 }

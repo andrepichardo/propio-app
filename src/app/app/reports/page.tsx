@@ -10,9 +10,9 @@ import {
   ProfitBarChart,
 } from '@/features/reports/components/report-charts';
 import { YearSelector } from '@/features/reports/components/year-selector';
+import { ReportsDataSkeleton } from '@/features/reports/components/reports-skeleton';
 import { PageHeader } from '@/shared/components/page-header';
 import { StatCard } from '@/shared/components/stat-card';
-import { Skeleton } from '@/shared/components/ui/skeleton';
 import {
   Card,
   CardContent,
@@ -126,19 +126,7 @@ export default async function ReportsPage({
         description={t('subtitle')}
         actions={<YearSelector selectedYear={selectedYear} />}
       />
-      <Suspense
-        key={selectedYear}
-        fallback={
-          <div className="space-y-6">
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="h-28 rounded-xl" />
-              ))}
-            </div>
-            <Skeleton className="h-80 rounded-xl" />
-          </div>
-        }
-      >
+      <Suspense key={selectedYear} fallback={<ReportsDataSkeleton />}>
         <ReportContent
           ownerId={user.id}
           currency={currency}
