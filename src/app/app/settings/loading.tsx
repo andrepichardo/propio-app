@@ -1,13 +1,65 @@
 import { Skeleton } from '@/shared/components/ui/skeleton';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+} from '@/shared/components/ui/card';
+
+/** One field: label + input (+ optional hint), matching the settings forms. */
+function FieldSkeleton({ hint = false }: { hint?: boolean }) {
+  return (
+    <div className="space-y-2">
+      <Skeleton className="h-4 w-20" />
+      <Skeleton className="h-9 w-full" />
+      {hint ? <Skeleton className="h-3 w-24 max-w-full" /> : null}
+    </div>
+  );
+}
 
 export default function SettingsLoading() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
+      {/* Header */}
       <div className="space-y-2">
         <Skeleton className="h-8 w-32" />
-        <Skeleton className="h-4 w-64" />
+        <Skeleton className="h-4 w-64 max-w-full" />
       </div>
-      <Skeleton className="h-48 rounded-xl" />
+
+      {/* Preferences form: "Formato" card + save button */}
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-5 w-28" />
+          </CardHeader>
+          <CardContent className="grid gap-5 sm:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <FieldSkeleton key={i} hint />
+            ))}
+          </CardContent>
+        </Card>
+        <div className="flex justify-end">
+          <Skeleton className="h-9 w-24" />
+        </div>
+      </div>
+
+      {/* Security form: "Seguridad" card */}
+      <Card>
+        <CardHeader>
+          <Skeleton className="h-5 w-24" />
+        </CardHeader>
+        <CardContent className="space-y-5">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <FieldSkeleton />
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <FieldSkeleton />
+            <FieldSkeleton />
+          </div>
+          <div className="flex justify-end">
+            <Skeleton className="h-9 w-36" />
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
