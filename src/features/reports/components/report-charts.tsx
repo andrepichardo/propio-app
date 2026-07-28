@@ -69,6 +69,8 @@ export function ProfitBarChart({
             background: 'hsl(var(--popover))',
             fontSize: 12,
           }}
+          labelStyle={{ color: 'hsl(var(--popover-foreground))' }}
+          itemStyle={{ color: 'hsl(var(--popover-foreground))' }}
           formatter={(value: number, name: string) => [
             formatCurrency(value, currency),
             seriesLabel(name),
@@ -128,6 +130,8 @@ export function ExpenseBreakdownChart({
             background: 'hsl(var(--popover))',
             fontSize: 12,
           }}
+          labelStyle={{ color: 'hsl(var(--popover-foreground))' }}
+          itemStyle={{ color: 'hsl(var(--popover-foreground))' }}
           formatter={(value: number) => formatCurrency(value, currency)}
         />
         <Legend wrapperStyle={{ fontSize: 12 }} />
