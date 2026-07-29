@@ -15,7 +15,6 @@ export const updatePreferencesSchema = z.object({
     .string()
     .length(3, 'currencyCode')
     .transform((v) => v.toUpperCase()),
-  timezone: z.string().min(1).max(60).default('UTC'),
 });
 
 /** In-app password change. Mirrors the registration password policy. */

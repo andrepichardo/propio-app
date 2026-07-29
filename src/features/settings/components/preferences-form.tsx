@@ -21,7 +21,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -73,12 +72,12 @@ export function PreferencesForm({
           <CardHeader>
             <CardTitle className="text-base">{t('formatting')}</CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-5 sm:grid-cols-2">
+          <CardContent>
             <FormField
               control={form.control}
               name="currency"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="sm:max-w-xs">
                   <FormLabel>{t('currency')}</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
@@ -95,20 +94,6 @@ export function PreferencesForm({
                     </SelectContent>
                   </Select>
                   <FormDescription>{t('currencyHint')}</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="timezone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('timezone')}</FormLabel>
-                  <FormControl>
-                    <Input placeholder="America/Santo_Domingo" {...field} />
-                  </FormControl>
-                  <FormDescription>{t('timezoneHint')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

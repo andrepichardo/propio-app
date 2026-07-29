@@ -17,7 +17,6 @@ export default async function SettingsPage() {
     where: { id: sessionUser.id },
     select: {
       currency: true,
-      timezone: true,
       hashedPassword: true,
     },
   });
@@ -27,12 +26,7 @@ export default async function SettingsPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <PageHeader title={t('title')} description={t('subtitle')} />
-      <PreferencesForm
-        defaultValues={{
-          currency: user.currency,
-          timezone: user.timezone,
-        }}
-      />
+      <PreferencesForm defaultValues={{ currency: user.currency }} />
       <ChangePasswordForm hasPassword={Boolean(user.hashedPassword)} />
     </div>
   );

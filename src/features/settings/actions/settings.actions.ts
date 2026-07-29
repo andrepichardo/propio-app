@@ -48,7 +48,6 @@ export const updatePreferencesAction = createOwnerAction(
       where: { id: ownerId },
       data: {
         currency: input.currency,
-        timezone: input.timezone,
       },
     });
     revalidatePath('/app', 'layout');
