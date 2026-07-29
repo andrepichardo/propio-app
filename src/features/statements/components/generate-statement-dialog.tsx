@@ -8,7 +8,7 @@ import { format } from 'date-fns';
 import { FilePlus2 } from 'lucide-react';
 import { generateStatementAction } from '../actions/statement.actions';
 import { Button } from '@/shared/components/ui/button';
-import { Input } from '@/shared/components/ui/input';
+import { MonthPicker } from '@/shared/components/ui/month-picker';
 import { Label } from '@/shared/components/ui/label';
 import {
   Dialog,
@@ -93,12 +93,10 @@ export function GenerateStatementDialog({
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="statement-month">{t('dialog.month')}</Label>
-            <Input
+            <MonthPicker
               id="statement-month"
-              type="month"
               value={month}
-              onChange={(e) => setMonth(e.target.value)}
-              required
+              onChange={setMonth}
             />
           </div>
           <DialogFooter>
