@@ -40,6 +40,14 @@ model User {
   // Handwritten signature image (storage URL) stamped on receipt PDFs.
   signatureUrl String?
 
+  // Reminder preferences consumed by the daily notification scheduler. Lead
+  // days = how many days ahead the reminder opens; the toggles mute a type.
+  notifyContractExpiring   Boolean @default(true)
+  contractExpiringLeadDays Int     @default(30)
+  notifyPaymentUpcoming    Boolean @default(true)
+  paymentUpcomingLeadDays  Int     @default(3)
+  notifyPaymentLate        Boolean @default(true)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

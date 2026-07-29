@@ -15,8 +15,38 @@ import {
 import { prisma } from '@/shared/lib/prisma';
 import { formatCurrency } from '@/shared/lib/format';
 
-const UPCOMING_WINDOW_DAYS = 3;
-const EXPIRING_WINDOW_DAYS = 30;
+/** Fallback reminder settings for owners whose row is somehow missing. Mirrors
+ * the Prisma `User` column defaults. */
+const DEFAULT_REMINDER_PREFS: ReminderPrefs = {
+  notifyContractExpiring: true,
+  contractExpiringLeadDays: 30,
+  notifyPaymentUpcoming: true,
+  paymentUpcomingLeadDays: 3,
+  notifyPaymentLate: true,
+};
+
+type ReminderPrefs = {
+  notifyContractExpiring: boolean;
+  contractExpiringLeadDays: number;
+  notifyPaymentUpcoming: boolean;
+  paymentUpcomingLeadDays: number;
+  notifyPaymentLate: boolean;
+};
+
+/** Per-owner reminder settings, keyed by owner id. */
+async function loadReminderPrefs(): Promise<Map<string, ReminderPrefs>> {
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      notifyContractExpiring: true,
+      contractExpiringLeadDays: true,
+      notifyPaymentUpcoming: true,
+      paymentUpcomingLeadDays: true,
+      notifyPaymentLate: true,
+    },
+  });
+  return new Map(users.map(({ id, ...prefs }) => [id, prefs]));
+}
 
 /** Skip if an identical reminder was already created within the window. */
 async function alreadyNotified(
@@ -97,6 +127,8 @@ export async function runNotificationScheduler(): Promise<SchedulerResult> {
     expired: await expireLapsedContracts(now),
   };
 
+  const reminderPrefs = await loadReminderPrefs();
+
   const contracts = await prisma.contract.findMany({
     where: { deletedAt: null, status: ContractStatus.ACTIVE },
     select: {
@@ -112,6 +144,8 @@ export async function runNotificationScheduler(): Promise<SchedulerResult> {
   });
 
   for (const contract of contracts) {
+    const prefs =
+      reminderPrefs.get(contract.ownerId) ?? DEFAULT_REMINDER_PREFS;
     const tenantName = `${contract.tenant.firstName} ${contract.tenant.lastName}`;
     const rent = formatCurrency(
       contract.monthlyRent.toString(),
@@ -120,16 +154,16 @@ export async function runNotificationScheduler(): Promise<SchedulerResult> {
     const actionUrl = `/app/contracts/${contract.id}`;
 
     // --- Contract expiring ---------------------------------------------------
-    if (contract.endDate) {
+    if (prefs.notifyContractExpiring && contract.endDate) {
       const daysLeft = differenceInCalendarDays(contract.endDate, now);
       if (
         daysLeft >= 0 &&
-        daysLeft <= EXPIRING_WINDOW_DAYS &&
+        daysLeft <= prefs.contractExpiringLeadDays &&
         !(await alreadyNotified(
           contract.ownerId,
           NotificationType.CONTRACT_EXPIRING,
           contract.id,
-          EXPIRING_WINDOW_DAYS,
+          prefs.contractExpiringLeadDays,
         ))
       ) {
         await prisma.notification.create({
@@ -178,6 +212,7 @@ export async function runNotificationScheduler(): Promise<SchedulerResult> {
     if (now > dueThisMonth) {
       // Late for the current period.
       if (
+        prefs.notifyPaymentLate &&
         !(await alreadyNotified(
           contract.ownerId,
           NotificationType.PAYMENT_LATE,
@@ -215,7 +250,8 @@ export async function runNotificationScheduler(): Promise<SchedulerResult> {
           ? dueThisMonth
           : dueDateFor(addMonths(now, 1), contract.dueDay);
       if (
-        nextDue <= addDays(now, UPCOMING_WINDOW_DAYS) &&
+        prefs.notifyPaymentUpcoming &&
+        nextDue <= addDays(now, prefs.paymentUpcomingLeadDays) &&
         !(await alreadyNotified(
           contract.ownerId,
           NotificationType.PAYMENT_UPCOMING,

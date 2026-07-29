@@ -18,6 +18,11 @@ export default async function SettingsPage() {
     select: {
       currency: true,
       hashedPassword: true,
+      notifyContractExpiring: true,
+      contractExpiringLeadDays: true,
+      notifyPaymentUpcoming: true,
+      paymentUpcomingLeadDays: true,
+      notifyPaymentLate: true,
     },
   });
 
@@ -26,7 +31,16 @@ export default async function SettingsPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <PageHeader title={t('title')} description={t('subtitle')} />
-      <PreferencesForm defaultValues={{ currency: user.currency }} />
+      <PreferencesForm
+        defaultValues={{
+          currency: user.currency,
+          notifyContractExpiring: user.notifyContractExpiring,
+          contractExpiringLeadDays: user.contractExpiringLeadDays,
+          notifyPaymentUpcoming: user.notifyPaymentUpcoming,
+          paymentUpcomingLeadDays: user.paymentUpcomingLeadDays,
+          notifyPaymentLate: user.notifyPaymentLate,
+        }}
+      />
       <ChangePasswordForm hasPassword={Boolean(user.hashedPassword)} />
     </div>
   );

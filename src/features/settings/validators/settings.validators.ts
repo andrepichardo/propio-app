@@ -6,15 +6,32 @@ export const updateProfileSchema = z.object({
 });
 
 /**
- * Formatting preferences shown on the Settings page. Language lives in the
- * topbar switcher (it sets the cookie AND mirrors to `User.locale`), so it's
- * intentionally not here.
+ * Preferences shown on the Settings page: money formatting + reminder settings
+ * (consumed by the daily notification scheduler), saved together with one
+ * submit. Language lives in the topbar switcher (it sets the cookie AND mirrors
+ * to `User.locale`), so it's intentionally not here.
+ *
+ * Lead days are only meaningful when their toggle is on, but we always
+ * validate/persist them so turning a reminder back on restores the last value.
  */
 export const updatePreferencesSchema = z.object({
   currency: z
     .string()
     .length(3, 'currencyCode')
     .transform((v) => v.toUpperCase()),
+  notifyContractExpiring: z.boolean(),
+  contractExpiringLeadDays: z.coerce
+    .number()
+    .int('leadDaysInvalid')
+    .min(1, 'leadDaysInvalid')
+    .max(180, 'leadDaysInvalid'),
+  notifyPaymentUpcoming: z.boolean(),
+  paymentUpcomingLeadDays: z.coerce
+    .number()
+    .int('leadDaysInvalid')
+    .min(0, 'leadDaysInvalid')
+    .max(30, 'leadDaysInvalid'),
+  notifyPaymentLate: z.boolean(),
 });
 
 /** In-app password change. Mirrors the registration password policy. */

@@ -48,6 +48,11 @@ export const updatePreferencesAction = createOwnerAction(
       where: { id: ownerId },
       data: {
         currency: input.currency,
+        notifyContractExpiring: input.notifyContractExpiring,
+        contractExpiringLeadDays: input.contractExpiringLeadDays,
+        notifyPaymentUpcoming: input.notifyPaymentUpcoming,
+        paymentUpcomingLeadDays: input.paymentUpcomingLeadDays,
+        notifyPaymentLate: input.notifyPaymentLate,
       },
     });
     revalidatePath('/app', 'layout');
