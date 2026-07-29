@@ -23,7 +23,7 @@ import {
   uploadPaymentProofAction,
 } from '../actions/payment.actions';
 import { applyFieldErrors } from '@/shared/hooks/use-server-action';
-import { toDateInputValue } from '@/shared/lib/format';
+import { DatePicker } from '@/shared/components/ui/date-picker';
 import {
   Form,
   FormControl,
@@ -254,13 +254,7 @@ export function PaymentForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel required>{t('form.date')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="date"
-                      value={toDateInputValue(field.value)}
-                      onChange={(e) => field.onChange(e.target.value)}
-                    />
-                  </FormControl>
+                  <DatePicker value={field.value} onChange={field.onChange} />
                   <FormMessage />
                 </FormItem>
               )}

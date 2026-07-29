@@ -14,7 +14,7 @@ import {
 } from '../validators/contract.validators';
 import { renewContractAction } from '../actions/contract.actions';
 import { applyFieldErrors } from '@/shared/hooks/use-server-action';
-import { formatCurrency, toDateInputValue } from '@/shared/lib/format';
+import { formatCurrency } from '@/shared/lib/format';
 import {
   Dialog,
   DialogContent,
@@ -34,6 +34,7 @@ import {
   FormMessage,
 } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
+import { DatePicker } from '@/shared/components/ui/date-picker';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Button } from '@/shared/components/ui/button';
 
@@ -175,13 +176,7 @@ export function RenewContractDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel required>{t('startDate')}</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="date"
-                        value={toDateInputValue(field.value)}
-                        onChange={(e) => field.onChange(e.target.value)}
-                      />
-                    </FormControl>
+                    <DatePicker value={field.value} onChange={field.onChange} />
                     <FormMessage />
                   </FormItem>
                 )}
@@ -192,15 +187,11 @@ export function RenewContractDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t('endDate')}</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="date"
-                        value={field.value ? toDateInputValue(field.value) : ''}
-                        onChange={(e) =>
-                          field.onChange(e.target.value || null)
-                        }
-                      />
-                    </FormControl>
+                    <DatePicker
+                      value={field.value}
+                      onChange={(v) => field.onChange(v || null)}
+                      clearable
+                    />
                     <FormDescription>{t('endDateHint')}</FormDescription>
                     <FormMessage />
                   </FormItem>

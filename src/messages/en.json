@@ -873,6 +873,10 @@
       "body": "{tenant} still owes {amount} on {property}."
     }
   },
+  "datePicker": {
+    "placeholder": "Select a date",
+    "clear": "Clear date"
+  },
   "currencies": {
     "USD": "US Dollar",
     "DOP": "Dominican Peso",

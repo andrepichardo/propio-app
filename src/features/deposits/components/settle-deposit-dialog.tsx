@@ -13,7 +13,7 @@ import {
 } from '../validators/deposit.validators';
 import { settleDepositAction } from '../actions/deposit.actions';
 import { applyFieldErrors } from '@/shared/hooks/use-server-action';
-import { formatCurrency, toDateInputValue } from '@/shared/lib/format';
+import { formatCurrency } from '@/shared/lib/format';
 import {
   Dialog,
   DialogContent,
@@ -33,6 +33,7 @@ import {
   FormMessage,
 } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
+import { DatePicker } from '@/shared/components/ui/date-picker';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Button } from '@/shared/components/ui/button';
 
@@ -166,13 +167,7 @@ export function SettleDepositDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel required>{t('settledAt')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="date"
-                      value={toDateInputValue(field.value)}
-                      onChange={(e) => field.onChange(e.target.value)}
-                    />
-                  </FormControl>
+                  <DatePicker value={field.value} onChange={field.onChange} />
                   <FormMessage />
                 </FormItem>
               )}

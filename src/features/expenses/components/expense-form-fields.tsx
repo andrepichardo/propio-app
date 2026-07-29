@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
-import { toDateInputValue } from '@/shared/lib/format';
+import { DatePicker } from '@/shared/components/ui/date-picker';
 import { Textarea } from '@/shared/components/ui/textarea';
 import {
   Select,
@@ -95,13 +95,7 @@ export function ExpenseFormFields({
         render={({ field }) => (
           <FormItem>
             <FormLabel required>{t('form.date')}</FormLabel>
-            <FormControl>
-              <Input
-                type="date"
-                value={toDateInputValue(field.value)}
-                onChange={(e) => field.onChange(e.target.value)}
-              />
-            </FormControl>
+            <DatePicker value={field.value} onChange={field.onChange} />
             <FormMessage />
           </FormItem>
         )}

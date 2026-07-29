@@ -18,7 +18,6 @@ import {
   updateContractAction,
 } from '../actions/contract.actions';
 import { applyFieldErrors } from '@/shared/hooks/use-server-action';
-import { toDateInputValue } from '@/shared/lib/format';
 import {
   Form,
   FormControl,
@@ -29,6 +28,7 @@ import {
   FormMessage,
 } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
+import { DatePicker } from '@/shared/components/ui/date-picker';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Button } from '@/shared/components/ui/button';
 import { Switch } from '@/shared/components/ui/switch';
@@ -194,13 +194,7 @@ export function ContractForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel required>{t('form.startDate')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="date"
-                      value={toDateInputValue(field.value)}
-                      onChange={(e) => field.onChange(e.target.value)}
-                    />
-                  </FormControl>
+                  <DatePicker value={field.value} onChange={field.onChange} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -211,15 +205,11 @@ export function ContractForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t('form.endDate')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="date"
-                      value={toDateInputValue(field.value)}
-                      onChange={(e) =>
-                        field.onChange(e.target.value || undefined)
-                      }
-                    />
-                  </FormControl>
+                  <DatePicker
+                    value={field.value}
+                    onChange={(v) => field.onChange(v || undefined)}
+                    clearable
+                  />
                   <FormDescription>{t('form.openEnded')}</FormDescription>
                   <FormMessage />
                 </FormItem>

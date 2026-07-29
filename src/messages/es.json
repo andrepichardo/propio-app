@@ -876,6 +876,10 @@
       "body": "{tenant} aún debe {amount} de {property}."
     }
   },
+  "datePicker": {
+    "placeholder": "Selecciona una fecha",
+    "clear": "Quitar fecha"
+  },
   "currencies": {
     "USD": "Dólar estadounidense",
     "DOP": "Peso dominicano",
