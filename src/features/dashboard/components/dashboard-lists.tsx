@@ -19,14 +19,17 @@ import {
   CardTitle,
 } from '@/shared/components/ui/card';
 import { EmptyState } from '@/shared/components/empty-state';
-import { formatCurrency, formatDate, formatRelative } from '@/shared/lib/format';
+import { formatCurrency, formatRelative } from '@/shared/lib/format';
+import type { DateFormatter } from '@/shared/lib/date-format';
 import { cn } from '@/shared/lib/utils';
 
 export function UpcomingPaymentsCard({
   payments,
+  formatDate,
   className,
 }: {
   payments: UpcomingPayment[];
+  formatDate: DateFormatter;
   className?: string;
 }) {
   const t = useTranslations('dashboard');
@@ -70,7 +73,7 @@ export function UpcomingPaymentsCard({
                     {formatCurrency(payment.amount, payment.currency)}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {t('due', { date: formatDate(payment.dueDate, 'MMM d') })}
+                    {t('due', { date: formatDate(payment.dueDate) })}
                   </p>
                 </div>
               </li>
@@ -134,9 +137,11 @@ export function DepositsHeldCard({
 
 export function ExpiringContractsCard({
   contracts,
+  formatDate,
   className,
 }: {
   contracts: ExpiringContract[];
+  formatDate: DateFormatter;
   className?: string;
 }) {
   const t = useTranslations('dashboard');
@@ -174,7 +179,7 @@ export function ExpiringContractsCard({
                   </div>
                   <span className="inline-flex shrink-0 items-center gap-1 text-xs text-warning">
                     <CalendarClock className="size-3.5" />
-                    {formatDate(contract.endDate, 'MMM d')}
+                    {formatDate(contract.endDate)}
                   </span>
                 </Link>
               </li>

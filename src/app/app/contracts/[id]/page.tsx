@@ -20,7 +20,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/components/ui/card';
-import { formatCurrency, formatDate } from '@/shared/lib/format';
+import { formatCurrency } from '@/shared/lib/format';
+import { getFormatDate } from '@/shared/lib/date-format.server';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('meta');
@@ -43,6 +44,7 @@ export default async function ContractDetailPage({
     });
 
   const t = await getTranslations('contracts.detail');
+  const formatDate = await getFormatDate();
 
   const rows = [
     {

@@ -23,7 +23,7 @@ import {
   CardTitle,
 } from '@/shared/components/ui/card';
 import { FileDropzone } from '@/shared/components/ui/file-dropzone';
-import { formatDate } from '@/shared/lib/format';
+import { useFormatDate } from '@/shared/components/date-format-provider';
 
 export type PropertyPhotoItem = {
   id: string;
@@ -40,6 +40,7 @@ export function PropertyPhotos({
   photos: PropertyPhotoItem[];
 }) {
   const t = useTranslations('properties.photos');
+  const formatDate = useFormatDate();
   const router = useRouter();
   // Separate transitions so deleting never lights up the dropzone's
   // "uploading" state (and vice versa).

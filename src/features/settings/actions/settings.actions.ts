@@ -48,6 +48,7 @@ export const updatePreferencesAction = createOwnerAction(
       where: { id: ownerId },
       data: {
         currency: input.currency,
+        dateFormat: input.dateFormat,
         notifyContractExpiring: input.notifyContractExpiring,
         contractExpiringLeadDays: input.contractExpiringLeadDays,
         notifyPaymentUpcoming: input.notifyPaymentUpcoming,

@@ -914,6 +914,15 @@
     "formatting": "Formato",
     "currency": "Moneda",
     "currencyHint": "Predeterminada para nuevos contratos y gastos.",
+    "dateFormat": "Formato de fecha",
+    "dateFormatHint": "Cómo se muestran las fechas en la app.",
+    "dateFormats": {
+      "MEDIUM": "Medio",
+      "DMY": "Día/Mes/Año",
+      "MDY": "Mes/Día/Año",
+      "LONG": "Largo",
+      "ISO": "ISO"
+    },
     "preferencesUpdated": "Preferencias actualizadas.",
     "reminders": "Recordatorios",
     "remindersHint": "Elige qué avisos quieres recibir y con cuánta anticipación.",

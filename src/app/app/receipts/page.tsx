@@ -18,7 +18,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui/table';
-import { formatCurrency, formatDate } from '@/shared/lib/format';
+import { formatCurrency } from '@/shared/lib/format';
+import { getFormatDate } from '@/shared/lib/date-format.server';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('meta');
@@ -36,6 +37,7 @@ async function ReceiptsTable({
     page,
   });
   const t = await getTranslations('receipts');
+  const formatDate = await getFormatDate();
 
   // Self-healing: seeded rows or failed post-payment renders leave pdfUrl
   // empty. Backfill them after the response so the next visit has the PDF.

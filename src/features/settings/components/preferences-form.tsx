@@ -4,7 +4,7 @@ import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import {
   updatePreferencesSchema,
@@ -13,6 +13,11 @@ import {
 import { updatePreferencesAction } from '../actions/settings.actions';
 import { applyFieldErrors } from '@/shared/hooks/use-server-action';
 import { cn } from '@/shared/lib/utils';
+import {
+  DATE_FORMAT_VALUES,
+  makeDateFormatter,
+  toDateFormat,
+} from '@/shared/lib/date-format';
 import {
   Form,
   FormControl,
@@ -54,8 +59,14 @@ export function PreferencesForm({
 }) {
   const t = useTranslations('settings');
   const tc = useTranslations('currencies');
+  const locale = useLocale();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+
+  // A representative date (Jul 8) so DMY vs MDY read differently in previews.
+  const sampleDate = new Date(Date.UTC(2026, 6, 8));
+  const dateExample = (pref: string) =>
+    makeDateFormatter(toDateFormat(pref), locale)(sampleDate);
 
   const form = useForm<UpdatePreferencesInput>({
     resolver: zodResolver(updatePreferencesSchema),
@@ -86,12 +97,12 @@ export function PreferencesForm({
           <CardHeader>
             <CardTitle className="text-base">{t('formatting')}</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="grid gap-5 sm:grid-cols-2">
             <FormField
               control={form.control}
               name="currency"
               render={({ field }) => (
-                <FormItem className="sm:max-w-xs">
+                <FormItem>
                   <FormLabel>{t('currency')}</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
@@ -108,6 +119,31 @@ export function PreferencesForm({
                     </SelectContent>
                   </Select>
                   <FormDescription>{t('currencyHint')}</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="dateFormat"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('dateFormat')}</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {DATE_FORMAT_VALUES.map((value) => (
+                        <SelectItem key={value} value={value}>
+                          {t(`dateFormats.${value}`)} — {dateExample(value)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>{t('dateFormatHint')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

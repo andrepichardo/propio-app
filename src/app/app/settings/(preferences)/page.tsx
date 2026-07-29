@@ -5,6 +5,7 @@ import { prisma } from '@/shared/lib/prisma';
 import { PreferencesForm } from '@/features/settings/components/preferences-form';
 import { ChangePasswordForm } from '@/features/settings/components/change-password-form';
 import { PageHeader } from '@/shared/components/page-header';
+import { toDateFormat } from '@/shared/lib/date-format';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('meta');
@@ -17,6 +18,7 @@ export default async function SettingsPage() {
     where: { id: sessionUser.id },
     select: {
       currency: true,
+      dateFormat: true,
       hashedPassword: true,
       notifyContractExpiring: true,
       contractExpiringLeadDays: true,
@@ -34,6 +36,7 @@ export default async function SettingsPage() {
       <PreferencesForm
         defaultValues={{
           currency: user.currency,
+          dateFormat: toDateFormat(user.dateFormat),
           notifyContractExpiring: user.notifyContractExpiring,
           contractExpiringLeadDays: user.contractExpiringLeadDays,
           notifyPaymentUpcoming: user.notifyPaymentUpcoming,

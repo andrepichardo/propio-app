@@ -23,6 +23,7 @@ import {
   CardDescription,
 } from '@/shared/components/ui/card';
 import { formatCurrency, formatPercent } from '@/shared/lib/format';
+import { getFormatDate } from '@/shared/lib/date-format.server';
 
 /**
  * Server component that loads the full dashboard summary and composes the KPI
@@ -38,6 +39,7 @@ export async function DashboardOverview({
 }) {
   const summary = await getDashboardSummary(ownerId);
   const t = await getTranslations('dashboard');
+  const formatDate = await getFormatDate();
 
   const hasDeposits = summary.finance.depositsHeld > 0;
 
@@ -100,6 +102,7 @@ export async function DashboardOverview({
             <UpcomingPaymentsCard
               className="max-h-80 lg:max-h-none lg:min-h-0"
               payments={summary.upcomingPayments}
+              formatDate={formatDate}
             />
             <DepositsHeldCard
               className="max-h-80 lg:max-h-none lg:min-h-0"
@@ -109,7 +112,10 @@ export async function DashboardOverview({
             />
           </div>
         ) : (
-          <UpcomingPaymentsCard payments={summary.upcomingPayments} />
+          <UpcomingPaymentsCard
+            payments={summary.upcomingPayments}
+            formatDate={formatDate}
+          />
         )}
       </div>
 
@@ -119,6 +125,7 @@ export async function DashboardOverview({
         <ExpiringContractsCard
           className="max-h-[22rem] lg:h-[22rem]"
           contracts={summary.expiringContracts}
+          formatDate={formatDate}
         />
         <RecentActivityCard
           className="max-h-[22rem] lg:h-[22rem]"

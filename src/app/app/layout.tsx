@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import { getLocale } from 'next-intl/server';
 import { requireUser } from '@/shared/lib/auth/session';
 import { prisma } from '@/shared/lib/prisma';
 import { getUnreadNotificationCount } from '@/features/notifications/services/notification.service';
@@ -7,6 +8,7 @@ import { Logo } from '@/shared/components/brand/logo';
 import { SidebarNav } from '@/shared/components/layout/sidebar-nav';
 import { Topbar } from '@/shared/components/layout/topbar';
 import { VerifyEmailBanner } from '@/shared/components/layout/verify-email-banner';
+import { DateFormatProvider } from '@/shared/components/date-format-provider';
 
 /**
  * Authenticated application shell. Middleware already guards `/app/**`, but we
@@ -20,7 +22,7 @@ export default async function AppLayout({
   const user = await requireUser().catch(() => null);
   if (!user) redirect('/login');
 
-  const [unreadCount, account] = await Promise.all([
+  const [unreadCount, account, locale] = await Promise.all([
     getUnreadNotificationCount(user.id),
     prisma.user.findUnique({
       where: { id: user.id },
@@ -29,8 +31,10 @@ export default async function AppLayout({
         hashedPassword: true,
         name: true,
         image: true,
+        dateFormat: true,
       },
     }),
+    getLocale(),
   ]);
 
   // Only credential accounts need in-app verification — OAuth providers
@@ -65,7 +69,14 @@ export default async function AppLayout({
         />
         {needsVerification ? <VerifyEmailBanner /> : null}
         <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
-          <div className="mx-auto w-full max-w-6xl">{children}</div>
+          <div className="mx-auto w-full max-w-6xl">
+            <DateFormatProvider
+              dateFormat={account?.dateFormat ?? 'MEDIUM'}
+              locale={locale}
+            >
+              {children}
+            </DateFormatProvider>
+          </div>
         </main>
       </div>
     </div>

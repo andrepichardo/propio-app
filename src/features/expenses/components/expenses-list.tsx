@@ -16,7 +16,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui/table';
-import { formatCurrency, formatDate } from '@/shared/lib/format';
+import { formatCurrency } from '@/shared/lib/format';
+import { getFormatDate } from '@/shared/lib/date-format.server';
 
 export async function ExpensesList({
   ownerId,
@@ -32,6 +33,7 @@ export async function ExpensesList({
     filters,
   );
   const t = await getTranslations('expenses');
+  const formatDate = await getFormatDate();
 
   if (items.length === 0) {
     return (

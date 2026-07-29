@@ -22,7 +22,7 @@ import { PageHeader } from '@/shared/components/page-header';
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent } from '@/shared/components/ui/card';
-import { formatDate } from '@/shared/lib/format';
+import { getFormatDate } from '@/shared/lib/date-format.server';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('meta');
@@ -43,6 +43,7 @@ export default async function PropertyDetailPage({
   });
 
   const t = await getTranslations('properties');
+  const formatDate = await getFormatDate();
 
   const location = [
     property.addressLine,

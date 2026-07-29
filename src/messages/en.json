@@ -911,6 +911,15 @@
     "formatting": "Formatting",
     "currency": "Currency",
     "currencyHint": "Default for new contracts and expenses.",
+    "dateFormat": "Date format",
+    "dateFormatHint": "How dates appear across the app.",
+    "dateFormats": {
+      "MEDIUM": "Medium",
+      "DMY": "Day/Month/Year",
+      "MDY": "Month/Day/Year",
+      "LONG": "Long",
+      "ISO": "ISO"
+    },
     "preferencesUpdated": "Preferences updated.",
     "reminders": "Reminders",
     "remindersHint": "Choose which reminders you get and how far ahead.",

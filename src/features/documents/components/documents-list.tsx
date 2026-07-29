@@ -15,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui/table';
-import { formatDate } from '@/shared/lib/format';
+import { getFormatDate } from '@/shared/lib/date-format.server';
 
 export async function DocumentsList({
   ownerId,
@@ -29,6 +29,7 @@ export async function DocumentsList({
     filters,
   );
   const t = await getTranslations('documents');
+  const formatDate = await getFormatDate();
 
   if (items.length === 0) {
     return (

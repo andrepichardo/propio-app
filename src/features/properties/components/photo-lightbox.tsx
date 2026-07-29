@@ -4,7 +4,7 @@ import { useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { formatDate } from '@/shared/lib/format';
+import { useFormatDate } from '@/shared/components/date-format-provider';
 import type { PropertyPhotoItem } from './property-photos';
 
 /**
@@ -25,6 +25,7 @@ export function PhotoLightbox({
   onNavigate: (nextIndex: number) => void;
 }) {
   const t = useTranslations('properties.photos');
+  const formatDate = useFormatDate();
   const isOpen = index !== null;
 
   const go = useCallback(

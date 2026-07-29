@@ -37,6 +37,9 @@ model User {
   currency String   @default("USD") // ISO 4217, used for money formatting
   timezone String   @default("UTC")
 
+  // UI date display style: MEDIUM | DMY | MDY | LONG | ISO (see date-format.ts).
+  dateFormat String @default("MEDIUM")
+
   // Handwritten signature image (storage URL) stamped on receipt PDFs.
   signatureUrl String?
 

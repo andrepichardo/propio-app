@@ -10,7 +10,8 @@ import {
   CardTitle,
 } from '@/shared/components/ui/card';
 import { Badge } from '@/shared/components/ui/badge';
-import { formatCurrency, formatDate } from '@/shared/lib/format';
+import { formatCurrency } from '@/shared/lib/format';
+import { getFormatDate } from '@/shared/lib/date-format.server';
 
 /**
  * Deposit state for a contract: what was collected, and — once the tenant
@@ -26,6 +27,7 @@ export async function DepositCard({
   currency: string;
 }) {
   const t = await getTranslations('deposits');
+  const formatDate = await getFormatDate();
   const summary = await depositService.getSummary(
     ownerId,
     contractId,

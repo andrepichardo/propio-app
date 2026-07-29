@@ -16,7 +16,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui/table';
-import { formatCurrency, formatDate } from '@/shared/lib/format';
+import { formatCurrency } from '@/shared/lib/format';
+import { getFormatDate } from '@/shared/lib/date-format.server';
 
 export async function ContractsList({
   ownerId,
@@ -30,6 +31,7 @@ export async function ContractsList({
     filters,
   );
   const t = await getTranslations('contracts');
+  const formatDate = await getFormatDate();
 
   if (items.length === 0) {
     return (
@@ -77,11 +79,9 @@ export async function ContractsList({
                   {contract.tenant.firstName} {contract.tenant.lastName}
                 </TableCell>
                 <TableCell className="text-sm text-muted-foreground">
-                  {formatDate(contract.startDate, 'MMM d, yyyy')}
+                  {formatDate(contract.startDate)}
                   {' – '}
-                  {contract.endDate
-                    ? formatDate(contract.endDate, 'MMM d, yyyy')
-                    : t('open')}
+                  {contract.endDate ? formatDate(contract.endDate) : t('open')}
                 </TableCell>
                 <TableCell className="text-right font-medium">
                   {formatCurrency(

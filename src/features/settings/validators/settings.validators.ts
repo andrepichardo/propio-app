@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { DATE_FORMAT_VALUES } from '@/shared/lib/date-format';
 
 /** Identity fields shown on the Profile page. Messages are `validation` keys. */
 export const updateProfileSchema = z.object({
@@ -19,6 +20,7 @@ export const updatePreferencesSchema = z.object({
     .string()
     .length(3, 'currencyCode')
     .transform((v) => v.toUpperCase()),
+  dateFormat: z.enum(DATE_FORMAT_VALUES),
   notifyContractExpiring: z.boolean(),
   contractExpiringLeadDays: z.coerce
     .number()

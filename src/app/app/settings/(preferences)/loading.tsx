@@ -31,10 +31,9 @@ export default function SettingsLoading() {
           <CardHeader>
             <Skeleton className="h-5 w-28" />
           </CardHeader>
-          <CardContent>
-            <div className="sm:max-w-xs">
-              <FieldSkeleton hint />
-            </div>
+          <CardContent className="grid gap-5 sm:grid-cols-2">
+            <FieldSkeleton hint />
+            <FieldSkeleton hint />
           </CardContent>
         </Card>
 

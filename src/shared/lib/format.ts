@@ -1,4 +1,4 @@
-import { format, formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow, type Locale } from 'date-fns';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 
 /**
@@ -100,11 +100,12 @@ function toDisplayDate(date: Date): Date {
 export function formatDate(
   value: Date | string | null | undefined,
   pattern = 'MMM d, yyyy',
+  options?: { locale?: Locale },
 ): string {
   if (!value) return '—';
   const date = typeof value === 'string' ? new Date(value) : value;
   if (Number.isNaN(date.getTime())) return '—';
-  return format(toDisplayDate(date), pattern);
+  return format(toDisplayDate(date), pattern, options);
 }
 
 /** Value for `<input type="date">` (`yyyy-MM-dd`), timezone-shift safe. */
