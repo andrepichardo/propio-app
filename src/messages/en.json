@@ -872,6 +872,18 @@
       "body": "{tenant} still owes {amount} on {property}."
     }
   },
+  "currencies": {
+    "USD": "US Dollar",
+    "DOP": "Dominican Peso",
+    "MXN": "Mexican Peso",
+    "COP": "Colombian Peso",
+    "ARS": "Argentine Peso",
+    "CLP": "Chilean Peso",
+    "PEN": "Peruvian Sol",
+    "GTQ": "Guatemalan Quetzal",
+    "CRC": "Costa Rican Colón",
+    "EUR": "Euro"
+  },
   "settings": {
     "title": "Settings",
     "subtitle": "Preferences and account security.",
@@ -897,7 +909,7 @@
     "save": "Save changes",
     "formatting": "Formatting",
     "currency": "Currency",
-    "currencyHint": "ISO 4217 code.",
+    "currencyHint": "Default for new contracts and expenses.",
     "locale": "Locale",
     "localeHint": "e.g. en, es, en-US.",
     "timezone": "Timezone",

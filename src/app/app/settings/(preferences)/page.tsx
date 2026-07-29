@@ -17,7 +17,6 @@ export default async function SettingsPage() {
     where: { id: sessionUser.id },
     select: {
       currency: true,
-      locale: true,
       timezone: true,
       hashedPassword: true,
     },
@@ -31,7 +30,6 @@ export default async function SettingsPage() {
       <PreferencesForm
         defaultValues={{
           currency: user.currency,
-          locale: user.locale,
           timezone: user.timezone,
         }}
       />

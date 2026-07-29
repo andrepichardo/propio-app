@@ -875,6 +875,18 @@
       "body": "{tenant} aún debe {amount} de {property}."
     }
   },
+  "currencies": {
+    "USD": "Dólar estadounidense",
+    "DOP": "Peso dominicano",
+    "MXN": "Peso mexicano",
+    "COP": "Peso colombiano",
+    "ARS": "Peso argentino",
+    "CLP": "Peso chileno",
+    "PEN": "Sol peruano",
+    "GTQ": "Quetzal guatemalteco",
+    "CRC": "Colón costarricense",
+    "EUR": "Euro"
+  },
   "settings": {
     "title": "Configuración",
     "subtitle": "Preferencias y seguridad de la cuenta.",
@@ -900,7 +912,7 @@
     "save": "Guardar cambios",
     "formatting": "Formato",
     "currency": "Moneda",
-    "currencyHint": "Código ISO 4217.",
+    "currencyHint": "Predeterminada para nuevos contratos y gastos.",
     "locale": "Idioma",
     "localeHint": "ej. en, es, en-US.",
     "timezone": "Zona horaria",

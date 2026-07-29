@@ -31,8 +31,8 @@ export default function SettingsLoading() {
           <CardHeader>
             <Skeleton className="h-5 w-28" />
           </CardHeader>
-          <CardContent className="grid gap-5 sm:grid-cols-3">
-            {Array.from({ length: 3 }).map((_, i) => (
+          <CardContent className="grid gap-5 sm:grid-cols-2">
+            {Array.from({ length: 2 }).map((_, i) => (
               <FieldSkeleton key={i} hint />
             ))}
           </CardContent>

@@ -5,13 +5,16 @@ export const updateProfileSchema = z.object({
   name: z.string().trim().min(2, 'nameRequired').max(80),
 });
 
-/** Formatting preferences shown on the Settings page. */
+/**
+ * Formatting preferences shown on the Settings page. Language lives in the
+ * topbar switcher (it sets the cookie AND mirrors to `User.locale`), so it's
+ * intentionally not here.
+ */
 export const updatePreferencesSchema = z.object({
   currency: z
     .string()
     .length(3, 'currencyCode')
     .transform((v) => v.toUpperCase()),
-  locale: z.string().min(2).max(10).default('en'),
   timezone: z.string().min(1).max(60).default('UTC'),
 });
 

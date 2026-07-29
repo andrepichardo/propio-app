@@ -22,7 +22,15 @@ import {
   FormMessage,
 } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/components/ui/select';
 import { Button } from '@/shared/components/ui/button';
+import { CURRENCY_CODES } from '@/shared/lib/currencies';
 import {
   Card,
   CardContent,
@@ -36,6 +44,7 @@ export function PreferencesForm({
   defaultValues: UpdatePreferencesInput;
 }) {
   const t = useTranslations('settings');
+  const tc = useTranslations('currencies');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -64,31 +73,28 @@ export function PreferencesForm({
           <CardHeader>
             <CardTitle className="text-base">{t('formatting')}</CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-5 sm:grid-cols-3">
+          <CardContent className="grid gap-5 sm:grid-cols-2">
             <FormField
               control={form.control}
               name="currency"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t('currency')}</FormLabel>
-                  <FormControl>
-                    <Input placeholder="USD" maxLength={3} {...field} />
-                  </FormControl>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {CURRENCY_CODES.map((code) => (
+                        <SelectItem key={code} value={code}>
+                          {code} — {tc(code)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormDescription>{t('currencyHint')}</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="locale"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('locale')}</FormLabel>
-                  <FormControl>
-                    <Input placeholder="en" {...field} />
-                  </FormControl>
-                  <FormDescription>{t('localeHint')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

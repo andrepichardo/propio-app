@@ -48,7 +48,6 @@ export const updatePreferencesAction = createOwnerAction(
       where: { id: ownerId },
       data: {
         currency: input.currency,
-        locale: input.locale,
         timezone: input.timezone,
       },
     });
