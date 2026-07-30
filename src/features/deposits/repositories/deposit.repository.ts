@@ -1,6 +1,7 @@
 import 'server-only';
 import { PaymentStatus, PaymentType, type Prisma } from '@prisma/client';
 import { prisma } from '@/shared/lib/prisma';
+import type { Converter } from '@/shared/lib/exchange-rates';
 
 /** Guard against a malformed chain ever looping forever. */
 const MAX_CHAIN_LENGTH = 50;
@@ -89,12 +90,27 @@ export const depositRepository = {
   },
 
   /** Retained deposit becomes income on `settledAt`. */
-  async sumRetained(ownerId: string, from: Date, to: Date): Promise<number> {
-    const result = await prisma.depositSettlement.aggregate({
+  async sumRetained(
+    ownerId: string,
+    from: Date,
+    to: Date,
+    convert: Converter,
+    primary: string,
+  ): Promise<{ total: number; approx: boolean }> {
+    const groups = await prisma.depositSettlement.groupBy({
+      by: ['currency'],
       where: { ownerId, deletedAt: null, settledAt: { gte: from, lte: to } },
       _sum: { amountRetained: true },
     });
-    return Number(result._sum.amountRetained ?? 0);
+    let total = 0;
+    let approx = false;
+    for (const g of groups) {
+      const amount = Number(g._sum.amountRetained ?? 0);
+      if (!amount) continue;
+      total += convert(amount, g.currency);
+      if (g.currency !== primary) approx = true;
+    }
+    return { total, approx };
   },
 
   /**
@@ -103,14 +119,21 @@ export const depositRepository = {
    * deposit carried across renewals nets against its settlement regardless of
    * which contract in the chain it sits on.
    */
-  async heldBreakdown(
-    ownerId: string,
-  ): Promise<
-    { propertyId: string; tenantId: string; property: string; tenant: string; amount: number }[]
+  async heldBreakdown(ownerId: string): Promise<
+    {
+      propertyId: string;
+      tenantId: string;
+      property: string;
+      tenant: string;
+      amount: number;
+      currency: string;
+    }[]
   > {
+    // Group by currency too so each held amount keeps its own currency; the
+    // caller converts only the grand total to the primary currency.
     const [collected, settled] = await Promise.all([
       prisma.payment.groupBy({
-        by: ['propertyId', 'tenantId'],
+        by: ['propertyId', 'tenantId', 'currency'],
         where: {
           ownerId,
           deletedAt: null,
@@ -120,7 +143,7 @@ export const depositRepository = {
         _sum: { amount: true },
       }),
       prisma.depositSettlement.groupBy({
-        by: ['propertyId', 'tenantId'],
+        by: ['propertyId', 'tenantId', 'currency'],
         where: { ownerId, deletedAt: null },
         _sum: { depositHeld: true },
       }),
@@ -128,7 +151,7 @@ export const depositRepository = {
 
     const settledMap = new Map(
       settled.map((s) => [
-        `${s.propertyId}:${s.tenantId}`,
+        `${s.propertyId}:${s.tenantId}:${s.currency}`,
         Number(s._sum.depositHeld ?? 0),
       ]),
     );
@@ -137,9 +160,10 @@ export const depositRepository = {
       .map((c) => ({
         propertyId: c.propertyId,
         tenantId: c.tenantId,
+        currency: c.currency,
         amount:
           Number(c._sum.amount ?? 0) -
-          (settledMap.get(`${c.propertyId}:${c.tenantId}`) ?? 0),
+          (settledMap.get(`${c.propertyId}:${c.tenantId}:${c.currency}`) ?? 0),
       }))
       // Ignore fully-settled (or rounding-noise) groups.
       .filter((h) => h.amount > 0.005)

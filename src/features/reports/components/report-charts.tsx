@@ -71,10 +71,17 @@ export function ProfitBarChart({
           }}
           labelStyle={{ color: 'hsl(var(--popover-foreground))' }}
           itemStyle={{ color: 'hsl(var(--popover-foreground))' }}
-          formatter={(value: number, name: string) => [
-            formatCurrency(value, currency),
-            seriesLabel(name),
-          ]}
+          formatter={(value: number, name: string, item) => {
+            const point = item?.payload as MonthlyReportRow | undefined;
+            const approx =
+              name === 'revenue'
+                ? point?.revenueApprox
+                : point?.expensesApprox;
+            return [
+              `${approx ? '≈ ' : ''}${formatCurrency(value, currency)}`,
+              seriesLabel(name),
+            ];
+          }}
         />
         <Legend
           wrapperStyle={{ fontSize: 12 }}
@@ -90,9 +97,11 @@ export function ProfitBarChart({
 export function ExpenseBreakdownChart({
   data,
   currency,
+  approx = false,
 }: {
   data: { label: string; value: number }[];
   currency: string;
+  approx?: boolean;
 }) {
   const t = useTranslations('reports');
   if (data.length === 0) {
@@ -132,7 +141,9 @@ export function ExpenseBreakdownChart({
           }}
           labelStyle={{ color: 'hsl(var(--popover-foreground))' }}
           itemStyle={{ color: 'hsl(var(--popover-foreground))' }}
-          formatter={(value: number) => formatCurrency(value, currency)}
+          formatter={(value: number) =>
+            `${approx ? '≈ ' : ''}${formatCurrency(value, currency)}`
+          }
         />
         <Legend wrapperStyle={{ fontSize: 12 }} />
       </PieChart>

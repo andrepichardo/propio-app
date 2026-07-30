@@ -21,7 +21,7 @@ export function toNumber(value: Numeric): number {
  * to Intl's own formatting ("XYZ 1,200.00").
  */
 const CURRENCY_SYMBOLS: Record<string, string> = {
-  USD: '$',
+  USD: 'US$',
   DOP: 'RD$',
   EUR: '€',
   MXN: 'MX$',

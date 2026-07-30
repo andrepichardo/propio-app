@@ -24,12 +24,12 @@ describe('toNumber', () => {
 });
 
 describe('formatCurrency', () => {
-  it('formats USD with a bare $ and two decimals', () => {
-    expect(formatCurrency(1200, 'USD')).toBe('$1,200.00');
+  it('formats USD with the US$ prefix and two decimals', () => {
+    expect(formatCurrency(1200, 'USD')).toBe('US$1,200.00');
   });
 
   it('accepts Decimal-style strings', () => {
-    expect(formatCurrency('99.9', 'USD')).toBe('$99.90');
+    expect(formatCurrency('99.9', 'USD')).toBe('US$99.90');
   });
 
   it('formats DOP with the RD$ prefix', () => {

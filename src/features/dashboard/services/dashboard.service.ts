@@ -16,6 +16,11 @@ import { prisma } from '@/shared/lib/prisma';
 import { propertyRepository } from '@/features/properties/repositories/property.repository';
 import { depositRepository } from '@/features/deposits/repositories/deposit.repository';
 import { toNumber } from '@/shared/lib/format';
+import {
+  getUsdRates,
+  makeConverter,
+  type Converter,
+} from '@/shared/lib/exchange-rates';
 
 export type DashboardSummary = {
   properties: { total: number; occupied: number; available: number; maintenance: number };
@@ -26,9 +31,20 @@ export type DashboardSummary = {
     revenueTrendPct: number;
     /** Deposits currently held on behalf of tenants (a liability). */
     depositsHeld: number;
+    /** Per-metric ≈ flags: true only when that total combined a converted
+     * (non-primary) currency. Single-currency totals stay exact. */
+    revenueApprox: boolean;
+    expensesApprox: boolean;
   };
   occupancyRate: number;
-  monthlySeries: { month: string; revenue: number; expenses: number }[];
+  monthlySeries: {
+    month: string;
+    revenue: number;
+    expenses: number;
+    /** Per-point ≈ flags — set only when that month's figure was converted. */
+    revenueApprox: boolean;
+    expensesApprox: boolean;
+  }[];
   upcomingPayments: UpcomingPayment[];
   /** Held deposits per tenant/property, so the total can be itemised. */
   depositsBreakdown: DepositBreakdownItem[];
@@ -41,7 +57,9 @@ export type DepositBreakdownItem = {
   tenantId: string;
   property: string;
   tenant: string;
+  /** Original held amount, in its own currency (not converted). */
   amount: number;
+  currency: string;
 };
 
 export type UpcomingPayment = {
@@ -72,12 +90,35 @@ export type RecentActivityItem = {
 };
 
 /** Sum completed payments within an inclusive date window. */
+/** A converted total plus whether it combined any non-primary currency. */
+type Summed = { total: number; approx: boolean };
+
+/** Sum groupBy-currency rows, converting each; flag if any is non-primary. */
+function reduceGroups(
+  groups: { currency: string; _sum: { amount: unknown } }[],
+  convert: Converter,
+  primary: string,
+): Summed {
+  let total = 0;
+  let approx = false;
+  for (const g of groups) {
+    const amount = toNumber(String(g._sum.amount ?? ''));
+    if (!amount) continue;
+    total += convert(amount, g.currency);
+    if (g.currency !== primary) approx = true;
+  }
+  return { total, approx };
+}
+
 async function sumPayments(
   ownerId: string,
   from: Date,
   to: Date,
-): Promise<number> {
-  const result = await prisma.payment.aggregate({
+  convert: Converter,
+  primary: string,
+): Promise<Summed> {
+  const groups = await prisma.payment.groupBy({
+    by: ['currency'],
     where: {
       ownerId,
       deletedAt: null,
@@ -88,7 +129,7 @@ async function sumPayments(
     },
     _sum: { amount: true },
   });
-  return toNumber(result._sum.amount?.toString());
+  return reduceGroups(groups, convert, primary);
 }
 
 /**
@@ -99,20 +140,28 @@ async function sumRevenue(
   ownerId: string,
   from: Date,
   to: Date,
-): Promise<number> {
+  convert: Converter,
+  primary: string,
+): Promise<Summed> {
   const [rent, retained] = await Promise.all([
-    sumPayments(ownerId, from, to),
-    depositRepository.sumRetained(ownerId, from, to),
+    sumPayments(ownerId, from, to, convert, primary),
+    depositRepository.sumRetained(ownerId, from, to, convert, primary),
   ]);
-  return rent + retained;
+  return {
+    total: rent.total + retained.total,
+    approx: rent.approx || retained.approx,
+  };
 }
 
 async function sumExpenses(
   ownerId: string,
   from: Date,
   to: Date,
-): Promise<number> {
-  const result = await prisma.expense.aggregate({
+  convert: Converter,
+  primary: string,
+): Promise<Summed> {
+  const groups = await prisma.expense.groupBy({
+    by: ['currency'],
     where: {
       ownerId,
       deletedAt: null,
@@ -120,13 +169,25 @@ async function sumExpenses(
     },
     _sum: { amount: true },
   });
-  return toNumber(result._sum.amount?.toString());
+  return reduceGroups(groups, convert, primary);
 }
 
-/** Build the last 6 months of revenue vs expenses for the trend chart. */
+/** Build the last 6 months of revenue vs expenses for the trend chart. Each
+ * point carries its own ≈ flags so a tooltip marks a value only when THAT
+ * month's figure mixed a converted currency. */
 async function buildMonthlySeries(
   ownerId: string,
-): Promise<{ month: string; revenue: number; expenses: number }[]> {
+  convert: Converter,
+  primary: string,
+): Promise<
+  {
+    month: string;
+    revenue: number;
+    expenses: number;
+    revenueApprox: boolean;
+    expensesApprox: boolean;
+  }[]
+> {
   const now = new Date();
   const months = Array.from({ length: 6 }).map((_, i) =>
     startOfMonth(subMonths(now, 5 - i)),
@@ -136,10 +197,16 @@ async function buildMonthlySeries(
     months.map(async (start) => {
       const end = endOfMonth(start);
       const [revenue, expenses] = await Promise.all([
-        sumRevenue(ownerId, start, end),
-        sumExpenses(ownerId, start, end),
+        sumRevenue(ownerId, start, end, convert, primary),
+        sumExpenses(ownerId, start, end, convert, primary),
       ]);
-      return { month: format(start, 'MMM'), revenue, expenses };
+      return {
+        month: format(start, 'MMM'),
+        revenue: revenue.total,
+        expenses: expenses.total,
+        revenueApprox: revenue.approx,
+        expensesApprox: expenses.approx,
+      };
     }),
   );
 }
@@ -172,6 +239,7 @@ function monthKey(date: Date): string {
 
 export async function getDashboardSummary(
   ownerId: string,
+  currency: string,
 ): Promise<DashboardSummary> {
   const now = new Date();
   const monthStart = startOfMonth(now);
@@ -180,23 +248,26 @@ export async function getDashboardSummary(
   const prevEnd = endOfMonth(subMonths(now, 1));
   const soon = addMonths(now, 1);
 
+  // Live rates (cached ~24h); convert every amount to the primary currency.
+  const convert = makeConverter(await getUsdRates(), currency);
+
   const [
     statusCounts,
     monthlyRevenue,
     prevRevenue,
     monthlyExpenses,
     depositsBreakdown,
-    monthlySeries,
+    monthly,
     activeContracts,
     expiring,
     activity,
   ] = await Promise.all([
     propertyRepository.statusCounts(ownerId),
-    sumRevenue(ownerId, monthStart, monthEnd),
-    sumRevenue(ownerId, prevStart, prevEnd),
-    sumExpenses(ownerId, monthStart, monthEnd),
+    sumRevenue(ownerId, monthStart, monthEnd, convert, currency),
+    sumRevenue(ownerId, prevStart, prevEnd, convert, currency),
+    sumExpenses(ownerId, monthStart, monthEnd, convert, currency),
     depositRepository.heldBreakdown(ownerId),
-    buildMonthlySeries(ownerId),
+    buildMonthlySeries(ownerId, convert, currency),
     prisma.contract.findMany({
       where: { ownerId, deletedAt: null, status: ContractStatus.ACTIVE },
       select: {
@@ -249,9 +320,9 @@ export async function getDashboardSummary(
       : 0;
 
   const revenueTrendPct =
-    prevRevenue > 0
-      ? ((monthlyRevenue - prevRevenue) / prevRevenue) * 100
-      : monthlyRevenue > 0
+    prevRevenue.total > 0
+      ? ((monthlyRevenue.total - prevRevenue.total) / prevRevenue.total) * 100
+      : monthlyRevenue.total > 0
         ? 100
         : 0;
 
@@ -310,14 +381,20 @@ export async function getDashboardSummary(
       maintenance: statusCounts[PropertyStatus.MAINTENANCE],
     },
     finance: {
-      monthlyRevenue,
-      monthlyExpenses,
-      netProfit: monthlyRevenue - monthlyExpenses,
+      monthlyRevenue: monthlyRevenue.total,
+      monthlyExpenses: monthlyExpenses.total,
+      netProfit: monthlyRevenue.total - monthlyExpenses.total,
       revenueTrendPct,
-      depositsHeld: depositsBreakdown.reduce((sum, d) => sum + d.amount, 0),
+      // Each held deposit keeps its own currency; only the total is converted.
+      depositsHeld: depositsBreakdown.reduce(
+        (sum, d) => sum + convert(d.amount, d.currency),
+        0,
+      ),
+      revenueApprox: monthlyRevenue.approx,
+      expensesApprox: monthlyExpenses.approx,
     },
     occupancyRate,
-    monthlySeries,
+    monthlySeries: monthly,
     upcomingPayments,
     depositsBreakdown,
     expiringContracts: expiring

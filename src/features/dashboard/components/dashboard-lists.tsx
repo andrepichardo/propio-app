@@ -97,6 +97,9 @@ export function DepositsHeldCard({
   className?: string;
 }) {
   const t = useTranslations('dashboard');
+  // The total is converted to the primary currency; mark it ≈ only when a
+  // deposit is held in another currency (so a conversion actually happened).
+  const approx = items.some((item) => item.currency !== currency);
   return (
     <Card className={cn('flex flex-col overflow-hidden', className)}>
       {/* Total lives in the header so the scrolling list gets the full body. */}
@@ -104,6 +107,7 @@ export function DepositsHeldCard({
         <CardTitle className="text-base">{t('depositsHeld')}</CardTitle>
         <div className="text-right leading-tight">
           <p className="text-sm font-semibold">
+            {approx ? '≈ ' : ''}
             {formatCurrency(total, currency)}
           </p>
           <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
@@ -125,7 +129,7 @@ export function DepositsHeldCard({
                 </p>
               </div>
               <p className="shrink-0 text-sm font-semibold">
-                {formatCurrency(item.amount, currency)}
+                {formatCurrency(item.amount, item.currency)}
               </p>
             </li>
           ))}

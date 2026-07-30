@@ -36,7 +36,7 @@ async function ReportContent({
   currency: string;
   year: number;
 }) {
-  const report = await getYearlyReport(ownerId, year);
+  const report = await getYearlyReport(ownerId, year, currency);
   const t = await getTranslations('reports');
   const totalUnits =
     report.occupancy.occupied +
@@ -44,25 +44,30 @@ async function ReportContent({
     report.occupancy.maintenance;
   const occupancyRate =
     totalUnits > 0 ? report.occupancy.occupied / totalUnits : 0;
+  // Per-metric ≈: only when that specific total mixed a converted currency.
+  const revApprox = report.approx.revenue ? '≈ ' : '';
+  const expApprox = report.approx.expenses ? '≈ ' : '';
+  const netApprox =
+    report.approx.revenue || report.approx.expenses ? '≈ ' : '';
 
   return (
     <div className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           label={t('revenue', { year })}
-          value={formatCurrency(report.totals.revenue, currency)}
+          value={`${revApprox}${formatCurrency(report.totals.revenue, currency)}`}
           icon={TrendingUp}
           accent="success"
         />
         <StatCard
           label={t('expensesTotal', { year })}
-          value={formatCurrency(report.totals.expenses, currency)}
+          value={`${expApprox}${formatCurrency(report.totals.expenses, currency)}`}
           icon={TrendingDown}
           accent="warning"
         />
         <StatCard
           label={t('netProfit', { year })}
-          value={formatCurrency(report.totals.profit, currency)}
+          value={`${netApprox}${formatCurrency(report.totals.profit, currency)}`}
           icon={Wallet}
           accent={report.totals.profit >= 0 ? 'default' : 'destructive'}
         />
@@ -100,6 +105,7 @@ async function ReportContent({
             <ExpenseBreakdownChart
               data={report.categoryBreakdown}
               currency={currency}
+              approx={report.approx.expenses}
             />
           </CardContent>
         </Card>

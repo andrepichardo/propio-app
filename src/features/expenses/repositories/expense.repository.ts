@@ -1,6 +1,7 @@
 import 'server-only';
 import type { ExpenseCategory, Prisma } from '@prisma/client';
 import { prisma } from '@/shared/lib/prisma';
+import type { Converter } from '@/shared/lib/exchange-rates';
 import {
   buildPaginatedResult,
   normalizePagination,
@@ -97,9 +98,11 @@ export const expenseRepository = {
     ownerId: string,
     from?: Date,
     to?: Date,
+    convert?: Converter,
   ): Promise<{ category: ExpenseCategory; total: number }[]> {
+    // Group by currency too so amounts can be converted before merging.
     const grouped = await prisma.expense.groupBy({
-      by: ['category'],
+      by: ['category', 'currency'],
       where: {
         ownerId,
         deletedAt: null,
@@ -109,9 +112,15 @@ export const expenseRepository = {
       },
       _sum: { amount: true },
     });
-    return grouped.map((row) => ({
-      category: row.category,
-      total: Number(row._sum.amount ?? 0),
+    const totals = new Map<ExpenseCategory, number>();
+    for (const row of grouped) {
+      const amount = Number(row._sum.amount ?? 0);
+      const value = convert ? convert(amount, row.currency) : amount;
+      totals.set(row.category, (totals.get(row.category) ?? 0) + value);
+    }
+    return [...totals.entries()].map(([category, total]) => ({
+      category,
+      total,
     }));
   },
 };

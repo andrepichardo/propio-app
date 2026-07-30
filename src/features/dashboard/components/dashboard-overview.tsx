@@ -37,11 +37,18 @@ export async function DashboardOverview({
   ownerId: string;
   currency: string;
 }) {
-  const summary = await getDashboardSummary(ownerId);
+  const summary = await getDashboardSummary(ownerId, currency);
   const t = await getTranslations('dashboard');
   const formatDate = await getFormatDate();
 
   const hasDeposits = summary.finance.depositsHeld > 0;
+  // Per-metric ≈: only when that specific total mixed a converted currency.
+  const revApprox = summary.finance.revenueApprox ? '≈ ' : '';
+  const expApprox = summary.finance.expensesApprox ? '≈ ' : '';
+  const netApprox =
+    summary.finance.revenueApprox || summary.finance.expensesApprox
+      ? '≈ '
+      : '';
 
   return (
     <div className="space-y-6">
@@ -64,18 +71,18 @@ export async function DashboardOverview({
         />
         <StatCard
           label={t('monthlyRevenue')}
-          value={formatCurrency(summary.finance.monthlyRevenue, currency)}
+          value={`${revApprox}${formatCurrency(summary.finance.monthlyRevenue, currency)}`}
           icon={TrendingUp}
           trend={summary.finance.revenueTrendPct}
           accent="success"
         />
         <StatCard
           label={t('netProfit')}
-          value={formatCurrency(summary.finance.netProfit, currency)}
+          value={`${netApprox}${formatCurrency(summary.finance.netProfit, currency)}`}
           icon={summary.finance.netProfit >= 0 ? Wallet : TrendingDown}
           accent={summary.finance.netProfit >= 0 ? 'default' : 'destructive'}
           hint={t('expensesHint', {
-            amount: formatCurrency(summary.finance.monthlyExpenses, currency),
+            amount: `${expApprox}${formatCurrency(summary.finance.monthlyExpenses, currency)}`,
           })}
         />
       </div>

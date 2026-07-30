@@ -12,7 +12,13 @@ import {
 } from 'recharts';
 import { formatCompactCurrency, formatCurrency } from '@/shared/lib/format';
 
-type Point = { month: string; revenue: number; expenses: number };
+type Point = {
+  month: string;
+  revenue: number;
+  expenses: number;
+  revenueApprox: boolean;
+  expensesApprox: boolean;
+};
 
 /**
  * Revenue vs expenses area chart. Colours come from CSS variables so the chart
@@ -74,10 +80,17 @@ export function RevenueChart({
             boxShadow: '0 4px 12px -4px rgb(0 0 0 / 0.1)',
           }}
           labelStyle={{ color: 'hsl(var(--muted-foreground))' }}
-          formatter={(value: number, name: string) => [
-            formatCurrency(value, currency),
-            name === 'revenue' ? t('revenue') : t('expenses'),
-          ]}
+          formatter={(value: number, name: string, item) => {
+            const point = item?.payload as Point | undefined;
+            const approx =
+              name === 'revenue'
+                ? point?.revenueApprox
+                : point?.expensesApprox;
+            return [
+              `${approx ? '≈ ' : ''}${formatCurrency(value, currency)}`,
+              name === 'revenue' ? t('revenue') : t('expenses'),
+            ];
+          }}
         />
         <Area
           type="monotone"
