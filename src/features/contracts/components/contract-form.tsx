@@ -29,6 +29,7 @@ import {
 } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
 import { DatePicker } from '@/shared/components/ui/date-picker';
+import { CURRENCY_CODES } from '@/shared/lib/currencies';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Button } from '@/shared/components/ui/button';
 import { Switch } from '@/shared/components/ui/switch';
@@ -66,6 +67,7 @@ export function ContractForm({
   defaultValues,
 }: ContractFormProps) {
   const t = useTranslations('contracts');
+  const tc = useTranslations('currencies');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -240,14 +242,23 @@ export function ContractForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t('form.currency')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      maxLength={3}
-                      className="uppercase"
-                      {...field}
-                      value={field.value ?? ''}
-                    />
-                  </FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value ?? ''}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {CURRENCY_CODES.map((code) => (
+                        <SelectItem key={code} value={code}>
+                          {code} — {tc(code)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormDescription>{t('form.currencyHint')}</FormDescription>
                   <FormMessage />
                 </FormItem>
