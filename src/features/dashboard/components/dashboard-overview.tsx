@@ -119,7 +119,9 @@ export async function DashboardOverview({
             />
           </div>
         ) : (
+          // No deposits card → the payments card fills the chart's height.
           <UpcomingPaymentsCard
+            className="lg:h-[26rem]"
             payments={summary.upcomingPayments}
             formatDate={formatDate}
           />
