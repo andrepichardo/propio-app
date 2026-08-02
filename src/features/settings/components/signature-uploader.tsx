@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { PenLine, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/shared/components/ui/button';
+import { SignaturePad } from './signature-pad';
 import {
   removeSignatureAction,
   updateSignatureAction,
@@ -66,7 +67,8 @@ export function SignatureUploader({
         )}
       </div>
       <div className="space-y-1.5">
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
+          <SignaturePad onSave={(file) => onFileSelected(file)} />
           <Button
             type="button"
             variant="outline"
