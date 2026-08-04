@@ -645,6 +645,8 @@
       "amount": "Amount",
       "isDeposit": "This is a security deposit",
       "isDepositHint": "Deposits are held as a liability and don’t count as income.",
+      "settlesPeriod": "Covers the full period",
+      "settlesPeriodHint": "The tenant owes nothing more for this period, even though it's less than the rent (e.g. an agreed discount).",
       "method": "Method",
       "date": "Payment date",
       "reference": "Reference",

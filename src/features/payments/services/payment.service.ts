@@ -135,10 +135,11 @@ export const paymentService = {
 
     const isDeposit = input.type === PaymentType.DEPOSIT;
     const monthlyRent = Number(contract.monthlyRent);
-    // A deposit doesn't settle rent, so it never leaves a rent balance.
-    const balanceAfter = isDeposit
-      ? 0
-      : Math.max(0, monthlyRent - input.amount);
+    // A deposit never leaves a rent balance; `settlesPeriod` clears it too (a
+    // lower-but-agreed amount that still covers the period, e.g. a discount).
+    const settlesPeriod = !isDeposit && input.settlesPeriod;
+    const balanceAfter =
+      isDeposit || settlesPeriod ? 0 : Math.max(0, monthlyRent - input.amount);
     const prefs = await getUserPreferences(ownerId);
     // Rent covers a due-day-to-due-day period, regardless of when it was paid.
     const rentPeriod = isDeposit
@@ -166,6 +167,7 @@ export const paymentService = {
           proofUrl: input.proofUrl || undefined,
           // A deposit settles no rent period.
           periodStart: rentPeriod,
+          settlesPeriod,
           paidAt: input.paidAt,
           notes: input.notes,
         },
@@ -331,9 +333,9 @@ export const paymentService = {
 
     const isDeposit = input.type === PaymentType.DEPOSIT;
     const monthlyRent = Number(payment.contract.monthlyRent);
-    const balanceAfter = isDeposit
-      ? 0
-      : Math.max(0, monthlyRent - input.amount);
+    const settlesPeriod = !isDeposit && input.settlesPeriod;
+    const balanceAfter =
+      isDeposit || settlesPeriod ? 0 : Math.max(0, monthlyRent - input.amount);
     const prefs = await getUserPreferences(ownerId);
     // Rent covers a due-day-to-due-day period, regardless of when it was paid.
     const rentPeriod = isDeposit
@@ -355,6 +357,7 @@ export const paymentService = {
           concept,
           proofUrl: input.proofUrl || null,
           periodStart: rentPeriod,
+          settlesPeriod,
           paidAt: input.paidAt,
           notes: input.notes ?? null,
         },

@@ -24,6 +24,8 @@ export const registerPaymentSchema = z.object({
   paidAt: z.coerce.date().default(() => new Date()),
   /** First day of the rent period this payment settles. */
   periodStart: z.coerce.date().optional(),
+  /** Marks the period fully paid even if `amount` < rent (agreed discount). */
+  settlesPeriod: z.boolean().default(false),
   notes: z
     .string()
     .trim()

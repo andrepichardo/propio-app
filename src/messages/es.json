@@ -648,6 +648,8 @@
       "amount": "Monto",
       "isDeposit": "Este pago es un depósito de garantía",
       "isDepositHint": "Los depósitos se retienen como pasivo y no cuentan como ingreso.",
+      "settlesPeriod": "Cubre el período completo",
+      "settlesPeriodHint": "El inquilino no debe nada más por este período, aunque sea menor a la renta (ej. un descuento pactado).",
       "method": "Método",
       "date": "Fecha del pago",
       "reference": "Referencia",

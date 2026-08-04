@@ -347,6 +347,11 @@ model Payment {
   periodEnd   DateTime?
   paidAt      DateTime  @default(now())
 
+  // Marks the rent period as fully settled even when `amount` < the contract's
+  // monthly rent (e.g. an agreed discount). Keeps it out of "upcoming payments"
+  // and leaves no balance. Ignored for DEPOSIT payments.
+  settlesPeriod Boolean @default(false)
+
   notes String? @db.Text
 
   createdAt DateTime  @default(now())

@@ -140,6 +140,8 @@ export async function PaymentsList({
                         notes: payment.notes,
                         proofUrl: payment.proofUrl,
                         paidAt: payment.paidAt.toISOString(),
+                        settlesPeriod: payment.settlesPeriod,
+                        rent: Number(payment.contract.monthlyRent),
                       }}
                     />
                     <DeletePaymentDialog paymentId={payment.id} />

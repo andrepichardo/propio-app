@@ -90,10 +90,22 @@ export function PaymentForm({
       notes: '',
       proofUrl: '',
       sendReceipt: false,
+      settlesPeriod: false,
     },
   });
 
   const proofUrl = form.watch('proofUrl');
+  // Show the "covers the full period" toggle only for a rent payment that's
+  // below the contract's rent (otherwise it's already fully covered).
+  const watchType = form.watch('type');
+  const watchAmount = Number(form.watch('amount')) || 0;
+  const watchContractId = form.watch('contractId');
+  const selectedRent =
+    contracts.find((c) => c.id === watchContractId)?.rent ?? 0;
+  const showSettles =
+    watchType !== PaymentType.DEPOSIT &&
+    watchAmount > 0 &&
+    watchAmount < selectedRent;
 
   /** Upload as soon as a file is picked so registration only carries the URL. */
   async function uploadProof(file: File) {
@@ -224,6 +236,28 @@ export function PaymentForm({
                 </FormItem>
               )}
             />
+            {showSettles ? (
+              <FormField
+                control={form.control}
+                name="settlesPeriod"
+                render={({ field }) => (
+                  <FormItem className="flex items-center justify-between rounded-lg border p-3 sm:col-span-2">
+                    <div className="pr-3">
+                      <FormLabel>{t('form.settlesPeriod')}</FormLabel>
+                      <FormDescription>
+                        {t('form.settlesPeriodHint')}
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            ) : null}
             <FormField
               control={form.control}
               name="method"

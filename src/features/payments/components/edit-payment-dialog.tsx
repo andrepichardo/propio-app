@@ -64,6 +64,10 @@ export type EditablePayment = {
   notes?: string | null;
   proofUrl?: string | null;
   paidAt: string; // ISO — already serialised by the server component
+  settlesPeriod: boolean;
+  /** Contract's monthly rent — the "covers full period" toggle only shows when
+   * the amount is below it. */
+  rent: number;
 };
 
 export function EditPaymentDialog({ payment }: { payment: EditablePayment }) {
@@ -85,10 +89,17 @@ export function EditPaymentDialog({ payment }: { payment: EditablePayment }) {
       notes: payment.notes ?? '',
       proofUrl: payment.proofUrl ?? '',
       paidAt: new Date(payment.paidAt),
+      settlesPeriod: payment.settlesPeriod,
     },
   });
 
   const proofUrl = form.watch('proofUrl');
+  const watchType = form.watch('type');
+  const watchAmount = Number(form.watch('amount')) || 0;
+  const showSettles =
+    watchType !== PaymentType.DEPOSIT &&
+    watchAmount > 0 &&
+    watchAmount < payment.rent;
 
   async function uploadProof(file: File) {
     const formData = new FormData();
@@ -177,6 +188,28 @@ export function EditPaymentDialog({ payment }: { payment: EditablePayment }) {
                 </FormItem>
               )}
             />
+            {showSettles ? (
+              <FormField
+                control={form.control}
+                name="settlesPeriod"
+                render={({ field }) => (
+                  <FormItem className="flex items-center justify-between rounded-lg border p-3 sm:col-span-2">
+                    <div className="pr-3">
+                      <FormLabel>{t('form.settlesPeriod')}</FormLabel>
+                      <FormDescription>
+                        {t('form.settlesPeriodHint')}
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            ) : null}
             <FormField
               control={form.control}
               name="method"

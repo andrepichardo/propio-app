@@ -338,27 +338,36 @@ export async function getDashboardSummary(
       contractId: { in: activeContracts.map((c) => c.id) },
       paidAt: { gte: subMonths(monthStart, 1) },
     },
-    select: { contractId: true, amount: true, paidAt: true, periodStart: true },
+    select: {
+      contractId: true,
+      amount: true,
+      paidAt: true,
+      periodStart: true,
+      settlesPeriod: true,
+    },
   });
   const paidByContractMonth = new Map<string, number>();
+  // Months explicitly marked as fully settled (a lower-but-agreed amount).
+  const settledMonths = new Set<string>();
   for (const payment of recentPayments) {
     const key = `${payment.contractId}:${monthKey(payment.periodStart ?? payment.paidAt)}`;
     paidByContractMonth.set(
       key,
       (paidByContractMonth.get(key) ?? 0) + toNumber(payment.amount.toString()),
     );
+    if (payment.settlesPeriod) settledMonths.add(key);
   }
 
   const upcomingPayments: UpcomingPayment[] = activeContracts
     .map((contract) => {
       const rent = toNumber(contract.monthlyRent.toString());
-      // Skip due dates whose month is already covered by recorded rent
-      // payments (an overpayment can exceed the month's rent, hence >=).
+      // Skip due dates whose month is already covered — either enough was paid
+      // (overpayment can exceed the rent, hence >=) or it was marked settled.
       let dueDate = nextDueDate(contract.dueDay, now);
       for (let i = 0; i < 3; i++) {
-        const paid =
-          paidByContractMonth.get(`${contract.id}:${monthKey(dueDate)}`) ?? 0;
-        if (paid < rent) break;
+        const key = `${contract.id}:${monthKey(dueDate)}`;
+        const paid = paidByContractMonth.get(key) ?? 0;
+        if (!settledMonths.has(key) && paid < rent) break;
         dueDate = addMonths(dueDate, 1);
       }
       return {
