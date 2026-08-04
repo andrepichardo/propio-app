@@ -58,6 +58,21 @@ function storageKeyFromPublicUrl(url?: string | null): string | null {
  * verbatim, so it's built in the owner's language at creation — not
  * re-translated at render.
  */
+/**
+ * Rent period a payment covers, anchored to the contract's **due day** — never
+ * the date it happened to be paid. It runs from `dueDay` of the paidAt month to
+ * the same day next month (e.g. due day 15, paid Aug 4 → 15 Aug – 15 Sep; the
+ * same for a payment made Aug 20). Built at UTC midnight like other date-only
+ * values, so `nextRentDueDate` and month bucketing stay consistent.
+ */
+function rentPeriodStart(paidAt: Date, dueDay: number): Date {
+  const year = paidAt.getUTCFullYear();
+  const month = paidAt.getUTCMonth();
+  const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+  const day = Math.min(Math.max(dueDay, 1), daysInMonth);
+  return new Date(Date.UTC(year, month, day));
+}
+
 function defaultConcept(
   baseDate: Date,
   isDeposit: boolean,
@@ -125,13 +140,13 @@ export const paymentService = {
       ? 0
       : Math.max(0, monthlyRent - input.amount);
     const prefs = await getUserPreferences(ownerId);
+    // Rent covers a due-day-to-due-day period, regardless of when it was paid.
+    const rentPeriod = isDeposit
+      ? undefined
+      : (input.periodStart ?? rentPeriodStart(input.paidAt, contract.dueDay));
     const concept =
       input.concept ??
-      defaultConcept(
-        input.periodStart ?? input.paidAt,
-        isDeposit,
-        prefs.locale,
-      );
+      defaultConcept(rentPeriod ?? input.paidAt, isDeposit, prefs.locale);
 
     // --- Atomic write: payment + receipt + activity -------------------------
     const { payment, receipt } = await prisma.$transaction(async (tx) => {
@@ -150,7 +165,7 @@ export const paymentService = {
           concept,
           proofUrl: input.proofUrl || undefined,
           // A deposit settles no rent period.
-          periodStart: isDeposit ? undefined : input.periodStart,
+          periodStart: rentPeriod,
           paidAt: input.paidAt,
           notes: input.notes,
         },
@@ -309,7 +324,7 @@ export const paymentService = {
       where: { id: input.id, ownerId, deletedAt: null },
       include: {
         receipt: { select: { id: true, number: true } },
-        contract: { select: { monthlyRent: true, currency: true } },
+        contract: { select: { monthlyRent: true, currency: true, dueDay: true } },
       },
     });
     if (!payment) throw new NotFoundError('Payment');
@@ -320,13 +335,14 @@ export const paymentService = {
       ? 0
       : Math.max(0, monthlyRent - input.amount);
     const prefs = await getUserPreferences(ownerId);
+    // Rent covers a due-day-to-due-day period, regardless of when it was paid.
+    const rentPeriod = isDeposit
+      ? null
+      : (input.periodStart ??
+        rentPeriodStart(input.paidAt, payment.contract.dueDay));
     const concept =
       input.concept ??
-      defaultConcept(
-        input.periodStart ?? input.paidAt,
-        isDeposit,
-        prefs.locale,
-      );
+      defaultConcept(rentPeriod ?? input.paidAt, isDeposit, prefs.locale);
 
     await prisma.$transaction(async (tx) => {
       await tx.payment.update({
@@ -338,7 +354,7 @@ export const paymentService = {
           reference: input.reference ?? null,
           concept,
           proofUrl: input.proofUrl || null,
-          periodStart: isDeposit ? null : (input.periodStart ?? null),
+          periodStart: rentPeriod,
           paidAt: input.paidAt,
           notes: input.notes ?? null,
         },
