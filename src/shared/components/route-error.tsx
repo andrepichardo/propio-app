@@ -30,7 +30,9 @@ export function RouteError({
         <AlertTriangle className="size-6" />
       </div>
       <div className="space-y-1">
-        <h2 className="text-lg font-semibold">{title ?? t('somethingWrong')}</h2>
+        <h2 className="text-lg font-semibold">
+          {title ?? t('somethingWrong')}
+        </h2>
         <p className="max-w-sm text-sm text-muted-foreground">
           {t('errorHint')}
         </p>

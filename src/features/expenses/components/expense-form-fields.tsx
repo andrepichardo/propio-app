@@ -46,7 +46,10 @@ export function ExpenseFormFields({
           <FormItem className="sm:col-span-2">
             <FormLabel required>{t('form.description')}</FormLabel>
             <FormControl>
-              <Input placeholder={t('form.descriptionPlaceholder')} {...field} />
+              <Input
+                placeholder={t('form.descriptionPlaceholder')}
+                {...field}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>

@@ -1,9 +1,5 @@
 import { Skeleton } from '@/shared/components/ui/skeleton';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from '@/shared/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/shared/components/ui/card';
 
 /** One field: label + input (+ optional hint), matching the settings forms. */
 function FieldSkeleton({ hint = false }: { hint?: boolean }) {

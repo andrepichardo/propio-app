@@ -30,12 +30,7 @@ const identification = z
 export const tenantBaseSchema = z.object({
   firstName: z.string().trim().min(1, 'firstNameRequired').max(80),
   lastName: z.string().trim().min(1, 'lastNameRequired').max(80),
-  email: z
-    .string()
-    .trim()
-    .email('emailInvalid')
-    .optional()
-    .or(z.literal('')),
+  email: z.string().trim().email('emailInvalid').optional().or(z.literal('')),
   phone,
   identification,
   avatarUrl: z.string().url().optional().or(z.literal('')),

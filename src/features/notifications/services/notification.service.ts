@@ -23,8 +23,6 @@ export async function markNotificationRead(
   await notificationRepository.markRead(ownerId, id);
 }
 
-export async function markAllNotificationsRead(
-  ownerId: string,
-): Promise<void> {
+export async function markAllNotificationsRead(ownerId: string): Promise<void> {
   await notificationRepository.markAllRead(ownerId);
 }

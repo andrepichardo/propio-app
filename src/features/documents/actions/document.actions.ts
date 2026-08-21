@@ -5,11 +5,7 @@ import { getTranslations } from 'next-intl/server';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { createOwnerAction } from '@/shared/lib/action';
 import { ValidationError } from '@/shared/lib/errors';
-import {
-  type ActionResult,
-  ok,
-  toActionFailure,
-} from '@/shared/lib/result';
+import { type ActionResult, ok, toActionFailure } from '@/shared/lib/result';
 import { documentService } from '../services/document.service';
 import {
   deleteDocumentSchema,

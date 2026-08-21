@@ -55,16 +55,20 @@ export async function DepositCard({
 
   return (
     <Card className="flex flex-col">
-      <CardHeader className="flex-row items-start justify-between space-y-0 gap-3">
+      <CardHeader className="flex-row items-start justify-between gap-3 space-y-0">
         <div className="space-y-1.5">
           <CardTitle className="text-base">{t('title')}</CardTitle>
           <CardDescription className="text-pretty">
-            {settlement ? t('settledOn', {
-              date: formatDate(settlement.settledAt),
-            }) : t('heldDescription')}
+            {settlement
+              ? t('settledOn', {
+                  date: formatDate(settlement.settledAt),
+                })
+              : t('heldDescription')}
           </CardDescription>
         </div>
-        {action ? <div className="hidden shrink-0 sm:block">{action}</div> : null}
+        {action ? (
+          <div className="hidden shrink-0 sm:block">{action}</div>
+        ) : null}
       </CardHeader>
 
       <CardContent className="flex flex-1 flex-col space-y-3 text-sm">
@@ -111,9 +115,7 @@ export async function DepositCard({
             </p>
           </>
         )}
-        {action ? (
-          <div className="mt-auto pt-4 sm:hidden">{action}</div>
-        ) : null}
+        {action ? <div className="mt-auto pt-4 sm:hidden">{action}</div> : null}
       </CardContent>
     </Card>
   );

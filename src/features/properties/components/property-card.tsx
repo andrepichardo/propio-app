@@ -8,9 +8,7 @@ import { Card } from '@/shared/components/ui/card';
 
 export function PropertyCard({ property }: { property: PropertyListItem }) {
   const t = useTranslations('properties');
-  const location = [property.city, property.country]
-    .filter(Boolean)
-    .join(', ');
+  const location = [property.city, property.country].filter(Boolean).join(', ');
 
   return (
     <Link href={`/app/properties/${property.id}`} className="group block">
@@ -47,7 +45,7 @@ export function PropertyCard({ property }: { property: PropertyListItem }) {
               <MapPin className="size-3.5 shrink-0" />
               {location || t('noLocation')}
             </span>
-            <span className="inline-flex items-center gap-1 shrink-0">
+            <span className="inline-flex shrink-0 items-center gap-1">
               <FileSignature className="size-3.5" />
               {property._count.contracts}
             </span>

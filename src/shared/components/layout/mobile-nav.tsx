@@ -33,7 +33,7 @@ export function MobileNav() {
         <div className="flex h-16 shrink-0 items-center border-b px-5">
           <Logo />
         </div>
-        <div className="flex-1 overflow-y-auto scrollbar-thin">
+        <div className="scrollbar-thin flex-1 overflow-y-auto">
           <SidebarNav onNavigate={() => setOpen(false)} />
         </div>
       </DialogContent>

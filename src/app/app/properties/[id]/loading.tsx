@@ -46,7 +46,10 @@ export default function PropertyDetailLoading() {
           <Card>
             <CardContent className="space-y-4 p-6">
               {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="flex items-center justify-between gap-3">
+                <div
+                  key={i}
+                  className="flex items-center justify-between gap-3"
+                >
                   <Skeleton className="h-4 w-24" />
                   <Skeleton className="h-4 w-12" />
                 </div>

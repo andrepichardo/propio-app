@@ -42,8 +42,8 @@ describe('settleDepositSchema', () => {
   });
 
   it('requires a contract id', () => {
-    expect(
-      settleDepositSchema.safeParse({ amountRetained: 0 }).success,
-    ).toBe(false);
+    expect(settleDepositSchema.safeParse({ amountRetained: 0 }).success).toBe(
+      false,
+    );
   });
 });

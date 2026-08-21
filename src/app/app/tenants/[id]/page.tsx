@@ -97,7 +97,11 @@ export default async function TenantDetailPage({
               />
             </div>
             <p className="text-xs text-muted-foreground">
-              {t('since', { date: formatter.dateTime(tenant.createdAt, { dateStyle: 'medium' }) })}
+              {t('since', {
+                date: formatter.dateTime(tenant.createdAt, {
+                  dateStyle: 'medium',
+                }),
+              })}
             </p>
           </CardContent>
         </Card>

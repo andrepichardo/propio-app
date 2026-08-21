@@ -21,9 +21,7 @@ export type {
  * Render helpers returning a Node Buffer, ready to upload to storage or attach
  * to an email. React-PDF is server-only.
  */
-export function renderReceiptPdf(
-  data: ReceiptDocumentData,
-): Promise<Buffer> {
+export function renderReceiptPdf(data: ReceiptDocumentData): Promise<Buffer> {
   return renderToBuffer(
     ReceiptDocument({ data }) as ReactElement<DocumentProps>,
   );

@@ -1,9 +1,5 @@
 import { Skeleton } from '@/shared/components/ui/skeleton';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from '@/shared/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/shared/components/ui/card';
 
 /** Button row + hint used by the avatar / signature uploaders. */
 function UploaderControls() {

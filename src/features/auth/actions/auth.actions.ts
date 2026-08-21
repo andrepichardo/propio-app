@@ -5,7 +5,12 @@ import { getTranslations } from 'next-intl/server';
 import { signIn, signOut } from '@/shared/lib/auth/auth';
 import { loginSchema } from '@/shared/lib/auth/auth.validators';
 import { ValidationError } from '@/shared/lib/errors';
-import { type ActionResult, fail, ok, toActionFailure } from '@/shared/lib/result';
+import {
+  type ActionResult,
+  fail,
+  ok,
+  toActionFailure,
+} from '@/shared/lib/result';
 
 /**
  * Authenticate with email + password via the Credentials provider.

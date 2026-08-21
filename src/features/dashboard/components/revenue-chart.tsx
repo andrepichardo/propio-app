@@ -34,18 +34,31 @@ export function RevenueChart({
   const t = useTranslations('dashboard');
   return (
     <ResponsiveContainer width="100%" height="100%" minHeight={240}>
-      <AreaChart
-        data={data}
-        margin={{ top: 8, right: 8, left: 4, bottom: 0 }}
-      >
+      <AreaChart data={data} margin={{ top: 8, right: 8, left: 4, bottom: 0 }}>
         <defs>
           <linearGradient id="revenueFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.25} />
-            <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+            <stop
+              offset="0%"
+              stopColor="hsl(var(--primary))"
+              stopOpacity={0.25}
+            />
+            <stop
+              offset="100%"
+              stopColor="hsl(var(--primary))"
+              stopOpacity={0}
+            />
           </linearGradient>
           <linearGradient id="expenseFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="hsl(var(--warning))" stopOpacity={0.2} />
-            <stop offset="100%" stopColor="hsl(var(--warning))" stopOpacity={0} />
+            <stop
+              offset="0%"
+              stopColor="hsl(var(--warning))"
+              stopOpacity={0.2}
+            />
+            <stop
+              offset="100%"
+              stopColor="hsl(var(--warning))"
+              stopOpacity={0}
+            />
           </linearGradient>
         </defs>
         <CartesianGrid
@@ -83,9 +96,7 @@ export function RevenueChart({
           formatter={(value: number, name: string, item) => {
             const point = item?.payload as Point | undefined;
             const approx =
-              name === 'revenue'
-                ? point?.revenueApprox
-                : point?.expensesApprox;
+              name === 'revenue' ? point?.revenueApprox : point?.expensesApprox;
             return [
               `${approx ? '≈ ' : ''}${formatCurrency(value, currency)}`,
               name === 'revenue' ? t('revenue') : t('expenses'),

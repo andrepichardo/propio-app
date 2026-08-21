@@ -46,7 +46,9 @@ export function ForgotPasswordForm() {
         <CheckCircle2 className="size-8 text-success" />
         <div className="space-y-1">
           <p className="font-medium">{t('forgot.sentTitle')}</p>
-          <p className="text-sm text-muted-foreground">{t('forgot.sentBody')}</p>
+          <p className="text-sm text-muted-foreground">
+            {t('forgot.sentBody')}
+          </p>
         </div>
         <Button variant="outline" asChild className="mt-2">
           <Link href="/login">{t('forgot.backToSignIn')}</Link>

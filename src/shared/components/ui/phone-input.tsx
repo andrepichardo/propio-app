@@ -52,7 +52,7 @@ function CountrySelect({
         disabled && 'cursor-not-allowed opacity-50',
       )}
     >
-      <span className="flex h-4 w-6 items-center justify-center overflow-hidden rounded-[3px] [&_svg]:h-full [&_svg]:w-full [&_img]:h-full [&_img]:w-full [&_img]:object-cover">
+      <span className="flex h-4 w-6 items-center justify-center overflow-hidden rounded-[3px] [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_svg]:h-full [&_svg]:w-full">
         {value ? (
           <Flag country={value} label={value} />
         ) : (

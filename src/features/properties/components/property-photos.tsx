@@ -10,10 +10,7 @@ import {
   deletePropertyPhotoAction,
   uploadPropertyPhotoAction,
 } from '../actions/property-photo.actions';
-import {
-  MAX_PROPERTY_PHOTO_MB,
-  PROPERTY_PHOTO_ACCEPT,
-} from '../constants';
+import { MAX_PROPERTY_PHOTO_MB, PROPERTY_PHOTO_ACCEPT } from '../constants';
 import { PhotoLightbox } from './photo-lightbox';
 import {
   Card,

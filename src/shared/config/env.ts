@@ -16,10 +16,7 @@ const emptyToUndefined = (value: unknown) =>
   typeof value === 'string' && value.trim() === '' ? undefined : value;
 
 const optionalString = z.preprocess(emptyToUndefined, z.string().optional());
-const optionalUrl = z.preprocess(
-  emptyToUndefined,
-  z.string().url().optional(),
-);
+const optionalUrl = z.preprocess(emptyToUndefined, z.string().url().optional());
 
 const serverSchema = z.object({
   NODE_ENV: z

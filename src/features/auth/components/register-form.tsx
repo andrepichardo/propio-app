@@ -10,9 +10,7 @@ import {
   registerSchema,
   type RegisterInput,
 } from '@/shared/lib/auth/auth.validators';
-import {
-  applyFieldErrors,
-} from '@/shared/hooks/use-server-action';
+import { applyFieldErrors } from '@/shared/hooks/use-server-action';
 import {
   Form,
   FormControl,

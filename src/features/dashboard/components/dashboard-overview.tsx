@@ -47,9 +47,7 @@ export async function DashboardOverview({
   const revApprox = summary.finance.revenueApprox ? '≈ ' : '';
   const expApprox = summary.finance.expensesApprox ? '≈ ' : '';
   const netApprox =
-    summary.finance.revenueApprox || summary.finance.expensesApprox
-      ? '≈ '
-      : '';
+    summary.finance.revenueApprox || summary.finance.expensesApprox ? '≈ ' : '';
 
   return (
     <div className="space-y-6">

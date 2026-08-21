@@ -73,9 +73,7 @@ export function TenantForm({ mode, tenantId, defaultValues }: TenantFormProps) {
         toast.error(result.error);
         return;
       }
-      toast.success(
-        mode === 'create' ? t('createdToast') : t('updatedToast'),
-      );
+      toast.success(mode === 'create' ? t('createdToast') : t('updatedToast'));
       router.push(`/app/tenants/${result.data.id}`);
       router.refresh();
     });
