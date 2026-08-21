@@ -894,6 +894,10 @@
     "CRC": "Colón costarricense",
     "EUR": "Euro"
   },
+  "fx": {
+    "unavailableTitle": "Tasas de cambio no disponibles",
+    "unavailableBody": "Los montos en otras monedas se están sumando sin convertir, así que estos totales mezclan monedas. Se corregirán solos cuando las tasas vuelvan a estar disponibles."
+  },
   "settings": {
     "title": "Configuración",
     "subtitle": "Preferencias y seguridad de la cuenta.",

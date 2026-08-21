@@ -38,6 +38,12 @@ export type YearlyReport = {
   /** Per-metric ≈ flags: true only when that total combined a converted
    * (non-primary) currency. Single-currency totals stay exact. */
   approx: { revenue: boolean; expenses: boolean };
+  /**
+   * True when at least one amount could NOT be converted (rates API down, or
+   * no rate for that currency), so it was summed at 1:1 and the totals mix
+   * currencies. Distinct from `approx`, which means "converted, hence rounded".
+   */
+  ratesUnavailable: boolean;
 };
 
 /** A converted total plus whether it combined any non-primary currency. */
@@ -54,7 +60,10 @@ function reduceGroups(
     const amount = Number(g._sum.amount ?? 0);
     if (!amount) continue;
     total += convert(amount, g.currency);
-    if (g.currency !== primary) approx = true;
+    // Only a REAL conversion earns the ≈ — see `ratesUnavailable`.
+    if (g.currency !== primary && convert.canConvert(g.currency)) {
+      approx = true;
+    }
   }
   return { total, approx };
 }
@@ -166,5 +175,8 @@ export async function getYearlyReport(
       maintenance: statusCounts.MAINTENANCE,
     },
     approx,
+    // Read last: `missing` fills up as amounts are converted, so it is only
+    // complete once every sum above has run.
+    ratesUnavailable: convert.missing.size > 0,
   };
 }

@@ -505,7 +505,10 @@
       "title": "New contract",
       "subtitle": "Set the terms for a tenant and property."
     },
-    "edit": { "title": "Edit contract", "subtitle": "Update the lease terms." },
+    "edit": {
+      "title": "Edit contract",
+      "subtitle": "Update the lease terms."
+    },
     "form": {
       "parties": "Parties",
       "property": "Property",
@@ -890,6 +893,10 @@
     "GTQ": "Guatemalan Quetzal",
     "CRC": "Costa Rican Colón",
     "EUR": "Euro"
+  },
+  "fx": {
+    "unavailableTitle": "Exchange rates unavailable",
+    "unavailableBody": "Amounts in other currencies are being added without conversion, so these totals mix currencies. They will correct themselves once rates are reachable again."
   },
   "settings": {
     "title": "Settings",

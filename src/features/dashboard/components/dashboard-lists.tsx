@@ -89,17 +89,23 @@ export function DepositsHeldCard({
   total,
   currency,
   items,
+  ratesUnavailable = false,
   className,
 }: {
   total: number;
   currency: string;
   items: DepositBreakdownItem[];
+  /** No rates were available, so the total was summed unconverted. */
+  ratesUnavailable?: boolean;
   className?: string;
 }) {
   const t = useTranslations('dashboard');
   // The total is converted to the primary currency; mark it ≈ only when a
-  // deposit is held in another currency (so a conversion actually happened).
-  const approx = items.some((item) => item.currency !== currency);
+  // deposit is held in another currency AND the conversion actually happened.
+  // Without rates the amounts were added raw, which the page-level notice
+  // reports — a ≈ here would quietly pass that off as a rounding difference.
+  const approx =
+    !ratesUnavailable && items.some((item) => item.currency !== currency);
   return (
     <Card className={cn('flex flex-col overflow-hidden', className)}>
       {/* Total lives in the header so the scrolling list gets the full body. */}

@@ -13,6 +13,7 @@ import { YearSelector } from '@/features/reports/components/year-selector';
 import { ReportsDataSkeleton } from '@/features/reports/components/reports-skeleton';
 import { PageHeader } from '@/shared/components/page-header';
 import { StatCard } from '@/shared/components/stat-card';
+import { RatesUnavailableNotice } from '@/shared/components/rates-unavailable-notice';
 import {
   Card,
   CardContent,
@@ -52,6 +53,7 @@ async function ReportContent({
 
   return (
     <div className="space-y-6">
+      {report.ratesUnavailable ? <RatesUnavailableNotice /> : null}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           label={t('revenue', { year })}

@@ -16,6 +16,7 @@ import { prisma } from '@/shared/lib/prisma';
 import { propertyRepository } from '@/features/properties/repositories/property.repository';
 import { depositRepository } from '@/features/deposits/repositories/deposit.repository';
 import { toNumber } from '@/shared/lib/format';
+import { monthKey } from '@/shared/lib/rent-period';
 import {
   getUsdRates,
   makeConverter,
@@ -48,6 +49,13 @@ export type DashboardSummary = {
   upcomingPayments: UpcomingPayment[];
   /** Held deposits per tenant/property, so the total can be itemised. */
   depositsBreakdown: DepositBreakdownItem[];
+  /**
+   * True when at least one amount could NOT be converted (the rates API was
+   * unreachable, or the currency has no rate), so it was summed at 1:1 and the
+   * totals mix currencies. Distinct from the ≈ flags: those mean "converted,
+   * hence rounded"; this one means "not converted at all — treat with care".
+   */
+  ratesUnavailable: boolean;
   expiringContracts: ExpiringContract[];
   recentActivity: RecentActivityItem[];
 };
@@ -105,7 +113,12 @@ function reduceGroups(
     const amount = toNumber(String(g._sum.amount ?? ''));
     if (!amount) continue;
     total += convert(amount, g.currency);
-    if (g.currency !== primary) approx = true;
+    // Only a REAL conversion earns the ≈. A currency with no rate was added
+    // in raw, which the summary flags as `ratesUnavailable` instead — calling
+    // that "approximate" would dress up a wrong number as a rounded one.
+    if (g.currency !== primary && convert.canConvert(g.currency)) {
+      approx = true;
+    }
   }
   return { total, approx };
 }
@@ -222,19 +235,6 @@ function nextDueDate(dueDay: number, reference = new Date()): Date {
     day,
   );
   return thisMonth >= reference ? thisMonth : addMonths(thisMonth, 1);
-}
-
-/**
- * Month bucket a payment counts toward: its rent period, else when paid.
- * Date-only values (periodStart, form-picked paidAt) live at UTC midnight;
- * reading them with local getters west of UTC would land on the previous
- * month at month boundaries, so those use their UTC parts.
- */
-function monthKey(date: Date): string {
-  const isUtcMidnight = date.getTime() % 86_400_000 === 0;
-  const year = isUtcMidnight ? date.getUTCFullYear() : date.getFullYear();
-  const month = isUtcMidnight ? date.getUTCMonth() : date.getMonth();
-  return `${year}-${month}`;
 }
 
 export async function getDashboardSummary(
@@ -406,6 +406,9 @@ export async function getDashboardSummary(
     monthlySeries: monthly,
     upcomingPayments,
     depositsBreakdown,
+    // Read last: `missing` fills up as amounts are converted, so it is only
+    // complete once every sum above has run.
+    ratesUnavailable: convert.missing.size > 0,
     expiringContracts: expiring
       .filter((c) => c.endDate)
       .map((c) => ({

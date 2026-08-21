@@ -108,7 +108,11 @@ export const depositRepository = {
       const amount = Number(g._sum.amountRetained ?? 0);
       if (!amount) continue;
       total += convert(amount, g.currency);
-      if (g.currency !== primary) approx = true;
+      // Only a REAL conversion earns the ≈; a rate-less currency is reported
+      // by the caller as `ratesUnavailable`.
+      if (g.currency !== primary && convert.canConvert(g.currency)) {
+        approx = true;
+      }
     }
     return { total, approx };
   },

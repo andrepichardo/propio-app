@@ -12,9 +12,11 @@ import {
  * Time-of-day greeting resolved against the BROWSER's clock.
  *
  * It has to run on the client: the server has no idea what time it is for the
- * visitor (its own clock is UTC in production, and `User.timezone` is unused),
- * so a server-rendered greeting is wrong for anyone outside UTC — e.g. 00:30 in
- * the Dominican Republic is 04:30 UTC, which used to read "Buenos días".
+ * visitor (its own clock is UTC in production, and the app stores no timezone
+ * preference — the browser's clock is a better source anyway, since it follows
+ * the user when they travel), so a server-rendered greeting is wrong for anyone
+ * outside UTC — e.g. 00:30 in the Dominican Republic is 04:30 UTC, which used
+ * to read "Buenos días".
  *
  * `initialKey` (the server's best guess) seeds the first render so hydration
  * matches; the effect then corrects it and re-checks every hour, so a dashboard

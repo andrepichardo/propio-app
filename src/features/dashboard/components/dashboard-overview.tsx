@@ -15,6 +15,7 @@ import {
   UpcomingPaymentsCard,
 } from './dashboard-lists';
 import { StatCard } from '@/shared/components/stat-card';
+import { RatesUnavailableNotice } from '@/shared/components/rates-unavailable-notice';
 import {
   Card,
   CardContent,
@@ -52,6 +53,7 @@ export async function DashboardOverview({
 
   return (
     <div className="space-y-6">
+      {summary.ratesUnavailable ? <RatesUnavailableNotice /> : null}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           label={t('totalProperties')}
@@ -116,6 +118,7 @@ export async function DashboardOverview({
               total={summary.finance.depositsHeld}
               currency={currency}
               items={summary.depositsBreakdown}
+              ratesUnavailable={summary.ratesUnavailable}
             />
           </div>
         ) : (

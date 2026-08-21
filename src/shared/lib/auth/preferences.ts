@@ -5,20 +5,24 @@ import { prisma } from '@/shared/lib/prisma';
 export type UserPreferences = {
   currency: string;
   locale: string;
-  timezone: string;
   dateFormat: string;
 };
 
 const DEFAULTS: UserPreferences = {
   currency: 'USD',
   locale: 'en',
-  timezone: 'UTC',
   dateFormat: 'MEDIUM',
 };
 
 /**
- * Load an owner's formatting preferences (currency/locale/timezone). Cached
+ * Load an owner's formatting preferences (currency/locale/date style). Cached
  * per request so the many components that format money don't each query.
+ *
+ * There is deliberately no timezone here: domain dates are date-only values
+ * stored at UTC midnight (a contract ends on a calendar day, not at an
+ * instant), so shifting them by an offset would move them a day. The one place
+ * a real clock matters — the dashboard greeting — reads the browser's clock on
+ * the client, which is more accurate than any stored preference.
  */
 export const getUserPreferences = cache(
   async (userId: string): Promise<UserPreferences> => {
@@ -27,7 +31,6 @@ export const getUserPreferences = cache(
       select: {
         currency: true,
         locale: true,
-        timezone: true,
         dateFormat: true,
       },
     });
@@ -35,7 +38,6 @@ export const getUserPreferences = cache(
     return {
       currency: user.currency,
       locale: user.locale,
-      timezone: user.timezone,
       dateFormat: user.dateFormat,
     };
   },

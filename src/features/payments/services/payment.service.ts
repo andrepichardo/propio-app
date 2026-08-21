@@ -24,6 +24,7 @@ import { receiptService } from '@/features/receipts/services/receipt.service';
 import { sendReceiptEmail } from '@/emails/send';
 import { getUserPreferences } from '@/shared/lib/auth/preferences';
 import { isLocale } from '@/i18n/config';
+import { rentPeriodStart } from '@/shared/lib/rent-period';
 
 /**
  * Generate the next per-owner receipt number for the current year, e.g.
@@ -58,21 +59,6 @@ function storageKeyFromPublicUrl(url?: string | null): string | null {
  * verbatim, so it's built in the owner's language at creation — not
  * re-translated at render.
  */
-/**
- * Rent period a payment covers, anchored to the contract's **due day** — never
- * the date it happened to be paid. It runs from `dueDay` of the paidAt month to
- * the same day next month (e.g. due day 15, paid Aug 4 → 15 Aug – 15 Sep; the
- * same for a payment made Aug 20). Built at UTC midnight like other date-only
- * values, so `nextRentDueDate` and month bucketing stay consistent.
- */
-function rentPeriodStart(paidAt: Date, dueDay: number): Date {
-  const year = paidAt.getUTCFullYear();
-  const month = paidAt.getUTCMonth();
-  const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
-  const day = Math.min(Math.max(dueDay, 1), daysInMonth);
-  return new Date(Date.UTC(year, month, day));
-}
-
 function defaultConcept(
   baseDate: Date,
   isDeposit: boolean,
