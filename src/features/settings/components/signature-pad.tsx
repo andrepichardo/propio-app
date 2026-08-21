@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Eraser, PenLine } from 'lucide-react';
 import {
@@ -73,17 +73,22 @@ export function SignaturePad({ onSave }: { onSave: (file: File) => void }) {
     return true;
   }
 
-  // Fresh session on open — clear ink state; the canvas is (re)sized on the
-  // first stroke, when layout is guaranteed stable.
-  useEffect(() => {
-    if (!open) return;
+  /**
+   * Fresh session on open. This runs in the event handler rather than an
+   * effect on `open`: resetting state from an effect triggers a second,
+   * cascading render (and trips `react-hooks/set-state-in-effect`).
+   *
+   * No canvas clearing needed here — the dialog content is unmounted while
+   * closed, so each open gets a brand-new canvas, and `sizeCanvas()` clears it
+   * again on the first stroke once `sized` is back to false.
+   */
+  function handleOpenChange(next: boolean) {
+    setOpen(next);
+    if (!next) return;
     sized.current = false;
     setHasInk(false);
     resetBounds();
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext('2d');
-    if (canvas && ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }, [open]);
+  }
 
   function point(e: React.PointerEvent<HTMLCanvasElement>) {
     const rect = canvasRef.current!.getBoundingClientRect();
@@ -173,7 +178,7 @@ export function SignaturePad({ onSave }: { onSave: (file: File) => void }) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button type="button" variant="outline" size="sm">
           <PenLine className="size-4" /> {t('drawSignature')}
