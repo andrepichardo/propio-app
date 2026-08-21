@@ -7,18 +7,13 @@ import { DashboardOverview } from '@/features/dashboard/components/dashboard-ove
 import { WelcomeToast } from '@/features/auth/components/welcome-toast';
 import { PageHeader } from '@/shared/components/page-header';
 import { QuickActions } from '@/features/dashboard/components/quick-actions';
+import { Greeting } from '@/features/dashboard/components/greeting';
+import { greetingKey } from '@/shared/lib/greeting';
 import { Skeleton } from '@/shared/components/ui/skeleton';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('meta');
   return { title: t('dashboard') };
-}
-
-function greetingKey(): 'greetingMorning' | 'greetingAfternoon' | 'greetingEvening' {
-  const hour = new Date().getHours();
-  if (hour < 12) return 'greetingMorning';
-  if (hour < 18) return 'greetingAfternoon';
-  return 'greetingEvening';
 }
 
 function DashboardSkeleton() {
@@ -52,10 +47,6 @@ export default async function DashboardPage() {
   const { currency } = await getUserPreferences(user.id);
   const t = await getTranslations('dashboard');
   const firstName = user.name?.split(' ')[0];
-  const greeting = t(greetingKey());
-  const title = firstName
-    ? t('greetingName', { greeting, name: firstName })
-    : greeting;
 
   return (
     <div className="space-y-6">
@@ -63,7 +54,12 @@ export default async function DashboardPage() {
         <WelcomeToast />
       </Suspense>
 
-      <PageHeader title={title} description={t('subtitle')} />
+      <PageHeader
+        title={
+          <Greeting name={firstName} initialKey={greetingKey(new Date())} />
+        }
+        description={t('subtitle')}
+      />
 
       <QuickActions />
 
