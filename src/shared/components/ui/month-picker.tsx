@@ -30,9 +30,7 @@ export function MonthPicker({
 
   const selectedYear = value ? Number(value.slice(0, 4)) : undefined;
   const selectedMonth = value ? Number(value.slice(5, 7)) - 1 : undefined;
-  const [year, setYear] = useState(
-    selectedYear ?? new Date().getFullYear(),
-  );
+  const [year, setYear] = useState(selectedYear ?? new Date().getFullYear());
 
   const label = value
     ? format(new Date(selectedYear ?? 0, selectedMonth ?? 0, 1), 'MMMM yyyy', {

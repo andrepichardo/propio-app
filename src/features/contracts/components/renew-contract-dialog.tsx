@@ -206,11 +206,7 @@ export function RenewContractDialog({
                 <FormItem>
                   <FormLabel>{t('notes')}</FormLabel>
                   <FormControl>
-                    <Textarea
-                      rows={2}
-                      {...field}
-                      value={field.value ?? ''}
-                    />
+                    <Textarea rows={2} {...field} value={field.value ?? ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

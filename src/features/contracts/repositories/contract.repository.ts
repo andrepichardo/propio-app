@@ -1,5 +1,6 @@
 import 'server-only';
-import type { ContractStatus, Prisma } from '@prisma/client';
+import type { ContractStatus } from '@/generated/prisma/enums';
+import type { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/shared/lib/prisma';
 import {
   buildPaginatedResult,
@@ -79,10 +80,20 @@ export const contractRepository = {
         },
         // Renewal chain neighbours, so the detail page can walk the history.
         renewedFrom: {
-          select: { id: true, startDate: true, endDate: true, monthlyRent: true },
+          select: {
+            id: true,
+            startDate: true,
+            endDate: true,
+            monthlyRent: true,
+          },
         },
         renewedTo: {
-          select: { id: true, startDate: true, endDate: true, monthlyRent: true },
+          select: {
+            id: true,
+            startDate: true,
+            endDate: true,
+            monthlyRent: true,
+          },
         },
         _count: { select: { payments: true } },
       },
@@ -93,11 +104,7 @@ export const contractRepository = {
     return prisma.contract.create({ data: { ...data, ownerId } });
   },
 
-  async update(
-    ownerId: string,
-    id: string,
-    data: Prisma.ContractUpdateInput,
-  ) {
+  async update(ownerId: string, id: string, data: Prisma.ContractUpdateInput) {
     const result = await prisma.contract.updateMany({
       where: { id, ownerId, deletedAt: null },
       data,

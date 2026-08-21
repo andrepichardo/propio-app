@@ -1,5 +1,5 @@
 import 'server-only';
-import type { Prisma } from '@prisma/client';
+import type { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/shared/lib/prisma';
 
 /**
@@ -14,10 +14,7 @@ export const notificationRepository = {
     });
   },
 
-  list(
-    ownerId: string,
-    options?: { unreadOnly?: boolean; take?: number },
-  ) {
+  list(ownerId: string, options?: { unreadOnly?: boolean; take?: number }) {
     return prisma.notification.findMany({
       where: {
         ownerId,

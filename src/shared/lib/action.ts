@@ -2,11 +2,7 @@ import 'server-only';
 import type { z } from 'zod';
 import { requireOwnerId } from '@/shared/lib/auth/session';
 import { ValidationError } from '@/shared/lib/errors';
-import {
-  type ActionResult,
-  ok,
-  toActionFailure,
-} from '@/shared/lib/result';
+import { type ActionResult, ok, toActionFailure } from '@/shared/lib/result';
 
 type OwnerContext = { ownerId: string };
 
@@ -25,10 +21,7 @@ type OwnerContext = { ownerId: string };
  */
 export function createOwnerAction<TSchema extends z.ZodTypeAny, TResult>(
   schema: TSchema,
-  handler: (
-    input: z.infer<TSchema>,
-    ctx: OwnerContext,
-  ) => Promise<TResult>,
+  handler: (input: z.infer<TSchema>, ctx: OwnerContext) => Promise<TResult>,
 ): (input: z.input<TSchema>) => Promise<ActionResult<TResult>> {
   return async (input) => {
     try {

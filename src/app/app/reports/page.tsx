@@ -48,8 +48,7 @@ async function ReportContent({
   // Per-metric ≈: only when that specific total mixed a converted currency.
   const revApprox = report.approx.revenue ? '≈ ' : '';
   const expApprox = report.approx.expenses ? '≈ ' : '';
-  const netApprox =
-    report.approx.revenue || report.approx.expenses ? '≈ ' : '';
+  const netApprox = report.approx.revenue || report.approx.expenses ? '≈ ' : '';
 
   return (
     <div className="space-y-6">

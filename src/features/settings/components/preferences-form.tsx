@@ -219,9 +219,7 @@ export function PreferencesForm({
 
 type PrefsFormApi = ReturnType<typeof useForm<UpdatePreferencesInput>>;
 type SwitchName =
-  | 'notifyContractExpiring'
-  | 'notifyPaymentUpcoming'
-  | 'notifyPaymentLate';
+  'notifyContractExpiring' | 'notifyPaymentUpcoming' | 'notifyPaymentLate';
 type LeadName = 'contractExpiringLeadDays' | 'paymentUpcomingLeadDays';
 
 function ReminderRow({
@@ -263,10 +261,7 @@ function ReminderSwitch({
       render={({ field }) => (
         <FormItem>
           <FormControl>
-            <Switch
-              checked={field.value}
-              onCheckedChange={field.onChange}
-            />
+            <Switch checked={field.value} onCheckedChange={field.onChange} />
           </FormControl>
         </FormItem>
       )}

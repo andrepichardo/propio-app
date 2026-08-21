@@ -1,4 +1,4 @@
-import { NotificationType } from '@prisma/client';
+import { NotificationType } from '@/generated/prisma/enums';
 import {
   AlertTriangle,
   Bell,

@@ -11,7 +11,7 @@ import {
   ContractStatus,
   NotificationType,
   PaymentStatus,
-} from '@prisma/client';
+} from '@/generated/prisma/enums';
 import { prisma } from '@/shared/lib/prisma';
 import { formatCurrency } from '@/shared/lib/format';
 
@@ -144,8 +144,7 @@ export async function runNotificationScheduler(): Promise<SchedulerResult> {
   });
 
   for (const contract of contracts) {
-    const prefs =
-      reminderPrefs.get(contract.ownerId) ?? DEFAULT_REMINDER_PREFS;
+    const prefs = reminderPrefs.get(contract.ownerId) ?? DEFAULT_REMINDER_PREFS;
     const tenantName = `${contract.tenant.firstName} ${contract.tenant.lastName}`;
     const rent = formatCurrency(
       contract.monthlyRent.toString(),

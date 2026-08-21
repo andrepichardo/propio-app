@@ -190,7 +190,8 @@ export function FileDropzone(props: FileDropzoneProps) {
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
           dragging && 'border-primary bg-primary/5',
           error && !dragging && 'border-destructive/60',
-          busy && 'cursor-not-allowed opacity-60 hover:border-inherit hover:bg-transparent',
+          busy &&
+            'cursor-not-allowed opacity-60 hover:border-inherit hover:bg-transparent',
         )}
       >
         {uploading ? (

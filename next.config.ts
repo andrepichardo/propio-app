@@ -37,9 +37,8 @@ const nextConfig: NextConfig = {
     // We run `tsc --noEmit` in CI; never silently ship type errors.
     ignoreBuildErrors: false,
   },
-  eslint: {
-    ignoreDuringBuilds: false,
-  },
+  // NOTE: the `eslint` option was removed in Next 16 — `next build` no longer
+  // runs linting at all. Linting is its own step (`yarn lint`, ESLint CLI).
 };
 
 export default withNextIntl(nextConfig);

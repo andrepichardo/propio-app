@@ -1,5 +1,6 @@
 import 'server-only';
-import type { ActivityAction, Prisma } from '@prisma/client';
+import type { ActivityAction } from '@/generated/prisma/enums';
+import type { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/shared/lib/prisma';
 
 type LogActivityInput = {

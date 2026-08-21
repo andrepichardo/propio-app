@@ -23,7 +23,9 @@ export default async function ResetPasswordPage({
         <h1 className="text-2xl font-semibold tracking-tight">
           {t('reset.invalidTitle')}
         </h1>
-        <p className="text-sm text-muted-foreground">{t('reset.invalidBody')}</p>
+        <p className="text-sm text-muted-foreground">
+          {t('reset.invalidBody')}
+        </p>
         <Button asChild>
           <Link href="/forgot-password">{t('reset.requestNew')}</Link>
         </Button>

@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { PaymentMethod, PaymentType } from '@prisma/client';
+import { PaymentMethod, PaymentType } from '@/generated/prisma/enums';
 import { Wallet } from 'lucide-react';
 import {
   registerPaymentSchema,
@@ -137,9 +137,7 @@ export function PaymentForm({
         toast.error(result.error);
         return;
       }
-      toast.success(
-        t('recordedToast', { number: result.data.receiptNumber }),
-      );
+      toast.success(t('recordedToast', { number: result.data.receiptNumber }));
       router.push('/app/payments');
       router.refresh();
     });
@@ -206,9 +204,7 @@ export function PaymentForm({
                 <FormItem className="flex items-center justify-between rounded-lg border p-3 sm:col-span-2">
                   <div>
                     <FormLabel>{t('form.isDeposit')}</FormLabel>
-                    <FormDescription>
-                      {t('form.isDepositHint')}
-                    </FormDescription>
+                    <FormDescription>{t('form.isDepositHint')}</FormDescription>
                   </div>
                   <FormControl>
                     <Switch

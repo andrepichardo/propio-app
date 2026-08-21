@@ -38,11 +38,7 @@ export type StatementDocumentData = {
 };
 
 /** Monthly statement summarising charges, payments and outstanding balance. */
-export function StatementDocument({
-  data,
-}: {
-  data: StatementDocumentData;
-}) {
+export function StatementDocument({ data }: { data: StatementDocumentData }) {
   const l = data.labels;
   return (
     <Document

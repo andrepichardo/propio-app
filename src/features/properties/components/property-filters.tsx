@@ -12,10 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import {
-  PROPERTY_STATUS_VALUES,
-  PROPERTY_TYPE_VALUES,
-} from '../constants';
+import { PROPERTY_STATUS_VALUES, PROPERTY_TYPE_VALUES } from '../constants';
 
 const ALL = 'all';
 

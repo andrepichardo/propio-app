@@ -1,9 +1,5 @@
 import { Skeleton } from '@/shared/components/ui/skeleton';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from '@/shared/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/shared/components/ui/card';
 
 /** Mirrors the contract detail layout (mobile-first) so the load doesn't jump. */
 export default function ContractDetailLoading() {

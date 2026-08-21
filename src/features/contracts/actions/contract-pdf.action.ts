@@ -17,10 +17,7 @@ export async function uploadContractPdfAction(
   try {
     const ownerId = await requireOwnerId();
 
-    const contractId = z
-      .string()
-      .cuid()
-      .safeParse(formData.get('contractId'));
+    const contractId = z.string().cuid().safeParse(formData.get('contractId'));
     if (!contractId.success) {
       throw new ValidationError(
         (await getTranslations('contracts.pdf'))('missingRef'),

@@ -46,7 +46,10 @@ export default function TenantDetailLoading() {
             </CardHeader>
             <CardContent className="space-y-4">
               {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="flex items-center justify-between gap-3">
+                <div
+                  key={i}
+                  className="flex items-center justify-between gap-3"
+                >
                   <Skeleton className="h-4 w-24" />
                   <Skeleton className="h-4 w-28" />
                 </div>
@@ -60,7 +63,10 @@ export default function TenantDetailLoading() {
             </CardHeader>
             <CardContent className="space-y-4">
               {Array.from({ length: 2 }).map((_, i) => (
-                <div key={i} className="flex items-center justify-between gap-3">
+                <div
+                  key={i}
+                  className="flex items-center justify-between gap-3"
+                >
                   <Skeleton className="h-4 w-24" />
                   <Skeleton className="h-4 w-28" />
                 </div>

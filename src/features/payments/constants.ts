@@ -1,4 +1,4 @@
-import { PaymentMethod } from '@prisma/client';
+import { PaymentMethod } from '@/generated/prisma/enums';
 import { Banknote, CreditCard, Landmark, ReceiptText } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 

@@ -60,9 +60,7 @@ export function AvatarUploader({
     <div className="flex items-center gap-4">
       <Avatar className="size-16">
         {image ? <AvatarImage src={image} alt={name ?? 'User'} /> : null}
-        <AvatarFallback className="text-lg">
-          {getInitials(name)}
-        </AvatarFallback>
+        <AvatarFallback className="text-lg">{getInitials(name)}</AvatarFallback>
       </Avatar>
       <div className="space-y-1.5">
         <div className="flex gap-2">

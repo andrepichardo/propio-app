@@ -143,7 +143,9 @@ export default async function PropertyDetailPage({
                   <CardContent className="flex flex-col items-center gap-1 p-4 text-center">
                     <stat.icon className="size-5 text-muted-foreground transition-colors group-hover:text-primary" />
                     <p className="text-xl font-semibold">{stat.value}</p>
-                    <p className="text-xs text-muted-foreground">{stat.label}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {stat.label}
+                    </p>
                   </CardContent>
                 </Card>
               </Link>
@@ -199,13 +201,7 @@ export default async function PropertyDetailPage({
   );
 }
 
-function Detail({
-  label,
-  value,
-}: {
-  label: string;
-  value: React.ReactNode;
-}) {
+function Detail({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between">
       <span className="text-muted-foreground">{label}</span>

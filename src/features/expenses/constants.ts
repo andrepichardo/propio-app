@@ -1,4 +1,4 @@
-import { ExpenseCategory } from '@prisma/client';
+import { ExpenseCategory } from '@/generated/prisma/enums';
 
 /** Keys under `expenses.categories` are the enum values; translate with
  * `t(\`categories.${value}\`)`. */

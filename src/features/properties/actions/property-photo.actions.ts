@@ -18,10 +18,7 @@ export async function uploadPropertyPhotoAction(
   try {
     const ownerId = await requireOwnerId();
 
-    const propertyId = z
-      .string()
-      .cuid()
-      .safeParse(formData.get('propertyId'));
+    const propertyId = z.string().cuid().safeParse(formData.get('propertyId'));
     if (!propertyId.success) {
       const t = await getTranslations('properties.photos');
       throw new ValidationError(t('missingRef'));

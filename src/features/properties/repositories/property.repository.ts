@@ -1,5 +1,6 @@
 import 'server-only';
-import { type Prisma, PropertyStatus, type PropertyType } from '@prisma/client';
+import { PropertyStatus, type PropertyType } from '@/generated/prisma/enums';
+import { type Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/shared/lib/prisma';
 import {
   buildPaginatedResult,
@@ -104,11 +105,7 @@ export const propertyRepository = {
     });
   },
 
-  async update(
-    ownerId: string,
-    id: string,
-    data: Prisma.PropertyUpdateInput,
-  ) {
+  async update(ownerId: string, id: string, data: Prisma.PropertyUpdateInput) {
     // Guard ownership with updateMany, then return the fresh row.
     const result = await prisma.property.updateMany({
       where: { id, ownerId, deletedAt: null },

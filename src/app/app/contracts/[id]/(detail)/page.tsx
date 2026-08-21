@@ -36,12 +36,10 @@ export default async function ContractDetailPage({
   const ownerId = await requireOwnerId();
   const { id } = await params;
 
-  const contract = await contractService
-    .getById(ownerId, id)
-    .catch((error) => {
-      if (error instanceof NotFoundError) notFound();
-      throw error;
-    });
+  const contract = await contractService.getById(ownerId, id).catch((error) => {
+    if (error instanceof NotFoundError) notFound();
+    throw error;
+  });
 
   const t = await getTranslations('contracts.detail');
   const formatDate = await getFormatDate();
@@ -66,9 +64,7 @@ export default async function ContractDetailPage({
     { label: t('startDate'), value: formatDate(contract.startDate) },
     {
       label: t('endDate'),
-      value: contract.endDate
-        ? formatDate(contract.endDate)
-        : t('openEnded'),
+      value: contract.endDate ? formatDate(contract.endDate) : t('openEnded'),
     },
   ];
 

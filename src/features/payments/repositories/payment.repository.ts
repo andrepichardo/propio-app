@@ -1,5 +1,6 @@
 import 'server-only';
-import type { PaymentMethod, Prisma } from '@prisma/client';
+import type { PaymentMethod } from '@/generated/prisma/enums';
+import type { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/shared/lib/prisma';
 import {
   buildPaginatedResult,

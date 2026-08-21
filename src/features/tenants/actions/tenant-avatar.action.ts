@@ -29,11 +29,7 @@ export async function uploadTenantAvatarAction(
       mimeTypes: IMAGE_MIME_TYPES,
     });
 
-    const result = await tenantService.setAvatar(
-      ownerId,
-      tenantId.data,
-      file,
-    );
+    const result = await tenantService.setAvatar(ownerId, tenantId.data, file);
 
     revalidatePath(`/app/tenants/${tenantId.data}`);
     revalidatePath('/app/tenants');

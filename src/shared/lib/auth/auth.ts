@@ -25,12 +25,7 @@ export class EmailNotVerifiedError extends CredentialsSignin {
  * provider) while still using the Prisma adapter so OAuth accounts and users
  * are persisted for a unified account model.
  */
-export const {
-  handlers,
-  auth,
-  signIn,
-  signOut,
-} = NextAuth({
+export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   adapter: PrismaAdapter(prisma),
   providers: [

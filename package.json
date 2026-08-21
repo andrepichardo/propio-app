@@ -7,10 +7,10 @@
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint",
     "format": "prettier --write \"src/**/*.{ts,tsx,md}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,md}\"",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "node node_modules/typescript7/bin/tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "db:generate": "prisma generate",
@@ -18,15 +18,15 @@
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
     "db:seed": "tsx prisma/seed.ts",
-    "postinstall": "prisma generate"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "postinstall": "prisma generate",
+    "lint:fix": "eslint --fix",
+    "typecheck:ts6": "node node_modules/typescript/bin/tsc --noEmit"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
     "@hookform/resolvers": "^3.9.1",
-    "@prisma/client": "^6.1.0",
+    "@prisma/adapter-pg": "7.9.1",
+    "@prisma/client": "7.9.1",
     "@radix-ui/react-avatar": "^1.1.2",
     "@radix-ui/react-checkbox": "^1.1.3",
     "@radix-ui/react-dialog": "^1.1.4",
@@ -50,13 +50,14 @@
     "date-fns": "^4.1.0",
     "framer-motion": "^11.15.0",
     "lucide-react": "^0.469.0",
-    "next": "^15",
+    "next": "16.3.2",
     "next-auth": "5.0.0-beta.25",
     "next-intl": "^4.13.2",
     "next-themes": "^0.4.4",
-    "react": "19.0.0",
+    "pg": "^8.23.0",
+    "react": "19.2.8",
     "react-day-picker": "^10.0.1",
-    "react-dom": "19.0.0",
+    "react-dom": "19.2.8",
     "react-hook-form": "^7.54.2",
     "react-phone-number-input": "^3.4.17",
     "recharts": "^2.15.0",
@@ -68,25 +69,27 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.2.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^22.10.5",
-    "@types/react": "^19.0.2",
-    "@types/react-dom": "^19.0.2",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
     "autoprefixer": "^10.4.20",
-    "eslint": "^9.17.0",
-    "eslint-config-next": "^15",
-    "eslint-config-prettier": "^9.1.0",
+    "dotenv": "^17.4.2",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.2",
+    "eslint-config-prettier": "10.1.8",
     "postcss": "^8.4.49",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.9",
-    "prisma": "^6.1.0",
+    "prisma": "7.9.1",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2",
+    "typescript": "6.0.3",
+    "typescript7": "npm:typescript@7.0.2",
     "vitest": "^2.1.8"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": "^20.19 || ^22.12 || >=24"
   }
 }

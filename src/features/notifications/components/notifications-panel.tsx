@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { CheckCheck } from 'lucide-react';
-import type { NotificationType } from '@prisma/client';
+import type { NotificationType } from '@/generated/prisma/enums';
 import { NOTIFICATION_ICONS } from '../constants';
 import {
   markAllNotificationsReadAction,

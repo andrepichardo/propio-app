@@ -28,9 +28,7 @@ export function Topbar({ user, unreadCount = 0 }: TopbarProps) {
             <Button asChild size="sm" className="gap-1.5">
               <Link href="/app/payments/new">
                 <Plus className="size-4" />
-                <span className="hidden sm:inline">
-                  {t('registerPayment')}
-                </span>
+                <span className="hidden sm:inline">{t('registerPayment')}</span>
               </Link>
             </Button>
           </TooltipTrigger>
@@ -39,12 +37,7 @@ export function Topbar({ user, unreadCount = 0 }: TopbarProps) {
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              asChild
-              variant="ghost"
-              size="icon"
-              className="relative"
-            >
+            <Button asChild variant="ghost" size="icon" className="relative">
               <Link href="/app/notifications">
                 <Bell className="size-5" />
                 {unreadCount > 0 ? (

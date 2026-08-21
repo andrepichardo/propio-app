@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { ContractStatus } from '@prisma/client';
+import { ContractStatus } from '@/generated/prisma/enums';
 import {
   createContractSchema,
   type CreateContractInput,
@@ -115,7 +115,9 @@ export function ContractForm({
         action={
           <div className="flex gap-2">
             <Button asChild variant="outline">
-              <Link href="/app/properties/new">{t('needBoth.addProperty')}</Link>
+              <Link href="/app/properties/new">
+                {t('needBoth.addProperty')}
+              </Link>
             </Button>
             <Button asChild>
               <Link href="/app/tenants/new">{t('needBoth.addTenant')}</Link>

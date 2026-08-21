@@ -47,9 +47,7 @@ export function dateFormatPattern(
   }
 }
 
-export type DateFormatter = (
-  value: Date | string | null | undefined,
-) => string;
+export type DateFormatter = (value: Date | string | null | undefined) => string;
 
 /**
  * Build a `formatDate`-compatible function bound to a user's preference and the

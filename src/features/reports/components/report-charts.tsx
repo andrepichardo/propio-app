@@ -74,9 +74,7 @@ export function ProfitBarChart({
           formatter={(value: number, name: string, item) => {
             const point = item?.payload as MonthlyReportRow | undefined;
             const approx =
-              name === 'revenue'
-                ? point?.revenueApprox
-                : point?.expensesApprox;
+              name === 'revenue' ? point?.revenueApprox : point?.expensesApprox;
             return [
               `${approx ? '≈ ' : ''}${formatCurrency(value, currency)}`,
               seriesLabel(name),
@@ -87,8 +85,16 @@ export function ProfitBarChart({
           wrapperStyle={{ fontSize: 12 }}
           formatter={(v: string) => seriesLabel(v)}
         />
-        <Bar dataKey="revenue" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-        <Bar dataKey="expenses" fill="hsl(var(--warning))" radius={[4, 4, 0, 0]} />
+        <Bar
+          dataKey="revenue"
+          fill="hsl(var(--primary))"
+          radius={[4, 4, 0, 0]}
+        />
+        <Bar
+          dataKey="expenses"
+          fill="hsl(var(--warning))"
+          radius={[4, 4, 0, 0]}
+        />
       </BarChart>
     </ResponsiveContainer>
   );

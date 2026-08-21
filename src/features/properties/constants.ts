@@ -1,4 +1,8 @@
-import { FurnishingType, PropertyStatus, PropertyType } from '@prisma/client';
+import {
+  FurnishingType,
+  PropertyStatus,
+  PropertyType,
+} from '@/generated/prisma/enums';
 import type { BadgeProps } from '@/shared/components/ui/badge';
 
 /**

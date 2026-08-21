@@ -10,14 +10,18 @@
 //   • Explicit onDelete rules; indexes on every foreign key + hot filters.
 // ---------------------------------------------------------------------------
 
+// Prisma 7: the `prisma-client` generator replaces `prisma-client-js` and
+// requires an explicit output path — the client is no longer written into
+// node_modules, so it is imported from `@/generated/prisma/client`.
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
+// Connection URLs live in `prisma.config.ts` (CLI) and in the pg driver
+// adapter (runtime); Prisma 7 rejects `url`/`directUrl` here.
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
 }
 
 // ===========================================================================

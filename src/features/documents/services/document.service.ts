@@ -1,6 +1,6 @@
 import 'server-only';
 import { randomUUID } from 'crypto';
-import { ActivityAction } from '@prisma/client';
+import { ActivityAction } from '@/generated/prisma/enums';
 import { prisma } from '@/shared/lib/prisma';
 import { documentRepository } from '../repositories/document.repository';
 import {
@@ -62,7 +62,11 @@ export const documentService = {
     if (file.size > MAX_DOCUMENT_SIZE_BYTES) {
       throw new ValidationError('File is too large (max 10 MB).');
     }
-    if (!ALLOWED_MIME_TYPES.includes(file.type as (typeof ALLOWED_MIME_TYPES)[number])) {
+    if (
+      !ALLOWED_MIME_TYPES.includes(
+        file.type as (typeof ALLOWED_MIME_TYPES)[number],
+      )
+    ) {
       throw new ValidationError(
         'Unsupported file type. Upload a PDF, image or Word document.',
       );

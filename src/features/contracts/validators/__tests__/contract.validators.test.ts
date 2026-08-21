@@ -37,8 +37,7 @@ describe('createContractSchema', () => {
 
   it('rejects non-positive rent', () => {
     expect(
-      createContractSchema.safeParse({ ...validInput, monthlyRent: 0 })
-        .success,
+      createContractSchema.safeParse({ ...validInput, monthlyRent: 0 }).success,
     ).toBe(false);
     expect(
       createContractSchema.safeParse({ ...validInput, monthlyRent: -100 })

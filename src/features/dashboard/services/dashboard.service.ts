@@ -11,7 +11,7 @@ import {
   PaymentStatus,
   PaymentType,
   PropertyStatus,
-} from '@prisma/client';
+} from '@/generated/prisma/enums';
 import { prisma } from '@/shared/lib/prisma';
 import { propertyRepository } from '@/features/properties/repositories/property.repository';
 import { depositRepository } from '@/features/deposits/repositories/deposit.repository';
@@ -24,7 +24,12 @@ import {
 } from '@/shared/lib/exchange-rates';
 
 export type DashboardSummary = {
-  properties: { total: number; occupied: number; available: number; maintenance: number };
+  properties: {
+    total: number;
+    occupied: number;
+    available: number;
+    maintenance: number;
+  };
   finance: {
     monthlyRevenue: number;
     monthlyExpenses: number;

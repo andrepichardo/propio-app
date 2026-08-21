@@ -58,9 +58,7 @@ export class SupabaseStorageService implements StorageService {
   async remove(keys: string | string[]): Promise<void> {
     const list = Array.isArray(keys) ? keys : [keys];
     if (list.length === 0) return;
-    const { error } = await this.client.storage
-      .from(this.bucket)
-      .remove(list);
+    const { error } = await this.client.storage.from(this.bucket).remove(list);
     if (error) {
       throw new AppError(
         `Failed to delete file(s): ${error.message}`,
@@ -71,16 +69,11 @@ export class SupabaseStorageService implements StorageService {
   }
 
   getPublicUrl(key: string): string {
-    const { data } = this.client.storage
-      .from(this.bucket)
-      .getPublicUrl(key);
+    const { data } = this.client.storage.from(this.bucket).getPublicUrl(key);
     return data.publicUrl;
   }
 
-  async getSignedUrl(
-    key: string,
-    options?: SignedUrlOptions,
-  ): Promise<string> {
+  async getSignedUrl(key: string, options?: SignedUrlOptions): Promise<string> {
     const { data, error } = await this.client.storage
       .from(this.bucket)
       .createSignedUrl(key, options?.expiresInSeconds ?? 3600);

@@ -38,10 +38,20 @@ const RED = '#B22234';
 const BLUE = '#3C3B6E';
 const STRIPE = 14 / 13;
 
-export function FlagUS({ className, label = 'English (United States)' }: { className?: string; label?: string }) {
+export function FlagUS({
+  className,
+  label = 'English (United States)',
+}: {
+  className?: string;
+  label?: string;
+}) {
   return (
     <FlagFrame label={label} className={className}>
-      <svg viewBox="0 0 20 14" className="block !size-full" preserveAspectRatio="none">
+      <svg
+        viewBox="0 0 20 14"
+        className="block !size-full"
+        preserveAspectRatio="none"
+      >
         <rect width="20" height="14" fill="#fff" />
         {[0, 2, 4, 6, 8, 10, 12].map((i) => (
           <rect key={i} y={i * STRIPE} width="20" height={STRIPE} fill={RED} />
@@ -59,12 +69,22 @@ export function FlagUS({ className, label = 'English (United States)' }: { class
   );
 }
 
-export function FlagDO({ className, label = 'Español (República Dominicana)' }: { className?: string; label?: string }) {
+export function FlagDO({
+  className,
+  label = 'Español (República Dominicana)',
+}: {
+  className?: string;
+  label?: string;
+}) {
   const DO_BLUE = '#002D62';
   const DO_RED = '#CE1126';
   return (
     <FlagFrame label={label} className={className}>
-      <svg viewBox="0 0 20 14" className="block !size-full" preserveAspectRatio="none">
+      <svg
+        viewBox="0 0 20 14"
+        className="block !size-full"
+        preserveAspectRatio="none"
+      >
         {/* White cross background shows through the gaps between quadrants. */}
         <rect width="20" height="14" fill="#fff" />
         <rect x="0" y="0" width="8.8" height="5.6" fill={DO_BLUE} />

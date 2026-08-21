@@ -1,4 +1,4 @@
-import { ContractStatus } from '@prisma/client';
+import { ContractStatus } from '@/generated/prisma/enums';
 import type { BadgeProps } from '@/shared/components/ui/badge';
 
 /** Keys under `contracts.statuses` are the enum values; translate with

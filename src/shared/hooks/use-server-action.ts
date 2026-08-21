@@ -1,11 +1,7 @@
 'use client';
 
 import { useCallback, useTransition } from 'react';
-import type {
-  FieldValues,
-  Path,
-  UseFormReturn,
-} from 'react-hook-form';
+import type { FieldValues, Path, UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
 import type { ActionResult } from '@/shared/lib/result';
 

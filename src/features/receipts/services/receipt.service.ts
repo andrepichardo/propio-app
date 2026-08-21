@@ -26,7 +26,9 @@ export const receiptService = {
   async list(
     ownerId: string,
     params: PaginationParams,
-  ): Promise<PaginatedResult<Awaited<ReturnType<typeof fetchReceipts>>[number]>> {
+  ): Promise<
+    PaginatedResult<Awaited<ReturnType<typeof fetchReceipts>>[number]>
+  > {
     const { page, pageSize, skip, take } = normalizePagination(params);
     const [items, total] = await Promise.all([
       fetchReceipts(ownerId, skip, take),

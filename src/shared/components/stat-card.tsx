@@ -14,10 +14,7 @@ interface StatCardProps {
   accent?: 'default' | 'success' | 'warning' | 'destructive';
 }
 
-const accentStyles: Record<
-  NonNullable<StatCardProps['accent']>,
-  string
-> = {
+const accentStyles: Record<NonNullable<StatCardProps['accent']>, string> = {
   default: 'bg-primary/10 text-primary',
   success: 'bg-success/10 text-success',
   warning: 'bg-warning/10 text-warning',

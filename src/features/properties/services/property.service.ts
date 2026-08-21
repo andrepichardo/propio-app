@@ -1,6 +1,6 @@
 import 'server-only';
 import { randomUUID } from 'crypto';
-import { ActivityAction } from '@prisma/client';
+import { ActivityAction } from '@/generated/prisma/enums';
 import { propertyRepository } from '../repositories/property.repository';
 import type {
   CreatePropertyInput,

@@ -21,7 +21,10 @@ export default async function ProfileSettingsPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <PageHeader title={t('profileTitle')} description={t('profileSubtitle')} />
+      <PageHeader
+        title={t('profileTitle')}
+        description={t('profileSubtitle')}
+      />
       <ProfileForm
         email={user.email}
         image={user.image}

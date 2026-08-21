@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Plus } from 'lucide-react';
-import { ExpenseCategory } from '@prisma/client';
+import { ExpenseCategory } from '@/generated/prisma/enums';
 import {
   createExpenseSchema,
   type CreateExpenseInput,

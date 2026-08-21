@@ -39,7 +39,11 @@ export default async function LandingPage() {
               </Button>
             ) : (
               <>
-                <Button variant="ghost" asChild className="hidden sm:inline-flex">
+                <Button
+                  variant="ghost"
+                  asChild
+                  className="hidden sm:inline-flex"
+                >
                   <Link href="/login">{t('signIn')}</Link>
                 </Button>
                 <Button asChild>
