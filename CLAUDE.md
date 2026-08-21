@@ -1,17 +1,18 @@
 # Propio — agent notes
 
-SaaS for independent landlords. Next.js 15 App Router · React 19 · TS strict · Prisma 6/PostgreSQL (Supabase) · Auth.js v5 · next-intl v4 · Tailwind + shadcn-style UI in `src/shared/components/ui`.
+SaaS for independent landlords. Next.js 16 App Router (Turbopack) · React 19.2 · TS strict · Prisma 7/PostgreSQL (Supabase) · Auth.js v5 · next-intl v4 · Tailwind + shadcn-style UI in `src/shared/components/ui`.
 
 ## Commands
 
 - **Yarn, not npm** (`yarn.lock` is the lockfile): `yarn dev` · `yarn build` · `yarn typecheck` · `yarn lint` · `yarn test`
+- **Two TypeScripts on purpose** (see Gotchas): `yarn typecheck` runs **TS 7** (the Go compiler, ~0.3s); `yarn typecheck:ts6` runs TS 6.0.3, which is what ESLint, Next and the IDE actually see. `yarn lint` is the ESLint CLI (`next lint` was removed in Next 16 and `next build` no longer lints).
 - DB: `yarn db:push` (dev), `db:migrate`, `db:seed` (demo@propio.app / Demo1234!)
 - Copy `.env.example` → `.env`; minimum `DATABASE_URL` + `AUTH_SECRET`.
 
 ## Environments (dev/prod are strictly separated)
 
 - `.env` points at the **dev** Supabase project (`apsqhknnbwwgowrciuio`, us-west-2). Production is a separate project (`imeqnlqshmwomzaocczc`, us-east-2) whose env lives only in Vercel.
-- **Vercel never touches the DB** — deploys run `prisma generate && next build` only. Schema changes must be applied to prod manually (`prisma db push` with prod `DATABASE_URL`/`DIRECT_URL` in the process env), ideally BEFORE pushing the code that needs them. Additive columns are safe with the old code still live.
+- **Vercel never touches the DB** — deploys run `prisma generate && next build` only (`prisma generate` is required: Prisma 7 writes the client into `src/generated/prisma`, which is gitignored). Schema changes must be applied to prod manually (`prisma db push` with prod `DATABASE_URL`/`DIRECT_URL` in the process env), ideally BEFORE pushing the code that needs them. Additive columns are safe with the old code still live.
 - `prisma/seed.ts` has `assertNotProduction()` — never bypass it. Never run destructive scripts against prod credentials.
 - Storage bucket `propio` (public) exists in both projects.
 - Resend: **prod** sends from the verified domain `usepropio.com` (`EMAIL_FROM="Propio <no-reply@usepropio.com>"`, set in Vercel). **Dev** stays on `EMAIL_FROM=onboarding@resend.dev` (no-domain mode) on purpose — it only delivers to the Resend account owner, so local runs can't email a real tenant. Same Resend account/key for both. `no-reply@` has no mailbox and the code sends no `reply_to`, so tenant replies are lost.
@@ -73,11 +74,35 @@ SaaS for independent landlords. Next.js 15 App Router · React 19 · TS strict �
 
 ## Gotchas
 
-- `middleware.ts` uses the edge-safe `auth.config.ts` (no Prisma/bcrypt). Node-only providers live in `auth.ts`.
+- **`src/proxy.ts`** (Next 16 renamed the `middleware` convention to `proxy`) uses the edge-safe `auth.config.ts`; Node-only providers live in `auth.ts`. Two traps, both of which fail SILENTLY because `app/layout.tsx` also guards with `redirect('/login')`:
+  - It must export the function as `default` (or a named `proxy`). `export const { auth: proxy } = NextAuth(...)` is a destructured binding and Next's static analysis rejects it: "must export a function".
+  - The matcher needs a REAL escaped dot: `.*\\..*` in the source string. Written `.*\..*` the string collapses to `.*..*`, which matches every path of 1+ characters, so the proxy silently stops running everywhere except `/`. Verify with `curl -o /dev/null -w '%{http_code}' localhost:3000/app` — it must be **307**, not 200.
+  - `proxy` always runs on the **Node.js** runtime; the edge runtime is not supported there.
 - Env is validated at boot in `src/shared/config/env.ts`; server env import from client code throws.
-- **Windows EPERM on `prisma generate`**: the dev server (or a stray node/VS Code TS server that keeps respawning) locks the query-engine DLL. Kill node processes right before `prisma generate`/`db:push`/`yarn build` (or use `prisma db push --skip-generate` when the client is already current), then relaunch `yarn dev`.
+- **Windows EPERM on `prisma generate`**: the dev server (or a stray node/VS Code TS server that keeps respawning) locks the query-engine DLL. Kill node processes right before `prisma generate`/`db:push`/`yarn build`, then relaunch `yarn dev`. (`--skip-generate` no longer exists on `db push` in Prisma 7.)
 - Never run two dev servers at once — they share `.next` and corrupt each other (500s). **`.next` corruption is common after EPERM/killed processes**: `next build` fails with `MODULE_NOT_FOUND` / "Failed to collect page data", or dev throws `Cannot find module './vendor-chunks/...'` → `rm -rf .next` and rebuild (fixes it).
 - **Testing server modules**: `vitest.config.ts` aliases `server-only` to `src/test/server-only-stub.ts`. Without it any module with `import 'server-only'` throws on import under Vitest and can't be unit-tested. Don't drop the `server-only` import from source to make a test pass.
 - **DROPPING a column is the reverse of adding one**: additive columns go to prod BEFORE the code. A drop must go AFTER the code that stops reading it is deployed — the live build still `select`s the old column and every query using it throws the moment it disappears.
-- **Applying schema to prod**: prod DB URLs live in the gitignored `.env.production` (reference copy). Apply with `export $(grep -E '^(DATABASE_URL|DIRECT_URL)=' .env.production | sed 's/"//g') && npx prisma db push --skip-generate`, then verify no drift with `prisma migrate diff --from-url "$DIRECT_URL" --to-schema-datamodel prisma/schema.prisma --exit-code`. Prod project host is `aws-*-us-east-2`.
+- **Applying schema to prod** (Prisma 7 changed every flag here): prod DB URLs live in the gitignored `.env.production` (reference copy). `prisma.config.ts` reads `DIRECT_URL` from the process env, so export it first:
+  ```bash
+  set -a && eval "$(grep -E '^(DATABASE_URL|DIRECT_URL)=' .env.production)" && set +a
+  npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --script   # REVIEW first
+  npx prisma db push --accept-data-loss
+  npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code  # 0 = in sync
+  ```
+  Gone in 7: `db push --skip-generate`, `db execute --url/--schema`, `migrate diff --from-url/--to-schema-datamodel`. For a **destructive** change (dropping a column) prefer `prisma db execute --file drop.sql` over `db push --accept-data-loss`, which would apply every drift it finds. Prod project host is `aws-*-us-east-2`.
 - GitHub OAuth apps allow only ONE callback URL (prod vs localhost); Google allows several.
+- **Prisma 7 enums must be imported from `@/generated/prisma/enums`, never `/client`.** The generated client is TypeScript source inside `src/`, so a `'use client'` component importing an enum from `/client` drags `node:module` into the browser bundle and Turbopack fails with "does not support external modules". `enums.ts` has zero imports. Only server-only files import from `/client` (that is where the `Prisma` namespace types live).
+- **Why two TypeScript versions**: `typescript-eslint` (latest, 8.67) declares `typescript >=4.8.4 <6.1.0` and TS 7 hard-errors with "typescript-eslint does not support TS 7.0". So `typescript` resolves to **6.0.3** (what ESLint, Next and the IDE consume via `require('typescript')`), and TS 7.0.2 is installed under the npm alias `typescript7` purely to run the type check. Both check the same code with the same semantics; TS 7 is just ~13× faster (0.3s vs 4s). Note `node_modules/.bin/tsc` points at the TS 7 binary because the alias package also ships a `tsc` bin — that is why both typecheck scripts call their compiler by explicit path. Collapse this back to a single `typescript` once typescript-eslint supports 7.x.
+- **ESLint is pinned to 9.x, not 10**: `eslint-plugin-react@7.37.5` (latest, and a dependency of `eslint-config-next`) peers at `<=9` and crashes under ESLint 10 with `contextOrFilename.getFilename is not a function`.
+- **`next dev` rewrites `CLAUDE.md`**: Next 16 appends a managed `<!-- BEGIN:nextjs-agent-rules -->` block on every dev boot. Deleting it just brings it back on the next run — commit it and move on (`agentRules: false` in `next.config.ts` disables it).
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

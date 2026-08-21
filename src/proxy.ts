@@ -21,5 +21,8 @@ export default auth;
 
 export const config = {
   // Run on everything except static assets, image optimizer, and API auth.
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|.*\..*).*)'],
+  // The `\\.` is a REAL escaped dot: it excludes paths with a file extension.
+  // Written as `\.` the string collapses to `.`, the group becomes `.*..*`,
+  // and every path of one character or more is excluded from the proxy.
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)'],
 };

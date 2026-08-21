@@ -10,7 +10,7 @@
     "lint": "eslint",
     "format": "prettier --write \"src/**/*.{ts,tsx,md}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,md}\"",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "node node_modules/typescript7/bin/tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "db:generate": "prisma generate",
@@ -19,7 +19,8 @@
     "db:studio": "prisma studio",
     "db:seed": "tsx prisma/seed.ts",
     "postinstall": "prisma generate",
-    "lint:fix": "eslint --fix"
+    "lint:fix": "eslint --fix",
+    "typecheck:ts6": "node node_modules/typescript/bin/tsc --noEmit"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
@@ -84,10 +85,11 @@
     "prisma": "7.9.1",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2",
+    "typescript": "6.0.3",
+    "typescript7": "npm:typescript@7.0.2",
     "vitest": "^2.1.8"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": "^20.19 || ^22.12 || >=24"
   }
 }

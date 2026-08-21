@@ -23,7 +23,8 @@
         "name": "next"
       }
     ],
-    "baseUrl": ".",
+    // No `baseUrl`: TypeScript 7 removed it. `paths` are resolved relative to
+    // this file's directory, which is what we always meant anyway.
     "paths": {
       "@/*": ["./src/*"]
     }
