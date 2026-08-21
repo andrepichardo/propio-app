@@ -51,12 +51,36 @@ export async function loginAction(
   }
 }
 
-/** Start an OAuth flow. Throws a redirect handled by Next.js. */
+/**
+ * Start an OAuth flow.
+ *
+ * `redirect: false` makes Auth.js RETURN the provider's authorize URL instead
+ * of redirecting by throwing. That matters: a thrown redirect crossing the
+ * server-action boundary reaches the client as a rejected promise, so any
+ * `catch` around the call swallows it and reports a failure that never
+ * happened — while the browser navigates to the provider anyway. Returning the
+ * URL and letting the client navigate keeps this a pure action, exactly like
+ * {@link loginAction}.
+ */
 export async function oauthSignInAction(
   provider: 'google' | 'github',
-): Promise<void> {
-  // `welcome=1` lets the dashboard fire the sign-in toast post-redirect.
-  await signIn(provider, { redirectTo: '/app?welcome=1' });
+): Promise<ActionResult<{ redirectTo: string }>> {
+  const t = await getTranslations('auth.errors');
+  try {
+    // `welcome=1` lets the dashboard fire the sign-in toast post-redirect.
+    const url = await signIn(provider, {
+      redirectTo: '/app?welcome=1',
+      redirect: false,
+    });
+
+    if (typeof url !== 'string' || url.length === 0) {
+      return fail(t('authError'), 'AUTH_ERROR');
+    }
+    return ok({ redirectTo: url });
+  } catch (error) {
+    if (error instanceof AuthError) return fail(t('authError'), 'AUTH_ERROR');
+    return toActionFailure(error);
+  }
 }
 
 export async function signOutAction(): Promise<void> {

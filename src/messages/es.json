@@ -85,7 +85,9 @@
       "resendVerification": "Reenviar enlace de verificación",
       "verifiedBanner": "Correo verificado — ya puedes iniciar sesión.",
       "linkInvalid": "Ese enlace de verificación es inválido o expiró.",
-      "requestNew": "Solicita uno nuevo"
+      "requestNew": "Solicita uno nuevo",
+      "oauthFailed": "No pudimos completar el inicio de sesión con ese proveedor.",
+      "oauthAccountNotLinked": "Ese correo ya tiene una cuenta creada de otra forma. Inicia sesión con tu correo y contraseña."
     },
     "register": {
       "title": "Crea tu cuenta",

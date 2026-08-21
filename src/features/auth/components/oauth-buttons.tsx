@@ -50,12 +50,16 @@ export function OAuthButtons() {
   function handle(provider: 'google' | 'github') {
     setActive(provider);
     startTransition(async () => {
-      try {
-        await oauthSignInAction(provider);
-      } catch {
+      const result = await oauthSignInAction(provider);
+      if (!result.success) {
         toast.error(t('error'));
         setActive(null);
+        return;
       }
+      // A full navigation, not `router.push`: the target is the provider's own
+      // domain. `active` stays set so the button keeps its loading state until
+      // the browser leaves the page.
+      window.location.href = result.data.redirectTo;
     });
   }
 

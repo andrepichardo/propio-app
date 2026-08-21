@@ -35,6 +35,25 @@ export default async function LoginPage({
         </div>
       )}
 
+      {/* Any error Auth.js sends here that is NOT our own verification-link
+          code. `pages.error` points at /login, so without this branch an OAuth
+          failure (OAuthAccountNotLinked, OAuthCallback, AccessDenied…) bounced
+          the user back to a pristine login form with no explanation at all.
+          The raw code is shown small so a failure stays diagnosable. */}
+      {error && error !== 'verification' && (
+        <div className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+          <TriangleAlert className="mt-0.5 size-4 shrink-0" />
+          <div className="min-w-0 space-y-1">
+            <p>
+              {error === 'OAuthAccountNotLinked'
+                ? t('login.oauthAccountNotLinked')
+                : t('login.oauthFailed')}
+            </p>
+            <p className="font-mono text-xs opacity-70">{error}</p>
+          </div>
+        </div>
+      )}
+
       {error === 'verification' && (
         <div className="flex items-start gap-2 rounded-md border border-amber-500/30 bg-amber-500/10 p-3 text-sm text-amber-700 dark:text-amber-400">
           <TriangleAlert className="mt-0.5 size-4 shrink-0" />

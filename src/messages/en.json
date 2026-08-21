@@ -85,7 +85,9 @@
       "resendVerification": "Resend verification link",
       "verifiedBanner": "Email verified — you can sign in now.",
       "linkInvalid": "That verification link is invalid or has expired.",
-      "requestNew": "Request a new one"
+      "requestNew": "Request a new one",
+      "oauthFailed": "We could not finish signing you in with that provider.",
+      "oauthAccountNotLinked": "That email already has an account created a different way. Sign in with your email and password instead."
     },
     "register": {
       "title": "Create your account",
