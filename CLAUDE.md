@@ -66,6 +66,7 @@ SaaS for independent landlords. Next.js 15 App Router · React 19 · TS strict �
 - Clickable table rows: stretched-link pattern — row `relative cursor-pointer`, the row's main `<Link>` gets `after:absolute after:inset-0` (used in tenants + contracts lists). Don't apply where rows carry multiple actions.
 - KPI tiles: use the shared `StatCard` (`src/shared/components/stat-card.tsx`); its value already handles long amounts (`min-w-0 break-words`, responsive size). Prefix the value string with `≈ ` when the metric's `approx` flag is set (see Currency).
 - Shared UI added: `ui/popover.tsx`, `ui/calendar.tsx`, `ui/date-picker.tsx`, `ui/month-picker.tsx`, `ui/switch.tsx`. Money/date inputs use the `<Select>` (currency) and pickers rather than raw text/native inputs.
+- **Wide tables never widen the page**: the app shell grid is `lg:grid-cols-[16rem_minmax(0,1fr)]` with `min-w-0` on the content column (`app/app/layout.tsx`). A plain `1fr` (= `minmax(auto,1fr)`) can't shrink below its min-content width, so a wide table blew the whole document out horizontally between `lg` and ~`xl`. Keep both the `minmax(0,…)` track and the `min-w-0`; the `Table` primitive's `overflow-auto` wrapper then scrolls on its own only when needed.
 - `PageHeader` actions wrap on mobile (`flex-wrap`, `sm:flex-nowrap`); for a busy header (e.g. contract detail) make the primary action `w-full sm:w-auto` and group secondaries. Dialogs (`ui/dialog.tsx`) use `w-[calc(100%-2rem)]` so they don't touch mobile edges.
 
 ## Gotchas

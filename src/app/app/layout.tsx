@@ -43,20 +43,24 @@ export default async function AppLayout({
     account?.hashedPassword && !account.emailVerified,
   );
 
+  // `minmax(0,1fr)` + `min-w-0` on the content column: with a plain `1fr`
+  // (= `minmax(auto,1fr)`) the column cannot shrink below its min-content
+  // width, so a wide table (payments, contracts…) widens the whole document
+  // instead of scrolling inside its own container.
   return (
-    <div className="min-h-screen lg:grid lg:grid-cols-[16rem_1fr]">
+    <div className="min-h-screen lg:grid lg:grid-cols-[16rem_minmax(0,1fr)]">
       <aside className="sticky top-0 hidden h-screen flex-col border-r bg-card lg:flex">
         <div className="flex h-16 items-center border-b px-5">
           <Link href="/app">
             <Logo />
           </Link>
         </div>
-        <div className="flex-1 overflow-y-auto scrollbar-thin">
+        <div className="scrollbar-thin flex-1 overflow-y-auto">
           <SidebarNav />
         </div>
       </aside>
 
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen min-w-0 flex-col">
         {/* Prefer DB values for name/image: the JWT snapshot goes stale after
             profile edits (avatar upload, rename) until the next sign-in. */}
         <Topbar
