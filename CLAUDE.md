@@ -27,7 +27,11 @@ SaaS for independent landlords. Next.js 16 App Router (Turbopack) · React 19.2 
 - **Money**: Prisma `Decimal(12,2)`. Format with helpers in `src/shared/lib/format.ts`; never do float math on display values.
 - **Storage**: only through `getStorage()` (`src/shared/lib/storage`) — never import the Supabase driver directly. When re-uploading to a FIXED key (avatar, signature, receipt PDF), store the URL with `?v=${Date.now()}` to bust browser/CDN caches.
 - **Lists**: filters/pagination live in the URL query string, validated with a Zod `*FiltersSchema` before hitting services.
-- **Every route section** gets `loading.tsx` (skeleton) + `error.tsx` (re-export `@/shared/components/route-error`). Skeletons must MIRROR the real view (same cards/grid/field density, mobile-first, no overflow) — detail/form/list pages each have their own; form-page skeletons compose primitives from `shared/components/form-skeleton.tsx`. **A segment's index page that also has child routes must live in a route group** so its detailed skeleton doesn't leak as the fallback for the children: the dashboard index is `app/app/(overview)/page.tsx` and the settings index is `app/app/settings/(preferences)/page.tsx` (their `loading.tsx` lives inside the group).
+- **Every route section** gets `loading.tsx` (skeleton) + `error.tsx` (re-export `@/shared/components/route-error`). Skeletons must MIRROR the real view (same cards/grid/field density, mobile-first, no overflow) — detail/form/list pages each have their own; form-page skeletons compose primitives from `shared/components/form-skeleton.tsx`. **A page that also has child routes must live in a route group**, together with its `loading.tsx`. A `loading.tsx` is a Suspense boundary for its segment AND everything below it, so an index skeleton left beside its children flashes for one frame before the child's own skeleton takes over (visible on the first navigation, then hidden by the router cache until a reload). Applies at BOTH levels:
+  - index → children: `(list)` in `payments`, `tenants`, `contracts`, `properties`; plus `app/app/(overview)` (dashboard) and `app/app/settings/(preferences)`.
+  - detail → edit: `[id]/(detail)` in `tenants`, `contracts`, `properties`.
+  `error.tsx` stays at the SEGMENT root on purpose — error boundaries should cover the children. Route groups don't change any URL.
+  Audit rule: no directory may hold `page.tsx` + `loading.tsx` while also containing child route directories. The one deliberate exception is `src/app` itself, whose `loading.tsx` is a plain full-screen spinner meant as the global fallback, not a page-shaped skeleton.
 - No `any`. `import 'server-only'` in server-only modules. Barrel exports per feature are optional; avoid importing server code into client bundles.
 
 ## i18n (EN + Latin-American ES — everything user-visible is translated)
@@ -95,9 +99,7 @@ SaaS for independent landlords. Next.js 16 App Router (Turbopack) · React 19.2 
 - **Prisma 7 enums must be imported from `@/generated/prisma/enums`, never `/client`.** The generated client is TypeScript source inside `src/`, so a `'use client'` component importing an enum from `/client` drags `node:module` into the browser bundle and Turbopack fails with "does not support external modules". `enums.ts` has zero imports. Only server-only files import from `/client` (that is where the `Prisma` namespace types live).
 - **Why two TypeScript versions**: `typescript-eslint` (latest, 8.67) declares `typescript >=4.8.4 <6.1.0` and TS 7 hard-errors with "typescript-eslint does not support TS 7.0". So `typescript` resolves to **6.0.3** (what ESLint, Next and the IDE consume via `require('typescript')`), and TS 7.0.2 is installed under the npm alias `typescript7` purely to run the type check. Both check the same code with the same semantics; TS 7 is just ~13× faster (0.3s vs 4s). Note `node_modules/.bin/tsc` points at the TS 7 binary because the alias package also ships a `tsc` bin — that is why both typecheck scripts call their compiler by explicit path. Collapse this back to a single `typescript` once typescript-eslint supports 7.x.
 - **ESLint is pinned to 9.x, not 10**: `eslint-plugin-react@7.37.5` (latest, and a dependency of `eslint-config-next`) peers at `<=9` and crashes under ESLint 10 with `contextOrFilename.getFilename is not a function`.
-- **`next dev` rewrites `CLAUDE.md`**: Next 16 appends a managed `<!-- BEGIN:nextjs-agent-rules -->` block on every dev boot. Deleting it just brings it back on the next run — commit it and move on (`agentRules: false` in `next.config.ts` disables it).
-
-<!-- BEGIN:nextjs-agent-rules -->
+- **`next dev` rewrites `CLAUDE.md`**: Next 16 appends a managed `<!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know
 
