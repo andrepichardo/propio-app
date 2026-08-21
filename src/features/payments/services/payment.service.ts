@@ -4,8 +4,8 @@ import {
   ActivityAction,
   NotificationType,
   PaymentType,
-  type Prisma,
-} from '@prisma/client';
+} from '@/generated/prisma/enums';
+import { type Prisma } from '@/generated/prisma/client';
 import { addMonths, format } from 'date-fns';
 import { es as esDateLocale } from 'date-fns/locale';
 import { prisma } from '@/shared/lib/prisma';
@@ -312,7 +312,9 @@ export const paymentService = {
       where: { id: input.id, ownerId, deletedAt: null },
       include: {
         receipt: { select: { id: true, number: true } },
-        contract: { select: { monthlyRent: true, currency: true, dueDay: true } },
+        contract: {
+          select: { monthlyRent: true, currency: true, dueDay: true },
+        },
       },
     });
     if (!payment) throw new NotFoundError('Payment');

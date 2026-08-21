@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Pencil } from 'lucide-react';
-import { PaymentType, type PaymentMethod } from '@prisma/client';
+import { PaymentType, type PaymentMethod } from '@/generated/prisma/enums';
 import {
   updatePaymentSchema,
   type UpdatePaymentInput,

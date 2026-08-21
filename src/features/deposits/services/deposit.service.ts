@@ -1,5 +1,5 @@
 import 'server-only';
-import { ActivityAction } from '@prisma/client';
+import { ActivityAction } from '@/generated/prisma/enums';
 import { prisma } from '@/shared/lib/prisma';
 import { depositRepository } from '../repositories/deposit.repository';
 import type { SettleDepositInput } from '../validators/deposit.validators';

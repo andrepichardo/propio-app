@@ -7,7 +7,7 @@ import {
   startOfMonth,
   startOfYear,
 } from 'date-fns';
-import { PaymentStatus, PaymentType } from '@prisma/client';
+import { PaymentStatus, PaymentType } from '@/generated/prisma/enums';
 import { getTranslations } from 'next-intl/server';
 import { prisma } from '@/shared/lib/prisma';
 import { propertyRepository } from '@/features/properties/repositories/property.repository';

@@ -1,5 +1,9 @@
 import 'server-only';
-import { ActivityAction, ContractStatus, PropertyStatus } from '@prisma/client';
+import {
+  ActivityAction,
+  ContractStatus,
+  PropertyStatus,
+} from '@/generated/prisma/enums';
 import { prisma } from '@/shared/lib/prisma';
 import { contractRepository } from '../repositories/contract.repository';
 import type {

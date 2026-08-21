@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ExpenseCategory } from '@prisma/client';
+import { ExpenseCategory } from '@/generated/prisma/enums';
 
 export const expenseBaseSchema = z.object({
   propertyId: z
@@ -10,10 +10,7 @@ export const expenseBaseSchema = z.object({
     .transform((v) => (v ? v : undefined)),
   category: z.nativeEnum(ExpenseCategory).default(ExpenseCategory.OTHER),
   description: z.string().trim().min(2, 'descriptionRequired').max(200),
-  amount: z.coerce
-    .number()
-    .positive('amountPositive')
-    .max(100_000_000),
+  amount: z.coerce.number().positive('amountPositive').max(100_000_000),
   currency: z
     .string()
     .trim()

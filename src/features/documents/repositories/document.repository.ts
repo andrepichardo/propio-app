@@ -1,5 +1,6 @@
 import 'server-only';
-import type { DocumentType, Prisma } from '@prisma/client';
+import type { DocumentType } from '@/generated/prisma/enums';
+import type { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/shared/lib/prisma';
 import {
   buildPaginatedResult,

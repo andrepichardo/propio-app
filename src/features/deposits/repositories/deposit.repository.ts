@@ -1,5 +1,6 @@
 import 'server-only';
-import { PaymentStatus, PaymentType, type Prisma } from '@prisma/client';
+import { PaymentStatus, PaymentType } from '@/generated/prisma/enums';
+import { type Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/shared/lib/prisma';
 import type { Converter } from '@/shared/lib/exchange-rates';
 

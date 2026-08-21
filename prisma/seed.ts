@@ -5,11 +5,24 @@
  * Run with: `npm run db:seed`
  * Credentials: demo@propio.app / Demo1234!
  */
-import { PrismaClient, PropertyStatus, PropertyType } from '@prisma/client';
+// Prisma 7 no longer auto-loads `.env`, and this file runs as its own `tsx`
+// process — without this the production guard below would read an EMPTY
+// DATABASE_URL and conclude it is not production.
+import 'dotenv/config';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { PropertyStatus, PropertyType } from '../src/generated/prisma/enums';
+import { PrismaClient } from '../src/generated/prisma/client';
 import bcrypt from 'bcryptjs';
 import { addMonths, startOfMonth, subMonths } from 'date-fns';
 
-const prisma = new PrismaClient();
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  throw new Error('DATABASE_URL is not set — refusing to seed blindly.');
+}
+
+const prisma = new PrismaClient({
+  adapter: new PrismaPg({ connectionString }),
+});
 
 /**
  * Safety guard. This seed wipes and recreates the demo tenant, so it must never
@@ -174,21 +187,47 @@ async function main() {
   // A few expenses across categories.
   const expenses: {
     category:
-      | 'MAINTENANCE'
-      | 'CLEANING'
-      | 'UTILITIES'
-      | 'REPAIRS'
-      | 'CONDOMINIUM';
+      'MAINTENANCE' | 'CLEANING' | 'UTILITIES' | 'REPAIRS' | 'CONDOMINIUM';
     description: string;
     amount: number;
     monthsAgo: number;
     propertyId?: string;
   }[] = [
-    { category: 'MAINTENANCE', description: 'AC service', amount: 150, monthsAgo: 1, propertyId: sunset.id },
-    { category: 'CLEANING', description: 'Deep cleaning', amount: 80, monthsAgo: 2, propertyId: oceanview.id },
-    { category: 'UTILITIES', description: 'Water bill', amount: 45, monthsAgo: 0, propertyId: sunset.id },
-    { category: 'REPAIRS', description: 'Roof leak repair', amount: 420, monthsAgo: 3, propertyId: cabin.id },
-    { category: 'CONDOMINIUM', description: 'HOA fee', amount: 120, monthsAgo: 0, propertyId: sunset.id },
+    {
+      category: 'MAINTENANCE',
+      description: 'AC service',
+      amount: 150,
+      monthsAgo: 1,
+      propertyId: sunset.id,
+    },
+    {
+      category: 'CLEANING',
+      description: 'Deep cleaning',
+      amount: 80,
+      monthsAgo: 2,
+      propertyId: oceanview.id,
+    },
+    {
+      category: 'UTILITIES',
+      description: 'Water bill',
+      amount: 45,
+      monthsAgo: 0,
+      propertyId: sunset.id,
+    },
+    {
+      category: 'REPAIRS',
+      description: 'Roof leak repair',
+      amount: 420,
+      monthsAgo: 3,
+      propertyId: cabin.id,
+    },
+    {
+      category: 'CONDOMINIUM',
+      description: 'HOA fee',
+      amount: 120,
+      monthsAgo: 0,
+      propertyId: sunset.id,
+    },
   ];
 
   for (const expense of expenses) {

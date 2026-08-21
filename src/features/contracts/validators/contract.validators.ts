@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ContractStatus } from '@prisma/client';
+import { ContractStatus } from '@/generated/prisma/enums';
 
 export const contractBaseSchema = z
   .object({
@@ -7,10 +7,7 @@ export const contractBaseSchema = z
     tenantId: z.string().cuid('selectTenant'),
     startDate: z.coerce.date({ message: 'startDateRequired' }),
     endDate: z.coerce.date().optional().nullable(),
-    monthlyRent: z.coerce
-      .number()
-      .positive('rentPositive')
-      .max(100_000_000),
+    monthlyRent: z.coerce.number().positive('rentPositive').max(100_000_000),
     currency: z
       .string()
       .trim()
@@ -28,36 +25,32 @@ export const contractBaseSchema = z
       .optional()
       .transform((v) => (v === '' ? undefined : v)),
   })
-  .refine(
-    (data) => !data.endDate || data.endDate > data.startDate,
-    {
-      message: 'endAfterStart',
-      path: ['endDate'],
-    },
-  );
+  .refine((data) => !data.endDate || data.endDate > data.startDate, {
+    message: 'endAfterStart',
+    path: ['endDate'],
+  });
 
 export const createContractSchema = contractBaseSchema;
 
-export const updateContractSchema = z
-  .object({
-    id: z.string().cuid(),
-    propertyId: z.string().cuid().optional(),
-    tenantId: z.string().cuid().optional(),
-    startDate: z.coerce.date().optional(),
-    endDate: z.coerce.date().optional().nullable(),
-    monthlyRent: z.coerce.number().positive().max(100_000_000).optional(),
-    currency: z
-      .string()
-      .trim()
-      .length(3, 'currencyCode')
-      .transform((v) => v.toUpperCase())
-      .optional(),
-    dueDay: z.coerce.number().int().min(1).max(31).optional(),
-    securityDeposit: z.coerce.number().min(0).max(100_000_000).optional(),
-    maintenanceIncluded: z.boolean().optional(),
-    status: z.nativeEnum(ContractStatus).optional(),
-    notes: z.string().trim().max(2000).optional(),
-  });
+export const updateContractSchema = z.object({
+  id: z.string().cuid(),
+  propertyId: z.string().cuid().optional(),
+  tenantId: z.string().cuid().optional(),
+  startDate: z.coerce.date().optional(),
+  endDate: z.coerce.date().optional().nullable(),
+  monthlyRent: z.coerce.number().positive().max(100_000_000).optional(),
+  currency: z
+    .string()
+    .trim()
+    .length(3, 'currencyCode')
+    .transform((v) => v.toUpperCase())
+    .optional(),
+  dueDay: z.coerce.number().int().min(1).max(31).optional(),
+  securityDeposit: z.coerce.number().min(0).max(100_000_000).optional(),
+  maintenanceIncluded: z.boolean().optional(),
+  status: z.nativeEnum(ContractStatus).optional(),
+  notes: z.string().trim().max(2000).optional(),
+});
 
 /**
  * Renewing a contract creates a NEW one carrying the previous terms forward,

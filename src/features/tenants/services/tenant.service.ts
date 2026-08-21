@@ -1,5 +1,5 @@
 import 'server-only';
-import { ActivityAction } from '@prisma/client';
+import { ActivityAction } from '@/generated/prisma/enums';
 import { tenantRepository } from '../repositories/tenant.repository';
 import type {
   CreateTenantInput,

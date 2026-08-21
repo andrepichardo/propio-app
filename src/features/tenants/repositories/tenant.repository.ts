@@ -1,5 +1,5 @@
 import 'server-only';
-import type { Prisma } from '@prisma/client';
+import type { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/shared/lib/prisma';
 import {
   buildPaginatedResult,
@@ -76,7 +76,9 @@ export const tenantRepository = {
     return prisma.tenant.findFirst({
       where: { id, ownerId, deletedAt: null },
       include: {
-        _count: { select: { contracts: true, payments: true, documents: true } },
+        _count: {
+          select: { contracts: true, payments: true, documents: true },
+        },
       },
     });
   },
@@ -89,7 +91,6 @@ export const tenantRepository = {
       select: { id: true, firstName: true, lastName: true },
     });
   },
-
 
   create(ownerId: string, data: Omit<Prisma.TenantCreateInput, 'owner'>) {
     return prisma.tenant.create({

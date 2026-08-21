@@ -43,7 +43,9 @@ const eslintConfig = [
     ignores: [
       'node_modules/**',
       '.next/**',
-      'prisma/generated/**',
+      // Prisma 7 emits the client as TypeScript source into the project, so it
+      // would otherwise be linted like first-party code.
+      'src/generated/**',
       'next-env.d.ts',
     ],
   },

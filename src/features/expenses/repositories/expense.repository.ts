@@ -1,5 +1,6 @@
 import 'server-only';
-import type { ExpenseCategory, Prisma } from '@prisma/client';
+import type { ExpenseCategory } from '@/generated/prisma/enums';
+import type { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/shared/lib/prisma';
 import type { Converter } from '@/shared/lib/exchange-rates';
 import {
@@ -72,11 +73,7 @@ export const expenseRepository = {
     return prisma.expense.create({ data: { ...data, ownerId } });
   },
 
-  async update(
-    ownerId: string,
-    id: string,
-    data: Prisma.ExpenseUpdateInput,
-  ) {
+  async update(ownerId: string, id: string, data: Prisma.ExpenseUpdateInput) {
     const result = await prisma.expense.updateMany({
       where: { id, ownerId, deletedAt: null },
       data,
@@ -107,7 +104,12 @@ export const expenseRepository = {
         ownerId,
         deletedAt: null,
         ...(from || to
-          ? { incurredAt: { ...(from ? { gte: from } : {}), ...(to ? { lte: to } : {}) } }
+          ? {
+              incurredAt: {
+                ...(from ? { gte: from } : {}),
+                ...(to ? { lte: to } : {}),
+              },
+            }
           : {}),
       },
       _sum: { amount: true },

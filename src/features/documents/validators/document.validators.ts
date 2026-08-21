@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { DocumentType } from '@prisma/client';
+import { DocumentType } from '@/generated/prisma/enums';
 
 export const MAX_DOCUMENT_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
 

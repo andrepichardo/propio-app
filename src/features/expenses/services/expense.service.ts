@@ -1,5 +1,5 @@
 import 'server-only';
-import { ActivityAction } from '@prisma/client';
+import { ActivityAction } from '@/generated/prisma/enums';
 import { prisma } from '@/shared/lib/prisma';
 import { expenseRepository } from '../repositories/expense.repository';
 import type {
@@ -21,7 +21,8 @@ async function assertPropertyOwnership(
     where: { id: propertyId, ownerId, deletedAt: null },
     select: { id: true },
   });
-  if (!property) throw new ForbiddenError('Property not found in your account.');
+  if (!property)
+    throw new ForbiddenError('Property not found in your account.');
 }
 
 export const expenseService = {

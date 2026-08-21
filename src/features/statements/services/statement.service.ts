@@ -1,18 +1,13 @@
 import 'server-only';
-import {
-  addMonths,
-  endOfMonth,
-  format,
-  startOfMonth,
-} from 'date-fns';
+import { addMonths, endOfMonth, format, startOfMonth } from 'date-fns';
 import { es as esDateLocale } from 'date-fns/locale';
 import { getTranslations } from 'next-intl/server';
 import {
   ActivityAction,
   PaymentStatus,
   PaymentType,
-  type Prisma,
-} from '@prisma/client';
+} from '@/generated/prisma/enums';
+import { type Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/shared/lib/prisma';
 import type {
   GenerateStatementInput,
@@ -306,7 +301,9 @@ export const statementService = {
           totalCharged: t('totalCharged'),
           totalPaid: t('totalPaid'),
           outstanding: t('outstanding'),
-          nextDue: t('nextDue', { date: format(params.nextDueDate, 'PPP', dfOpts) }),
+          nextDue: t('nextDue', {
+            date: format(params.nextDueDate, 'PPP', dfOpts),
+          }),
           generatedBy: t('generatedBy', {
             app: clientEnv.NEXT_PUBLIC_APP_NAME,
           }),
