@@ -88,7 +88,7 @@
       "requestNew": "Request a new one",
       "oauthFailed": "We could not finish signing you in with that provider.",
       "oauthAccountNotLinked": "That email already has an account created a different way. Sign in with your email and password instead.",
-      "oauthMisconfigured": "That provider is not set up correctly for this site — its registered callback URL does not match. Sign in with your email meanwhile."
+      "oauthMisconfigured": "We could not finish signing you in with that provider. The server rejected the callback — the details are in the server logs."
     },
     "register": {
       "title": "Create your account",

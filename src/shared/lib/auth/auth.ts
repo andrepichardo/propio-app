@@ -38,6 +38,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientId: process.env.AUTH_GITHUB_ID,
       clientSecret: process.env.AUTH_GITHUB_SECRET,
       allowDangerousEmailAccountLinking: true,
+      /**
+       * Required because this is a GitHub **App** (client id `Ov23li…`), not a
+       * classic OAuth App. GitHub Apps append an `iss` parameter to the
+       * callback; Auth.js validates it against `provider.issuer`, which the
+       * GitHub provider leaves unset, so it falls back to the placeholder
+       * "https://authjs.dev" and every callback dies with
+       * `unexpected "iss" (issuer) response parameter value` — surfaced to the
+       * user as the opaque `Configuration` error. Classic OAuth Apps send no
+       * `iss`, which is why the stock config works for them and not here.
+       */
+      issuer: 'https://github.com/login/oauth',
     }),
     Credentials({
       name: 'Email',

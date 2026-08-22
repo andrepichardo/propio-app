@@ -1,4 +1,12 @@
 {
+  // Use the workspace TypeScript (6.0.3), which is what ESLint, Next and the
+  // IDE consume. TS 7 runs the type check via `yarn typecheck` — see CLAUDE.md.
   "js/ts.tsdk.path": "node_modules\\typescript\\lib",
-  "prisma.pinToPrisma6": true
+
+  // MUST stay false now that the project is on Prisma 7. When pinned to 6 the
+  // extension loads the Prisma 6 language server, which does not know that
+  // connection URLs moved to `prisma.config.ts`, and reports a bogus
+  // `Argument "url" is missing in data source block "db"` on a schema the
+  // Prisma 7 CLI validates as correct.
+  "prisma.pinToPrisma6": false
 }

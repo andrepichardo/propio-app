@@ -49,9 +49,10 @@ export default async function LoginPage({
                 ? t('login.oauthAccountNotLinked')
                 : error === 'Configuration'
                   ? // Auth.js collapses CallbackRouteError into "Configuration",
-                    // which reads like an app bug. In practice it is almost
-                    // always the provider's registered callback URL not matching
-                    // this deployment's — the server log carries the real cause.
+                    // which reads like an app bug but covers ANY failure in the
+                    // callback (token exchange, profile fetch, adapter write).
+                    // Deliberately does not name a cause: only the server log's
+                    // `[auth][cause]` line knows which one it was.
                     t('login.oauthMisconfigured')
                   : t('login.oauthFailed')}
             </p>
