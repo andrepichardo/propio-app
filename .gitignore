@@ -28,7 +28,11 @@ yarn-error.log*
 # env files
 .env
 .env*.local
-.env.production
+# Reference copy of the PROD credentials, used only by the manual
+# schema commands. Deliberately NOT named .env.production: Next loads
+# .env.[mode] automatically, so that name made `next start` talk to the
+# production database from a local machine.
+.env.prod.reference
 
 # vercel
 .vercel

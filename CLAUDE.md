@@ -87,9 +87,9 @@ SaaS for independent landlords. Next.js 16 App Router (Turbopack) · React 19.2 
 - Never run two dev servers at once — they share `.next` and corrupt each other (500s). **`.next` corruption is common after EPERM/killed processes**: `next build` fails with `MODULE_NOT_FOUND` / "Failed to collect page data", or dev throws `Cannot find module './vendor-chunks/...'` → `rm -rf .next` and rebuild (fixes it).
 - **Testing server modules**: `vitest.config.ts` aliases `server-only` to `src/test/server-only-stub.ts`. Without it any module with `import 'server-only'` throws on import under Vitest and can't be unit-tested. Don't drop the `server-only` import from source to make a test pass.
 - **DROPPING a column is the reverse of adding one**: additive columns go to prod BEFORE the code. A drop must go AFTER the code that stops reading it is deployed — the live build still `select`s the old column and every query using it throws the moment it disappears.
-- **Applying schema to prod** (Prisma 7 changed every flag here): prod DB URLs live in the gitignored `.env.production` (reference copy). `prisma.config.ts` reads `DIRECT_URL` from the process env, so export it first:
+- **Applying schema to prod** (Prisma 7 changed every flag here): prod DB URLs live in the gitignored `.env.prod.reference`. **That name is deliberate**: Next auto-loads `.env.[mode]`, so while the file was called `.env.production` a local `next start` (NODE_ENV=production) silently connected to the PRODUCTION database. Never rename it back. `prisma.config.ts` reads `DIRECT_URL` from the process env, so export it first:
   ```bash
-  set -a && eval "$(grep -E '^(DATABASE_URL|DIRECT_URL)=' .env.production)" && set +a
+  set -a && eval "$(grep -E '^(DATABASE_URL|DIRECT_URL)=' .env.prod.reference)" && set +a
   npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --script   # REVIEW first
   npx prisma db push --accept-data-loss
   npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code  # 0 = in sync

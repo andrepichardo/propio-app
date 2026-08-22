@@ -7,12 +7,17 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   experimental: {
-    // Server Actions are enabled by default in Next 15; tune the body size
-    // limit so document/photo uploads via actions don't get rejected early.
+    // The only experiment we opt into, and it is load-bearing: without it
+    // server actions cap request bodies at 1MB and document/photo uploads are
+    // rejected. Next 16 still keeps `serverActions` under `experimental`, so
+    // the "Experiments (use with caution)" line in the build output is
+    // expected — not a misconfiguration.
     serverActions: {
       bodySizeLimit: '10mb',
     },
-    optimizePackageImports: ['lucide-react', 'date-fns', 'recharts'],
+    // NOTE: `optimizePackageImports` used to list lucide-react, date-fns and
+    // recharts. Next 16 already ships all three in its default list, so the
+    // entry only added noise to the experiments banner.
   },
   images: {
     remotePatterns: [
