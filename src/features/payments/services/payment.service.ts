@@ -25,32 +25,15 @@ import { sendReceiptEmail } from '@/emails/send';
 import { getUserPreferences } from '@/shared/lib/auth/preferences';
 import { isLocale } from '@/i18n/config';
 import { rentPeriodStart } from '@/shared/lib/rent-period';
-
-/**
- * Generate the next per-owner receipt number for the current year, e.g.
- * `REC-2026-0007`. Runs inside the payment transaction so it can't race with a
- * concurrent registration.
- *
- * Derived from the HIGHEST existing number, not a row count: payments can be
- * permanently deleted, and a count would reuse a live number after a gap and
- * collide with `@@unique([ownerId, number])`. Zero-padding to 4 digits keeps
- * the lexical `desc` order numeric for realistic per-year volumes.
- */
-/**
- * Recover a storage key from a Supabase public URL. The proof key uses a random
- * UUID and only the URL is persisted, so deleting the blob means parsing it out
- * of `.../object/public/{bucket}/{key}`. Returns null for anything unexpected.
- */
-function storageKeyFromPublicUrl(url?: string | null): string | null {
-  if (!url) return null;
-  const marker = '/object/public/';
-  const at = url.indexOf(marker);
-  if (at === -1) return null;
-  const afterBucket = url.slice(at + marker.length).split('?')[0] ?? '';
-  const slash = afterBucket.indexOf('/');
-  if (slash === -1) return null;
-  return decodeURIComponent(afterBucket.slice(slash + 1));
-}
+import {
+  rentBalanceAfter,
+  settlesRentPeriod,
+} from '@/shared/lib/rent-settlement';
+import {
+  nextReceiptNumber,
+  receiptNumberPrefix,
+} from '@/shared/lib/receipt-number';
+import { storageKeyFromPublicUrl } from '@/shared/lib/storage/public-url';
 
 /**
  * Localized default concept, used when the owner leaves the field blank. Rent
@@ -74,19 +57,22 @@ function defaultConcept(
   return `${isEs ? 'Alquiler' : 'Rent'} ${start} – ${end}`;
 }
 
-async function nextReceiptNumber(
+/**
+ * Reserve the next receipt number for this owner. Runs inside the payment
+ * transaction so it cannot race with a concurrent registration; the numbering
+ * rule itself lives in `receipt-number.ts` and is unit-tested there.
+ */
+async function reserveReceiptNumber(
   tx: Prisma.TransactionClient,
   ownerId: string,
 ): Promise<string> {
   const year = new Date().getFullYear();
-  const prefix = `REC-${year}-`;
   const latest = await tx.receipt.findFirst({
-    where: { ownerId, number: { startsWith: prefix } },
+    where: { ownerId, number: { startsWith: receiptNumberPrefix(year) } },
     orderBy: { number: 'desc' },
     select: { number: true },
   });
-  const nextSeq = latest ? Number(latest.number.slice(prefix.length)) + 1 : 1;
-  return `${prefix}${String(nextSeq).padStart(4, '0')}`;
+  return nextReceiptNumber(latest?.number, year);
 }
 
 export const paymentService = {
@@ -121,11 +107,13 @@ export const paymentService = {
 
     const isDeposit = input.type === PaymentType.DEPOSIT;
     const monthlyRent = Number(contract.monthlyRent);
-    // A deposit never leaves a rent balance; `settlesPeriod` clears it too (a
-    // lower-but-agreed amount that still covers the period, e.g. a discount).
-    const settlesPeriod = !isDeposit && input.settlesPeriod;
-    const balanceAfter =
-      isDeposit || settlesPeriod ? 0 : Math.max(0, monthlyRent - input.amount);
+    const settlesPeriod = settlesRentPeriod(isDeposit, input.settlesPeriod);
+    const balanceAfter = rentBalanceAfter({
+      amount: input.amount,
+      monthlyRent,
+      isDeposit,
+      settlesPeriod,
+    });
     const prefs = await getUserPreferences(ownerId);
     // Rent covers a due-day-to-due-day period, regardless of when it was paid.
     const rentPeriod = isDeposit
@@ -159,7 +147,7 @@ export const paymentService = {
         },
       });
 
-      const number = await nextReceiptNumber(tx, ownerId);
+      const number = await reserveReceiptNumber(tx, ownerId);
       const receipt = await tx.receipt.create({
         data: {
           ownerId,
@@ -321,9 +309,13 @@ export const paymentService = {
 
     const isDeposit = input.type === PaymentType.DEPOSIT;
     const monthlyRent = Number(payment.contract.monthlyRent);
-    const settlesPeriod = !isDeposit && input.settlesPeriod;
-    const balanceAfter =
-      isDeposit || settlesPeriod ? 0 : Math.max(0, monthlyRent - input.amount);
+    const settlesPeriod = settlesRentPeriod(isDeposit, input.settlesPeriod);
+    const balanceAfter = rentBalanceAfter({
+      amount: input.amount,
+      monthlyRent,
+      isDeposit,
+      settlesPeriod,
+    });
     const prefs = await getUserPreferences(ownerId);
     // Rent covers a due-day-to-due-day period, regardless of when it was paid.
     const rentPeriod = isDeposit

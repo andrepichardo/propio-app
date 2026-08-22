@@ -1,5 +1,6 @@
 import 'server-only';
 import { ActivityAction } from '@/generated/prisma/enums';
+import { splitDeposit } from '@/shared/lib/deposit-split';
 import { prisma } from '@/shared/lib/prisma';
 import { depositRepository } from '../repositories/deposit.repository';
 import type { SettleDepositInput } from '../validators/deposit.validators';
@@ -83,18 +84,19 @@ export const depositService = {
     }
 
     const held = await depositRepository.heldForContract(ownerId, contract.id);
-    if (held <= 0) {
-      throw new ValidationError('No deposit was collected for this contract.');
-    }
-    if (input.amountRetained > held) {
+    const split = splitDeposit(held, input.amountRetained);
+    if (!split.ok) {
+      if (split.reason === 'noDeposit') {
+        throw new ValidationError(
+          'No deposit was collected for this contract.',
+        );
+      }
       throw new ValidationError(
         'The retained amount cannot exceed the deposit collected.',
         { amountRetained: ['retainedExceedsDeposit'] },
       );
     }
-
-    const amountRetained = input.amountRetained;
-    const amountReturned = held - amountRetained;
+    const { amountRetained, amountReturned } = split;
 
     const settlement = await prisma.$transaction(async (tx) => {
       const created = await depositRepository.create(tx, {

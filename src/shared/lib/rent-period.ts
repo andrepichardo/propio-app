@@ -7,6 +7,7 @@
  * Kept free of server-only imports so it is unit-testable on its own; both
  * functions are pure.
  */
+import { addMonths } from 'date-fns';
 
 /**
  * Rent period a payment covers, anchored to the contract's **due day** — never
@@ -37,4 +38,25 @@ export function monthKey(date: Date): string {
   const year = isUtcMidnight ? date.getUTCFullYear() : date.getFullYear();
   const month = isUtcMidnight ? date.getUTCMonth() : date.getMonth();
   return `${year}-${month}`;
+}
+
+/**
+ * Next due date for a contract, relative to `reference`.
+ *
+ * `dueDay` is clamped to 28 so a contract due on the 29th–31st still lands on
+ * a day that exists in EVERY month — the alternative (rolling into the next
+ * month) would silently skip February.
+ *
+ * Unlike the date-only helpers above this works in LOCAL time on purpose: it
+ * answers "what is the next due date from now", a question about the reader's
+ * present, not a stored calendar value.
+ */
+export function nextDueDate(dueDay: number, reference = new Date()): Date {
+  const day = Math.min(Math.max(dueDay, 1), 28);
+  const thisMonth = new Date(
+    reference.getFullYear(),
+    reference.getMonth(),
+    day,
+  );
+  return thisMonth >= reference ? thisMonth : addMonths(thisMonth, 1);
 }

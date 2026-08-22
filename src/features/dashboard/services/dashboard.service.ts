@@ -16,7 +16,8 @@ import { prisma } from '@/shared/lib/prisma';
 import { propertyRepository } from '@/features/properties/repositories/property.repository';
 import { depositRepository } from '@/features/deposits/repositories/deposit.repository';
 import { toNumber } from '@/shared/lib/format';
-import { monthKey } from '@/shared/lib/rent-period';
+import { monthKey, nextDueDate } from '@/shared/lib/rent-period';
+import { isPeriodCovered } from '@/shared/lib/rent-settlement';
 import {
   getUsdRates,
   makeConverter,
@@ -229,19 +230,6 @@ async function buildMonthlySeries(
   );
 }
 
-/**
- * Compute the next due date for a contract from its `dueDay`, relative to now.
- */
-function nextDueDate(dueDay: number, reference = new Date()): Date {
-  const day = Math.min(Math.max(dueDay, 1), 28);
-  const thisMonth = new Date(
-    reference.getFullYear(),
-    reference.getMonth(),
-    day,
-  );
-  return thisMonth >= reference ? thisMonth : addMonths(thisMonth, 1);
-}
-
 export async function getDashboardSummary(
   ownerId: string,
   currency: string,
@@ -372,7 +360,12 @@ export async function getDashboardSummary(
       for (let i = 0; i < 3; i++) {
         const key = `${contract.id}:${monthKey(dueDate)}`;
         const paid = paidByContractMonth.get(key) ?? 0;
-        if (!settledMonths.has(key) && paid < rent) break;
+        const covered = isPeriodCovered({
+          paid,
+          monthlyRent: rent,
+          settled: settledMonths.has(key),
+        });
+        if (!covered) break;
         dueDate = addMonths(dueDate, 1);
       }
       return {

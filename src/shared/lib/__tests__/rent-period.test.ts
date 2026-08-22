@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { monthKey, rentPeriodStart } from '@/shared/lib/rent-period';
+import {
+  monthKey,
+  nextDueDate,
+  rentPeriodStart,
+} from '@/shared/lib/rent-period';
 
 /** Readable assertion helper: a UTC-midnight date as `yyyy-MM-dd`. */
 const iso = (date: Date) => date.toISOString().slice(0, 10);
@@ -75,5 +79,40 @@ describe('monthKey', () => {
     const stamp = new Date(2026, 7, 15, 14, 30);
 
     expect(monthKey(stamp)).toBe('2026-7');
+  });
+});
+
+describe('nextDueDate', () => {
+  it('uses this month when the due day is still ahead', () => {
+    const reference = new Date(2026, 7, 3); // 3 Aug
+    expect(nextDueDate(15, reference)).toEqual(new Date(2026, 7, 15));
+  });
+
+  it('rolls to next month once the due day has passed', () => {
+    const reference = new Date(2026, 7, 20); // 20 Aug
+    expect(nextDueDate(15, reference)).toEqual(new Date(2026, 8, 15));
+  });
+
+  it('treats the due day itself as still due today', () => {
+    const reference = new Date(2026, 7, 15); // exactly the due day, midnight
+    expect(nextDueDate(15, reference)).toEqual(new Date(2026, 7, 15));
+  });
+
+  it('clamps a due day of 29-31 to 28 so February is never skipped', () => {
+    const reference = new Date(2026, 0, 5); // 5 Jan
+    expect(nextDueDate(31, reference)).toEqual(new Date(2026, 0, 28));
+    expect(nextDueDate(29, new Date(2026, 1, 1))).toEqual(
+      new Date(2026, 1, 28),
+    );
+  });
+
+  it('clamps a nonsensical due day up to 1', () => {
+    const reference = new Date(2026, 7, 20);
+    expect(nextDueDate(0, reference)).toEqual(new Date(2026, 8, 1));
+  });
+
+  it('crosses the year boundary', () => {
+    const reference = new Date(2026, 11, 20); // 20 Dec
+    expect(nextDueDate(5, reference)).toEqual(new Date(2027, 0, 5));
   });
 });

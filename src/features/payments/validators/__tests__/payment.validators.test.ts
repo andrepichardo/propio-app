@@ -57,3 +57,33 @@ describe('registerPaymentSchema', () => {
     ).toBe(false);
   });
 });
+
+describe('registerPaymentSchema — settlesPeriod', () => {
+  it('defaults to false so a partial payment leaves a balance', () => {
+    const result = registerPaymentSchema.safeParse(validInput);
+    expect(result.success).toBe(true);
+    if (result.success) expect(result.data.settlesPeriod).toBe(false);
+  });
+
+  it('accepts an explicit true', () => {
+    const result = registerPaymentSchema.safeParse({
+      ...validInput,
+      amount: 900,
+      settlesPeriod: true,
+    });
+    expect(result.success).toBe(true);
+    if (result.success) expect(result.data.settlesPeriod).toBe(true);
+  });
+
+  it('rejects a non-boolean instead of coercing it', () => {
+    // Coercion here would be dangerous: the string "false" is truthy, so a
+    // stray form value could silently mark a period as fully settled.
+    for (const value of ['true', 'false', 1, 0]) {
+      const result = registerPaymentSchema.safeParse({
+        ...validInput,
+        settlesPeriod: value,
+      });
+      expect(result.success).toBe(false);
+    }
+  });
+});
