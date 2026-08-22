@@ -87,7 +87,8 @@
       "linkInvalid": "Ese enlace de verificación es inválido o expiró.",
       "requestNew": "Solicita uno nuevo",
       "oauthFailed": "No pudimos completar el inicio de sesión con ese proveedor.",
-      "oauthAccountNotLinked": "Ese correo ya tiene una cuenta creada de otra forma. Inicia sesión con tu correo y contraseña."
+      "oauthAccountNotLinked": "Ese correo ya tiene una cuenta creada de otra forma. Inicia sesión con tu correo y contraseña.",
+      "oauthMisconfigured": "Ese proveedor no está bien configurado para este sitio — la URL de callback registrada no coincide. Mientras tanto, inicia sesión con tu correo."
     },
     "register": {
       "title": "Crea tu cuenta",

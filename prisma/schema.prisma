@@ -97,6 +97,16 @@ model Account {
   id_token          String? @db.Text
   session_state     String?
 
+  /**
+   * GitHub Apps (client id `Ov23li…`) with expiring user tokens return this
+   * alongside the token. The Auth.js Prisma adapter does `account.create({ data })`
+   * with the token response UNFILTERED, so a field with no column here makes
+   * Prisma throw "Unknown argument" — surfacing as a useless `Configuration`
+   * error on the login page. Google never sends it, which is why only GitHub
+   * sign-in broke.
+   */
+  refresh_token_expires_in Int?
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
