@@ -6,45 +6,45 @@ interface LogoProps {
 }
 
 /**
- * Propio brand mark — a house glyph inside a rounded tile, paired with the
- * wordmark. Kept as inline SVG so it inherits currentColor and needs no asset.
+ * Propio brand mark — three stacked figures inside a rounded indigo tile,
+ * paired with the wordmark. Kept as inline SVG (no asset request, scales
+ * crisply, and the wordmark inherits `currentColor`).
+ *
+ * The tile keeps the literal brand indigo in BOTH themes (white glyphs on it
+ * sit at ~7:1, so it reads either way), while the wordmark is `currentColor`
+ * on purpose: the brand indigo would only hit ~2.6:1 on the dark background.
+ * The full-lockup viewBox is the designer's original, so tile↔wordmark
+ * spacing is theirs, not ours.
  */
 export function Logo({ className, showWordmark = true }: LogoProps) {
   return (
-    <span className={cn('inline-flex items-center gap-2', className)}>
-      <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-soft">
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          className="size-5"
-          aria-hidden="true"
-        >
-          <path
-            d="M4 11.5 12 5l8 6.5"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M6 10.5V19h12v-8.5"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M10.5 19v-4h3v4"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </span>
+    <svg
+      viewBox={showWordmark ? '0 0 307.15 95.98' : '0 0 95.98 95.98'}
+      className={cn('h-8 w-auto shrink-0', className)}
+      role="img"
+      aria-label="Propio"
+    >
+      <rect width="95.98" height="95.98" rx="20.88" ry="20.88" fill="#48509e" />
+      <path
+        fill="#fff"
+        d="M45.81,32.88c0-5.21-4.3-9.42-9.55-9.26-4.94.15-9,4.35-8.98,9.29.01,3.49,1.96,6.52,4.82,8.09.19.11.31.31.3.53l-2,30.23c-.02.33.24.6.57.6h11.16c.33,0,.59-.28.57-.6l-2-30.23c-.01-.22.1-.42.3-.53,2.87-1.57,4.82-4.62,4.82-8.12Z"
+      />
+      <path
+        fill="#fff"
+        fillOpacity=".5"
+        d="M57.26,32.88c0-5.21-4.3-9.42-9.55-9.26-4.94.15-9,4.35-8.98,9.29.01,3.49,1.96,6.52,4.82,8.09.19.11.31.31.3.53l-2,30.23c-.02.33.24.6.57.6h11.16c.33,0,.59-.28.57-.6l-2-30.23c-.01-.22.1-.42.3-.53,2.87-1.57,4.82-4.62,4.82-8.12Z"
+      />
+      <path
+        fill="#fff"
+        fillOpacity=".2"
+        d="M68.7,32.88c0-5.21-4.3-9.42-9.55-9.26-4.94.15-9,4.35-8.98,9.29.01,3.49,1.96,6.52,4.82,8.09.19.11.31.31.3.53l-2,30.23c-.02.33.24.6.57.6h11.16c.33,0,.59-.28.57-.6l-2-30.23c-.01-.22.1-.42.3-.53,2.87-1.57,4.82-4.62,4.82-8.12Z"
+      />
       {showWordmark ? (
-        <span className="text-lg font-semibold tracking-tight">Propio</span>
+        <g fill="currentColor">
+          <circle cx="261.18" cy="27.92" r="8.41" />
+          <path d="M302.81,42.46c-3.6-4.09-8.93-6.13-15.98-6.13-6.17,0-11.06,1.74-14.69,5.22-2.5,2.4-4.12,5.26-4.89,8.57l-.38-12.49h-12.43v12.08c-.59-3-1.71-5.66-3.36-7.97-2.58-3.6-6.22-5.4-10.92-5.4-2.39,0-4.56.52-6.53,1.56-1.46.77-3.06,2.25-4.81,4.44v-5.21h-12.63v11.44c-.72-2.26-1.85-4.3-3.44-6.11-3.6-4.09-8.93-6.13-15.98-6.13-4.83,0-8.87,1.08-12.14,3.22-1.04-.79-2.24-1.42-3.08-1.78-2.04-.96-3.94-1.44-5.69-1.44-1.9,0-3.5.47-4.79,1.41-1.29.94-2.55,2.66-3.76,5.16v-5.77h-9.13c-.26-4.04-1.6-7.21-4.01-9.52-2.71-2.59-6.78-3.88-12.22-3.88h-25.79c-.85,0-1.55.69-1.55,1.55v45.51c0,.85.69,1.55,1.55,1.55h14.36c.85,0,1.55-.69,1.55-1.55v-14.94c0-.85.69-1.55,1.55-1.55h6.68c6.06,0,10.56-1.38,13.51-4.14.31-.29.59-.59.87-.91v23.09h13.56v-11.8c0-5.64.7-9.48,2.09-11.54.97-1.46,2.34-2.19,4.11-2.19.87,0,2.04.3,3.5.89-.85,2.16-1.29,4.53-1.29,7.14,0,5.77,2.14,10.43,6.43,13.99,3.49,2.87,8.07,4.31,13.73,4.31,6.34,0,11.31-1.73,14.9-5.19,2.13-2.05,3.62-4.46,4.48-7.21v24.99h13.63v-16.81c1.35,1.39,2.88,2.44,4.59,3.15,1.71.71,3.61,1.06,5.69,1.06,4.29,0,7.84-1.54,10.64-4.63,1.85-2.03,3.07-4.67,3.7-7.89v11.72h13.49l-.36-11.62c1,3.14,2.85,5.85,5.56,8.1,3.49,2.87,8.07,4.31,13.73,4.31,6.34,0,11.31-1.73,14.9-5.19,3.59-3.46,5.39-7.9,5.39-13.31,0-4.82-1.45-8.87-4.34-12.17ZM141.84,42.94c-1.17,1.01-3.21,1.51-6.1,1.51h-2.13c-.85,0-1.55-.69-1.55-1.55v-7.75c0-.85.69-1.55,1.55-1.55h2.73c2.81,0,4.72.53,5.74,1.59,1.02,1.06,1.53,2.35,1.53,3.88s-.59,2.86-1.76,3.86ZM201.65,61.79c-1.25,1.48-2.85,2.22-4.79,2.22s-3.52-.75-4.79-2.25c-1.27-1.5-1.91-3.82-1.91-6.96s.64-5.4,1.92-6.91c1.28-1.51,2.91-2.27,4.87-2.27,1.86,0,3.42.75,4.67,2.24,1.26,1.49,1.89,3.76,1.89,6.81,0,3.27-.62,5.65-1.87,7.13ZM239.85,61.11c-1.06,1.29-2.38,1.94-3.95,1.94-1.79,0-3.27-.67-4.44-2.02-1.17-1.35-1.76-3.42-1.76-6.2,0-3.03.57-5.22,1.72-6.57,1.15-1.35,2.59-2.02,4.31-2.02,1.59,0,2.94.67,4.05,2.01,1.1,1.34,1.66,3.43,1.66,6.28,0,3.09-.53,5.29-1.59,6.58ZM291.72,61.79c-1.25,1.48-2.85,2.22-4.79,2.22s-3.52-.75-4.79-2.25c-1.27-1.5-1.91-3.82-1.91-6.96s.64-5.4,1.92-6.91c1.28-1.51,2.91-2.27,4.87-2.27,1.86,0,3.42.75,4.67,2.24,1.26,1.49,1.89,3.76,1.89,6.81,0,3.27-.62,5.65-1.87,7.13Z" />
+        </g>
       ) : null}
-    </span>
+    </svg>
   );
 }

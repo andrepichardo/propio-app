@@ -14,8 +14,10 @@
     --popover: 0 0% 100%;
     --popover-foreground: 224 16% 12%;
 
-    /* Propio brand: a confident, calm indigo. */
-    --primary: 243 75% 59%;
+    /* Propio brand indigo (#48509e), straight off the logo tile. Dark mode
+       lightens it: the literal brand value only reaches 2.6:1 on the dark
+       background, so it is unusable there for text, links or focus rings. */
+    --primary: 234 37% 45%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 220 14% 96%;
@@ -38,7 +40,7 @@
 
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 243 75% 59%;
+    --ring: 234 37% 45%;
 
     --radius: 0.65rem;
   }
@@ -53,7 +55,7 @@
     --popover: 224 18% 11%;
     --popover-foreground: 210 20% 96%;
 
-    --primary: 243 75% 66%;
+    --primary: 234 45% 65%;
     --primary-foreground: 224 20% 8%;
 
     --secondary: 223 15% 18%;
@@ -76,7 +78,7 @@
 
     --border: 223 15% 20%;
     --input: 223 15% 22%;
-    --ring: 243 75% 66%;
+    --ring: 234 45% 65%;
   }
 }
 

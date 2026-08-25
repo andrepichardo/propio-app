@@ -9,7 +9,7 @@ export const colors = {
   ink: '#1f2430',
   muted: '#6b7280',
   border: '#e5e7eb',
-  primary: '#4f46e5',
+  primary: '#48509e',
   subtle: '#f9fafb',
 };
 

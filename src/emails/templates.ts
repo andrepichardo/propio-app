@@ -7,7 +7,7 @@ import { clientEnv } from '@/shared/config/env';
  */
 const brand = {
   name: clientEnv.NEXT_PUBLIC_APP_NAME,
-  color: '#4f46e5',
+  color: '#48509e',
   url: clientEnv.NEXT_PUBLIC_APP_URL,
 };
 
