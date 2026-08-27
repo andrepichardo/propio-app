@@ -18,7 +18,9 @@ describe('createPropertySchema', () => {
     expect(createPropertySchema.safeParse({ name: 'A' }).success).toBe(false);
   });
 
-  it('normalises empty optional strings to undefined', () => {
+  it('turns emptied optional strings into null so they clear', () => {
+    // null, not undefined: Prisma reads `undefined` as "leave this column
+    // alone", which made clearing an optional field impossible.
     const result = createPropertySchema.safeParse({
       name: 'Sunset 4B',
       city: '',
@@ -26,8 +28,8 @@ describe('createPropertySchema', () => {
     });
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.data.city).toBeUndefined();
-      expect(result.data.description).toBeUndefined();
+      expect(result.data.city).toBeNull();
+      expect(result.data.description).toBeNull();
     }
   });
 });

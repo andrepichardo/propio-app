@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { clearEmpty } from '@/shared/lib/validation';
 
 /**
  * Settling a deposit at handover. The owner enters how much they keep (for
@@ -11,12 +12,7 @@ export const settleDepositSchema = z.object({
     .number()
     .min(0, 'amountNotNegative')
     .max(100_000_000),
-  reason: z
-    .string()
-    .trim()
-    .max(2000)
-    .optional()
-    .transform((v) => (v === '' ? undefined : v)),
+  reason: z.string().trim().max(2000).nullish().transform(clearEmpty),
   settledAt: z.coerce.date().default(() => new Date()),
 });
 

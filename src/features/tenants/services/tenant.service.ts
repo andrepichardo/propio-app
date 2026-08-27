@@ -15,7 +15,7 @@ function normalize(input: Partial<CreateTenantInput>) {
   return {
     firstName: input.firstName,
     lastName: input.lastName,
-    email: input.email || undefined,
+    email: input.email,
     phone: input.phone,
     identification: input.identification,
     avatarUrl: input.avatarUrl || undefined,

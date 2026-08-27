@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { optionalText } from '@/shared/lib/validation';
 import { ContractStatus } from '@/generated/prisma/enums';
 
 export const contractBaseSchema = z
@@ -18,12 +19,7 @@ export const contractBaseSchema = z
     securityDeposit: z.coerce.number().min(0).max(100_000_000).default(0),
     maintenanceIncluded: z.boolean().default(false),
     status: z.nativeEnum(ContractStatus).default(ContractStatus.ACTIVE),
-    notes: z
-      .string()
-      .trim()
-      .max(2000)
-      .optional()
-      .transform((v) => (v === '' ? undefined : v)),
+    notes: optionalText(2000),
   })
   .refine((data) => !data.endDate || data.endDate > data.startDate, {
     message: 'endAfterStart',
@@ -49,7 +45,7 @@ export const updateContractSchema = z.object({
   securityDeposit: z.coerce.number().min(0).max(100_000_000).optional(),
   maintenanceIncluded: z.boolean().optional(),
   status: z.nativeEnum(ContractStatus).optional(),
-  notes: z.string().trim().max(2000).optional(),
+  notes: optionalText(2000),
 });
 
 /**
@@ -64,12 +60,7 @@ export const renewContractSchema = z
     startDate: z.coerce.date({ message: 'startDateRequired' }),
     endDate: z.coerce.date().optional().nullable(),
     monthlyRent: z.coerce.number().positive('rentPositive').max(100_000_000),
-    notes: z
-      .string()
-      .trim()
-      .max(2000)
-      .optional()
-      .transform((v) => (v === '' ? undefined : v)),
+    notes: optionalText(2000),
   })
   .refine((data) => !data.endDate || data.endDate > data.startDate, {
     message: 'endAfterStart',

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { clearEmpty } from '@/shared/lib/validation';
 import { PaymentMethod, PaymentType } from '@/generated/prisma/enums';
 
 export const registerPaymentSchema = z.object({
@@ -6,29 +7,14 @@ export const registerPaymentSchema = z.object({
   amount: z.coerce.number().positive('amountPositive').max(100_000_000),
   type: z.nativeEnum(PaymentType).default(PaymentType.RENT),
   method: z.nativeEnum(PaymentMethod).default(PaymentMethod.TRANSFER),
-  reference: z
-    .string()
-    .trim()
-    .max(120)
-    .optional()
-    .transform((v) => (v === '' ? undefined : v)),
-  concept: z
-    .string()
-    .trim()
-    .max(200)
-    .optional()
-    .transform((v) => (v === '' ? undefined : v)),
+  reference: z.string().trim().max(120).nullish().transform(clearEmpty),
+  concept: z.string().trim().max(200).nullish().transform(clearEmpty),
   paidAt: z.coerce.date().default(() => new Date()),
   /** First day of the rent period this payment settles. */
   periodStart: z.coerce.date().optional(),
   /** Marks the period fully paid even if `amount` < rent (agreed discount). */
   settlesPeriod: z.boolean().default(false),
-  notes: z
-    .string()
-    .trim()
-    .max(2000)
-    .optional()
-    .transform((v) => (v === '' ? undefined : v)),
+  notes: z.string().trim().max(2000).nullish().transform(clearEmpty),
   /** Storage URL of an uploaded proof of payment, set by the upload action. */
   proofUrl: z.string().url().optional().or(z.literal('')),
   /** Whether to email the receipt PDF to the tenant. */

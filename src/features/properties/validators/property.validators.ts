@@ -1,17 +1,10 @@
 import { z } from 'zod';
+import { optionalText } from '@/shared/lib/validation';
 import {
   FurnishingType,
   PropertyStatus,
   PropertyType,
 } from '@/generated/prisma/enums';
-
-const optionalTrimmed = (max: number) =>
-  z
-    .string()
-    .trim()
-    .max(max)
-    .optional()
-    .transform((v) => (v === '' ? undefined : v));
 
 /** A number field that treats an empty input as "not set" (undefined), so
  * clearing it never coerces to 0. */
@@ -23,14 +16,14 @@ const optionalNumber = (schema: z.ZodNumber) =>
 
 export const propertyBaseSchema = z.object({
   name: z.string().trim().min(2, 'propertyNameMin').max(120),
-  description: optionalTrimmed(2000),
+  description: optionalText(2000),
   type: z.nativeEnum(PropertyType).default(PropertyType.TRADITIONAL_RENTAL),
   status: z.nativeEnum(PropertyStatus).default(PropertyStatus.AVAILABLE),
-  addressLine: optionalTrimmed(200),
-  city: optionalTrimmed(120),
-  state: optionalTrimmed(120),
-  postalCode: optionalTrimmed(20),
-  country: optionalTrimmed(2),
+  addressLine: optionalText(200),
+  city: optionalText(120),
+  state: optionalText(120),
+  postalCode: optionalText(20),
+  country: optionalText(2),
   bedrooms: optionalNumber(z.coerce.number().int().min(0).max(100)),
   bathrooms: optionalNumber(z.coerce.number().int().min(0).max(100)),
   areaSqm: optionalNumber(z.coerce.number().min(0).max(1_000_000)),

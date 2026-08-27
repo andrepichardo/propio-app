@@ -35,7 +35,9 @@ describe('registerPaymentSchema', () => {
     if (result.success) expect(result.data.amount).toBe(850.25);
   });
 
-  it('normalises empty optional strings to undefined', () => {
+  it('turns emptied optional strings into null so they clear', () => {
+    // null, not undefined: Prisma reads `undefined` as "leave this column
+    // alone", which made clearing an optional field impossible.
     const result = registerPaymentSchema.safeParse({
       ...validInput,
       reference: '',
@@ -44,9 +46,9 @@ describe('registerPaymentSchema', () => {
     });
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.data.reference).toBeUndefined();
-      expect(result.data.concept).toBeUndefined();
-      expect(result.data.notes).toBeUndefined();
+      expect(result.data.reference).toBeNull();
+      expect(result.data.concept).toBeNull();
+      expect(result.data.notes).toBeNull();
     }
   });
 

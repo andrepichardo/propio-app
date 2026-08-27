@@ -32,13 +32,15 @@ describe('settleDepositSchema', () => {
     if (result.success) expect(result.data.amountRetained).toBe(250.5);
   });
 
-  it('normalises an empty reason to undefined', () => {
+  it('turns an emptied reason into null so it clears', () => {
+    // null, not undefined: Prisma reads `undefined` as "leave this column
+    // alone", which made clearing an optional field impossible.
     const result = settleDepositSchema.safeParse({
       ...validInput,
       reason: '',
     });
     expect(result.success).toBe(true);
-    if (result.success) expect(result.data.reason).toBeUndefined();
+    if (result.success) expect(result.data.reason).toBeNull();
   });
 
   it('requires a contract id', () => {

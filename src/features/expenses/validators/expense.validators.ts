@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { clearEmpty } from '@/shared/lib/validation';
 import { ExpenseCategory } from '@/generated/prisma/enums';
 
 export const expenseBaseSchema = z.object({
@@ -18,18 +19,8 @@ export const expenseBaseSchema = z.object({
     .transform((v) => v.toUpperCase())
     .default('USD'),
   incurredAt: z.coerce.date().default(() => new Date()),
-  vendor: z
-    .string()
-    .trim()
-    .max(120)
-    .optional()
-    .transform((v) => (v === '' ? undefined : v)),
-  notes: z
-    .string()
-    .trim()
-    .max(2000)
-    .optional()
-    .transform((v) => (v === '' ? undefined : v)),
+  vendor: z.string().trim().max(120).nullish().transform(clearEmpty),
+  notes: z.string().trim().max(2000).nullish().transform(clearEmpty),
   invoiceUrl: z.string().url().optional().or(z.literal('')),
 });
 
