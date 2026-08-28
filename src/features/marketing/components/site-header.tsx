@@ -17,25 +17,6 @@ import { LanguageSwitcher } from '@/shared/components/language/language-switcher
 import { ThemeToggle } from '@/shared/components/theme-toggle';
 import { cn } from '@/shared/lib/utils';
 
-/**
- * In-page anchors are plain `<a>`, never `next/link`.
- *
- * Next's segment-cache navigation builds the new canonical URL by string
- * concatenation — `route.canonicalUrl + url.hash` (segment-cache/navigation.js).
- * Once a route entry has been seeded from a URL that already carried a hash
- * (i.e. the visitor reloaded on `/#features`), every further hash navigation
- * appends instead of replacing: `/#features#features#features`. It affects the
- * relative and absolute forms equally, so `/#features` is not a workaround.
- * The browser's own fragment navigation has none of that, and a same-page
- * anchor needs no router, no prefetch and no RSC round-trip anyway.
- */
-
-/**
- * Mobile panel. `closed` is DYNAMIC: an anchor tap closes with duration 0 so
- * the scroll can start immediately (see `handlePanelAnchor`), while the X
- * button keeps the animated fold. `custom` carries that flag through
- * AnimatePresence, which is the only way to update an exiting component.
- */
 const panelVariants: Variants = {
   open: {
     height: 'auto',
@@ -51,7 +32,6 @@ const panelVariants: Variants = {
   }),
 };
 
-/** In-page anchors. Only rendered on the landing itself (`showNav`). */
 const SECTIONS = [
   { href: '#features', key: 'navFeatures' },
   { href: '#how-it-works', key: 'navHowItWorks' },
@@ -59,12 +39,6 @@ const SECTIONS = [
   { href: '#faq', key: 'navFaq' },
 ] as const;
 
-/**
- * Marketing header, shared by the landing and the legal pages.
- *
- * It starts transparent over the hero and only grows its border + blur once
- * the page has scrolled, so the hero reads as full-bleed on load.
- */
 export function SiteHeader({
   authed,
   showNav = true,
@@ -77,28 +51,14 @@ export function SiteHeader({
   const [scrolled, setScrolled] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const pendingHashRef = React.useRef<string | null>(null);
-  // State, not a ref: it is read during render (AnimatePresence's `custom`),
-  // and setting it in the same handler as `setMenuOpen(false)` batches both
-  // into the render that unmounts the panel.
   const [instantClose, setInstantClose] = React.useState(false);
 
-  /**
-   * Mobile-panel anchors defer their scroll until the panel has finished
-   * closing. Left to the native fragment navigation, the tap's synchronous
-   * React re-render + the panel's first exit-animation frame kill the smooth
-   * scroll before it starts (browser-verified: hash changes, scrollY stays 0
-   * — links=2 still in the DOM, y=0 from the first sample). Instant scroll
-   * never hit this because it completes synchronously during navigation.
-   */
   function handlePanelAnchor(
     event: React.MouseEvent<HTMLAnchorElement>,
     href: string,
   ) {
     event.preventDefault();
     pendingHashRef.current = href;
-    // Instant close for this path only: the panel vanishes in the same frame
-    // and onExitComplete fires immediately, so the scroll starts without the
-    // 250ms fold. The X button keeps the animated close.
     setInstantClose(true);
     setMenuOpen(false);
   }
@@ -117,10 +77,6 @@ export function SiteHeader({
       )}
     >
       <div className="container flex h-16 items-center justify-between gap-3">
-        {/* Plain <a>, not `next/link` — see the anchor note above: Next also
-            resurrects a STALE hash from the route cache when navigating to
-            `/`, so a visitor who reloaded on `/#reviews` would be sent back
-            there. The logo must always land on the top of home. */}
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- the full navigation is the point, see above */}
         <a href="/" className="shrink-0" aria-label="Propio">
           <Logo />
@@ -177,13 +133,6 @@ export function SiteHeader({
         </div>
       </div>
 
-      {/* The panel OVERLAYS the page (absolute below the bar) instead of
-          expanding the sticky header in normal flow. In flow, tapping an
-          anchor raced the closing animation: the browser computed the target
-          position with the menu open, then the collapse shifted the whole
-          layout mid-scroll and the smooth scroll was cancelled or landed
-          wrong — links looked dead on mobile. Overlaid, opening/closing moves
-          nothing, so fragment navigation is never disturbed. */}
       <AnimatePresence
         initial={false}
         custom={instantClose}
@@ -195,9 +144,6 @@ export function SiteHeader({
           const target = document.getElementById(href.slice(1));
           if (!target) return;
           history.pushState(null, '', href);
-          // No `behavior` on purpose: it defaults to the CSS scroll-behavior,
-          // so this is smooth where allowed, instant under reduced motion,
-          // and it honours each section's scroll-margin-top.
           target.scrollIntoView();
         }}
       >

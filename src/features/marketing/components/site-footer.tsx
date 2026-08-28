@@ -2,14 +2,6 @@ import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { Logo } from '@/shared/components/brand/logo';
 
-/**
- * Marketing footer, shared by the landing and the legal pages.
- *
- * Product links are section anchors. They are written absolute (`/#features`)
- * so they also work from `/terms` and `/privacy`, and they render as plain
- * `<a>` rather than `next/link` — routing a hash through Next appends it to
- * the canonical URL instead of replacing it (see the note in site-header).
- */
 const COLUMNS = [
   {
     key: 'product',
