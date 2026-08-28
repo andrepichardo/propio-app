@@ -14,6 +14,7 @@ import {
 } from '@/generated/prisma/enums';
 import { prisma } from '@/shared/lib/prisma';
 import { formatCurrency } from '@/shared/lib/format';
+import { sendReminderDigests } from './notification-digest';
 
 /** Fallback reminder settings for owners whose row is somehow missing. Mirrors
  * the Prisma `User` column defaults. */
@@ -82,6 +83,8 @@ export type SchedulerResult = {
   expiring: number;
   /** Contracts closed automatically because their end date passed. */
   expired: number;
+  /** Owners who received a digest email this run (one each, not one per item). */
+  emailed: number;
 };
 
 /**
@@ -116,6 +119,11 @@ async function expireLapsedContracts(now: Date): Promise<number> {
  *
  * Idempotent by design: each reminder de-dupes against recent notifications,
  * so the job can run daily (or be retried) without spamming.
+ *
+ * Notifications are written first and mailed second (`sendReminderDigests`),
+ * as ONE digest per owner rather than one email per reminder. Keeping the two
+ * phases apart is what lets a failed send be retried without recreating — or
+ * duplicating — the in-app notification.
  */
 export async function runNotificationScheduler(): Promise<SchedulerResult> {
   const now = new Date();
@@ -125,6 +133,7 @@ export async function runNotificationScheduler(): Promise<SchedulerResult> {
     expiring: 0,
     // Runs first so a lapsed contract isn't also reminded about below.
     expired: await expireLapsedContracts(now),
+    emailed: 0,
   };
 
   const reminderPrefs = await loadReminderPrefs();
@@ -283,6 +292,10 @@ export async function runNotificationScheduler(): Promise<SchedulerResult> {
       }
     }
   }
+
+  // Mail whatever is still unsent — this run's notifications plus anything a
+  // previous run created but could not deliver.
+  result.emailed = await sendReminderDigests(now);
 
   return result;
 }

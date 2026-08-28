@@ -5,6 +5,7 @@ import { clientEnv } from '@/shared/config/env';
 import { EMAIL_FROM, getResend } from './client';
 import {
   receiptEmail,
+  reminderDigestEmail,
   resetPasswordEmail,
   verifyEmail,
   welcomeEmail,
@@ -140,4 +141,77 @@ export async function sendReceiptEmail(params: {
       ? [{ filename: `${params.receiptNumber}.pdf`, content: params.pdf }]
       : undefined,
   });
+}
+
+/** One owner's digest: the recipient plus their already-translated items. */
+export type ReminderDigest = {
+  /** Opaque caller reference, echoed back for the digests that were accepted. */
+  ref: string;
+  to: string;
+  name?: string | null;
+  /** Plain text, translated into the owner's language by the caller. */
+  items: { heading: string; body: string }[];
+  locale?: Locale;
+};
+
+/** Resend accepts at most 100 messages per batch call. */
+const BATCH_SIZE = 100;
+
+/**
+ * Send the daily reminder digests in batched Resend calls.
+ *
+ * Returns the `ref`s that were accepted — NOT a count. The caller stamps only
+ * those as emailed, so a chunk that fails is simply retried on the next run
+ * instead of being silently marked as delivered.
+ *
+ * Batching matters twice over: the cron route caps at 60s (a hundred
+ * sequential sends would flirt with that), and one call per chunk keeps a
+ * morning burst from tripping the provider's per-second limits.
+ */
+export async function sendReminderDigestEmails(
+  digests: ReminderDigest[],
+): Promise<string[]> {
+  if (digests.length === 0) return [];
+
+  const resend = getResend();
+  if (!resend) {
+    console.warn(
+      `[email] RESEND_API_KEY not set. Would send ${digests.length} reminder digest(s).`,
+    );
+    return [];
+  }
+
+  const sent: string[] = [];
+
+  for (let start = 0; start < digests.length; start += BATCH_SIZE) {
+    const chunk = digests.slice(start, start + BATCH_SIZE);
+    const messages = await Promise.all(
+      chunk.map(async (digest) => {
+        const t = await emailTranslations(digest.locale);
+        const { subject, html } = reminderDigestEmail({
+          subject: t('digestSubject', { count: digest.items.length }),
+          title: t('digestTitle'),
+          intro: digest.name
+            ? t('digestIntroNamed', { name: digest.name })
+            : t('digestIntro'),
+          items: digest.items,
+          ctaHref: `${APP_URL}/app/notifications`,
+          ctaLabel: t('digestCta'),
+          manage: t('digestManage'),
+          footer: t('footer'),
+        });
+        return { from: EMAIL_FROM, to: digest.to, subject, html };
+      }),
+    );
+
+    const { error } = await resend.batch.send(messages);
+    if (error) {
+      // Leave the whole chunk unstamped; the next run picks it up again.
+      console.error('[email] reminder digest batch failed', error);
+      continue;
+    }
+    sent.push(...chunk.map((digest) => digest.ref));
+  }
+
+  return sent;
 }

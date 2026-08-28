@@ -53,6 +53,11 @@ model User {
   notifyPaymentUpcoming    Boolean @default(true)
   paymentUpcomingLeadDays  Int     @default(3)
   notifyPaymentLate        Boolean @default(true)
+  // Master switch for the daily reminder DIGEST email. The three toggles above
+  // decide which reminders exist at all (in-app); this one decides whether they
+  // also leave the app as one email per day. Defaults on: a reminder you have
+  // to open the app to see is the weakest form of a reminder.
+  notifyByEmail            Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -637,6 +642,11 @@ model Notification {
 
   readAt DateTime?
   dueAt  DateTime? // when the reminder becomes relevant
+  // Stamped once this row has gone out in a digest email. Nullable on purpose:
+  // it is the retry ledger. The scheduler's de-dupe works off the notification
+  // ROW, so without this a failed send would be skipped forever on the next
+  // run — the reminder would exist in-app and never reach the inbox.
+  emailedAt DateTime?
 
   createdAt DateTime @default(now())
 

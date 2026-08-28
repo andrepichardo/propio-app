@@ -204,6 +204,16 @@ export function PreferencesForm({
               description={t('reminderPaymentLateDesc')}
               toggle={<ReminderSwitch form={form} name="notifyPaymentLate" />}
             />
+
+            <Separator />
+
+            {/* Delivery, not a fourth reminder: this decides whether the three
+                above ALSO leave the app as one digest email each morning. */}
+            <ReminderRow
+              title={t('reminderByEmail')}
+              description={t('reminderByEmailDesc')}
+              toggle={<ReminderSwitch form={form} name="notifyByEmail" />}
+            />
           </CardContent>
         </Card>
 
@@ -219,7 +229,10 @@ export function PreferencesForm({
 
 type PrefsFormApi = ReturnType<typeof useForm<UpdatePreferencesInput>>;
 type SwitchName =
-  'notifyContractExpiring' | 'notifyPaymentUpcoming' | 'notifyPaymentLate';
+  | 'notifyContractExpiring'
+  | 'notifyPaymentUpcoming'
+  | 'notifyPaymentLate'
+  | 'notifyByEmail';
 type LeadName = 'contractExpiringLeadDays' | 'paymentUpcomingLeadDays';
 
 function ReminderRow({

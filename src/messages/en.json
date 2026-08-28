@@ -958,6 +958,8 @@
     "reminderPaymentUpcomingDesc": "When the due day is near and rent is still unrecorded.",
     "reminderPaymentLate": "Overdue rent",
     "reminderPaymentLateDesc": "When the due day has passed and rent is still unrecorded.",
+    "reminderByEmail": "Send them to my email",
+    "reminderByEmailDesc": "One email each morning with everything that needs attention. Turn it off and reminders still appear in the app.",
     "leadBefore": "Remind me",
     "leadDaysUnit": "days ahead",
     "remindersUpdated": "Reminders updated.",
@@ -1046,7 +1048,7 @@
       "pain5": "When tax season arrives, the numbers live in four places and none of them agree.",
       "gain1": "Register a payment once — the balance, the receipt and the reports all update together.",
       "gain2": "Every receipt is a signed PDF, filed automatically and emailed to the tenant.",
-      "gain3": "Expirations, upcoming rent and late payments are waiting on your dashboard before they become a problem.",
+      "gain3": "Expirations, upcoming rent and late payments reach you in one email each morning, before they become a problem.",
       "gain4": "Each contract keeps its own currency, and your dashboard converts everything to your main one.",
       "gain5": "A year of revenue, expenses, profit and occupancy is one screen away, already calculated."
     },
@@ -1062,8 +1064,8 @@
       "reportsDesc": "Revenue, expenses, profit and occupancy across every property, by month and by year.",
       "multiCurrencyTitle": "Rent in any currency",
       "multiCurrencyDesc": "Each contract carries its own currency. Your dashboard converts everything to your main one at the day’s exchange rate.",
-      "remindersTitle": "Reminders that surface on time",
-      "remindersDesc": "Expiring contracts, rent coming due and late payments — flagged in the app every morning, with the lead time you choose for each.",
+      "remindersTitle": "Reminders that reach you first",
+      "remindersDesc": "Expiring contracts, rent coming due and late payments — one email each morning and a notice in the app, with the lead time you choose for each.",
       "documentsTitle": "Every document, one place",
       "documentsDesc": "Contracts, IDs, invoices and photos, organised per property and always a click away.",
       "securityTitle": "Your data is only yours",
@@ -1105,7 +1107,7 @@
       "reportsBullet3": "Totals marked as approximate when a conversion was involved — never a made-up figure presented as exact.",
       "remindersEyebrow": "Reminders",
       "remindersTitle": "Nothing expires behind your back",
-      "remindersDesc": "Propio checks your portfolio every morning and collects what needs attention in your notifications — with the lead time you set, and only for the reminders you turned on.",
+      "remindersDesc": "Propio checks your portfolio every morning and sends you a single email with what needs attention — with the lead time you set, and only for the reminders you turned on.",
       "remindersBullet1": "Contracts about to expire, with as much notice as you want.",
       "remindersBullet2": "Rent coming due, days before the tenant is late.",
       "remindersBullet3": "Late payments, so the conversation happens early instead of awkwardly.",
@@ -1328,9 +1330,9 @@
         {
           "title": "Notifications and email",
           "body": [
-            "Propio sends email only for things that have to leave the app: messages required to operate your account (verification and password resets), and the receipts you choose to send to a tenant. Reminders are not emailed — they appear as notifications inside the app.",
-            "Reminders about expiring contracts, upcoming rent and late payments are optional, and each one can be turned off — or given more notice — in Settings. Account emails cannot be turned off while your account is open, because the service cannot function without them.",
-            "Reminders are generated once a day and depend on infrastructure we do not control. Treat them as a convenience, not as a guaranteed alert: you have to open the app to see them, and the responsibility for meeting a deadline remains yours."
+            "Propio sends email only for things that have to leave the app: messages required to operate your account (verification and password resets), the receipts you choose to send to a tenant, and one daily summary of the reminders you have enabled.",
+            "Reminders about expiring contracts, upcoming rent and late payments are optional, and each one can be turned off — or given more notice — in Settings. The same screen turns the daily email off on its own, without losing the notices inside the app. Account emails cannot be turned off while your account is open, because the service cannot function without them.",
+            "Reminders are generated once a day and depend on infrastructure we do not control, including third-party email delivery. Treat them as a convenience, not as a guaranteed alert: the responsibility for meeting a deadline remains yours."
           ],
           "bullets": []
         },
@@ -1428,7 +1430,7 @@
             "To create and secure your account, and to sign you in.",
             "To store and show your properties, tenants, contracts, payments and documents.",
             "To generate receipts, statements and reports, and to email the receipts to the tenants you choose.",
-            "To generate, inside the app, the reminders you have enabled about expiring contracts, upcoming rent and late payments.",
+            "To generate the reminders you have enabled about expiring contracts, upcoming rent and late payments, and — when the daily summary is switched on — to email them to you.",
             "To provide support when you contact us, and to diagnose faults.",
             "To meet legal obligations and to protect the service against abuse."
           ]
@@ -1441,7 +1443,7 @@
           "bullets": [
             "Vercel — application hosting and delivery.",
             "Supabase — the PostgreSQL database and the file storage that holds your uploads, hosted on Amazon Web Services in the United States.",
-            "Resend — delivery of transactional email: verification messages, password resets, and the receipts you send to tenants.",
+            "Resend — delivery of transactional email: verification messages, password resets, the receipts you send to tenants, and your daily reminder summary.",
             "Google and GitHub — only if you choose to sign in with them, and only to authenticate you.",
             "open.er-api.com — a public exchange-rate source. We request published rates only; no data about you or your portfolio is sent to it."
           ]
@@ -1578,6 +1580,12 @@
     "receiptTitle": "Payment received",
     "receiptBody": "Hi {name}, we’ve recorded your payment of {amount} for {property}. Your receipt {number} is attached.",
     "receiptFrom": "Sent by {owner}.",
-    "receiptNoReply": "This mailbox does not accept replies. If you have any question about this payment, contact your landlord directly."
+    "receiptNoReply": "This mailbox does not accept replies. If you have any question about this payment, contact your landlord directly.",
+    "digestSubject": "You have {count, plural, one {# reminder} other {# reminders}}",
+    "digestTitle": "This needs your attention",
+    "digestIntro": "Here is what Propio found in your portfolio this morning.",
+    "digestIntroNamed": "Hi {name}, here is what Propio found in your portfolio this morning.",
+    "digestCta": "Open my dashboard",
+    "digestManage": "You are getting this because reminder emails are on. Turn them off any time in Settings → Reminders."
   }
 }

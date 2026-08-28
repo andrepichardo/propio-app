@@ -958,6 +958,8 @@
     "reminderPaymentUpcomingDesc": "Cuando se acerca el día de pago y la renta sigue sin registrarse.",
     "reminderPaymentLate": "Pago atrasado",
     "reminderPaymentLateDesc": "Cuando ya pasó el día de pago y la renta sigue sin registrarse.",
+    "reminderByEmail": "Enviármelos por correo",
+    "reminderByEmailDesc": "Un solo correo cada mañana con todo lo que necesita atención. Si lo apagas, los recordatorios siguen apareciendo en la app.",
     "leadBefore": "Avisar con",
     "leadDaysUnit": "días de anticipación",
     "remindersUpdated": "Recordatorios actualizados.",
@@ -1046,7 +1048,7 @@
       "pain5": "Cuando llega la temporada de impuestos, los números viven en cuatro lugares y ninguno coincide.",
       "gain1": "Registras el pago una vez — el saldo, el recibo y los reportes se actualizan juntos.",
       "gain2": "Cada recibo es un PDF firmado, archivado solo y enviado por correo al inquilino.",
-      "gain3": "Vencimientos, alquileres por vencer y pagos atrasados te esperan en el panel antes de ser un problema.",
+      "gain3": "Vencimientos, alquileres por vencer y pagos atrasados te llegan en un solo correo cada mañana, antes de ser un problema.",
       "gain4": "Cada contrato conserva su moneda, y tu panel convierte todo a tu moneda principal.",
       "gain5": "Un año de ingresos, gastos, ganancia y ocupación está a una pantalla, ya calculado."
     },
@@ -1062,8 +1064,8 @@
       "reportsDesc": "Ingresos, gastos, ganancia y ocupación en todas tus propiedades, por mes y por año.",
       "multiCurrencyTitle": "Alquiler en cualquier moneda",
       "multiCurrencyDesc": "Cada contrato lleva su propia moneda. Tu panel convierte todo a tu moneda principal a la tasa de cambio del día.",
-      "remindersTitle": "Recordatorios que aparecen a tiempo",
-      "remindersDesc": "Contratos por vencer, alquileres próximos y pagos atrasados — marcados en la app cada mañana, con los días de anticipación que elijas para cada uno.",
+      "remindersTitle": "Recordatorios que te llegan primero",
+      "remindersDesc": "Contratos por vencer, alquileres próximos y pagos atrasados — un solo correo cada mañana y un aviso en la app, con los días de anticipación que elijas para cada uno.",
       "documentsTitle": "Cada documento, en un solo lugar",
       "documentsDesc": "Contratos, identificaciones, facturas y fotos, organizados por propiedad y siempre a un clic.",
       "securityTitle": "Tus datos son solo tuyos",
@@ -1105,7 +1107,7 @@
       "reportsBullet3": "Los totales se marcan como aproximados cuando hubo una conversión — nunca una cifra inventada presentada como exacta.",
       "remindersEyebrow": "Recordatorios",
       "remindersTitle": "Nada vence a tus espaldas",
-      "remindersDesc": "Propio revisa tu cartera cada mañana y reúne en tus notificaciones lo que necesita atención — con la anticipación que configures y solo con los recordatorios que dejes activos.",
+      "remindersDesc": "Propio revisa tu cartera cada mañana y te manda un solo correo con lo que necesita atención — con la anticipación que configures y solo con los recordatorios que dejes activos.",
       "remindersBullet1": "Contratos próximos a vencer, con toda la anticipación que quieras.",
       "remindersBullet2": "Alquileres por vencer, días antes de que el inquilino se atrase.",
       "remindersBullet3": "Pagos atrasados, para que la conversación sea a tiempo y no incómoda.",
@@ -1328,9 +1330,9 @@
         {
           "title": "Notificaciones y correo",
           "body": [
-            "Propio envía correo solo para lo que tiene que salir de la aplicación: mensajes necesarios para operar tu cuenta (verificación y restablecimiento de contraseña), y los recibos que elijas enviarle a un inquilino. Los recordatorios no se envían por correo — aparecen como notificaciones dentro de la aplicación.",
-            "Los recordatorios sobre contratos por vencer, alquileres próximos y pagos atrasados son opcionales, y cada uno se puede desactivar — o darle más anticipación — en Configuración. Los correos de cuenta no se pueden desactivar mientras tu cuenta esté abierta, porque el servicio no funciona sin ellos.",
-            "Los recordatorios se generan una vez al día y dependen de infraestructura que no controlamos. Trátalos como una conveniencia, no como una alerta garantizada: tienes que abrir la aplicación para verlos, y la responsabilidad de cumplir una fecha sigue siendo tuya."
+            "Propio envía correo solo para lo que tiene que salir de la aplicación: mensajes necesarios para operar tu cuenta (verificación y restablecimiento de contraseña), los recibos que elijas enviarle a un inquilino, y un resumen diario con los recordatorios que tengas activos.",
+            "Los recordatorios sobre contratos por vencer, alquileres próximos y pagos atrasados son opcionales, y cada uno se puede desactivar — o darle más anticipación — en Configuración. Ahí mismo puedes desactivar solo el correo diario sin perder los avisos dentro de la aplicación. Los correos de cuenta no se pueden desactivar mientras tu cuenta esté abierta, porque el servicio no funciona sin ellos.",
+            "Los recordatorios se generan una vez al día y dependen de infraestructura que no controlamos, incluida la entrega de correo por terceros. Trátalos como una conveniencia, no como una alerta garantizada: la responsabilidad de cumplir una fecha sigue siendo tuya."
           ],
           "bullets": []
         },
@@ -1428,7 +1430,7 @@
             "Para crear y proteger tu cuenta, y para iniciar tu sesión.",
             "Para guardar y mostrar tus propiedades, inquilinos, contratos, pagos y documentos.",
             "Para generar recibos, estados de cuenta y reportes, y enviar por correo los recibos a los inquilinos que elijas.",
-            "Para generar, dentro de la aplicación, los recordatorios que hayas activado sobre contratos por vencer, alquileres próximos y pagos atrasados.",
+            "Para generar los recordatorios que hayas activado sobre contratos por vencer, alquileres próximos y pagos atrasados y, cuando tengas activo el resumen diario, enviártelos por correo.",
             "Para darte soporte cuando nos contactas y diagnosticar fallas.",
             "Para cumplir obligaciones legales y proteger el servicio contra abusos."
           ]
@@ -1441,7 +1443,7 @@
           "bullets": [
             "Vercel — alojamiento y entrega de la aplicación.",
             "Supabase — la base de datos PostgreSQL y el almacenamiento de archivos donde viven tus cargas, alojados en Amazon Web Services en Estados Unidos.",
-            "Resend — entrega de correo transaccional: verificación, restablecimiento de contraseña, y los recibos que envías a inquilinos.",
+            "Resend — entrega de correo transaccional: verificación, restablecimiento de contraseña, los recibos que envías a inquilinos, y tu resumen diario de recordatorios.",
             "Google y GitHub — solo si eliges iniciar sesión con ellos, y únicamente para autenticarte.",
             "open.er-api.com — fuente pública de tasas de cambio. Solo solicitamos tasas publicadas; no se le envía ningún dato tuyo ni de tu cartera."
           ]
@@ -1578,6 +1580,12 @@
     "receiptTitle": "Pago recibido",
     "receiptBody": "Hola {name}, registramos tu pago de {amount} correspondiente a {property}. Tu recibo {number} está adjunto.",
     "receiptFrom": "Enviado por {owner}.",
-    "receiptNoReply": "Este buzón no recibe respuestas. Si tienes alguna duda sobre este pago, comunícate directamente con tu arrendador."
+    "receiptNoReply": "Este buzón no recibe respuestas. Si tienes alguna duda sobre este pago, comunícate directamente con tu arrendador.",
+    "digestSubject": "Tienes {count, plural, one {# recordatorio} other {# recordatorios}}",
+    "digestTitle": "Esto necesita tu atención",
+    "digestIntro": "Esto es lo que Propio encontró en tu cartera esta mañana.",
+    "digestIntroNamed": "Hola {name}, esto es lo que Propio encontró en tu cartera esta mañana.",
+    "digestCta": "Abrir mi panel",
+    "digestManage": "Recibes este correo porque tienes activos los recordatorios por correo. Puedes desactivarlos cuando quieras en Configuración → Recordatorios."
   }
 }

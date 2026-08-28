@@ -34,6 +34,9 @@ export const updatePreferencesSchema = z.object({
     .min(0, 'leadDaysInvalid')
     .max(30, 'leadDaysInvalid'),
   notifyPaymentLate: z.boolean(),
+  /** Master switch for the daily digest email; the toggles above still govern
+   *  which reminders exist in-app. */
+  notifyByEmail: z.boolean(),
 });
 
 /** In-app password change. Mirrors the registration password policy. */

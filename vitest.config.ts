@@ -6,6 +6,15 @@ export default defineConfig({
     environment: 'node',
     include: ['src/**/*.test.ts'],
     globals: false,
+    // `shared/config/env.ts` validates the whole server env at IMPORT time, so
+    // any module that reaches it — the email templates pull `clientEnv` — fails
+    // to load without these. Deliberately fake: nothing under test opens a
+    // connection or signs anything, and pointing them at the real `.env` would
+    // aim unit tests at the dev database.
+    env: {
+      DATABASE_URL: 'postgresql://user:pass@localhost:5432/propio_test',
+      AUTH_SECRET: 'unit-tests-do-not-sign-anything',
+    },
   },
   resolve: {
     alias: {

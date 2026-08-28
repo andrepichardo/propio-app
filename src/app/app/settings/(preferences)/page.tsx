@@ -25,6 +25,7 @@ export default async function SettingsPage() {
       notifyPaymentUpcoming: true,
       paymentUpcomingLeadDays: true,
       notifyPaymentLate: true,
+      notifyByEmail: true,
     },
   });
 
@@ -42,6 +43,7 @@ export default async function SettingsPage() {
           notifyPaymentUpcoming: user.notifyPaymentUpcoming,
           paymentUpcomingLeadDays: user.paymentUpcomingLeadDays,
           notifyPaymentLate: user.notifyPaymentLate,
+          notifyByEmail: user.notifyByEmail,
         }}
       />
       <ChangePasswordForm hasPassword={Boolean(user.hashedPassword)} />

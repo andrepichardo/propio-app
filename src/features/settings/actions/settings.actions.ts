@@ -54,6 +54,7 @@ export const updatePreferencesAction = createOwnerAction(
         notifyPaymentUpcoming: input.notifyPaymentUpcoming,
         paymentUpcomingLeadDays: input.paymentUpcomingLeadDays,
         notifyPaymentLate: input.notifyPaymentLate,
+        notifyByEmail: input.notifyByEmail,
       },
     });
     revalidatePath('/app', 'layout');
