@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { getCurrentUser } from '@/shared/lib/auth/session';
@@ -23,9 +22,14 @@ export default async function AuthLayout({
     <div className="grid min-h-screen lg:grid-cols-2">
       <div className="flex flex-col px-6 py-8 sm:px-12">
         <div className="flex items-center justify-between">
-          <Link href="/" className="w-fit">
+          {/* Plain <a>, not `next/link`: Next replays a stale hash from the
+              route cache when navigating to `/` (`route.canonicalUrl +
+              url.hash`), so a visitor who reloaded on `/#reviews` and then
+              signed in would be bounced back to that section. */}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- the full navigation is the point, see above */}
+          <a href="/" className="w-fit">
             <Logo />
-          </Link>
+          </a>
           <LanguageSwitcher />
         </div>
         <div className="flex flex-1 items-center justify-center py-12">

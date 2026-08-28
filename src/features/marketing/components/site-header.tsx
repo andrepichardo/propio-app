@@ -69,9 +69,14 @@ export function SiteHeader({
       )}
     >
       <div className="container flex h-16 items-center justify-between gap-3">
-        <Link href="/" className="shrink-0" aria-label="Propio">
+        {/* Plain <a>, not `next/link` — see the anchor note above: Next also
+            resurrects a STALE hash from the route cache when navigating to
+            `/`, so a visitor who reloaded on `/#reviews` would be sent back
+            there. The logo must always land on the top of home. */}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- the full navigation is the point, see above */}
+        <a href="/" className="shrink-0" aria-label="Propio">
           <Logo />
-        </Link>
+        </a>
 
         {showNav ? (
           <nav className="hidden items-center gap-1 md:flex">

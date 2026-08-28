@@ -711,8 +711,16 @@
     "colTenant": "Inquilino",
     "colProperty": "Propiedad",
     "colAmount": "Monto",
-    "colPdf": "PDF",
-    "generating": "Generando…"
+    "generating": "Generando…",
+    "colActions": "Acciones",
+    "download": "Descargar PDF",
+    "send": "Enviar por correo",
+    "sendTitle": "Enviar recibo por correo",
+    "sendDescription": "Se enviará el recibo {number} a {email} con el PDF adjunto.",
+    "sendConfirm": "Enviar recibo",
+    "sendSuccess": "Recibo enviado a {email}",
+    "sendError": "No se pudo enviar el recibo. Inténtalo de nuevo.",
+    "noTenantEmail": "Este inquilino no tiene correo registrado"
   },
   "expenses": {
     "title": "Gastos",
@@ -1569,6 +1577,7 @@
     "receiptSubject": "Recibo {number}",
     "receiptTitle": "Pago recibido",
     "receiptBody": "Hola {name}, registramos tu pago de {amount} correspondiente a {property}. Tu recibo {number} está adjunto.",
-    "receiptFrom": "Enviado por {owner}."
+    "receiptFrom": "Enviado por {owner}.",
+    "receiptNoReply": "Este buzón no recibe respuestas. Si tienes alguna duda sobre este pago, comunícate directamente con tu arrendador."
   }
 }

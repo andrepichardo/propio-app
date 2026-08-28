@@ -100,13 +100,24 @@ export function receiptEmail(p: {
   body: string;
   /** "Sent by <landlord>" line; omitted when the owner has no name set. */
   from?: string;
+  /**
+   * Reply guidance. Receipts go out from `no-reply@`, which has no mailbox —
+   * a tenant who hits Reply gets a hard bounce ("User does not exist"), so the
+   * email has to point them somewhere. Always rendered, even when the owner
+   * has no name set and the `from` line is omitted.
+   */
+  note: string;
   footer: string;
 }): { subject: string; html: string } {
-  const sender = p.from
-    ? `<p style="font-size:13px;line-height:1.6;color:#8a909c;margin:16px 0 0;border-top:1px solid #eceef1;padding-top:14px;">${p.from}</p>`
-    : '';
+  const lines = [p.from, p.note].filter(Boolean);
+  const footnotes = `<div style="margin:16px 0 0;border-top:1px solid #eceef1;padding-top:14px;">${lines
+    .map(
+      (line) =>
+        `<p style="font-size:13px;line-height:1.6;color:#8a909c;margin:0 0 6px;">${line}</p>`,
+    )
+    .join('')}</div>`;
   return {
     subject: p.subject,
-    html: layout(p.title, `${paragraph(p.body)}${sender}`, p.footer),
+    html: layout(p.title, `${paragraph(p.body)}${footnotes}`, p.footer),
   };
 }

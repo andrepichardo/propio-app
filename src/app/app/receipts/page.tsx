@@ -20,6 +20,7 @@ import {
 } from '@/shared/components/ui/table';
 import { formatCurrency } from '@/shared/lib/format';
 import { getFormatDate } from '@/shared/lib/date-format.server';
+import { SendReceiptButton } from '@/features/receipts/components/send-receipt-button';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('meta');
@@ -75,7 +76,7 @@ async function ReceiptsTable({
               <TableHead>{t('colTenant')}</TableHead>
               <TableHead>{t('colProperty')}</TableHead>
               <TableHead className="text-right">{t('colAmount')}</TableHead>
-              <TableHead className="text-right">{t('colPdf')}</TableHead>
+              <TableHead className="text-right">{t('colActions')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -94,22 +95,34 @@ async function ReceiptsTable({
                 <TableCell className="text-right font-semibold">
                   {formatCurrency(receipt.amount.toString(), receipt.currency)}
                 </TableCell>
-                <TableCell className="text-right">
-                  {receipt.pdfUrl ? (
-                    <Button variant="ghost" size="sm" asChild>
-                      <a
-                        href={receipt.pdfUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                <TableCell>
+                  <div className="flex items-center justify-end gap-1">
+                    {receipt.pdfUrl ? (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        asChild
+                        aria-label={t('download')}
                       >
-                        <Download className="size-4" />
-                      </a>
-                    </Button>
-                  ) : (
-                    <span className="text-xs text-muted-foreground">
-                      {t('generating')}
-                    </span>
-                  )}
+                        <a
+                          href={receipt.pdfUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Download className="size-4" />
+                        </a>
+                      </Button>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">
+                        {t('generating')}
+                      </span>
+                    )}
+                    <SendReceiptButton
+                      id={receipt.id}
+                      number={receipt.number}
+                      email={receipt.tenant.email}
+                    />
+                  </div>
                 </TableCell>
               </TableRow>
             ))}

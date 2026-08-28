@@ -129,6 +129,7 @@ export async function sendReceiptEmail(params: {
     from: params.ownerName
       ? t('receiptFrom', { owner: params.ownerName })
       : undefined,
+    note: t('receiptNoReply'),
     footer: t('footer'),
   });
   await deliver({

@@ -9,11 +9,12 @@ import {
   type PaginatedResult,
   type PaginationParams,
 } from '@/shared/types/pagination';
-import { NotFoundError } from '@/shared/lib/errors';
+import { AppError, NotFoundError, ValidationError } from '@/shared/lib/errors';
 import { formatCurrency } from '@/shared/lib/format';
 import { getStorage } from '@/shared/lib/storage';
 import { getUserPreferences } from '@/shared/lib/auth/preferences';
 import { renderReceiptPdf } from '@/pdf/render';
+import { sendReceiptEmail } from '@/emails/send';
 import { clientEnv } from '@/shared/config/env';
 import { defaultLocale, isLocale } from '@/i18n/config';
 
@@ -48,6 +49,77 @@ export const receiptService = {
     });
     if (!receipt) throw new NotFoundError('Receipt');
     return receipt;
+  },
+
+  /**
+   * Email an existing receipt to its tenant, PDF attached.
+   *
+   * Covers what the payment flow leaves open: the owner unticked "send
+   * receipt" when registering the payment, or the post-commit delivery failed.
+   *
+   * `generatePdf` hands back the rendered bytes only when it actually had to
+   * build the file; for a receipt that already has one it returns just the
+   * URL, so the bytes are pulled back from storage. If neither yields a PDF we
+   * fail loudly rather than mail the tenant a receipt with nothing attached.
+   */
+  async emailToTenant(
+    ownerId: string,
+    receiptId: string,
+  ): Promise<{ email: string }> {
+    const receipt = await prisma.receipt.findFirst({
+      where: { id: receiptId, ownerId, ...liveReceipt },
+      select: {
+        id: true,
+        number: true,
+        amount: true,
+        currency: true,
+        tenant: { select: { firstName: true, lastName: true, email: true } },
+        property: { select: { name: true } },
+      },
+    });
+    if (!receipt) throw new NotFoundError('Receipt');
+
+    const email = receipt.tenant.email;
+    if (!email) {
+      throw new ValidationError('This tenant has no email address on file.');
+    }
+
+    const generated = await receiptService.generatePdf(ownerId, receipt.id);
+    const pdf = generated?.pdf ?? (await downloadPdf(generated?.url));
+    if (!pdf) {
+      throw new AppError(
+        'The receipt PDF could not be prepared. Please try again.',
+        'RECEIPT_PDF_UNAVAILABLE',
+        502,
+      );
+    }
+
+    const [prefs, owner] = await Promise.all([
+      getUserPreferences(ownerId),
+      prisma.user.findUnique({
+        where: { id: ownerId },
+        select: { name: true },
+      }),
+    ]);
+    // Catalog locale ('en' | 'es'); prefs may hold a BCP-47 tag like "en-US".
+    const locale = prefs.locale.slice(0, 2);
+
+    await sendReceiptEmail({
+      to: email,
+      tenantName: `${receipt.tenant.firstName} ${receipt.tenant.lastName}`,
+      amount: formatCurrency(
+        receipt.amount.toString(),
+        receipt.currency,
+        prefs.locale,
+      ),
+      receiptNumber: receipt.number,
+      propertyName: receipt.property.name,
+      ownerName: owner?.name,
+      pdf,
+      locale: isLocale(locale) ? locale : undefined,
+    });
+
+    return { email };
   },
 
   /**
@@ -205,6 +277,20 @@ function nextRentDueDate(
 /** Receipts whose payment is still live — a voided payment has no receipt. */
 const liveReceipt = { payment: { deletedAt: null } };
 
+/** Pull a stored receipt PDF back as bytes. The bucket is public, so a plain
+ *  fetch is enough; a failure here is not fatal to the caller, which decides. */
+async function downloadPdf(url?: string): Promise<Buffer | undefined> {
+  if (!url) return undefined;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) return undefined;
+    return Buffer.from(await response.arrayBuffer());
+  } catch (error) {
+    console.error('[receipts] could not download stored PDF', url, error);
+    return undefined;
+  }
+}
+
 function fetchReceipts(ownerId: string, skip: number, take: number) {
   return prisma.receipt.findMany({
     where: { ownerId, ...liveReceipt },
@@ -220,7 +306,8 @@ function fetchReceipts(ownerId: string, skip: number, take: number) {
       currency: true,
       issuedAt: true,
       pdfUrl: true,
-      tenant: { select: { firstName: true, lastName: true } },
+      // `email` drives the send button's enabled state in the table.
+      tenant: { select: { firstName: true, lastName: true, email: true } },
       property: { select: { name: true } },
     },
   });

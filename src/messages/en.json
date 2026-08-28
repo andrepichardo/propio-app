@@ -711,8 +711,16 @@
     "colTenant": "Tenant",
     "colProperty": "Property",
     "colAmount": "Amount",
-    "colPdf": "PDF",
-    "generating": "Generating…"
+    "generating": "Generating…",
+    "colActions": "Actions",
+    "download": "Download PDF",
+    "send": "Send by email",
+    "sendTitle": "Send receipt by email",
+    "sendDescription": "Receipt {number} will be emailed to {email} with the PDF attached.",
+    "sendConfirm": "Send receipt",
+    "sendSuccess": "Receipt sent to {email}",
+    "sendError": "The receipt could not be sent. Please try again.",
+    "noTenantEmail": "This tenant has no email address on file"
   },
   "expenses": {
     "title": "Expenses",
@@ -1569,6 +1577,7 @@
     "receiptSubject": "Receipt {number}",
     "receiptTitle": "Payment received",
     "receiptBody": "Hi {name}, we’ve recorded your payment of {amount} for {property}. Your receipt {number} is attached.",
-    "receiptFrom": "Sent by {owner}."
+    "receiptFrom": "Sent by {owner}.",
+    "receiptNoReply": "This mailbox does not accept replies. If you have any question about this payment, contact your landlord directly."
   }
 }
