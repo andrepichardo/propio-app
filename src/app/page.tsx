@@ -25,8 +25,16 @@ export default async function LandingPage() {
   const t = await getTranslations('landing');
   const authed = Boolean(user);
 
+  // overflow-x-CLIP, never -hidden: entrance animations (Reveal's ±24-32px
+  // side offsets, the hero chips' negative margins at lg) extend the
+  // document's scroll area and put a horizontal scrollbar on mobile. `clip`
+  // cuts that off WITHOUT creating a scroll container — `hidden` would, and
+  // the sticky header would stop sticking.
   return (
-    <div className="flex min-h-screen flex-col">
+    <div
+      data-smooth-scroll
+      className="flex min-h-screen flex-col overflow-x-clip"
+    >
       <LandingJsonLd />
       <SiteHeader authed={authed} />
 

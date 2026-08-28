@@ -40,7 +40,10 @@ export function UseCases() {
   const t = useTranslations('landing.useCases');
 
   return (
-    <section id="use-cases" className="relative scroll-mt-20 py-20 sm:py-28">
+    <section
+      id="use-cases"
+      className="relative scroll-mt-6 py-20 sm:scroll-mt-0 sm:py-28"
+    >
       <div className="container">
         <SectionHeading
           eyebrow={t('eyebrow')}

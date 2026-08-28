@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { Logo } from '@/shared/components/brand/logo';
-import { LanguageSwitcher } from '@/shared/components/language/language-switcher';
-import { ThemeToggle } from '@/shared/components/theme-toggle';
 
 /**
  * Marketing footer, shared by the landing and the legal pages.
@@ -54,10 +52,6 @@ export async function SiteFooter() {
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
               {t('tagline')}
             </p>
-            <div className="mt-6 flex items-center gap-2">
-              <ThemeToggle />
-              <LanguageSwitcher />
-            </div>
           </div>
 
           {COLUMNS.map((column) => (

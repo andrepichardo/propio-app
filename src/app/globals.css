@@ -99,6 +99,16 @@
   :focus-visible {
     @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
+
+  /* Smooth in-page anchor scrolling, opted into by the marketing pages via
+     `data-smooth-scroll` on their root (html:has keeps it off the app shell,
+     where it would animate the router's scroll-to-top on every navigation).
+     Gated on reduced motion like every other animation on those pages. */
+  @media (prefers-reduced-motion: no-preference) {
+    html:has([data-smooth-scroll]) {
+      scroll-behavior: smooth;
+    }
+  }
 }
 
 @layer utilities {

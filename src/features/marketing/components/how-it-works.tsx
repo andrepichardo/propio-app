@@ -46,7 +46,7 @@ export function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="relative scroll-mt-20 border-y bg-muted/25 py-20 sm:py-28"
+      className="relative scroll-mt-6 border-y bg-muted/25 py-20 sm:scroll-mt-0 sm:py-28"
     >
       <div className="container">
         <SectionHeading

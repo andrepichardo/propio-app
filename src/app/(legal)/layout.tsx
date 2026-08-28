@@ -14,7 +14,7 @@ export default async function LegalLayout({
   const user = await getCurrentUser();
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div data-smooth-scroll className="flex min-h-screen flex-col">
       <SiteHeader authed={Boolean(user)} showNav={false} />
       <main className="flex-1">{children}</main>
       <SiteFooter />
