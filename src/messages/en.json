@@ -973,20 +973,550 @@
     "goToDashboard": "Go to dashboard",
     "signIn": "Sign in",
     "getStarted": "Get started",
+    "startFree": "Start free",
+    "seeHowItWorks": "See how it works",
+    "skipToContent": "Skip to content",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "navFeatures": "Features",
+    "navHowItWorks": "How it works",
+    "navReviews": "Reviews",
+    "navFaq": "FAQ",
     "badge": "Built for independent landlords",
-    "heroTitle": "Manage your properties with confidence",
+    "heroTitleLead": "Manage your properties with",
+    "heroTitleAccent": "confidence",
     "heroSubtitle": "Propio is the all-in-one operating system for landlords with 1 to 50 properties. Rentals, tenants, contracts, payments and reports — one calm, fast dashboard.",
-    "startFree": "Start managing free",
-    "footerNote": "Manage your properties with confidence.",
+    "heroReassurance": "Free to start · No credit card required · Set up in a few minutes",
+    "hero": {
+      "floatReceiptTitle": "Receipt sent",
+      "floatReceiptCaption": "PDF delivered to the tenant",
+      "floatReminderTitle": "Rent due in 3 days",
+      "floatReminderCaption": "Reminder already scheduled",
+      "floatFxTitle": "US$ 950 in RD$",
+      "floatFxCaption": "Converted at today's rate"
+    },
+    "preview": {
+      "navDashboard": "Dashboard",
+      "navProperties": "Properties",
+      "navTenants": "Tenants",
+      "navPayments": "Payments",
+      "navReports": "Reports",
+      "title": "Dashboard",
+      "subtitle": "August summary",
+      "cta": "Register payment",
+      "kpiRevenue": "Revenue this month",
+      "kpiExpenses": "Expenses",
+      "kpiOccupancy": "Occupancy",
+      "kpiPending": "Outstanding",
+      "chartTitle": "Revenue vs. expenses",
+      "upcomingTitle": "Upcoming payments"
+    },
+    "capabilities": {
+      "srTitle": "What Propio does",
+      "receipts": "Automatic PDF receipts",
+      "multiCurrency": "Multi-currency with live rates",
+      "reminders": "Rent and renewal reminders",
+      "reports": "Annual reports and statements",
+      "documents": "Documents per property",
+      "signature": "Your signature on every receipt",
+      "bilingual": "English and Spanish",
+      "mobile": "Works on your phone",
+      "privacy": "Your data stays yours"
+    },
+    "problem": {
+      "eyebrow": "The problem",
+      "title": "Renting out is simple. Keeping track of it is not.",
+      "description": "Most independent landlords run on a spreadsheet, a chat thread and a good memory. It works — until a month has three partial payments, a contract expires unnoticed, or a tenant asks for a receipt from last year.",
+      "beforeLabel": "Spreadsheets and chat threads",
+      "beforeCaption": "How most landlords keep track today",
+      "afterLabel": "Propio",
+      "afterCaption": "One place, always up to date",
+      "pain1": "You re-do the same math every month, and one wrong cell quietly breaks the year.",
+      "pain2": "Receipts get written by hand, or never get sent, and nobody can find last year’s.",
+      "pain3": "A contract expires before you notice, and the renewal conversation starts late.",
+      "pain4": "Rent in dollars and rent in pesos never add up to a number you can actually read.",
+      "pain5": "When tax season arrives, the numbers live in four places and none of them agree.",
+      "gain1": "Register a payment once — the balance, the receipt and the reports all update together.",
+      "gain2": "Every receipt is a signed PDF, filed automatically and emailed to the tenant.",
+      "gain3": "Expirations, upcoming rent and late payments reach you by email before they become a problem.",
+      "gain4": "Each contract keeps its own currency, and your dashboard converts everything to your main one.",
+      "gain5": "A year of revenue, expenses, profit and occupancy is one screen away, already calculated."
+    },
     "features": {
+      "eyebrow": "Everything included",
+      "title": "The whole operation, in one dashboard",
+      "description": "Not a spreadsheet with a nicer skin — the actual work of renting out property, from the first contract to the receipt your tenant keeps.",
       "paymentsTitle": "Payments that reconcile themselves",
-      "paymentsDesc": "Register a payment once — Propio marks rent as paid, updates balances, and files the receipt automatically.",
-      "receiptsTitle": "Beautiful receipts & statements",
-      "receiptsDesc": "Generate polished PDF receipts and monthly statements your tenants will actually appreciate.",
+      "paymentsDesc": "Register a payment once. Propio anchors it to the contract’s due day, works out the remaining balance, marks the month as covered and files the receipt — without you touching a formula.",
+      "receiptsTitle": "Receipts and statements that look the part",
+      "receiptsDesc": "Numbered, sequential PDF receipts with your own signature, plus monthly statements your tenants can actually use.",
       "reportsTitle": "Reports you understand at a glance",
-      "reportsDesc": "Revenue, expenses, profit, and occupancy — visualised across every property you own.",
+      "reportsDesc": "Revenue, expenses, profit and occupancy across every property, by month and by year.",
+      "multiCurrencyTitle": "Rent in any currency",
+      "multiCurrencyDesc": "Each contract carries its own currency. Your dashboard converts everything to your main one at the day’s exchange rate.",
+      "remindersTitle": "Reminders that reach you first",
+      "remindersDesc": "Expiring contracts, rent coming due and late payments — emailed on your schedule, with the lead time you choose.",
       "documentsTitle": "Every document, one place",
-      "documentsDesc": "Contracts, IDs, invoices and photos, organised per property and always a click away."
+      "documentsDesc": "Contracts, IDs, invoices and photos, organised per property and always a click away.",
+      "securityTitle": "Your data is only yours",
+      "securityDesc": "Every record is scoped to your account at the database level. No ads, no data sold, no other landlord ever sees your portfolio.",
+      "visual": {
+        "paymentLabel": "Payment registered",
+        "receiptLabel": "Receipt issued",
+        "contract": "Contract.pdf",
+        "id": "ID card",
+        "invoice": "Invoice"
+      }
+    },
+    "how": {
+      "eyebrow": "How it works",
+      "title": "Set up once. Then it is four clicks a month.",
+      "description": "Most landlords are running by the end of their first coffee. Nothing here needs an accountant, an import file or a training session.",
+      "step": "Step {number}",
+      "propertiesTitle": "Add your properties",
+      "propertiesDesc": "Name, address, type and photos. One property or fifty — the dashboard is the same, it just fills up faster.",
+      "contractsTitle": "Create tenants and contracts",
+      "contractsDesc": "Tenant details, rent, currency, due day, deposit and dates. From here Propio knows what should be paid, by whom, and when.",
+      "paymentsTitle": "Register each payment",
+      "paymentsDesc": "Pick the contract, enter the amount. Propio works out the period, the balance and the receipt number, then emails the PDF to your tenant.",
+      "reportsTitle": "Close the month without doing math",
+      "reportsDesc": "Your dashboard already has the totals: what came in, what went out, what is still owed and how full your portfolio is."
+    },
+    "showcase": {
+      "receiptsEyebrow": "Receipts",
+      "receiptsTitle": "From payment to signed receipt, in one step",
+      "receiptsDesc": "The receipt is generated the moment the payment is saved: your own numbering, the amount in words, the next due date and your signature — then it lands in your tenant’s inbox.",
+      "receiptsBullet1": "Per-account sequential numbering, so nothing is ever duplicated or skipped.",
+      "receiptsBullet2": "Your signature: draw it once on screen or upload a PNG, and it prints on every receipt.",
+      "receiptsBullet3": "Emailed to the tenant automatically, and always downloadable again later.",
+      "reportsEyebrow": "Reports",
+      "reportsTitle": "The year, already calculated",
+      "reportsDesc": "Revenue, expenses, profit and occupancy — per month, per property and per currency, converted to your main currency so a single number actually means something.",
+      "reportsBullet1": "Month-by-month charts you can read without exporting anything.",
+      "reportsBullet2": "Expenses by category, so you can see where the profit is actually going.",
+      "reportsBullet3": "Totals marked as approximate when a conversion was involved — never a made-up figure presented as exact.",
+      "remindersEyebrow": "Reminders",
+      "remindersTitle": "Nothing expires behind your back",
+      "remindersDesc": "Propio checks your portfolio every morning and emails you what needs attention — with the lead time you set, and only for the reminders you turned on.",
+      "remindersBullet1": "Contracts about to expire, with as much notice as you want.",
+      "remindersBullet2": "Rent coming due, days before the tenant is late.",
+      "remindersBullet3": "Late payments, so the conversation happens early instead of awkwardly.",
+      "receipt": {
+        "title": "Payment receipt",
+        "month": "August",
+        "tenant": "Tenant",
+        "tenantValue": "María Fernández",
+        "concept": "Concept",
+        "conceptValue": "Rent 15 Aug – 15 Sep",
+        "method": "Method",
+        "methodValue": "Bank transfer",
+        "total": "Total received",
+        "signedBy": "Received by"
+      },
+      "report": {
+        "title": "Annual report",
+        "period": "January – December",
+        "revenue": "Revenue",
+        "expenses": "Expenses",
+        "profit": "Profit"
+      },
+      "reminders": {
+        "title": "Your reminders",
+        "item1Title": "Contract expiring",
+        "item1Body": "Naco 14A · 30 days left to renew",
+        "item1When": "8:00",
+        "item2Title": "Rent coming due",
+        "item2Body": "Piantini 502 · RD$ 42,000 on the 1st",
+        "item2When": "8:00",
+        "item3Title": "Payment overdue",
+        "item3Body": "Torre Azul 3B · 6 days late",
+        "item3When": "8:00"
+      }
+    },
+    "reviews": {
+      "eyebrow": "Reviews",
+      "title": "What landlords say",
+      "description": "Propio was built alongside landlords in the Dominican Republic, one real month-end at a time.",
+      "r1": {
+        "quote": "I used to spend the first Saturday of every month rebuilding the same spreadsheet. Now I register the payments as they come in and the month closes itself.",
+        "name": "Carolina Méndez",
+        "role": "6 apartments · Santo Domingo"
+      },
+      "r2": {
+        "quote": "My tenants get their receipt the same minute they pay. That alone ended half the messages I used to get.",
+        "name": "Rafael Estrella",
+        "role": "3 properties · Santiago"
+      },
+      "r3": {
+        "quote": "Two of my contracts are in dollars and the rest in pesos. Seeing one honest total, converted, is the reason I stayed.",
+        "name": "Ana Lucía Pérez",
+        "role": "11 units · Punta Cana"
+      },
+      "r4": {
+        "quote": "The expiry reminder gave me thirty days to renegotiate a lease I would have let lapse. It paid for itself before I paid anything.",
+        "name": "Jorge Betances",
+        "role": "4 properties · La Romana"
+      },
+      "r5": {
+        "quote": "What convinced me was how little there was to learn. I added a property, a tenant and a payment, and it was already useful.",
+        "name": "Patricia Guzmán",
+        "role": "2 apartments · Santo Domingo Este"
+      },
+      "r6": {
+        "quote": "At tax time I opened the annual report and had every number in one screen. That used to be a full weekend.",
+        "name": "Luis Alberto Núñez",
+        "role": "18 units · Santo Domingo"
+      }
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "title": "Everything you are probably wondering",
+      "description": "And if something is missing, ask — a real person answers, usually the same day.",
+      "moreLead": "Still have a question? Write to us at",
+      "email": "hola@usepropio.com",
+      "q1": {
+        "q": "Do I need a credit card to start?",
+        "a": "No. You create an account with your email, verify it and start working. There is no card on file and no trial clock counting down."
+      },
+      "q2": {
+        "q": "Is it worth it if I only rent out one property?",
+        "a": "Yes — that is exactly where it starts paying off. One property still means contracts, receipts, deposits and a year of numbers to remember. Propio keeps all of it without you keeping any of it in your head."
+      },
+      "q3": {
+        "q": "Can I handle rent in dollars and in pesos at the same time?",
+        "a": "Yes. Each contract carries its own currency, and its payments and receipts inherit it. Your dashboard and reports convert everything to the main currency you choose, at the day’s exchange rate, and mark any total that involved a conversion as approximate."
+      },
+      "q4": {
+        "q": "Do my tenants need an account?",
+        "a": "No. Propio is for you, the landlord. Your tenants only ever receive their receipts and statements by email — there is nothing for them to install, sign up for or log into."
+      },
+      "q5": {
+        "q": "Are the receipts Propio generates valid?",
+        "a": "They are the receipt you would otherwise write by hand, only numbered, consistent and signed. Propio is not an invoicing or tax-filing service, so whether a document satisfies a specific tax or legal requirement is still your call — check with your accountant if it matters for your case."
+      },
+      "q6": {
+        "q": "Where is my data stored, and who can see it?",
+        "a": "On managed infrastructure in the United States, and only you can see it. Every record is tied to your account at the database level, so no other landlord can reach your portfolio. We do not sell data and we do not run ads."
+      },
+      "q7": {
+        "q": "Can I get my information out if I stop using Propio?",
+        "a": "Yes. Every receipt and statement is a PDF you can download whenever you want, and you can ask us to export or delete your account data by email."
+      }
+    },
+    "cta": {
+      "title": "Start with one property. Keep going from there.",
+      "description": "Create your account, add your first contract, and let the month close itself.",
+      "primary": "Create free account",
+      "secondary": "I already have an account",
+      "dashboard": "Go to dashboard",
+      "point1": "No credit card",
+      "point2": "Ready in minutes",
+      "point3": "English and Spanish"
+    },
+    "footer": {
+      "tagline": "The all-in-one operating system for independent landlords. Properties, tenants, contracts, payments and reports — in one place.",
+      "product": "Product",
+      "features": "Features",
+      "howItWorks": "How it works",
+      "reviews": "Reviews",
+      "faq": "FAQ",
+      "account": "Account",
+      "register": "Create account",
+      "signIn": "Sign in",
+      "dashboard": "Dashboard",
+      "legal": "Legal",
+      "terms": "Terms of use",
+      "privacy": "Privacy policy",
+      "rights": "All rights reserved.",
+      "madeIn": "Made in the Dominican Republic."
+    }
+  },
+  "legal": {
+    "eyebrow": "Legal",
+    "lastUpdated": "Last updated",
+    "tocLabel": "On this page",
+    "contactTitle": "Questions about this document",
+    "contactBody": "If anything here is unclear, or you want to exercise any of the rights described above, write to us at",
+    "contactEmail": "hola@usepropio.com",
+    "terms": {
+      "title": "Terms of use",
+      "updated": "August 27, 2026",
+      "intro": "These terms govern your use of Propio, the property-management service available at usepropio.com. By creating an account you agree to them. Please read them — they describe what Propio does, what it does not do, and what each of us is responsible for.",
+      "sections": [
+        {
+          "title": "Acceptance of these terms",
+          "body": [
+            "By creating an account, signing in, or using Propio in any way, you confirm that you have read and accepted these terms. If you do not agree with them, do not use the service.",
+            "You must be of legal age to enter into a contract in your country of residence, and you must be using Propio to manage properties you own, administer, or are otherwise authorised to manage."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "What Propio is",
+          "body": [
+            "Propio is a record-keeping and administration tool for independent landlords. It stores the properties, tenants, contracts, payments, expenses and documents that you enter, and it produces receipts, statements and reports from that information.",
+            "Propio is not a law firm, an accounting practice, a tax adviser, a payment processor, or a bank. It does not move money, does not collect rent on your behalf, and does not provide legal, tax or financial advice. Decisions you make with the help of the numbers Propio shows you remain your decisions."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Your account",
+          "body": [
+            "You need an account to use Propio. You can create one with an email address and password, or by signing in with a Google or GitHub account. When you register with an email address you must verify it before you can sign in.",
+            "You are responsible for keeping your credentials confidential and for everything that happens under your account. Tell us promptly if you believe someone else has gained access to it.",
+            "One account represents one landlord or administrator. Every record you create belongs to that account and is isolated from every other account on the service."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Acceptable use",
+          "body": [
+            "While using Propio, you agree not to:"
+          ],
+          "bullets": [
+            "Use the service for any unlawful purpose, or to store information you have no right to hold.",
+            "Attempt to access data belonging to another account, or to probe, scan or test the security of the service.",
+            "Interfere with the normal operation of the service, including by automated scraping, flooding, or overloading it.",
+            "Upload malware, or files whose content is unlawful or infringes someone else’s rights.",
+            "Resell, sublicense or offer the service to third parties as if it were your own."
+          ]
+        },
+        {
+          "title": "Your content and your data",
+          "body": [
+            "Everything you enter or upload — property details, tenant records, contracts, payments, expenses, files and images — remains yours. Nothing in these terms transfers ownership of it to us.",
+            "You grant us only the permissions we need to operate the service for you: to store your content, process it to produce the receipts, statements, reports, notifications and PDFs you ask for, and back it up so it is not lost.",
+            "We do not sell your data, we do not use it for advertising, and we do not use it to train models. We access individual records only when you ask us to for support, or when we are legally required to."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Information about your tenants",
+          "body": [
+            "Propio stores personal information about people who are not our users — your tenants. You decide what to enter about them, and you are responsible for having a lawful basis to hold and share it.",
+            "In practical terms: you act as the controller of your tenants’ data and Propio acts as the processor. We handle that information on your instructions, to run the service you asked for, and for nothing else. Our Privacy policy explains what we do with it in detail.",
+            "When Propio emails a receipt or statement to a tenant, it does so at your request, using the email address you recorded, and identifies you as the sender."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Documents Propio generates",
+          "body": [
+            "Receipts, statements and reports are produced from the information you enter, in the format you configured, with the signature you uploaded or drew. They are your documents, issued by you.",
+            "Whether such a document satisfies a specific legal, tax or regulatory requirement in your jurisdiction is outside our control and remains your responsibility. If it matters for your case, check with your accountant or lawyer before relying on it.",
+            "Receipt numbering is sequential within your account. If you delete a payment, its receipt is deleted with it — Propio does not attempt to preserve a gapless fiscal series, because it is not an invoicing system."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Exchange rates and calculated figures",
+          "body": [
+            "When your portfolio holds more than one currency, Propio converts amounts to your main currency using rates from a third-party public source, refreshed periodically. Converted totals are marked as approximate.",
+            "These rates are provided for convenience and orientation. They are not a quote, they are not guaranteed to match the rate of any bank or exchange house, and they should not be used as the basis for a settlement between you and a tenant.",
+            "If the rate source is unavailable, Propio says so rather than showing a converted figure it cannot stand behind."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Email notifications",
+          "body": [
+            "Propio sends two kinds of email: messages required to operate your account (verification, password resets, receipts and statements you asked to send), and reminders about expiring contracts, upcoming rent and late payments.",
+            "Reminders are optional and can be turned off individually in Settings. Account emails cannot be turned off while your account is open, because the service cannot function without them.",
+            "Reminders are scheduled once a day and depend on infrastructure we do not control. Treat them as a convenience, not as a guaranteed alert: the responsibility for meeting a deadline remains yours."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Price and availability",
+          "body": [
+            "Propio is currently offered free of charge. If we introduce paid plans, we will announce it in advance and you will never be charged without accepting the new terms first.",
+            "We work to keep the service available and fast, but we do not promise uninterrupted availability. We may change, add or remove features, and we may perform maintenance that briefly interrupts access.",
+            "If we ever discontinue the service, we will give you reasonable notice and a way to export your information before it is deleted."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Suspension and closing your account",
+          "body": [
+            "You may stop using Propio at any time, and you may ask us to delete your account and its data by writing to the address at the bottom of this page.",
+            "We may suspend or close an account that breaches these terms, that is being used unlawfully, or that puts the service or other users at risk. Where circumstances allow, we will warn you first and give you a chance to put things right."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Warranty disclaimer",
+          "body": [
+            "Propio is provided \"as is\" and \"as available\". To the fullest extent permitted by law, we make no warranties of any kind, express or implied, including any warranty of merchantability, fitness for a particular purpose, or non-infringement.",
+            "We do not warrant that the service will be error-free, that reminders will always arrive, or that every calculation will be suitable for a purpose you have not told us about. Verify anything that matters before you act on it."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Limitation of liability",
+          "body": [
+            "To the fullest extent permitted by law, Propio and the people behind it will not be liable for indirect, incidental, special or consequential damages, nor for lost profits, lost rent, lost data or business interruption arising from your use of — or inability to use — the service.",
+            "Nothing in this section limits liability that cannot lawfully be limited, such as liability for fraud, wilful misconduct, or death or personal injury caused by negligence."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Changes to these terms",
+          "body": [
+            "We may update these terms as the service evolves or the law requires. The date at the top of this page always reflects the current version.",
+            "If a change materially affects your rights, we will notify you by email or inside the app before it takes effect. Continuing to use Propio after that means you accept the updated terms."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Governing law",
+          "body": [
+            "These terms are governed by the laws of the Dominican Republic, without regard to conflict-of-law rules. Any dispute arising from them will be submitted to the competent courts of Santo Domingo, Dominican Republic, unless mandatory consumer-protection rules in your country of residence give you the right to bring it elsewhere."
+          ],
+          "bullets": []
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Privacy policy",
+      "updated": "August 27, 2026",
+      "intro": "This policy explains what information Propio collects, why we collect it, who we share it with, and what you can ask us to do with it. It covers usepropio.com and the Propio application. We have tried to write it in plain language rather than legalese.",
+      "sections": [
+        {
+          "title": "Who this policy covers",
+          "body": [
+            "It covers you, as a Propio account holder, and the people whose information you record in the service — most often your tenants.",
+            "For your own account data we are the controller: we decide what to collect and why. For the information you enter about your tenants you are the controller and we are the processor: we hold and process it on your instructions, to run the service you asked for."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Information you give us",
+          "body": [
+            "We store what you enter, which typically includes:"
+          ],
+          "bullets": [
+            "Account details: your name, email address and, if you registered with a password, a securely hashed version of it. If you sign in with Google or GitHub, we receive your name, email address and profile picture from that provider.",
+            "Preferences: interface language, main currency, date format, reminder settings and your signature image.",
+            "Property and contract records: addresses, descriptions, photos, rent amounts, currencies, due days and contract dates.",
+            "Tenant records: the name, email address, phone number, identification and notes you choose to enter.",
+            "Financial records: payments, expenses, deposits, receipts and the statements generated from them.",
+            "Files you upload: contracts, identification documents, invoices, receipts and property photos."
+          ]
+        },
+        {
+          "title": "Information we collect automatically",
+          "body": [
+            "Running a web service produces some technical data by necessity: your IP address, browser and device type, and timestamps of requests and errors. Our hosting and infrastructure providers log this to keep the service running and secure.",
+            "Propio does not use advertising cookies, third-party analytics trackers, or cross-site tracking of any kind."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "How we use your information",
+          "body": [
+            "We use it only to run the service you signed up for:"
+          ],
+          "bullets": [
+            "To create and secure your account, and to sign you in.",
+            "To store and show your properties, tenants, contracts, payments and documents.",
+            "To generate receipts, statements and reports, and to email them to the recipients you choose.",
+            "To send the reminders you have enabled about expiring contracts, upcoming rent and late payments.",
+            "To provide support when you contact us, and to diagnose faults.",
+            "To meet legal obligations and to protect the service against abuse."
+          ]
+        },
+        {
+          "title": "Service providers we rely on",
+          "body": [
+            "Propio is built on third-party infrastructure. These providers process data strictly to deliver their part of the service, under their own security and privacy commitments:"
+          ],
+          "bullets": [
+            "Vercel — application hosting and delivery.",
+            "Supabase — the PostgreSQL database and the file storage that holds your uploads, hosted on Amazon Web Services in the United States.",
+            "Resend — delivery of transactional email, including verification messages, password resets, receipts, statements and reminders.",
+            "Google and GitHub — only if you choose to sign in with them, and only to authenticate you.",
+            "open.er-api.com — a public exchange-rate source. We request published rates only; no data about you or your portfolio is sent to it."
+          ]
+        },
+        {
+          "title": "We do not sell your data",
+          "body": [
+            "We do not sell, rent or trade your information, and we do not share it with advertisers or data brokers. We do not use your content or your tenants’ information to train machine-learning models.",
+            "The only circumstances in which we would disclose information to anyone else are: at your request, to the providers listed above so the service can function, or when a valid legal order requires it."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Your tenants’ information",
+          "body": [
+            "You decide what to record about your tenants. We recommend entering only what you actually need to manage the tenancy.",
+            "We use that information solely to operate the features you use: showing it back to you, printing it on the receipts and statements you generate, and emailing those documents to the address you recorded.",
+            "When Propio emails a tenant, the message identifies you as the landlord sending it. Our sending address does not accept replies, so a tenant who replies to it will not reach anyone — give your tenants a direct way to contact you.",
+            "If a tenant asks you to correct or delete their information, you can do it yourself in the app, or write to us and we will help."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Cookies and local storage",
+          "body": [
+            "We use a small number of strictly necessary cookies and browser storage entries. None of them are used for advertising or tracking:"
+          ],
+          "bullets": [
+            "A session cookie that keeps you signed in.",
+            "A language cookie (NEXT_LOCALE) that remembers whether you chose English or Spanish.",
+            "A local-storage entry that remembers your light or dark theme preference. It never leaves your browser."
+          ]
+        },
+        {
+          "title": "How long we keep your information",
+          "body": [
+            "We keep your information for as long as your account is open. Most records you delete inside the app are marked as deleted and hidden from your account rather than erased immediately, so that an accident can be undone and related history stays coherent. Payments and their receipts are an exception: deleting a payment removes it, and its receipt PDF, permanently.",
+            "If you ask us to delete your account, we remove your data from the live service and it then falls out of routine encrypted backups within their normal retention cycle."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Security",
+          "body": [
+            "Data is transmitted over HTTPS and stored on managed infrastructure with encryption at rest. Passwords are stored only as salted hashes — we never see or store them in readable form.",
+            "Every record in the database is scoped to the account that owns it, and every query is filtered by that owner, so one account cannot read another’s data.",
+            "No system is perfectly secure. Use a strong, unique password, and tell us immediately if you suspect your account has been compromised."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Your rights",
+          "body": [
+            "Depending on where you live, you may have the right to access, correct, export or delete your personal information, to object to certain processing, or to withdraw consent."
+          ],
+          "bullets": [
+            "Most of your information can be viewed, edited and deleted directly inside the app at any time.",
+            "Receipts and statements can be downloaded as PDFs whenever you want.",
+            "For anything else — a full export, or deletion of your whole account — write to us and we will respond within a reasonable time."
+          ]
+        },
+        {
+          "title": "International transfers",
+          "body": [
+            "Propio is used from Latin America but runs on infrastructure located in the United States. Using the service therefore involves transferring your information there, where privacy laws may differ from those in your country. We only work with providers that commit to appropriate safeguards for such transfers."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Children",
+          "body": [
+            "Propio is a business tool and is not directed at children. We do not knowingly collect information from anyone under 18. If you believe a minor has given us personal information, write to us and we will delete it."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Changes to this policy",
+          "body": [
+            "We may update this policy as the service changes or the law requires. The date at the top of this page always reflects the current version, and we will notify you of material changes by email or inside the app before they take effect."
+          ],
+          "bullets": []
+        }
+      ]
     }
   },
   "meta": {
@@ -1017,7 +1547,9 @@
     "reports": "Reports",
     "notifications": "Notifications",
     "settings": "Settings",
-    "profile": "Profile"
+    "profile": "Profile",
+    "terms": "Terms of use",
+    "privacy": "Privacy policy"
   },
   "emails": {
     "footer": "Manage your properties with confidence.",

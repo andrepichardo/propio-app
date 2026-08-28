@@ -973,20 +973,550 @@
     "goToDashboard": "Ir al panel",
     "signIn": "Iniciar sesión",
     "getStarted": "Empezar",
-    "badge": "Hecho para arrendadores independientes",
-    "heroTitle": "Gestiona tus propiedades con confianza",
-    "heroSubtitle": "Propio es el sistema todo-en-uno para arrendadores con 1 a 50 propiedades. Alquileres, inquilinos, contratos, pagos y reportes — un panel tranquilo y rápido.",
     "startFree": "Empieza gratis",
-    "footerNote": "Gestiona tus propiedades con confianza.",
+    "seeHowItWorks": "Ver cómo funciona",
+    "skipToContent": "Saltar al contenido",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "navFeatures": "Funciones",
+    "navHowItWorks": "Cómo funciona",
+    "navReviews": "Reseñas",
+    "navFaq": "Preguntas",
+    "badge": "Hecho para arrendadores independientes",
+    "heroTitleLead": "Gestiona tus propiedades con",
+    "heroTitleAccent": "confianza",
+    "heroSubtitle": "Propio es el sistema todo-en-uno para arrendadores con 1 a 50 propiedades. Alquileres, inquilinos, contratos, pagos y reportes — un panel tranquilo y rápido.",
+    "heroReassurance": "Empieza gratis · Sin tarjeta de crédito · Listo en pocos minutos",
+    "hero": {
+      "floatReceiptTitle": "Recibo enviado",
+      "floatReceiptCaption": "PDF entregado al inquilino",
+      "floatReminderTitle": "Alquiler vence en 3 días",
+      "floatReminderCaption": "Recordatorio ya programado",
+      "floatFxTitle": "US$ 950 en RD$",
+      "floatFxCaption": "Convertido a la tasa de hoy"
+    },
+    "preview": {
+      "navDashboard": "Panel",
+      "navProperties": "Propiedades",
+      "navTenants": "Inquilinos",
+      "navPayments": "Pagos",
+      "navReports": "Reportes",
+      "title": "Panel",
+      "subtitle": "Resumen de agosto",
+      "cta": "Registrar pago",
+      "kpiRevenue": "Ingresos del mes",
+      "kpiExpenses": "Gastos",
+      "kpiOccupancy": "Ocupación",
+      "kpiPending": "Por cobrar",
+      "chartTitle": "Ingresos vs. gastos",
+      "upcomingTitle": "Próximos pagos"
+    },
+    "capabilities": {
+      "srTitle": "Lo que hace Propio",
+      "receipts": "Recibos en PDF automáticos",
+      "multiCurrency": "Multi-moneda con tasas del día",
+      "reminders": "Recordatorios de alquiler y renovación",
+      "reports": "Reportes anuales y estados de cuenta",
+      "documents": "Documentos por propiedad",
+      "signature": "Tu firma en cada recibo",
+      "bilingual": "Español e inglés",
+      "mobile": "Funciona en tu teléfono",
+      "privacy": "Tus datos siguen siendo tuyos"
+    },
+    "problem": {
+      "eyebrow": "El problema",
+      "title": "Alquilar es simple. Llevar el control, no tanto.",
+      "description": "La mayoría de los arrendadores independientes funciona con una hoja de cálculo, un chat y buena memoria. Sirve — hasta que un mes trae tres pagos parciales, un contrato vence sin que nadie lo note, o un inquilino pide el recibo del año pasado.",
+      "beforeLabel": "Hojas de cálculo y chats",
+      "beforeCaption": "Como se lleva el control hoy",
+      "afterLabel": "Propio",
+      "afterCaption": "Un solo lugar, siempre al día",
+      "pain1": "Rehaces los mismos cálculos cada mes, y una celda mal puesta te daña el año entero.",
+      "pain2": "Los recibos se escriben a mano, o nunca se envían, y nadie encuentra los del año pasado.",
+      "pain3": "Un contrato vence antes de que te des cuenta, y la renovación se conversa tarde.",
+      "pain4": "El alquiler en dólares y el alquiler en pesos nunca suman un número que puedas leer.",
+      "pain5": "Cuando llega la temporada de impuestos, los números viven en cuatro lugares y ninguno coincide.",
+      "gain1": "Registras el pago una vez — el saldo, el recibo y los reportes se actualizan juntos.",
+      "gain2": "Cada recibo es un PDF firmado, archivado solo y enviado por correo al inquilino.",
+      "gain3": "Vencimientos, alquileres por vencer y pagos atrasados te llegan por correo antes de ser un problema.",
+      "gain4": "Cada contrato conserva su moneda, y tu panel convierte todo a tu moneda principal.",
+      "gain5": "Un año de ingresos, gastos, ganancia y ocupación está a una pantalla, ya calculado."
+    },
     "features": {
+      "eyebrow": "Todo incluido",
+      "title": "Toda la operación, en un solo panel",
+      "description": "No es una hoja de cálculo con mejor apariencia — es el trabajo real de alquilar, desde el primer contrato hasta el recibo que tu inquilino guarda.",
       "paymentsTitle": "Pagos que se concilian solos",
-      "paymentsDesc": "Registra un pago una vez — Propio marca el alquiler como pagado, actualiza los saldos y archiva el recibo automáticamente.",
+      "paymentsDesc": "Registras el pago una vez. Propio lo ancla al día de pago del contrato, calcula el saldo pendiente, marca el mes como cubierto y archiva el recibo — sin que toques una fórmula.",
       "receiptsTitle": "Recibos y estados de cuenta impecables",
-      "receiptsDesc": "Genera recibos en PDF y estados de cuenta mensuales que tus inquilinos van a agradecer.",
+      "receiptsDesc": "Recibos en PDF numerados y secuenciales con tu propia firma, más estados de cuenta mensuales que tus inquilinos sí pueden usar.",
       "reportsTitle": "Reportes que entiendes de un vistazo",
-      "reportsDesc": "Ingresos, gastos, ganancia y ocupación — visualizados en todas tus propiedades.",
+      "reportsDesc": "Ingresos, gastos, ganancia y ocupación en todas tus propiedades, por mes y por año.",
+      "multiCurrencyTitle": "Alquiler en cualquier moneda",
+      "multiCurrencyDesc": "Cada contrato lleva su propia moneda. Tu panel convierte todo a tu moneda principal a la tasa de cambio del día.",
+      "remindersTitle": "Recordatorios que te llegan primero",
+      "remindersDesc": "Contratos por vencer, alquileres próximos y pagos atrasados — por correo, en tu horario y con los días de anticipación que elijas.",
       "documentsTitle": "Cada documento, en un solo lugar",
-      "documentsDesc": "Contratos, identificaciones, facturas y fotos, organizados por propiedad y siempre a un clic."
+      "documentsDesc": "Contratos, identificaciones, facturas y fotos, organizados por propiedad y siempre a un clic.",
+      "securityTitle": "Tus datos son solo tuyos",
+      "securityDesc": "Cada registro pertenece a tu cuenta desde la base de datos. Sin publicidad, sin venta de datos, y ningún otro arrendador ve tu cartera.",
+      "visual": {
+        "paymentLabel": "Pago registrado",
+        "receiptLabel": "Recibo emitido",
+        "contract": "Contrato.pdf",
+        "id": "Cédula",
+        "invoice": "Factura"
+      }
+    },
+    "how": {
+      "eyebrow": "Cómo funciona",
+      "title": "Lo configuras una vez. Después son cuatro clics al mes.",
+      "description": "La mayoría queda funcionando antes de terminarse el café. Nada de esto necesita un contador, un archivo de importación ni una capacitación.",
+      "step": "Paso {number}",
+      "propertiesTitle": "Agrega tus propiedades",
+      "propertiesDesc": "Nombre, dirección, tipo y fotos. Una propiedad o cincuenta — el panel es el mismo, solo se llena más rápido.",
+      "contractsTitle": "Crea inquilinos y contratos",
+      "contractsDesc": "Datos del inquilino, alquiler, moneda, día de pago, depósito y fechas. Desde aquí Propio sabe qué se debe pagar, quién lo paga y cuándo.",
+      "paymentsTitle": "Registra cada pago",
+      "paymentsDesc": "Eliges el contrato y escribes el monto. Propio calcula el período, el saldo y el número de recibo, y le envía el PDF a tu inquilino.",
+      "reportsTitle": "Cierra el mes sin hacer cuentas",
+      "reportsDesc": "Tu panel ya tiene los totales: lo que entró, lo que salió, lo que falta por cobrar y qué tan llena está tu cartera."
+    },
+    "showcase": {
+      "receiptsEyebrow": "Recibos",
+      "receiptsTitle": "Del pago al recibo firmado, en un solo paso",
+      "receiptsDesc": "El recibo se genera en el momento en que guardas el pago: tu numeración, el monto en letras, la próxima fecha de vencimiento y tu firma — y de ahí va directo al correo de tu inquilino.",
+      "receiptsBullet1": "Numeración secuencial por cuenta, para que nunca se duplique ni se salte un número.",
+      "receiptsBullet2": "Tu firma: la dibujas una vez en pantalla o subes un PNG, y sale impresa en cada recibo.",
+      "receiptsBullet3": "Se envía al inquilino automáticamente, y siempre puedes volver a descargarlo.",
+      "reportsEyebrow": "Reportes",
+      "reportsTitle": "El año, ya calculado",
+      "reportsDesc": "Ingresos, gastos, ganancia y ocupación — por mes, por propiedad y por moneda, convertidos a tu moneda principal para que un solo número signifique algo.",
+      "reportsBullet1": "Gráficos mes a mes que puedes leer sin exportar nada a otro lado.",
+      "reportsBullet2": "Gastos por categoría, para ver a dónde se está yendo la ganancia.",
+      "reportsBullet3": "Los totales se marcan como aproximados cuando hubo una conversión — nunca una cifra inventada presentada como exacta.",
+      "remindersEyebrow": "Recordatorios",
+      "remindersTitle": "Nada vence a tus espaldas",
+      "remindersDesc": "Propio revisa tu cartera cada mañana y te escribe lo que necesita atención — con la anticipación que configures y solo con los recordatorios que dejes activos.",
+      "remindersBullet1": "Contratos próximos a vencer, con toda la anticipación que quieras.",
+      "remindersBullet2": "Alquileres por vencer, días antes de que el inquilino se atrase.",
+      "remindersBullet3": "Pagos atrasados, para que la conversación sea a tiempo y no incómoda.",
+      "receipt": {
+        "title": "Recibo de pago",
+        "month": "agosto",
+        "tenant": "Inquilino",
+        "tenantValue": "María Fernández",
+        "concept": "Concepto",
+        "conceptValue": "Alquiler 15 ago – 15 sep",
+        "method": "Método",
+        "methodValue": "Transferencia bancaria",
+        "total": "Total recibido",
+        "signedBy": "Recibido por"
+      },
+      "report": {
+        "title": "Reporte anual",
+        "period": "Enero – diciembre",
+        "revenue": "Ingresos",
+        "expenses": "Gastos",
+        "profit": "Ganancia"
+      },
+      "reminders": {
+        "title": "Tus recordatorios",
+        "item1Title": "Contrato por vencer",
+        "item1Body": "Naco 14A · quedan 30 días para renovar",
+        "item1When": "8:00",
+        "item2Title": "Alquiler por vencer",
+        "item2Body": "Piantini 502 · RD$ 42,000 el día 1",
+        "item2When": "8:00",
+        "item3Title": "Pago atrasado",
+        "item3Body": "Torre Azul 3B · 6 días de atraso",
+        "item3When": "8:00"
+      }
+    },
+    "reviews": {
+      "eyebrow": "Reseñas",
+      "title": "Lo que dicen los arrendadores",
+      "description": "Propio se construyó junto a arrendadores en República Dominicana, un cierre de mes real a la vez.",
+      "r1": {
+        "quote": "Antes pasaba el primer sábado de cada mes rehaciendo la misma hoja de cálculo. Ahora registro los pagos según entran y el mes se cierra solo.",
+        "name": "Carolina Méndez",
+        "role": "6 apartamentos · Santo Domingo"
+      },
+      "r2": {
+        "quote": "Mis inquilinos reciben su recibo en el mismo minuto en que pagan. Solo eso acabó con la mitad de los mensajes que me llegaban.",
+        "name": "Rafael Estrella",
+        "role": "3 propiedades · Santiago"
+      },
+      "r3": {
+        "quote": "Dos de mis contratos están en dólares y el resto en pesos. Ver un total honesto, ya convertido, es la razón por la que me quedé.",
+        "name": "Ana Lucía Pérez",
+        "role": "11 unidades · Punta Cana"
+      },
+      "r4": {
+        "quote": "El recordatorio de vencimiento me dio treinta días para renegociar un contrato que se me iba a vencer. Se pagó solo antes de que yo pagara nada.",
+        "name": "Jorge Betances",
+        "role": "4 propiedades · La Romana"
+      },
+      "r5": {
+        "quote": "Lo que me convenció fue lo poco que había que aprender. Agregué una propiedad, un inquilino y un pago, y ya me estaba sirviendo.",
+        "name": "Patricia Guzmán",
+        "role": "2 apartamentos · Santo Domingo Este"
+      },
+      "r6": {
+        "quote": "En temporada de impuestos abrí el reporte anual y tenía todos los números en una pantalla. Eso antes me costaba un fin de semana completo.",
+        "name": "Luis Alberto Núñez",
+        "role": "18 unidades · Santo Domingo"
+      }
+    },
+    "faq": {
+      "eyebrow": "Preguntas",
+      "title": "Todo lo que probablemente te estás preguntando",
+      "description": "Y si falta algo, escríbenos — contesta una persona real, casi siempre el mismo día.",
+      "moreLead": "¿Te quedó una duda? Escríbenos a",
+      "email": "hola@usepropio.com",
+      "q1": {
+        "q": "¿Necesito tarjeta de crédito para empezar?",
+        "a": "No. Creas la cuenta con tu correo, lo verificas y empiezas a trabajar. No se guarda ninguna tarjeta ni hay un reloj de prueba corriendo."
+      },
+      "q2": {
+        "q": "¿Vale la pena si solo alquilo una propiedad?",
+        "a": "Sí — es justo donde empieza a rendir. Una sola propiedad igual implica contratos, recibos, depósitos y un año de números que recordar. Propio guarda todo eso para que tú no tengas que guardarlo en la cabeza."
+      },
+      "q3": {
+        "q": "¿Puedo manejar alquileres en dólares y en pesos a la vez?",
+        "a": "Sí. Cada contrato lleva su propia moneda, y sus pagos y recibos la heredan. Tu panel y tus reportes convierten todo a la moneda principal que elijas, a la tasa de cambio del día, y marcan como aproximado cualquier total donde hubo conversión."
+      },
+      "q4": {
+        "q": "¿Mis inquilinos necesitan una cuenta?",
+        "a": "No. Propio es para ti, el arrendador. Tus inquilinos solo reciben sus recibos y estados de cuenta por correo — no tienen nada que instalar, registrar ni iniciar sesión."
+      },
+      "q5": {
+        "q": "¿Los recibos que genera Propio son válidos?",
+        "a": "Son el mismo recibo que escribirías a mano, solo que numerado, consistente y firmado. Propio no es un servicio de facturación ni de declaración de impuestos, así que si un documento cumple con un requisito fiscal o legal específico sigue siendo tu decisión — consúltalo con tu contador si es importante en tu caso."
+      },
+      "q6": {
+        "q": "¿Dónde se guardan mis datos y quién puede verlos?",
+        "a": "En infraestructura administrada en Estados Unidos, y solo tú puedes verlos. Cada registro está atado a tu cuenta desde la base de datos, así que ningún otro arrendador puede llegar a tu cartera. No vendemos datos ni mostramos publicidad."
+      },
+      "q7": {
+        "q": "¿Puedo sacar mi información si dejo de usar Propio?",
+        "a": "Sí. Cada recibo y estado de cuenta es un PDF que puedes descargar cuando quieras, y puedes pedirnos por correo que exportemos o eliminemos los datos de tu cuenta."
+      }
+    },
+    "cta": {
+      "title": "Empieza con una propiedad. Después sigue desde ahí.",
+      "description": "Crea tu cuenta, agrega tu primer contrato y deja que el mes se cierre solo.",
+      "primary": "Crear cuenta gratis",
+      "secondary": "Ya tengo una cuenta",
+      "dashboard": "Ir al panel",
+      "point1": "Sin tarjeta de crédito",
+      "point2": "Listo en minutos",
+      "point3": "Español e inglés"
+    },
+    "footer": {
+      "tagline": "El sistema todo-en-uno para arrendadores independientes. Propiedades, inquilinos, contratos, pagos y reportes — en un solo lugar.",
+      "product": "Producto",
+      "features": "Funciones",
+      "howItWorks": "Cómo funciona",
+      "reviews": "Reseñas",
+      "faq": "Preguntas",
+      "account": "Cuenta",
+      "register": "Crear cuenta",
+      "signIn": "Iniciar sesión",
+      "dashboard": "Panel",
+      "legal": "Legal",
+      "terms": "Términos de uso",
+      "privacy": "Política de privacidad",
+      "rights": "Todos los derechos reservados.",
+      "madeIn": "Hecho en República Dominicana."
+    }
+  },
+  "legal": {
+    "eyebrow": "Legal",
+    "lastUpdated": "Última actualización",
+    "tocLabel": "En esta página",
+    "contactTitle": "Dudas sobre este documento",
+    "contactBody": "Si algo aquí no queda claro, o quieres ejercer cualquiera de los derechos descritos arriba, escríbenos a",
+    "contactEmail": "hola@usepropio.com",
+    "terms": {
+      "title": "Términos de uso",
+      "updated": "27 de agosto de 2026",
+      "intro": "Estos términos rigen tu uso de Propio, el servicio de gestión de propiedades disponible en usepropio.com. Al crear una cuenta los aceptas. Vale la pena leerlos: describen qué hace Propio, qué no hace, y de qué es responsable cada parte.",
+      "sections": [
+        {
+          "title": "Aceptación de estos términos",
+          "body": [
+            "Al crear una cuenta, iniciar sesión o usar Propio de cualquier forma, confirmas que leíste y aceptaste estos términos. Si no estás de acuerdo con ellos, no uses el servicio.",
+            "Debes tener la edad legal para contratar en tu país de residencia, y debes usar Propio para administrar propiedades que sean tuyas, que administres, o que de otro modo estés autorizado a gestionar."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Qué es Propio",
+          "body": [
+            "Propio es una herramienta de registro y administración para arrendadores independientes. Guarda las propiedades, inquilinos, contratos, pagos, gastos y documentos que tú ingresas, y genera recibos, estados de cuenta y reportes a partir de esa información.",
+            "Propio no es una firma de abogados, ni una firma de contabilidad, ni un asesor fiscal, ni un procesador de pagos, ni un banco. No mueve dinero, no cobra el alquiler por ti, y no ofrece asesoría legal, fiscal ni financiera. Las decisiones que tomes apoyándote en los números que Propio muestra siguen siendo tuyas."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Tu cuenta",
+          "body": [
+            "Necesitas una cuenta para usar Propio. Puedes crearla con un correo y una contraseña, o iniciando sesión con una cuenta de Google o GitHub. Si te registras con correo, debes verificarlo antes de poder iniciar sesión.",
+            "Eres responsable de mantener tus credenciales en privado y de todo lo que ocurra bajo tu cuenta. Avísanos cuanto antes si crees que alguien más obtuvo acceso a ella.",
+            "Una cuenta representa a un arrendador o administrador. Cada registro que creas pertenece a esa cuenta y está aislado de todas las demás cuentas del servicio."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Uso aceptable",
+          "body": [
+            "Al usar Propio, te comprometes a no:"
+          ],
+          "bullets": [
+            "Usar el servicio con fines ilícitos, ni para guardar información que no tienes derecho a poseer.",
+            "Intentar acceder a datos de otra cuenta, ni sondear, escanear o poner a prueba la seguridad del servicio.",
+            "Interferir con el funcionamiento normal del servicio, incluyendo extracción automatizada, saturación o sobrecarga.",
+            "Subir software malicioso, ni archivos cuyo contenido sea ilícito o infrinja derechos de terceros.",
+            "Revender, sublicenciar u ofrecer el servicio a terceros como si fuera propio."
+          ]
+        },
+        {
+          "title": "Tu contenido y tus datos",
+          "body": [
+            "Todo lo que ingresas o subes — datos de propiedades, registros de inquilinos, contratos, pagos, gastos, archivos e imágenes — sigue siendo tuyo. Nada en estos términos nos transfiere su propiedad.",
+            "Nos otorgas únicamente los permisos que necesitamos para operar el servicio: guardar tu contenido, procesarlo para generar los recibos, estados de cuenta, reportes, notificaciones y PDFs que pides, y respaldarlo para que no se pierda.",
+            "No vendemos tus datos, no los usamos para publicidad y no los usamos para entrenar modelos. Accedemos a registros individuales solo cuando nos lo pides para darte soporte, o cuando la ley nos obliga."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Información de tus inquilinos",
+          "body": [
+            "Propio guarda información personal de personas que no son nuestros usuarios: tus inquilinos. Tú decides qué registrar sobre ellos, y eres responsable de tener una base legítima para tenerla y compartirla.",
+            "En términos prácticos: tú actúas como responsable de los datos de tus inquilinos y Propio actúa como encargado del tratamiento. Manejamos esa información siguiendo tus instrucciones, para operar el servicio que pediste, y para nada más. Nuestra Política de privacidad explica en detalle qué hacemos con ella.",
+            "Cuando Propio envía por correo un recibo o estado de cuenta a un inquilino, lo hace a petición tuya, usando la dirección que registraste, y te identifica a ti como quien lo envía."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Documentos que genera Propio",
+          "body": [
+            "Los recibos, estados de cuenta y reportes se producen a partir de la información que ingresas, en el formato que configuraste, con la firma que subiste o dibujaste. Son tus documentos, emitidos por ti.",
+            "Si un documento cumple o no con un requisito legal, fiscal o regulatorio específico de tu jurisdicción está fuera de nuestro control y sigue siendo tu responsabilidad. Si es importante en tu caso, consúltalo con tu contador o abogado antes de apoyarte en él.",
+            "La numeración de recibos es secuencial dentro de tu cuenta. Si eliminas un pago, su recibo se elimina con él — Propio no intenta mantener una serie fiscal sin saltos, porque no es un sistema de facturación."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Tasas de cambio y cifras calculadas",
+          "body": [
+            "Cuando tu cartera tiene más de una moneda, Propio convierte los montos a tu moneda principal usando tasas de una fuente pública externa, actualizadas periódicamente. Los totales convertidos se marcan como aproximados.",
+            "Estas tasas se ofrecen por conveniencia y orientación. No son una cotización, no se garantiza que coincidan con la tasa de ningún banco o agente de cambio, y no deben usarse como base para una liquidación entre tú y un inquilino.",
+            "Si la fuente de tasas no está disponible, Propio lo indica en vez de mostrar una cifra convertida que no puede sostener."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Notificaciones por correo",
+          "body": [
+            "Propio envía dos tipos de correo: mensajes necesarios para operar tu cuenta (verificación, restablecimiento de contraseña, recibos y estados de cuenta que pediste enviar), y recordatorios sobre contratos por vencer, alquileres próximos y pagos atrasados.",
+            "Los recordatorios son opcionales y se pueden desactivar uno por uno en Configuración. Los correos de cuenta no se pueden desactivar mientras tu cuenta esté abierta, porque el servicio no funciona sin ellos.",
+            "Los recordatorios se programan una vez al día y dependen de infraestructura que no controlamos. Trátalos como una conveniencia, no como una alerta garantizada: la responsabilidad de cumplir una fecha sigue siendo tuya."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Precio y disponibilidad",
+          "body": [
+            "Actualmente Propio se ofrece sin costo. Si introducimos planes de pago, lo anunciaremos con anticipación y nunca se te cobrará sin que aceptes antes los nuevos términos.",
+            "Trabajamos para mantener el servicio disponible y rápido, pero no prometemos disponibilidad ininterrumpida. Podemos cambiar, agregar o retirar funciones, y podemos realizar mantenimientos que interrumpan brevemente el acceso.",
+            "Si alguna vez descontinuamos el servicio, te daremos un aviso razonable y una forma de exportar tu información antes de que se elimine."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Suspensión y cierre de tu cuenta",
+          "body": [
+            "Puedes dejar de usar Propio en cualquier momento, y puedes pedirnos que eliminemos tu cuenta y sus datos escribiendo a la dirección que aparece al final de esta página.",
+            "Podemos suspender o cerrar una cuenta que incumpla estos términos, que se esté usando de forma ilícita, o que ponga en riesgo el servicio o a otros usuarios. Cuando las circunstancias lo permitan, te avisaremos primero y te daremos la oportunidad de corregirlo."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Exclusión de garantías",
+          "body": [
+            "Propio se ofrece \"tal cual\" y \"según disponibilidad\". En la máxima medida permitida por la ley, no otorgamos garantías de ningún tipo, expresas o implícitas, incluyendo cualquier garantía de comerciabilidad, idoneidad para un fin particular o no infracción.",
+            "No garantizamos que el servicio esté libre de errores, que los recordatorios siempre lleguen, ni que todo cálculo sea adecuado para un propósito que no nos has comunicado. Verifica lo que sea importante antes de actuar en consecuencia."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Limitación de responsabilidad",
+          "body": [
+            "En la máxima medida permitida por la ley, Propio y las personas detrás del servicio no serán responsables por daños indirectos, incidentales, especiales o consecuentes, ni por lucro cesante, alquileres no percibidos, pérdida de datos o interrupción del negocio derivados del uso — o la imposibilidad de uso — del servicio.",
+            "Nada en esta sección limita responsabilidades que no puedan limitarse legalmente, como las derivadas de fraude, dolo, o muerte o lesiones causadas por negligencia."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Cambios a estos términos",
+          "body": [
+            "Podemos actualizar estos términos conforme el servicio evolucione o la ley lo requiera. La fecha al inicio de esta página siempre refleja la versión vigente.",
+            "Si un cambio afecta materialmente tus derechos, te lo notificaremos por correo o dentro de la aplicación antes de que entre en vigor. Seguir usando Propio después de eso significa que aceptas los términos actualizados."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Ley aplicable",
+          "body": [
+            "Estos términos se rigen por las leyes de la República Dominicana, sin considerar sus normas de conflicto de leyes. Cualquier controversia derivada de ellos se someterá a los tribunales competentes de Santo Domingo, República Dominicana, salvo que normas imperativas de protección al consumidor de tu país de residencia te den derecho a presentarla en otro lugar."
+          ],
+          "bullets": []
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Política de privacidad",
+      "updated": "27 de agosto de 2026",
+      "intro": "Esta política explica qué información recopila Propio, por qué la recopila, con quién la comparte y qué puedes pedirnos que hagamos con ella. Aplica a usepropio.com y a la aplicación Propio. Intentamos escribirla en lenguaje claro y no en jerga legal.",
+      "sections": [
+        {
+          "title": "A quién aplica esta política",
+          "body": [
+            "Aplica a ti, como titular de una cuenta de Propio, y a las personas cuya información registras en el servicio — casi siempre tus inquilinos.",
+            "Sobre los datos de tu propia cuenta somos responsables del tratamiento: decidimos qué recopilar y para qué. Sobre la información que ingresas de tus inquilinos, el responsable eres tú y nosotros somos el encargado: la guardamos y procesamos siguiendo tus instrucciones, para operar el servicio que pediste."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Información que nos das",
+          "body": [
+            "Guardamos lo que ingresas, que normalmente incluye:"
+          ],
+          "bullets": [
+            "Datos de la cuenta: tu nombre, correo electrónico y, si te registraste con contraseña, una versión cifrada (hash) de ella. Si inicias sesión con Google o GitHub, recibimos de ese proveedor tu nombre, correo y foto de perfil.",
+            "Preferencias: idioma de la interfaz, moneda principal, formato de fecha, configuración de recordatorios y tu imagen de firma.",
+            "Registros de propiedades y contratos: direcciones, descripciones, fotos, montos de alquiler, monedas, días de pago y fechas del contrato.",
+            "Registros de inquilinos: nombre, correo, teléfono, identificación y notas que decidas ingresar.",
+            "Registros financieros: pagos, gastos, depósitos, recibos y los estados de cuenta generados a partir de ellos.",
+            "Archivos que subes: contratos, documentos de identidad, facturas, comprobantes y fotos de las propiedades."
+          ]
+        },
+        {
+          "title": "Información que recopilamos automáticamente",
+          "body": [
+            "Operar un servicio web genera cierta información técnica por necesidad: tu dirección IP, tipo de navegador y dispositivo, y marcas de tiempo de solicitudes y errores. Nuestros proveedores de alojamiento e infraestructura registran esto para mantener el servicio funcionando y seguro.",
+            "Propio no usa cookies publicitarias, ni rastreadores analíticos de terceros, ni seguimiento entre sitios de ningún tipo."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Cómo usamos tu información",
+          "body": [
+            "La usamos únicamente para operar el servicio que contrataste:"
+          ],
+          "bullets": [
+            "Para crear y proteger tu cuenta, y para iniciar tu sesión.",
+            "Para guardar y mostrar tus propiedades, inquilinos, contratos, pagos y documentos.",
+            "Para generar recibos, estados de cuenta y reportes, y enviarlos por correo a los destinatarios que elijas.",
+            "Para enviar los recordatorios que hayas activado sobre contratos por vencer, alquileres próximos y pagos atrasados.",
+            "Para darte soporte cuando nos contactas y diagnosticar fallas.",
+            "Para cumplir obligaciones legales y proteger el servicio contra abusos."
+          ]
+        },
+        {
+          "title": "Proveedores de los que dependemos",
+          "body": [
+            "Propio se apoya en infraestructura de terceros. Estos proveedores procesan datos estrictamente para entregar su parte del servicio, bajo sus propios compromisos de seguridad y privacidad:"
+          ],
+          "bullets": [
+            "Vercel — alojamiento y entrega de la aplicación.",
+            "Supabase — la base de datos PostgreSQL y el almacenamiento de archivos donde viven tus cargas, alojados en Amazon Web Services en Estados Unidos.",
+            "Resend — entrega de correo transaccional, incluyendo verificación, restablecimiento de contraseña, recibos, estados de cuenta y recordatorios.",
+            "Google y GitHub — solo si eliges iniciar sesión con ellos, y únicamente para autenticarte.",
+            "open.er-api.com — fuente pública de tasas de cambio. Solo solicitamos tasas publicadas; no se le envía ningún dato tuyo ni de tu cartera."
+          ]
+        },
+        {
+          "title": "No vendemos tus datos",
+          "body": [
+            "No vendemos, alquilamos ni intercambiamos tu información, y no la compartimos con anunciantes ni con corredores de datos. No usamos tu contenido ni la información de tus inquilinos para entrenar modelos de aprendizaje automático.",
+            "Las únicas circunstancias en que revelaríamos información a un tercero son: a petición tuya, a los proveedores listados arriba para que el servicio funcione, o cuando una orden legal válida lo exija."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Información de tus inquilinos",
+          "body": [
+            "Tú decides qué registrar sobre tus inquilinos. Te recomendamos ingresar solo lo que realmente necesitas para administrar el alquiler.",
+            "Usamos esa información únicamente para operar las funciones que utilizas: mostrártela de vuelta, imprimirla en los recibos y estados de cuenta que generas, y enviar esos documentos a la dirección que registraste.",
+            "Cuando Propio le escribe a un inquilino, el mensaje te identifica a ti como el arrendador que lo envía. Nuestra dirección de envío no recibe respuestas, así que un inquilino que responda a ese correo no llegará a nadie — dales a tus inquilinos una vía directa para contactarte.",
+            "Si un inquilino te pide corregir o eliminar su información, puedes hacerlo tú mismo en la aplicación, o escribirnos y te ayudamos."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Cookies y almacenamiento local",
+          "body": [
+            "Usamos un número reducido de cookies estrictamente necesarias y de entradas de almacenamiento del navegador. Ninguna se usa para publicidad ni rastreo:"
+          ],
+          "bullets": [
+            "Una cookie de sesión que mantiene tu sesión iniciada.",
+            "Una cookie de idioma (NEXT_LOCALE) que recuerda si elegiste español o inglés.",
+            "Una entrada de almacenamiento local que recuerda tu preferencia de tema claro u oscuro. Nunca sale de tu navegador."
+          ]
+        },
+        {
+          "title": "Cuánto tiempo conservamos tu información",
+          "body": [
+            "Conservamos tu información mientras tu cuenta esté abierta. La mayoría de los registros que eliminas dentro de la aplicación se marcan como eliminados y se ocultan de tu cuenta en vez de borrarse de inmediato, para que un accidente se pueda deshacer y el historial relacionado se mantenga coherente. Los pagos y sus recibos son la excepción: eliminar un pago lo borra, junto con el PDF de su recibo, de forma permanente.",
+            "Si nos pides eliminar tu cuenta, retiramos tus datos del servicio activo y luego dejan de existir en los respaldos cifrados de rutina dentro de su ciclo normal de retención."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Seguridad",
+          "body": [
+            "Los datos se transmiten por HTTPS y se guardan en infraestructura administrada con cifrado en reposo. Las contraseñas se guardan solo como hashes con sal — nunca las vemos ni las almacenamos de forma legible.",
+            "Cada registro de la base de datos pertenece a la cuenta que lo creó, y toda consulta se filtra por ese propietario, de modo que una cuenta no puede leer los datos de otra.",
+            "Ningún sistema es perfectamente seguro. Usa una contraseña fuerte y única, y avísanos de inmediato si sospechas que tu cuenta fue comprometida."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Tus derechos",
+          "body": [
+            "Según dónde vivas, puedes tener derecho a acceder, corregir, exportar o eliminar tu información personal, a oponerte a ciertos tratamientos, o a retirar tu consentimiento."
+          ],
+          "bullets": [
+            "La mayor parte de tu información se puede ver, editar y eliminar directamente en la aplicación en cualquier momento.",
+            "Los recibos y estados de cuenta se pueden descargar como PDF cuando quieras.",
+            "Para cualquier otra cosa — una exportación completa, o la eliminación de toda tu cuenta — escríbenos y responderemos en un plazo razonable."
+          ]
+        },
+        {
+          "title": "Transferencias internacionales",
+          "body": [
+            "Propio se usa desde América Latina pero corre sobre infraestructura ubicada en Estados Unidos. Usar el servicio implica, por tanto, transferir tu información allí, donde las leyes de privacidad pueden diferir de las de tu país. Solo trabajamos con proveedores que se comprometen a garantías adecuadas para ese tipo de transferencias."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Menores de edad",
+          "body": [
+            "Propio es una herramienta de trabajo y no está dirigida a menores. No recopilamos conscientemente información de personas menores de 18 años. Si crees que un menor nos dio información personal, escríbenos y la eliminaremos."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Cambios a esta política",
+          "body": [
+            "Podemos actualizar esta política conforme el servicio cambie o la ley lo requiera. La fecha al inicio de esta página siempre refleja la versión vigente, y te notificaremos los cambios materiales por correo o dentro de la aplicación antes de que entren en vigor."
+          ],
+          "bullets": []
+        }
+      ]
     }
   },
   "meta": {
@@ -1017,7 +1547,9 @@
     "reports": "Reportes",
     "notifications": "Notificaciones",
     "settings": "Configuración",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "terms": "Términos de uso",
+    "privacy": "Política de privacidad"
   },
   "emails": {
     "footer": "Gestiona tus propiedades con confianza.",
