@@ -1173,7 +1173,7 @@
       "title": "Todo lo que probablemente te estás preguntando",
       "description": "Y si falta algo, escríbenos — contesta una persona real, casi siempre el mismo día.",
       "moreLead": "¿Te quedó una duda? Escríbenos a",
-      "email": "hola@usepropio.com",
+      "email": "info@usepropio.com",
       "q1": {
         "q": "¿Necesito tarjeta de crédito para empezar?",
         "a": "No. Creas la cuenta con tu correo, lo verificas y empiezas a trabajar. No se guarda ninguna tarjeta ni hay un reloj de prueba corriendo."
@@ -1237,7 +1237,7 @@
     "tocLabel": "En esta página",
     "contactTitle": "Dudas sobre este documento",
     "contactBody": "Si algo aquí no queda claro, o quieres ejercer cualquiera de los derechos descritos arriba, escríbenos a",
-    "contactEmail": "hola@usepropio.com",
+    "contactEmail": "info@usepropio.com",
     "terms": {
       "title": "Términos de uso",
       "updated": "27 de agosto de 2026",
