@@ -8,6 +8,7 @@ import {
   motion,
   useScroll,
   useMotionValueEvent,
+  type Variants,
 } from 'framer-motion';
 import { ArrowRight, Menu, X } from 'lucide-react';
 import { Logo } from '@/shared/components/brand/logo';
@@ -28,6 +29,27 @@ import { cn } from '@/shared/lib/utils';
  * The browser's own fragment navigation has none of that, and a same-page
  * anchor needs no router, no prefetch and no RSC round-trip anyway.
  */
+
+/**
+ * Mobile panel. `closed` is DYNAMIC: an anchor tap closes with duration 0 so
+ * the scroll can start immediately (see `handlePanelAnchor`), while the X
+ * button keeps the animated fold. `custom` carries that flag through
+ * AnimatePresence, which is the only way to update an exiting component.
+ */
+const panelVariants: Variants = {
+  open: {
+    height: 'auto',
+    opacity: 1,
+    transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] },
+  },
+  closed: (instant: boolean) => ({
+    height: 0,
+    opacity: 0,
+    transition: instant
+      ? { duration: 0 }
+      : { duration: 0.25, ease: [0.22, 1, 0.36, 1] },
+  }),
+};
 
 /** In-page anchors. Only rendered on the landing itself (`showNav`). */
 const SECTIONS = [
@@ -55,6 +77,10 @@ export function SiteHeader({
   const [scrolled, setScrolled] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const pendingHashRef = React.useRef<string | null>(null);
+  // State, not a ref: it is read during render (AnimatePresence's `custom`),
+  // and setting it in the same handler as `setMenuOpen(false)` batches both
+  // into the render that unmounts the panel.
+  const [instantClose, setInstantClose] = React.useState(false);
 
   /**
    * Mobile-panel anchors defer their scroll until the panel has finished
@@ -70,6 +96,10 @@ export function SiteHeader({
   ) {
     event.preventDefault();
     pendingHashRef.current = href;
+    // Instant close for this path only: the panel vanishes in the same frame
+    // and onExitComplete fires immediately, so the scroll starts without the
+    // 250ms fold. The X button keeps the animated close.
+    setInstantClose(true);
     setMenuOpen(false);
   }
 
@@ -156,7 +186,9 @@ export function SiteHeader({
           nothing, so fragment navigation is never disturbed. */}
       <AnimatePresence
         initial={false}
+        custom={instantClose}
         onExitComplete={() => {
+          setInstantClose(false);
           const href = pendingHashRef.current;
           pendingHashRef.current = null;
           if (!href) return;
@@ -172,10 +204,11 @@ export function SiteHeader({
         {menuOpen ? (
           <motion.div
             key="mobile-menu"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            variants={panelVariants}
+            custom={instantClose}
+            initial="closed"
+            animate="open"
+            exit="closed"
             className="absolute inset-x-0 top-full overflow-hidden border-b border-t bg-background/95 shadow-lg backdrop-blur-xl md:hidden"
           >
             <div className="container flex flex-col gap-1 py-4">
