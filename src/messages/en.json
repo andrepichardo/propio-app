@@ -1038,7 +1038,7 @@
       "pain5": "When tax season arrives, the numbers live in four places and none of them agree.",
       "gain1": "Register a payment once — the balance, the receipt and the reports all update together.",
       "gain2": "Every receipt is a signed PDF, filed automatically and emailed to the tenant.",
-      "gain3": "Expirations, upcoming rent and late payments reach you by email before they become a problem.",
+      "gain3": "Expirations, upcoming rent and late payments are waiting on your dashboard before they become a problem.",
       "gain4": "Each contract keeps its own currency, and your dashboard converts everything to your main one.",
       "gain5": "A year of revenue, expenses, profit and occupancy is one screen away, already calculated."
     },
@@ -1054,8 +1054,8 @@
       "reportsDesc": "Revenue, expenses, profit and occupancy across every property, by month and by year.",
       "multiCurrencyTitle": "Rent in any currency",
       "multiCurrencyDesc": "Each contract carries its own currency. Your dashboard converts everything to your main one at the day’s exchange rate.",
-      "remindersTitle": "Reminders that reach you first",
-      "remindersDesc": "Expiring contracts, rent coming due and late payments — emailed on your schedule, with the lead time you choose.",
+      "remindersTitle": "Reminders that surface on time",
+      "remindersDesc": "Expiring contracts, rent coming due and late payments — flagged in the app every morning, with the lead time you choose for each.",
       "documentsTitle": "Every document, one place",
       "documentsDesc": "Contracts, IDs, invoices and photos, organised per property and always a click away.",
       "securityTitle": "Your data is only yours",
@@ -1097,7 +1097,7 @@
       "reportsBullet3": "Totals marked as approximate when a conversion was involved — never a made-up figure presented as exact.",
       "remindersEyebrow": "Reminders",
       "remindersTitle": "Nothing expires behind your back",
-      "remindersDesc": "Propio checks your portfolio every morning and emails you what needs attention — with the lead time you set, and only for the reminders you turned on.",
+      "remindersDesc": "Propio checks your portfolio every morning and collects what needs attention in your notifications — with the lead time you set, and only for the reminders you turned on.",
       "remindersBullet1": "Contracts about to expire, with as much notice as you want.",
       "remindersBullet2": "Rent coming due, days before the tenant is late.",
       "remindersBullet3": "Late payments, so the conversation happens early instead of awkwardly.",
@@ -1188,7 +1188,7 @@
       },
       "q4": {
         "q": "Do my tenants need an account?",
-        "a": "No. Propio is for you, the landlord. Your tenants only ever receive their receipts and statements by email — there is nothing for them to install, sign up for or log into."
+        "a": "No. Propio is for you, the landlord. Your tenants only ever receive the receipts you send them by email — there is nothing for them to install, sign up for or log into."
       },
       "q5": {
         "q": "Are the receipts Propio generates valid?",
@@ -1295,7 +1295,7 @@
           "body": [
             "Propio stores personal information about people who are not our users — your tenants. You decide what to enter about them, and you are responsible for having a lawful basis to hold and share it.",
             "In practical terms: you act as the controller of your tenants’ data and Propio acts as the processor. We handle that information on your instructions, to run the service you asked for, and for nothing else. Our Privacy policy explains what we do with it in detail.",
-            "When Propio emails a receipt or statement to a tenant, it does so at your request, using the email address you recorded, and identifies you as the sender."
+            "When Propio emails a receipt to a tenant, it does so at your request, using the email address you recorded, and identifies you as the sender."
           ],
           "bullets": []
         },
@@ -1318,11 +1318,11 @@
           "bullets": []
         },
         {
-          "title": "Email notifications",
+          "title": "Notifications and email",
           "body": [
-            "Propio sends two kinds of email: messages required to operate your account (verification, password resets, receipts and statements you asked to send), and reminders about expiring contracts, upcoming rent and late payments.",
-            "Reminders are optional and can be turned off individually in Settings. Account emails cannot be turned off while your account is open, because the service cannot function without them.",
-            "Reminders are scheduled once a day and depend on infrastructure we do not control. Treat them as a convenience, not as a guaranteed alert: the responsibility for meeting a deadline remains yours."
+            "Propio sends email only for things that have to leave the app: messages required to operate your account (verification and password resets), and the receipts you choose to send to a tenant. Reminders are not emailed — they appear as notifications inside the app.",
+            "Reminders about expiring contracts, upcoming rent and late payments are optional, and each one can be turned off — or given more notice — in Settings. Account emails cannot be turned off while your account is open, because the service cannot function without them.",
+            "Reminders are generated once a day and depend on infrastructure we do not control. Treat them as a convenience, not as a guaranteed alert: you have to open the app to see them, and the responsibility for meeting a deadline remains yours."
           ],
           "bullets": []
         },
@@ -1347,7 +1347,7 @@
           "title": "Warranty disclaimer",
           "body": [
             "Propio is provided \"as is\" and \"as available\". To the fullest extent permitted by law, we make no warranties of any kind, express or implied, including any warranty of merchantability, fitness for a particular purpose, or non-infringement.",
-            "We do not warrant that the service will be error-free, that reminders will always arrive, or that every calculation will be suitable for a purpose you have not told us about. Verify anything that matters before you act on it."
+            "We do not warrant that the service will be error-free, that every reminder will be generated on time, or that every calculation will be suitable for a purpose you have not told us about. Verify anything that matters before you act on it."
           ],
           "bullets": []
         },
@@ -1419,8 +1419,8 @@
           "bullets": [
             "To create and secure your account, and to sign you in.",
             "To store and show your properties, tenants, contracts, payments and documents.",
-            "To generate receipts, statements and reports, and to email them to the recipients you choose.",
-            "To send the reminders you have enabled about expiring contracts, upcoming rent and late payments.",
+            "To generate receipts, statements and reports, and to email the receipts to the tenants you choose.",
+            "To generate, inside the app, the reminders you have enabled about expiring contracts, upcoming rent and late payments.",
             "To provide support when you contact us, and to diagnose faults.",
             "To meet legal obligations and to protect the service against abuse."
           ]
@@ -1433,7 +1433,7 @@
           "bullets": [
             "Vercel — application hosting and delivery.",
             "Supabase — the PostgreSQL database and the file storage that holds your uploads, hosted on Amazon Web Services in the United States.",
-            "Resend — delivery of transactional email, including verification messages, password resets, receipts, statements and reminders.",
+            "Resend — delivery of transactional email: verification messages, password resets, and the receipts you send to tenants.",
             "Google and GitHub — only if you choose to sign in with them, and only to authenticate you.",
             "open.er-api.com — a public exchange-rate source. We request published rates only; no data about you or your portfolio is sent to it."
           ]
@@ -1450,7 +1450,7 @@
           "title": "Your tenants’ information",
           "body": [
             "You decide what to record about your tenants. We recommend entering only what you actually need to manage the tenancy.",
-            "We use that information solely to operate the features you use: showing it back to you, printing it on the receipts and statements you generate, and emailing those documents to the address you recorded.",
+            "We use that information solely to operate the features you use: showing it back to you, printing it on the receipts and statements you generate, and emailing the receipts to the address you recorded.",
             "When Propio emails a tenant, the message identifies you as the landlord sending it. Our sending address does not accept replies, so a tenant who replies to it will not reach anyone — give your tenants a direct way to contact you.",
             "If a tenant asks you to correct or delete their information, you can do it yourself in the app, or write to us and we will help."
           ],

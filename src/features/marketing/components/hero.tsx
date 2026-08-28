@@ -156,10 +156,11 @@ export function Hero({ authed }: { authed: boolean }) {
               asChild
               className="backdrop-blur"
             >
-              <Link href="#how-it-works">
+              {/* Plain anchor, not `next/link` — see the note in site-header. */}
+              <a href="#how-it-works">
                 <Sparkles className="size-4" />
                 {t('seeHowItWorks')}
-              </Link>
+              </a>
             </Button>
           </motion.div>
 

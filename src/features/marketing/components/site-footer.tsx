@@ -7,9 +7,10 @@ import { ThemeToggle } from '@/shared/components/theme-toggle';
 /**
  * Marketing footer, shared by the landing and the legal pages.
  *
- * Product links are in-page anchors, so they only resolve on the landing —
- * they are written absolute (`/#features`) rather than bare (`#features`) so
- * they still work from `/terms` and `/privacy`.
+ * Product links are section anchors. They are written absolute (`/#features`)
+ * so they also work from `/terms` and `/privacy`, and they render as plain
+ * `<a>` rather than `next/link` — routing a hash through Next appends it to
+ * the canonical URL instead of replacing it (see the note in site-header).
  */
 const COLUMNS = [
   {
@@ -38,6 +39,9 @@ const COLUMNS = [
   },
 ] as const;
 
+const LINK_CLASS =
+  'text-sm text-muted-foreground transition-colors hover:text-foreground';
+
 export async function SiteFooter() {
   const t = await getTranslations('landing.footer');
 
@@ -62,12 +66,15 @@ export async function SiteFooter() {
               <ul className="mt-4 space-y-2.5">
                 {column.links.map((link) => (
                   <li key={link.key}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                      {t(link.key)}
-                    </Link>
+                    {link.href.includes('#') ? (
+                      <a href={link.href} className={LINK_CLASS}>
+                        {t(link.key)}
+                      </a>
+                    ) : (
+                      <Link href={link.href} className={LINK_CLASS}>
+                        {t(link.key)}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

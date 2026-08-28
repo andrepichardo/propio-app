@@ -16,6 +16,19 @@ import { LanguageSwitcher } from '@/shared/components/language/language-switcher
 import { ThemeToggle } from '@/shared/components/theme-toggle';
 import { cn } from '@/shared/lib/utils';
 
+/**
+ * In-page anchors are plain `<a>`, never `next/link`.
+ *
+ * Next's segment-cache navigation builds the new canonical URL by string
+ * concatenation — `route.canonicalUrl + url.hash` (segment-cache/navigation.js).
+ * Once a route entry has been seeded from a URL that already carried a hash
+ * (i.e. the visitor reloaded on `/#features`), every further hash navigation
+ * appends instead of replacing: `/#features#features#features`. It affects the
+ * relative and absolute forms equally, so `/#features` is not a workaround.
+ * The browser's own fragment navigation has none of that, and a same-page
+ * anchor needs no router, no prefetch and no RSC round-trip anyway.
+ */
+
 /** In-page anchors. Only rendered on the landing itself (`showNav`). */
 const SECTIONS = [
   { href: '#features', key: 'navFeatures' },
@@ -63,13 +76,13 @@ export function SiteHeader({
         {showNav ? (
           <nav className="hidden items-center gap-1 md:flex">
             {SECTIONS.map((section) => (
-              <Link
+              <a
                 key={section.href}
                 href={section.href}
                 className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               >
                 {t(section.key)}
-              </Link>
+              </a>
             ))}
           </nav>
         ) : null}
@@ -124,14 +137,14 @@ export function SiteHeader({
             <div className="container flex flex-col gap-1 py-4">
               {showNav
                 ? SECTIONS.map((section) => (
-                    <Link
+                    <a
                       key={section.href}
                       href={section.href}
                       onClick={() => setMenuOpen(false)}
                       className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                     >
                       {t(section.key)}
-                    </Link>
+                    </a>
                   ))
                 : null}
               {!authed ? (

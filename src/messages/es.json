@@ -1038,7 +1038,7 @@
       "pain5": "Cuando llega la temporada de impuestos, los números viven en cuatro lugares y ninguno coincide.",
       "gain1": "Registras el pago una vez — el saldo, el recibo y los reportes se actualizan juntos.",
       "gain2": "Cada recibo es un PDF firmado, archivado solo y enviado por correo al inquilino.",
-      "gain3": "Vencimientos, alquileres por vencer y pagos atrasados te llegan por correo antes de ser un problema.",
+      "gain3": "Vencimientos, alquileres por vencer y pagos atrasados te esperan en el panel antes de ser un problema.",
       "gain4": "Cada contrato conserva su moneda, y tu panel convierte todo a tu moneda principal.",
       "gain5": "Un año de ingresos, gastos, ganancia y ocupación está a una pantalla, ya calculado."
     },
@@ -1054,8 +1054,8 @@
       "reportsDesc": "Ingresos, gastos, ganancia y ocupación en todas tus propiedades, por mes y por año.",
       "multiCurrencyTitle": "Alquiler en cualquier moneda",
       "multiCurrencyDesc": "Cada contrato lleva su propia moneda. Tu panel convierte todo a tu moneda principal a la tasa de cambio del día.",
-      "remindersTitle": "Recordatorios que te llegan primero",
-      "remindersDesc": "Contratos por vencer, alquileres próximos y pagos atrasados — por correo, en tu horario y con los días de anticipación que elijas.",
+      "remindersTitle": "Recordatorios que aparecen a tiempo",
+      "remindersDesc": "Contratos por vencer, alquileres próximos y pagos atrasados — marcados en la app cada mañana, con los días de anticipación que elijas para cada uno.",
       "documentsTitle": "Cada documento, en un solo lugar",
       "documentsDesc": "Contratos, identificaciones, facturas y fotos, organizados por propiedad y siempre a un clic.",
       "securityTitle": "Tus datos son solo tuyos",
@@ -1097,7 +1097,7 @@
       "reportsBullet3": "Los totales se marcan como aproximados cuando hubo una conversión — nunca una cifra inventada presentada como exacta.",
       "remindersEyebrow": "Recordatorios",
       "remindersTitle": "Nada vence a tus espaldas",
-      "remindersDesc": "Propio revisa tu cartera cada mañana y te escribe lo que necesita atención — con la anticipación que configures y solo con los recordatorios que dejes activos.",
+      "remindersDesc": "Propio revisa tu cartera cada mañana y reúne en tus notificaciones lo que necesita atención — con la anticipación que configures y solo con los recordatorios que dejes activos.",
       "remindersBullet1": "Contratos próximos a vencer, con toda la anticipación que quieras.",
       "remindersBullet2": "Alquileres por vencer, días antes de que el inquilino se atrase.",
       "remindersBullet3": "Pagos atrasados, para que la conversación sea a tiempo y no incómoda.",
@@ -1188,7 +1188,7 @@
       },
       "q4": {
         "q": "¿Mis inquilinos necesitan una cuenta?",
-        "a": "No. Propio es para ti, el arrendador. Tus inquilinos solo reciben sus recibos y estados de cuenta por correo — no tienen nada que instalar, registrar ni iniciar sesión."
+        "a": "No. Propio es para ti, el arrendador. Tus inquilinos solo reciben por correo los recibos que les envías — no tienen nada que instalar, registrar ni iniciar sesión."
       },
       "q5": {
         "q": "¿Los recibos que genera Propio son válidos?",
@@ -1295,7 +1295,7 @@
           "body": [
             "Propio guarda información personal de personas que no son nuestros usuarios: tus inquilinos. Tú decides qué registrar sobre ellos, y eres responsable de tener una base legítima para tenerla y compartirla.",
             "En términos prácticos: tú actúas como responsable de los datos de tus inquilinos y Propio actúa como encargado del tratamiento. Manejamos esa información siguiendo tus instrucciones, para operar el servicio que pediste, y para nada más. Nuestra Política de privacidad explica en detalle qué hacemos con ella.",
-            "Cuando Propio envía por correo un recibo o estado de cuenta a un inquilino, lo hace a petición tuya, usando la dirección que registraste, y te identifica a ti como quien lo envía."
+            "Cuando Propio envía por correo un recibo a un inquilino, lo hace a petición tuya, usando la dirección que registraste, y te identifica a ti como quien lo envía."
           ],
           "bullets": []
         },
@@ -1318,11 +1318,11 @@
           "bullets": []
         },
         {
-          "title": "Notificaciones por correo",
+          "title": "Notificaciones y correo",
           "body": [
-            "Propio envía dos tipos de correo: mensajes necesarios para operar tu cuenta (verificación, restablecimiento de contraseña, recibos y estados de cuenta que pediste enviar), y recordatorios sobre contratos por vencer, alquileres próximos y pagos atrasados.",
-            "Los recordatorios son opcionales y se pueden desactivar uno por uno en Configuración. Los correos de cuenta no se pueden desactivar mientras tu cuenta esté abierta, porque el servicio no funciona sin ellos.",
-            "Los recordatorios se programan una vez al día y dependen de infraestructura que no controlamos. Trátalos como una conveniencia, no como una alerta garantizada: la responsabilidad de cumplir una fecha sigue siendo tuya."
+            "Propio envía correo solo para lo que tiene que salir de la aplicación: mensajes necesarios para operar tu cuenta (verificación y restablecimiento de contraseña), y los recibos que elijas enviarle a un inquilino. Los recordatorios no se envían por correo — aparecen como notificaciones dentro de la aplicación.",
+            "Los recordatorios sobre contratos por vencer, alquileres próximos y pagos atrasados son opcionales, y cada uno se puede desactivar — o darle más anticipación — en Configuración. Los correos de cuenta no se pueden desactivar mientras tu cuenta esté abierta, porque el servicio no funciona sin ellos.",
+            "Los recordatorios se generan una vez al día y dependen de infraestructura que no controlamos. Trátalos como una conveniencia, no como una alerta garantizada: tienes que abrir la aplicación para verlos, y la responsabilidad de cumplir una fecha sigue siendo tuya."
           ],
           "bullets": []
         },
@@ -1347,7 +1347,7 @@
           "title": "Exclusión de garantías",
           "body": [
             "Propio se ofrece \"tal cual\" y \"según disponibilidad\". En la máxima medida permitida por la ley, no otorgamos garantías de ningún tipo, expresas o implícitas, incluyendo cualquier garantía de comerciabilidad, idoneidad para un fin particular o no infracción.",
-            "No garantizamos que el servicio esté libre de errores, que los recordatorios siempre lleguen, ni que todo cálculo sea adecuado para un propósito que no nos has comunicado. Verifica lo que sea importante antes de actuar en consecuencia."
+            "No garantizamos que el servicio esté libre de errores, que cada recordatorio se genere a tiempo, ni que todo cálculo sea adecuado para un propósito que no nos has comunicado. Verifica lo que sea importante antes de actuar en consecuencia."
           ],
           "bullets": []
         },
@@ -1419,8 +1419,8 @@
           "bullets": [
             "Para crear y proteger tu cuenta, y para iniciar tu sesión.",
             "Para guardar y mostrar tus propiedades, inquilinos, contratos, pagos y documentos.",
-            "Para generar recibos, estados de cuenta y reportes, y enviarlos por correo a los destinatarios que elijas.",
-            "Para enviar los recordatorios que hayas activado sobre contratos por vencer, alquileres próximos y pagos atrasados.",
+            "Para generar recibos, estados de cuenta y reportes, y enviar por correo los recibos a los inquilinos que elijas.",
+            "Para generar, dentro de la aplicación, los recordatorios que hayas activado sobre contratos por vencer, alquileres próximos y pagos atrasados.",
             "Para darte soporte cuando nos contactas y diagnosticar fallas.",
             "Para cumplir obligaciones legales y proteger el servicio contra abusos."
           ]
@@ -1433,7 +1433,7 @@
           "bullets": [
             "Vercel — alojamiento y entrega de la aplicación.",
             "Supabase — la base de datos PostgreSQL y el almacenamiento de archivos donde viven tus cargas, alojados en Amazon Web Services en Estados Unidos.",
-            "Resend — entrega de correo transaccional, incluyendo verificación, restablecimiento de contraseña, recibos, estados de cuenta y recordatorios.",
+            "Resend — entrega de correo transaccional: verificación, restablecimiento de contraseña, y los recibos que envías a inquilinos.",
             "Google y GitHub — solo si eliges iniciar sesión con ellos, y únicamente para autenticarte.",
             "open.er-api.com — fuente pública de tasas de cambio. Solo solicitamos tasas publicadas; no se le envía ningún dato tuyo ni de tu cartera."
           ]
@@ -1450,7 +1450,7 @@
           "title": "Información de tus inquilinos",
           "body": [
             "Tú decides qué registrar sobre tus inquilinos. Te recomendamos ingresar solo lo que realmente necesitas para administrar el alquiler.",
-            "Usamos esa información únicamente para operar las funciones que utilizas: mostrártela de vuelta, imprimirla en los recibos y estados de cuenta que generas, y enviar esos documentos a la dirección que registraste.",
+            "Usamos esa información únicamente para operar las funciones que utilizas: mostrártela de vuelta, imprimirla en los recibos y estados de cuenta que generas, y enviar por correo los recibos a la dirección que registraste.",
             "Cuando Propio le escribe a un inquilino, el mensaje te identifica a ti como el arrendador que lo envía. Nuestra dirección de envío no recibe respuestas, así que un inquilino que responda a ese correo no llegará a nadie — dales a tus inquilinos una vía directa para contactarte.",
             "Si un inquilino te pide corregir o eliminar su información, puedes hacerlo tú mismo en la aplicación, o escribirnos y te ayudamos."
           ],
