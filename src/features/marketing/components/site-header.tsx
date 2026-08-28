@@ -41,10 +41,11 @@ const SECTIONS = [
 
 export function SiteHeader({
   authed,
-  showNav = true,
+  onLanding = true,
 }: {
   authed: boolean;
-  showNav?: boolean;
+  /** The landing renders the sections; elsewhere the nav links back to them. */
+  onLanding?: boolean;
 }) {
   const t = useTranslations('landing');
   const { scrollY } = useScroll();
@@ -52,6 +53,10 @@ export function SiteHeader({
   const [menuOpen, setMenuOpen] = React.useState(false);
   const pendingHashRef = React.useRef<string | null>(null);
   const [instantClose, setInstantClose] = React.useState(false);
+
+  // Off the landing the sections do not exist on this page, so the anchors
+  // become cross-page links and the deferred-scroll dance is unnecessary.
+  const sectionHref = (hash: string) => (onLanding ? hash : `/${hash}`);
 
   function handlePanelAnchor(
     event: React.MouseEvent<HTMLAnchorElement>,
@@ -82,19 +87,17 @@ export function SiteHeader({
           <Logo />
         </a>
 
-        {showNav ? (
-          <nav className="hidden items-center gap-1 md:flex">
-            {SECTIONS.map((section) => (
-              <a
-                key={section.href}
-                href={section.href}
-                className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-              >
-                {t(section.key)}
-              </a>
-            ))}
-          </nav>
-        ) : null}
+        <nav className="hidden items-center gap-1 md:flex">
+          {SECTIONS.map((section) => (
+            <a
+              key={section.href}
+              href={sectionHref(section.href)}
+              className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              {t(section.key)}
+            </a>
+          ))}
+        </nav>
 
         <div className="flex shrink-0 items-center gap-2">
           <ThemeToggle className="hidden sm:inline-flex" />
@@ -158,20 +161,19 @@ export function SiteHeader({
             className="absolute inset-x-0 top-full overflow-hidden border-b border-t bg-background/95 shadow-lg backdrop-blur-xl md:hidden"
           >
             <div className="container flex flex-col gap-1 py-4">
-              {showNav
-                ? SECTIONS.map((section) => (
-                    <a
-                      key={section.href}
-                      href={section.href}
-                      onClick={(event) =>
-                        handlePanelAnchor(event, section.href)
-                      }
-                      className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                    >
-                      {t(section.key)}
-                    </a>
-                  ))
-                : null}
+              {SECTIONS.map((section) => (
+                <a
+                  key={section.href}
+                  href={sectionHref(section.href)}
+                  onClick={(event) => {
+                    if (onLanding) handlePanelAnchor(event, section.href);
+                    else setMenuOpen(false);
+                  }}
+                  className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                >
+                  {t(section.key)}
+                </a>
+              ))}
               {!authed ? (
                 <Link
                   href="/login"

@@ -979,6 +979,12 @@
     "description": "Propio is the all-in-one operating system for independent landlords. Manage properties, tenants, contracts, payments, and reports from one place.",
     "ogDescription": "Manage your properties with confidence."
   },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist or may have been moved.",
+    "backHome": "Back to home",
+    "backDashboard": "Back to dashboard"
+  },
   "landing": {
     "goToDashboard": "Go to dashboard",
     "signIn": "Sign in",
@@ -1222,6 +1228,7 @@
       "register": "Create account",
       "signIn": "Sign in",
       "dashboard": "Dashboard",
+      "settings": "Settings",
       "legal": "Legal",
       "terms": "Terms of use",
       "privacy": "Privacy policy",

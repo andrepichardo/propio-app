@@ -979,6 +979,12 @@
     "description": "Propio es el sistema todo-en-uno para arrendadores independientes. Gestiona propiedades, inquilinos, contratos, pagos y reportes desde un solo lugar.",
     "ogDescription": "Gestiona tus propiedades con confianza."
   },
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "La página que buscas no existe o pudo haber sido movida.",
+    "backHome": "Volver al inicio",
+    "backDashboard": "Ir al panel"
+  },
   "landing": {
     "goToDashboard": "Ir al panel",
     "signIn": "Iniciar sesión",
@@ -1222,6 +1228,7 @@
       "register": "Crear cuenta",
       "signIn": "Iniciar sesión",
       "dashboard": "Panel",
+      "settings": "Configuración",
       "legal": "Legal",
       "terms": "Términos de uso",
       "privacy": "Política de privacidad",

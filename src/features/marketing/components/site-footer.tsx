@@ -2,38 +2,41 @@ import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { Logo } from '@/shared/components/brand/logo';
 
-const COLUMNS = [
-  {
-    key: 'product',
-    links: [
-      { href: '/#features', key: 'features' },
-      { href: '/#how-it-works', key: 'howItWorks' },
-      { href: '/#use-cases', key: 'useCases' },
-      { href: '/#faq', key: 'faq' },
-    ],
-  },
-  {
-    key: 'account',
-    links: [
-      { href: '/register', key: 'register' },
-      { href: '/login', key: 'signIn' },
-      { href: '/app', key: 'dashboard' },
-    ],
-  },
-  {
-    key: 'legal',
-    links: [
-      { href: '/terms', key: 'terms' },
-      { href: '/privacy', key: 'privacy' },
-    ],
-  },
-] as const;
+type FooterLink = { href: string; key: string };
+
+const PRODUCT_LINKS: FooterLink[] = [
+  { href: '/#features', key: 'features' },
+  { href: '/#how-it-works', key: 'howItWorks' },
+  { href: '/#use-cases', key: 'useCases' },
+  { href: '/#faq', key: 'faq' },
+];
+
+const SIGNED_IN_LINKS: FooterLink[] = [
+  { href: '/app', key: 'dashboard' },
+  { href: '/app/settings', key: 'settings' },
+];
+
+const SIGNED_OUT_LINKS: FooterLink[] = [
+  { href: '/register', key: 'register' },
+  { href: '/login', key: 'signIn' },
+];
+
+const LEGAL_LINKS: FooterLink[] = [
+  { href: '/terms', key: 'terms' },
+  { href: '/privacy', key: 'privacy' },
+];
 
 const LINK_CLASS =
   'text-sm text-muted-foreground transition-colors hover:text-foreground';
 
-export async function SiteFooter() {
+export async function SiteFooter({ authed }: { authed: boolean }) {
   const t = await getTranslations('landing.footer');
+
+  const columns = [
+    { key: 'product', links: PRODUCT_LINKS },
+    { key: 'account', links: authed ? SIGNED_IN_LINKS : SIGNED_OUT_LINKS },
+    { key: 'legal', links: LEGAL_LINKS },
+  ];
 
   return (
     <footer className="border-t bg-muted/25">
@@ -46,7 +49,7 @@ export async function SiteFooter() {
             </p>
           </div>
 
-          {COLUMNS.map((column) => (
+          {columns.map((column) => (
             <nav key={column.key} className="min-w-0">
               <h2 className="text-sm font-semibold">{t(column.key)}</h2>
               <ul className="mt-4 space-y-2.5">

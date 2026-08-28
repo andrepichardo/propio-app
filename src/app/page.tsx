@@ -58,7 +58,7 @@ export default async function LandingPage() {
         <FinalCta authed={authed} />
       </main>
 
-      <SiteFooter />
+      <SiteFooter authed={authed} />
     </div>
   );
 }
