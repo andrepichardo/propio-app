@@ -175,15 +175,20 @@ export function SiteHeader({
                 </a>
               ))}
               {!authed ? (
-                <Link
-                  href="/login"
-                  onClick={() => setMenuOpen(false)}
-                  className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                >
-                  {t('signIn')}
-                </Link>
+                <div className="mt-3 border-t pt-4">
+                  <Button variant="outline" asChild className="w-full">
+                    <Link href="/login" onClick={() => setMenuOpen(false)}>
+                      {t('signIn')}
+                    </Link>
+                  </Button>
+                </div>
               ) : null}
-              <div className="mt-2 flex items-center gap-2 px-3 sm:hidden">
+              <div
+                className={cn(
+                  'flex items-center gap-2 px-3 sm:hidden',
+                  authed ? 'mt-3 border-t pt-4' : 'mt-4',
+                )}
+              >
                 <ThemeToggle />
                 <LanguageSwitcher />
               </div>
