@@ -36,6 +36,7 @@ SaaS for independent landlords. Next.js 16 App Router (Turbopack) · React 19.2 
   - detail → edit: `[id]/(detail)` in `tenants`, `contracts`, `properties`.
   `error.tsx` stays at the SEGMENT root on purpose — error boundaries should cover the children. Route groups don't change any URL.
   Audit rule: no directory may hold `page.tsx` + `loading.tsx` while also containing child route directories. The one deliberate exception is `src/app` itself, whose `loading.tsx` is a plain full-screen spinner meant as the global fallback, not a page-shaped skeleton.
+- **Comment sparingly.** A comment earns its place when the code cannot state the reason itself: a non-obvious constraint, a library bug being worked around, a decision whose alternative looks more sensible than it is. Routine changes — a spacing tweak, a renamed prop, a reordered import — get none. Match the density of the file you are editing; do not narrate diffs.
 - No `any`. `import 'server-only'` in server-only modules. Barrel exports per feature are optional; avoid importing server code into client bundles.
 
 ## i18n (EN + Latin-American ES — everything user-visible is translated)
