@@ -6,16 +6,12 @@ import { useTranslations } from 'next-intl';
 import { cn } from '@/shared/lib/utils';
 import { navSections } from './nav-config';
 
-/**
- * Determine whether a nav item is active. The dashboard root only matches
- * exactly; other items match their sub-routes too.
- */
 function isActive(pathname: string, href: string): boolean {
   if (href === '/app') return pathname === '/app';
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
+export function SidebarNav() {
   const pathname = usePathname();
   const t = useTranslations('nav');
 
@@ -34,7 +30,6 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={onNavigate}
                 aria-current={active ? 'page' : undefined}
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',

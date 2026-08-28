@@ -13,7 +13,6 @@ import { Button } from '@/shared/components/ui/button';
 import { Logo } from '@/shared/components/brand/logo';
 import { SidebarNav } from './sidebar-nav';
 
-/** Slide-over navigation for small screens (reuses SidebarNav). */
 export function MobileNav() {
   const t = useTranslations('nav');
   const [open, setOpen] = useState(false);
@@ -26,15 +25,18 @@ export function MobileNav() {
           <span className="sr-only">{t('openMenu')}</span>
         </Button>
       </DialogTrigger>
-      {/* flex-col overrides the dialog's base grid, which would otherwise
-          spread the leftover height and float the nav mid-panel. */}
       <DialogContent className="left-0 top-0 flex h-full max-w-[17rem] translate-x-0 translate-y-0 flex-col gap-0 rounded-none border-r p-0 sm:rounded-none">
         <DialogTitle className="sr-only">{t('menuTitle')}</DialogTitle>
         <div className="flex h-16 shrink-0 items-center border-b px-5">
           <Logo />
         </div>
-        <div className="scrollbar-thin flex-1 overflow-y-auto">
-          <SidebarNav onNavigate={() => setOpen(false)} />
+        <div
+          className="scrollbar-thin flex-1 overflow-y-auto"
+          onClickCapture={(event) => {
+            if ((event.target as Element).closest('a')) setOpen(false);
+          }}
+        >
+          <SidebarNav />
         </div>
       </DialogContent>
     </Dialog>

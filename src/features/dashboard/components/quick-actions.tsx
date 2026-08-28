@@ -19,7 +19,7 @@ const actions: { labelKey: string; href: string; icon: LucideIcon }[] = [
 export function QuickActions() {
   const t = useTranslations('dashboard');
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
       {actions.map((action) => (
         <Link key={action.href} href={action.href} className="h-full">
           <Card className="flex h-full flex-col items-center gap-2 p-4 text-center transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-card">
