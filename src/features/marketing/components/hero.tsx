@@ -82,7 +82,14 @@ export function Hero({ authed }: { authed: boolean }) {
       <GridPattern />
 
       <div className="container relative">
-        <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
+        {/* max-w-4xl, not 3xl, so the HEADLINE gets two lines in both locales.
+            At 3xl (768px) "Gestiona tus propiedades" lands within a few px of
+            the limit at lg's 4.25rem and spills to a third line, while the
+            shorter English line still fits — the two languages looked
+            different for no reason. Only the h1 uses the extra width: the
+            lead paragraph keeps its own max-w-2xl and everything else is
+            auto-width and centred. */}
+        <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
           <motion.span
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
