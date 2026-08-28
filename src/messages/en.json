@@ -990,7 +990,7 @@
     "closeMenu": "Close menu",
     "navFeatures": "Features",
     "navHowItWorks": "How it works",
-    "navReviews": "Reviews",
+    "navUseCases": "Who it's for",
     "navFaq": "FAQ",
     "badge": "Built for independent landlords",
     "heroTitleLead": "Manage your properties with",
@@ -1143,40 +1143,28 @@
         "item3When": "8:00"
       }
     },
-    "reviews": {
-      "eyebrow": "Reviews",
-      "title": "What landlords say",
-      "description": "Propio was built alongside landlords in the Dominican Republic, one real month-end at a time.",
-      "r1": {
-        "quote": "I used to spend the first Saturday of every month rebuilding the same spreadsheet. Now I register the payments as they come in and the month closes itself.",
-        "name": "Carolina Méndez",
-        "role": "6 apartments · Santo Domingo"
-      },
-      "r2": {
-        "quote": "My tenants get their receipt the same minute they pay. That alone ended half the messages I used to get.",
-        "name": "Rafael Estrella",
-        "role": "3 properties · Santiago"
-      },
-      "r3": {
-        "quote": "Two of my contracts are in dollars and the rest in pesos. Seeing one honest total, converted, is the reason I stayed.",
-        "name": "Ana Lucía Pérez",
-        "role": "11 units · Punta Cana"
-      },
-      "r4": {
-        "quote": "The expiry reminder gave me thirty days to renegotiate a lease I would have let lapse. It paid for itself before I paid anything.",
-        "name": "Jorge Betances",
-        "role": "4 properties · La Romana"
-      },
-      "r5": {
-        "quote": "What convinced me was how little there was to learn. I added a property, a tenant and a payment, and it was already useful.",
-        "name": "Patricia Guzmán",
-        "role": "2 apartments · Santo Domingo Este"
-      },
-      "r6": {
-        "quote": "At tax time I opened the annual report and had every number in one screen. That used to be a full weekend.",
-        "name": "Luis Alberto Núñez",
-        "role": "18 units · Santo Domingo"
-      }
+    "useCases": {
+      "eyebrow": "Who it's for",
+      "title": "Built for landlords like you",
+      "description": "Different profiles, the same problem: staying in control without it becoming a second job. Propio fits the size of your operation.",
+      "firstTitle": "The first-time landlord",
+      "firstDesc": "You bought or inherited an apartment and rented it out. You want receipts that look serious and to know whether this month is paid — without opening a spreadsheet.",
+      "firstTag": "1 property",
+      "notebookTitle": "The one done with the notebook",
+      "notebookDesc": "Several units, a full notebook and too many “did you pay me?”. Register a payment once and Propio squares balances, receipts and reports for you.",
+      "notebookTag": "2–10 properties",
+      "remoteTitle": "The long-distance landlord",
+      "remoteDesc": "You live abroad and your properties stayed behind. The dashboard tells you who paid, who owes and which lease is ending — from your phone, depending on no one.",
+      "remoteTag": "Remote",
+      "familyTitle": "The family bookkeeper",
+      "familyDesc": "You run your parents' rentals. Every peso is recorded, every document filed, and accountability means showing a report — not reconstructing the month.",
+      "familyTag": "Clear accounts",
+      "currenciesTitle": "Dollar-and-peso contracts",
+      "currenciesDesc": "One tenant pays US$, the rest RD$. Each contract keeps its currency and the dashboard converts everything into one figure you can actually read.",
+      "currenciesTag": "Multi-currency",
+      "portfolioTitle": "The serious portfolio",
+      "portfolioDesc": "Dozens of units, an accountant asking for numbers and zero patience for chasing paper. Occupancy, revenue and expenses for the year on a single screen.",
+      "portfolioTag": "Up to 50 properties"
     },
     "faq": {
       "eyebrow": "Questions",
@@ -1228,7 +1216,7 @@
       "product": "Product",
       "features": "Features",
       "howItWorks": "How it works",
-      "reviews": "Reviews",
+      "useCases": "Who it's for",
       "faq": "FAQ",
       "account": "Account",
       "register": "Create account",

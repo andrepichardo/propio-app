@@ -990,7 +990,7 @@
     "closeMenu": "Cerrar menú",
     "navFeatures": "Funciones",
     "navHowItWorks": "Cómo funciona",
-    "navReviews": "Reseñas",
+    "navUseCases": "Para quién es",
     "navFaq": "Preguntas",
     "badge": "Hecho para arrendadores independientes",
     "heroTitleLead": "Gestiona tus propiedades con",
@@ -1143,40 +1143,28 @@
         "item3When": "8:00"
       }
     },
-    "reviews": {
-      "eyebrow": "Reseñas",
-      "title": "Lo que dicen los arrendadores",
-      "description": "Propio se construyó junto a arrendadores en República Dominicana, un cierre de mes real a la vez.",
-      "r1": {
-        "quote": "Antes pasaba el primer sábado de cada mes rehaciendo la misma hoja de cálculo. Ahora registro los pagos según entran y el mes se cierra solo.",
-        "name": "Carolina Méndez",
-        "role": "6 apartamentos · Santo Domingo"
-      },
-      "r2": {
-        "quote": "Mis inquilinos reciben su recibo en el mismo minuto en que pagan. Solo eso acabó con la mitad de los mensajes que me llegaban.",
-        "name": "Rafael Estrella",
-        "role": "3 propiedades · Santiago"
-      },
-      "r3": {
-        "quote": "Dos de mis contratos están en dólares y el resto en pesos. Ver un total honesto, ya convertido, es la razón por la que me quedé.",
-        "name": "Ana Lucía Pérez",
-        "role": "11 unidades · Punta Cana"
-      },
-      "r4": {
-        "quote": "El recordatorio de vencimiento me dio treinta días para renegociar un contrato que se me iba a vencer. Se pagó solo antes de que yo pagara nada.",
-        "name": "Jorge Betances",
-        "role": "4 propiedades · La Romana"
-      },
-      "r5": {
-        "quote": "Lo que me convenció fue lo poco que había que aprender. Agregué una propiedad, un inquilino y un pago, y ya me estaba sirviendo.",
-        "name": "Patricia Guzmán",
-        "role": "2 apartamentos · Santo Domingo Este"
-      },
-      "r6": {
-        "quote": "En temporada de impuestos abrí el reporte anual y tenía todos los números en una pantalla. Eso antes me costaba un fin de semana completo.",
-        "name": "Luis Alberto Núñez",
-        "role": "18 unidades · Santo Domingo"
-      }
+    "useCases": {
+      "eyebrow": "Para quién es",
+      "title": "Hecho para arrendadores como tú",
+      "description": "Perfiles distintos, el mismo problema: llevar el control sin que se convierta en un segundo trabajo. Propio se adapta al tamaño de tu operación.",
+      "firstTitle": "El del primer alquiler",
+      "firstDesc": "Compraste o heredaste un apartamento y lo alquilaste. Quieres recibos que se vean serios y saber si este mes ya te pagaron — sin abrir una hoja de cálculo.",
+      "firstTag": "1 propiedad",
+      "notebookTitle": "El que se cansó de la libreta",
+      "notebookDesc": "Varias unidades, una libreta llena y demasiados «¿me pagaste?». Registras el pago una vez y Propio cuadra saldos, recibos y reportes por ti.",
+      "notebookTag": "2–10 propiedades",
+      "remoteTitle": "El que administra desde lejos",
+      "remoteDesc": "Vives en otro país y tus propiedades siguen aquí. El panel te dice quién pagó, quién debe y qué contrato vence — desde el teléfono, sin depender de nadie.",
+      "remoteTag": "A distancia",
+      "familyTitle": "La que lleva las cuentas de la familia",
+      "familyDesc": "Administras los alquileres de tus padres. Cada peso queda registrado, cada documento archivado, y rendir cuentas es mostrar un reporte — no reconstruir el mes.",
+      "familyTag": "Cuentas claras",
+      "currenciesTitle": "El de contratos en dólares y en pesos",
+      "currenciesDesc": "Un inquilino paga en US$, el resto en RD$. Cada contrato guarda su moneda y el panel convierte todo a una sola cifra que sí puedes leer.",
+      "currenciesTag": "Multi-moneda",
+      "portfolioTitle": "El del portafolio serio",
+      "portfolioDesc": "Decenas de unidades, un contador que pide números y cero paciencia para perseguir papeles. Ocupación, ingresos y gastos del año en una sola pantalla.",
+      "portfolioTag": "Hasta 50 propiedades"
     },
     "faq": {
       "eyebrow": "Preguntas",
@@ -1228,7 +1216,7 @@
       "product": "Producto",
       "features": "Funciones",
       "howItWorks": "Cómo funciona",
-      "reviews": "Reseñas",
+      "useCases": "Para quién es",
       "faq": "Preguntas",
       "account": "Cuenta",
       "register": "Crear cuenta",

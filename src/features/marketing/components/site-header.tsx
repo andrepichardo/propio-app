@@ -33,7 +33,7 @@ import { cn } from '@/shared/lib/utils';
 const SECTIONS = [
   { href: '#features', key: 'navFeatures' },
   { href: '#how-it-works', key: 'navHowItWorks' },
-  { href: '#reviews', key: 'navReviews' },
+  { href: '#use-cases', key: 'navUseCases' },
   { href: '#faq', key: 'navFaq' },
 ] as const;
 
