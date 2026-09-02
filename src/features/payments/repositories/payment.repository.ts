@@ -20,11 +20,12 @@ export type PaymentListItem = Prisma.PaymentGetPayload<{
     reference: true;
     notes: true;
     paidAt: true;
+    periodStart: true;
     proofUrl: true;
     settlesPeriod: true;
     property: { select: { id: true; name: true } };
     tenant: { select: { id: true; firstName: true; lastName: true } };
-    contract: { select: { monthlyRent: true } };
+    contract: { select: { monthlyRent: true; dueDay: true } };
     receipt: { select: { id: true; number: true; pdfUrl: true } };
   };
 }>;
@@ -49,11 +50,12 @@ const listSelect = {
   reference: true,
   notes: true,
   paidAt: true,
+  periodStart: true,
   proofUrl: true,
   settlesPeriod: true,
   property: { select: { id: true, name: true } },
   tenant: { select: { id: true, firstName: true, lastName: true } },
-  contract: { select: { monthlyRent: true } },
+  contract: { select: { monthlyRent: true, dueDay: true } },
   receipt: { select: { id: true, number: true, pdfUrl: true } },
 } satisfies Prisma.PaymentSelect;
 

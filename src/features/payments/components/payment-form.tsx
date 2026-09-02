@@ -23,7 +23,16 @@ import {
   uploadPaymentProofAction,
 } from '../actions/payment.actions';
 import { applyFieldErrors } from '@/shared/hooks/use-server-action';
+import { addMonths } from 'date-fns';
+import {
+  firstUncoveredMonth,
+  monthValueToDate,
+  periodToMonthValue,
+  rentPeriodStart,
+} from '@/shared/lib/rent-period';
+import { useFormatDate } from '@/shared/components/date-format-provider';
 import { DatePicker } from '@/shared/components/ui/date-picker';
+import { MonthPicker } from '@/shared/components/ui/month-picker';
 import {
   Form,
   FormControl,
@@ -57,7 +66,10 @@ export type ContractOption = {
   id: string;
   label: string;
   rent: number;
+  dueDay: number;
   currency: string;
+  /** `yyyy-MM` periods already settled — drives the default and the warning. */
+  coveredPeriods: string[];
 };
 
 interface PaymentFormProps {
@@ -71,11 +83,15 @@ export function PaymentForm({
 }: PaymentFormProps) {
   const t = useTranslations('payments');
   const router = useRouter();
+  const formatDate = useFormatDate();
   const [isPending, startTransition] = useTransition();
   const [proofUploading, setProofUploading] = useState(false);
   const [proofName, setProofName] = useState<string | null>(null);
+  // Once the owner picks a period by hand, stop moving it under them.
+  const [periodPicked, setPeriodPicked] = useState(false);
 
   const preselected = contracts.find((c) => c.id === defaultContractId);
+  const today = new Date();
 
   const form = useForm<RegisterPaymentInput>({
     resolver: zodResolver(registerPaymentSchema),
@@ -86,7 +102,13 @@ export function PaymentForm({
       method: PaymentMethod.TRANSFER,
       reference: '',
       concept: '',
-      paidAt: new Date(),
+      paidAt: today,
+      periodStart: monthValueToDate(
+        firstUncoveredMonth(
+          preselected?.coveredPeriods ?? [],
+          `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`,
+        ),
+      ),
       notes: '',
       proofUrl: '',
       sendReceipt: false,
@@ -100,12 +122,51 @@ export function PaymentForm({
   const watchType = form.watch('type');
   const watchAmount = Number(form.watch('amount')) || 0;
   const watchContractId = form.watch('contractId');
-  const selectedRent =
-    contracts.find((c) => c.id === watchContractId)?.rent ?? 0;
+  const watchPeriod = form.watch('periodStart');
+  const selectedContract = contracts.find((c) => c.id === watchContractId);
+  const selectedRent = selectedContract?.rent ?? 0;
   const showSettles =
     watchType !== PaymentType.DEPOSIT &&
     watchAmount > 0 &&
     watchAmount < selectedRent;
+  const isRent = watchType !== PaymentType.DEPOSIT;
+
+  /**
+   * Month of the payment date. `DatePicker` hands back `yyyy-MM-dd` while the
+   * initial default is a real `Date` for today — Zod coerces both on submit,
+   * so the field holds either shape while the form is open.
+   */
+  function monthOf(paidAt: Date | string): string {
+    if (typeof paidAt === 'string') return paidAt.slice(0, 7);
+    const month = String(paidAt.getMonth() + 1).padStart(2, '0');
+    return `${paidAt.getFullYear()}-${month}`;
+  }
+
+  /** Suggest the first month this contract still owes, from `paidAt` forward. */
+  function suggestPeriod(
+    contract: ContractOption | undefined,
+    paidAt: Date | string,
+  ) {
+    return monthValueToDate(
+      firstUncoveredMonth(contract?.coveredPeriods ?? [], monthOf(paidAt)),
+    );
+  }
+
+  const periodMonth = watchPeriod ? periodToMonthValue(watchPeriod) : '';
+  const periodAlreadyCovered = Boolean(
+    isRent &&
+    periodMonth &&
+    selectedContract?.coveredPeriods.includes(periodMonth),
+  );
+  // "15 oct 2026 – 15 nov 2026" — the range the picked month resolves to once
+  // the service anchors it to the contract's due day.
+  const periodRange =
+    isRent && watchPeriod && selectedContract
+      ? (() => {
+          const start = rentPeriodStart(watchPeriod, selectedContract.dueDay);
+          return `${formatDate(start)} – ${formatDate(addMonths(start, 1))}`;
+        })()
+      : null;
 
   /** Upload as soon as a file is picked so registration only carries the URL. */
   async function uploadProof(file: File) {
@@ -176,7 +237,14 @@ export function PaymentForm({
                     onValueChange={(value) => {
                       field.onChange(value);
                       const c = contracts.find((x) => x.id === value);
-                      if (c) form.setValue('amount', c.rent);
+                      if (!c) return;
+                      form.setValue('amount', c.rent);
+                      if (!periodPicked) {
+                        form.setValue(
+                          'periodStart',
+                          suggestPeriod(c, form.getValues('paidAt')),
+                        );
+                      }
                     }}
                     value={field.value}
                   >
@@ -284,11 +352,50 @@ export function PaymentForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel required>{t('form.date')}</FormLabel>
-                  <DatePicker value={field.value} onChange={field.onChange} />
+                  <DatePicker
+                    value={field.value}
+                    onChange={(next) => {
+                      field.onChange(next);
+                      if (!periodPicked && next) {
+                        form.setValue(
+                          'periodStart',
+                          suggestPeriod(selectedContract, next),
+                        );
+                      }
+                    }}
+                  />
                   <FormMessage />
                 </FormItem>
               )}
             />
+            {isRent ? (
+              <FormField
+                control={form.control}
+                name="periodStart"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('form.period')}</FormLabel>
+                    <MonthPicker
+                      value={periodMonth}
+                      onChange={(month) => {
+                        setPeriodPicked(true);
+                        field.onChange(monthValueToDate(month));
+                      }}
+                    />
+                    {periodAlreadyCovered ? (
+                      <p className="text-[0.8rem] text-amber-600 dark:text-amber-500">
+                        {t('form.periodCovered')}
+                      </p>
+                    ) : (
+                      <FormDescription>
+                        {periodRange ?? t('form.periodHint')}
+                      </FormDescription>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ) : null}
             <FormField
               control={form.control}
               name="reference"

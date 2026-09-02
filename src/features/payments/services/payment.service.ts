@@ -3,6 +3,7 @@ import { randomUUID } from 'crypto';
 import {
   ActivityAction,
   NotificationType,
+  PaymentStatus,
   PaymentType,
 } from '@/generated/prisma/enums';
 import { type Prisma } from '@/generated/prisma/client';
@@ -24,8 +25,9 @@ import { receiptService } from '@/features/receipts/services/receipt.service';
 import { sendReceiptEmail } from '@/emails/send';
 import { getUserPreferences } from '@/shared/lib/auth/preferences';
 import { numberLocale, toLocale } from '@/i18n/config';
-import { rentPeriodStart } from '@/shared/lib/rent-period';
+import { periodToMonthValue, rentPeriodStart } from '@/shared/lib/rent-period';
 import {
+  isPeriodCovered,
   rentBalanceAfter,
   settlesRentPeriod,
 } from '@/shared/lib/rent-settlement';
@@ -80,6 +82,79 @@ export const paymentService = {
     return paymentRepository.list(ownerId, filters);
   },
 
+  /**
+   * Rent periods that already have enough money on them, per contract, as
+   * `yyyy-MM` values. The payment form uses it twice: to preselect the first
+   * unpaid month (so a prepayment doesn't silently land on the month that is
+   * already settled) and to warn before paying one twice.
+   *
+   * Coverage is decided by `isPeriodCovered`, the same rule the dashboard uses
+   * for "upcoming payments" — they must agree or the form would suggest a
+   * month the dashboard still shows as due.
+   */
+  async coveredPeriods(
+    ownerId: string,
+    contracts: { id: string; monthlyRent: number; dueDay: number }[],
+  ): Promise<Record<string, string[]>> {
+    if (contracts.length === 0) return {};
+
+    const byId = new Map(contracts.map((c) => [c.id, c]));
+    const now = new Date();
+    // A year back is enough to judge every month the form can suggest, and
+    // bounds the scan on a contract with years of history.
+    const since = new Date(Date.UTC(now.getUTCFullYear() - 1, 0, 1));
+
+    const rows = await prisma.payment.findMany({
+      where: {
+        ownerId,
+        contractId: { in: [...byId.keys()] },
+        deletedAt: null,
+        status: PaymentStatus.COMPLETED,
+        // Deposits settle no rent period.
+        type: { not: PaymentType.DEPOSIT },
+        paidAt: { gte: since },
+      },
+      select: {
+        contractId: true,
+        amount: true,
+        paidAt: true,
+        periodStart: true,
+        settlesPeriod: true,
+      },
+    });
+
+    const paid = new Map<string, number>();
+    const settled = new Set<string>();
+    for (const row of rows) {
+      const contract = byId.get(row.contractId);
+      if (!contract) continue;
+      // Legacy rows predate `periodStart`; anchor them the same way a new
+      // payment would be.
+      const period =
+        row.periodStart ?? rentPeriodStart(row.paidAt, contract.dueDay);
+      const key = `${row.contractId}:${periodToMonthValue(period)}`;
+      paid.set(key, (paid.get(key) ?? 0) + Number(row.amount));
+      if (row.settlesPeriod) settled.add(key);
+    }
+
+    const covered: Record<string, string[]> = {};
+    for (const [key, amount] of paid) {
+      const separator = key.indexOf(':');
+      const contractId = key.slice(0, separator);
+      const contract = byId.get(contractId);
+      if (!contract) continue;
+      const isCovered = isPeriodCovered({
+        paid: amount,
+        monthlyRent: contract.monthlyRent,
+        settled: settled.has(key),
+      });
+      if (isCovered) {
+        (covered[contractId] ??= []).push(key.slice(separator + 1));
+      }
+    }
+    return covered;
+  },
+
   async getById(ownerId: string, id: string) {
     const payment = await paymentRepository.findById(ownerId, id);
     if (!payment) throw new NotFoundError('Payment');
@@ -118,7 +193,7 @@ export const paymentService = {
     // Rent covers a due-day-to-due-day period, regardless of when it was paid.
     const rentPeriod = isDeposit
       ? undefined
-      : (input.periodStart ?? rentPeriodStart(input.paidAt, contract.dueDay));
+      : rentPeriodStart(input.periodStart ?? input.paidAt, contract.dueDay);
     const concept =
       input.concept ??
       defaultConcept(rentPeriod ?? input.paidAt, isDeposit, prefs.locale);
@@ -323,8 +398,10 @@ export const paymentService = {
     // Rent covers a due-day-to-due-day period, regardless of when it was paid.
     const rentPeriod = isDeposit
       ? null
-      : (input.periodStart ??
-        rentPeriodStart(input.paidAt, payment.contract.dueDay));
+      : rentPeriodStart(
+          input.periodStart ?? input.paidAt,
+          payment.contract.dueDay,
+        );
     const concept =
       input.concept ??
       defaultConcept(rentPeriod ?? input.paidAt, isDeposit, prefs.locale);

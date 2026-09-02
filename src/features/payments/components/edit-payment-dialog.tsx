@@ -22,7 +22,15 @@ import {
   uploadPaymentProofAction,
 } from '../actions/payment.actions';
 import { applyFieldErrors } from '@/shared/hooks/use-server-action';
+import { addMonths } from 'date-fns';
+import {
+  monthValueToDate,
+  periodToMonthValue,
+  rentPeriodStart,
+} from '@/shared/lib/rent-period';
+import { useFormatDate } from '@/shared/components/date-format-provider';
 import { DatePicker } from '@/shared/components/ui/date-picker';
+import { MonthPicker } from '@/shared/components/ui/month-picker';
 import {
   Dialog,
   DialogContent,
@@ -64,15 +72,20 @@ export type EditablePayment = {
   notes?: string | null;
   proofUrl?: string | null;
   paidAt: string; // ISO — already serialised by the server component
+  /** ISO period this payment settles; null on a deposit or a legacy row. */
+  periodStart: string | null;
   settlesPeriod: boolean;
   /** Contract's monthly rent — the "covers full period" toggle only shows when
    * the amount is below it. */
   rent: number;
+  /** Contract's due day — anchors the period range shown under the picker. */
+  dueDay: number;
 };
 
 export function EditPaymentDialog({ payment }: { payment: EditablePayment }) {
   const t = useTranslations('payments');
   const router = useRouter();
+  const formatDate = useFormatDate();
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [proofUploading, setProofUploading] = useState(false);
@@ -89,6 +102,9 @@ export function EditPaymentDialog({ payment }: { payment: EditablePayment }) {
       notes: payment.notes ?? '',
       proofUrl: payment.proofUrl ?? '',
       paidAt: new Date(payment.paidAt),
+      periodStart: payment.periodStart
+        ? new Date(payment.periodStart)
+        : undefined,
       settlesPeriod: payment.settlesPeriod,
     },
   });
@@ -96,10 +112,20 @@ export function EditPaymentDialog({ payment }: { payment: EditablePayment }) {
   const proofUrl = form.watch('proofUrl');
   const watchType = form.watch('type');
   const watchAmount = Number(form.watch('amount')) || 0;
+  const watchPeriod = form.watch('periodStart');
   const showSettles =
     watchType !== PaymentType.DEPOSIT &&
     watchAmount > 0 &&
     watchAmount < payment.rent;
+  const isRent = watchType !== PaymentType.DEPOSIT;
+
+  const periodMonth = watchPeriod ? periodToMonthValue(watchPeriod) : '';
+  const periodRange = watchPeriod
+    ? (() => {
+        const start = rentPeriodStart(watchPeriod, payment.dueDay);
+        return `${formatDate(start)} – ${formatDate(addMonths(start, 1))}`;
+      })()
+    : null;
 
   async function uploadProof(file: File) {
     const formData = new FormData();
@@ -245,6 +271,27 @@ export function EditPaymentDialog({ payment }: { payment: EditablePayment }) {
                 </FormItem>
               )}
             />
+            {isRent ? (
+              <FormField
+                control={form.control}
+                name="periodStart"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('form.period')}</FormLabel>
+                    <MonthPicker
+                      value={periodMonth}
+                      onChange={(month) =>
+                        field.onChange(monthValueToDate(month))
+                      }
+                    />
+                    <FormDescription>
+                      {periodRange ?? t('form.periodHint')}
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ) : null}
             <FormField
               control={form.control}
               name="reference"

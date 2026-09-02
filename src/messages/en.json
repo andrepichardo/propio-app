@@ -653,6 +653,9 @@
       "isDepositHint": "Deposits are held as a liability and don’t count as income.",
       "settlesPeriod": "Covers the full period",
       "settlesPeriodHint": "The tenant owes nothing more for this period, even though it's less than the rent (e.g. an agreed discount).",
+      "period": "Period covered",
+      "periodHint": "The rent month this payment settles. Change it to pay a month in advance.",
+      "periodCovered": "This period is already paid. Pick another month to record an advance payment.",
       "method": "Method",
       "date": "Payment date",
       "reference": "Reference",
@@ -1275,9 +1278,7 @@
         },
         {
           "title": "Acceptable use",
-          "body": [
-            "While using Propio, you agree not to:"
-          ],
+          "body": ["While using Propio, you agree not to:"],
           "bullets": [
             "Use the service for any unlawful purpose, or to store information you have no right to hold.",
             "Attempt to access data belonging to another account, or to probe, scan or test the security of the service.",
@@ -1396,9 +1397,7 @@
         },
         {
           "title": "Information you give us",
-          "body": [
-            "We store what you enter, which typically includes:"
-          ],
+          "body": ["We store what you enter, which typically includes:"],
           "bullets": [
             "Account details: your name, email address and, if you registered with a password, a securely hashed version of it. If you sign in with Google or GitHub, we receive your name, email address and profile picture from that provider.",
             "Preferences: interface language, main currency, date format, reminder settings and your signature image.",
@@ -1418,9 +1417,7 @@
         },
         {
           "title": "How we use your information",
-          "body": [
-            "We use it only to run the service you signed up for:"
-          ],
+          "body": ["We use it only to run the service you signed up for:"],
           "bullets": [
             "To create and secure your account, and to sign you in.",
             "To store and show your properties, tenants, contracts, payments and documents.",

@@ -130,6 +130,7 @@ export const contractRepository = {
         id: true,
         monthlyRent: true,
         currency: true,
+        dueDay: true,
         property: { select: { name: true } },
         tenant: { select: { firstName: true, lastName: true } },
       },

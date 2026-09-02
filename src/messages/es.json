@@ -653,6 +653,9 @@
       "isDepositHint": "Los depósitos se retienen como pasivo y no cuentan como ingreso.",
       "settlesPeriod": "Cubre el período completo",
       "settlesPeriodHint": "El inquilino no debe nada más por este período, aunque sea menor a la renta (ej. un descuento pactado).",
+      "period": "Período que cubre",
+      "periodHint": "El mes de alquiler que salda este pago. Cámbialo para pagar un mes por adelantado.",
+      "periodCovered": "Este período ya está pagado. Elige otro mes para registrar un pago adelantado.",
       "method": "Método",
       "date": "Fecha del pago",
       "reference": "Referencia",
@@ -1275,9 +1278,7 @@
         },
         {
           "title": "Uso aceptable",
-          "body": [
-            "Al usar Propio, te comprometes a no:"
-          ],
+          "body": ["Al usar Propio, te comprometes a no:"],
           "bullets": [
             "Usar el servicio con fines ilícitos, ni para guardar información que no tienes derecho a poseer.",
             "Intentar acceder a datos de otra cuenta, ni sondear, escanear o poner a prueba la seguridad del servicio.",
@@ -1396,9 +1397,7 @@
         },
         {
           "title": "Información que nos das",
-          "body": [
-            "Guardamos lo que ingresas, que normalmente incluye:"
-          ],
+          "body": ["Guardamos lo que ingresas, que normalmente incluye:"],
           "bullets": [
             "Datos de la cuenta: tu nombre, correo electrónico y, si te registraste con contraseña, una versión cifrada (hash) de ella. Si inicias sesión con Google o GitHub, recibimos de ese proveedor tu nombre, correo y foto de perfil.",
             "Preferencias: idioma de la interfaz, moneda principal, formato de fecha, configuración de recordatorios y tu imagen de firma.",

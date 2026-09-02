@@ -28,6 +28,60 @@ export function rentPeriodStart(paidAt: Date, dueDay: number): Date {
 }
 
 /**
+ * `yyyy-MM` for a rent period — the value shape `MonthPicker` speaks. Periods
+ * are date-only values at UTC midnight, so they are read with UTC parts.
+ */
+export function periodToMonthValue(date: Date): string {
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  return `${date.getUTCFullYear()}-${month}`;
+}
+
+/**
+ * First day of the month a `yyyy-MM` value denotes, at UTC midnight. Feed the
+ * result to `rentPeriodStart` to anchor it to a contract's due day — that way
+ * a form only has to send a month and never needs to know the due day.
+ */
+export function monthValueToDate(value: string): Date | undefined {
+  const match = /^(\d{4})-(\d{2})$/.exec(value);
+  if (!match) return undefined;
+  const month = Number(match[2]) - 1;
+  if (month < 0 || month > 11) return undefined;
+  return new Date(Date.UTC(Number(match[1]), month, 1));
+}
+
+/**
+ * First period from `fromMonth` forward that is not already covered, as a
+ * `yyyy-MM` value — what the payment form preselects so paying a month twice
+ * takes a deliberate change rather than being the default.
+ *
+ * Pure string arithmetic on purpose: both inputs are already month values, so
+ * there is no local-vs-UTC question to get wrong. Gives up after two years
+ * rather than looping on a pathological `covered` set.
+ */
+export function firstUncoveredMonth(
+  covered: readonly string[],
+  fromMonth: string,
+): string {
+  const match = /^(\d{4})-(\d{2})$/.exec(fromMonth);
+  if (!match) return fromMonth;
+
+  const taken = new Set(covered);
+  let year = Number(match[1]);
+  let month = Number(match[2]) - 1;
+
+  for (let step = 0; step < 24; step += 1) {
+    const value = `${year}-${String(month + 1).padStart(2, '0')}`;
+    if (!taken.has(value)) return value;
+    month += 1;
+    if (month > 11) {
+      month = 0;
+      year += 1;
+    }
+  }
+  return fromMonth;
+}
+
+/**
  * Month bucket a payment counts toward: its rent period, else when paid.
  * Date-only values (periodStart, form-picked paidAt) live at UTC midnight;
  * reading them with local getters west of UTC would land on the previous

@@ -1,12 +1,90 @@
 import { describe, expect, it } from 'vitest';
 import {
+  firstUncoveredMonth,
   monthKey,
+  monthValueToDate,
   nextDueDate,
+  periodToMonthValue,
   rentPeriodStart,
 } from '@/shared/lib/rent-period';
 
 /** Readable assertion helper: a UTC-midnight date as `yyyy-MM-dd`. */
 const iso = (date: Date) => date.toISOString().slice(0, 10);
+
+describe('periodToMonthValue', () => {
+  it('reads a UTC-midnight period with UTC parts', () => {
+    // Local getters west of UTC would report August for this September date.
+    expect(periodToMonthValue(new Date('2026-09-01T00:00:00.000Z'))).toBe(
+      '2026-09',
+    );
+  });
+
+  it('pads the month', () => {
+    expect(periodToMonthValue(new Date('2026-03-15T00:00:00.000Z'))).toBe(
+      '2026-03',
+    );
+  });
+});
+
+describe('monthValueToDate', () => {
+  it('round-trips with periodToMonthValue', () => {
+    const date = monthValueToDate('2026-10');
+    expect(date && iso(date)).toBe('2026-10-01');
+    expect(date && periodToMonthValue(date)).toBe('2026-10');
+  });
+
+  it('anchors to the due day once passed through rentPeriodStart', () => {
+    // This is the contract with the form: it sends a month, the service turns
+    // it into the period, so the client never needs to know the due day.
+    const month = monthValueToDate('2026-10');
+    expect(month && iso(rentPeriodStart(month, 15))).toBe('2026-10-15');
+  });
+
+  it('rejects anything that is not yyyy-MM', () => {
+    expect(monthValueToDate('2026-13')).toBeUndefined();
+    expect(monthValueToDate('2026-00')).toBeUndefined();
+    expect(monthValueToDate('2026-9')).toBeUndefined();
+    expect(monthValueToDate('')).toBeUndefined();
+  });
+});
+
+describe('firstUncoveredMonth', () => {
+  it('keeps the reference month when nothing is covered', () => {
+    expect(firstUncoveredMonth([], '2026-09')).toBe('2026-09');
+  });
+
+  it('skips covered months so a prepayment lands on the next one', () => {
+    // The regression this guards: two full payments in the same calendar month
+    // both defaulted to that month, so the second was absorbed as an
+    // overpayment and "upcoming payments" never advanced.
+    expect(firstUncoveredMonth(['2026-09'], '2026-09')).toBe('2026-10');
+    expect(firstUncoveredMonth(['2026-09', '2026-10'], '2026-09')).toBe(
+      '2026-11',
+    );
+  });
+
+  it('rolls into the next year', () => {
+    expect(firstUncoveredMonth(['2026-12'], '2026-12')).toBe('2027-01');
+  });
+
+  it('ignores covered months before the reference', () => {
+    expect(firstUncoveredMonth(['2026-07', '2026-08'], '2026-09')).toBe(
+      '2026-09',
+    );
+  });
+
+  it('gives up after two years instead of looping', () => {
+    const everything = Array.from({ length: 40 }, (_, i) => {
+      const month = 8 + i;
+      return `${2026 + Math.floor(month / 12)}-${String((month % 12) + 1).padStart(2, '0')}`;
+    });
+    expect(firstUncoveredMonth(everything, '2026-09')).toBe('2026-09');
+  });
+
+  it('returns a malformed reference untouched', () => {
+    expect(firstUncoveredMonth([], 'nope')).toBe('nope');
+  });
+});
 
 describe('rentPeriodStart', () => {
   it('anchors the period to the due day, not the day it was paid', () => {
