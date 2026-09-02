@@ -3,7 +3,7 @@ import { subDays } from 'date-fns';
 import { getTranslations } from 'next-intl/server';
 import { NotificationType } from '@/generated/prisma/enums';
 import { prisma } from '@/shared/lib/prisma';
-import { defaultLocale, isLocale, type Locale } from '@/i18n/config';
+import { toLocale, type Locale } from '@/i18n/config';
 import { sendReminderDigestEmails, type ReminderDigest } from '@/emails/send';
 
 /**
@@ -96,8 +96,7 @@ export async function sendReminderDigests(now: Date): Promise<number> {
   >();
 
   for (const notification of pending) {
-    const short = notification.owner.locale.slice(0, 2);
-    const locale = isLocale(short) ? short : defaultLocale;
+    const locale = toLocale(notification.owner.locale);
     const t = await translatorFor(locale);
 
     // Prefer the stored key + params; fall back to the English text captured on

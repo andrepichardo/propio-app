@@ -23,7 +23,7 @@ import { formatCurrency } from '@/shared/lib/format';
 import { receiptService } from '@/features/receipts/services/receipt.service';
 import { sendReceiptEmail } from '@/emails/send';
 import { getUserPreferences } from '@/shared/lib/auth/preferences';
-import { isLocale } from '@/i18n/config';
+import { numberLocale, toLocale } from '@/i18n/config';
 import { rentPeriodStart } from '@/shared/lib/rent-period';
 import {
   rentBalanceAfter,
@@ -251,16 +251,19 @@ export const paymentService = {
         ]);
         // Runs post-commit (outside the request scope), so the owner's locale
         // has to travel explicitly — the cookie fallback doesn't apply here.
-        const locale = prefs.locale.slice(0, 2);
         await sendReceiptEmail({
           to: params.tenantEmail,
           tenantName: params.tenantName,
-          amount: formatCurrency(params.amount, params.currency, prefs.locale),
+          amount: formatCurrency(
+            params.amount,
+            params.currency,
+            numberLocale(prefs.locale),
+          ),
           receiptNumber: params.number,
           propertyName: params.propertyName,
           ownerName: owner?.name,
           pdf: result?.pdf,
-          locale: isLocale(locale) ? locale : undefined,
+          locale: toLocale(prefs.locale),
         });
       }
     } catch (error) {

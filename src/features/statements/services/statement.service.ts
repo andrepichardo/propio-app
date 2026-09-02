@@ -29,7 +29,7 @@ import { getStorage } from '@/shared/lib/storage';
 import { renderStatementPdf, type StatementLine } from '@/pdf/render';
 import { getUserPreferences } from '@/shared/lib/auth/preferences';
 import { clientEnv } from '@/shared/config/env';
-import { defaultLocale, isLocale } from '@/i18n/config';
+import { numberLocale, toLocale } from '@/i18n/config';
 
 /** Per-owner sequential number, e.g. `STM-2026-0003`. Runs inside the tx. */
 async function nextStatementNumber(
@@ -260,16 +260,14 @@ export const statementService = {
 
       // The PDF renders post-commit (outside the request), so the owner's
       // locale must be resolved here — the cookie fallback doesn't apply.
-      const locale = isLocale(prefs.locale.slice(0, 2))
-        ? (prefs.locale.slice(0, 2) as typeof defaultLocale)
-        : defaultLocale;
+      const locale = toLocale(prefs.locale);
       const dfOpts = locale === 'es' ? { locale: esDateLocale } : undefined;
       // Full month name: "8 de mayo" (es) / "May 8" (en).
       const lineDateFmt = locale === 'es' ? "d 'de' MMMM" : 'MMMM d';
       const t = await getTranslations({ locale, namespace: 'pdf.statement' });
 
       const money = (value: number) =>
-        formatCurrency(value, params.currency, prefs.locale);
+        formatCurrency(value, params.currency, numberLocale(prefs.locale));
 
       const lines: StatementLine[] = params.lines.map((line) => ({
         date: format(line.date, lineDateFmt, dfOpts),

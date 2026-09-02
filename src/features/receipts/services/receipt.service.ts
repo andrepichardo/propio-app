@@ -16,7 +16,7 @@ import { getUserPreferences } from '@/shared/lib/auth/preferences';
 import { renderReceiptPdf } from '@/pdf/render';
 import { sendReceiptEmail } from '@/emails/send';
 import { clientEnv } from '@/shared/config/env';
-import { defaultLocale, isLocale } from '@/i18n/config';
+import { numberLocale, toLocale } from '@/i18n/config';
 
 export type ReceiptListItem = Awaited<
   ReturnType<typeof receiptService.list>
@@ -101,22 +101,19 @@ export const receiptService = {
         select: { name: true },
       }),
     ]);
-    // Catalog locale ('en' | 'es'); prefs may hold a BCP-47 tag like "en-US".
-    const locale = prefs.locale.slice(0, 2);
-
     await sendReceiptEmail({
       to: email,
       tenantName: `${receipt.tenant.firstName} ${receipt.tenant.lastName}`,
       amount: formatCurrency(
         receipt.amount.toString(),
         receipt.currency,
-        prefs.locale,
+        numberLocale(prefs.locale),
       ),
       receiptNumber: receipt.number,
       propertyName: receipt.property.name,
       ownerName: owner?.name,
       pdf,
-      locale: isLocale(locale) ? locale : undefined,
+      locale: toLocale(prefs.locale),
     });
 
     return { email };
@@ -154,12 +151,7 @@ export const receiptService = {
     if (receipt.pdfUrl) return { url: receipt.pdfUrl };
 
     const prefs = await getUserPreferences(ownerId);
-    // Catalog locale ('en' | 'es'); prefs may hold a BCP-47 tag like "en-US".
-    const locale = isLocale(prefs.locale.slice(0, 2))
-      ? (prefs.locale.slice(0, 2) as typeof defaultLocale)
-      : defaultLocale;
-    // Latin-American number formatting ("US$1,200.00"), not Spain's.
-    const numberLocale = locale === 'es' ? 'es-DO' : 'en-US';
+    const locale = toLocale(prefs.locale);
     const [tMethod, tPdf] = await Promise.all([
       getTranslations({ locale, namespace: 'payments.methods' }),
       getTranslations({ locale, namespace: 'pdf.receipt' }),
@@ -170,7 +162,7 @@ export const receiptService = {
     const amount = formatCurrency(
       receipt.amount.toString(),
       receipt.currency,
-      numberLocale,
+      numberLocale(prefs.locale),
     );
 
     const dateFnsOptions =
