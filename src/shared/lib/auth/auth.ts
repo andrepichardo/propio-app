@@ -4,6 +4,8 @@ import Credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';
 import GitHub from 'next-auth/providers/github';
 import { prisma } from '@/shared/lib/prisma';
+import { getUserLocale } from '@/i18n/locale';
+import { defaultLocale } from '@/i18n/config';
 import { authConfig } from './auth.config';
 import { verifyPassword } from './password';
 import { credentialsSchema } from './auth.validators';
@@ -85,4 +87,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
+  events: {
+    /**
+     * OAuth users are created by the adapter, which knows nothing about the
+     * visitor's language, so the row keeps the schema default ("en") — and
+     * `User.locale` is what every receipt PDF, statement and digest email
+     * renders in. The event still runs inside the callback request, so the
+     * locale cookie is readable here; a failure must not break the sign-in.
+     */
+    async createUser({ user }) {
+      if (!user.id) return;
+      try {
+        const locale = await getUserLocale();
+        if (locale === defaultLocale) return;
+        await prisma.user.update({ where: { id: user.id }, data: { locale } });
+      } catch (error) {
+        console.error('[auth] could not store the sign-up locale', error);
+      }
+    },
+  },
 });

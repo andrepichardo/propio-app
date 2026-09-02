@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { after } from 'next/server';
 import Link from 'next/link';
 import { getLocale } from 'next-intl/server';
 import { requireUser } from '@/shared/lib/auth/session';
@@ -32,6 +33,7 @@ export default async function AppLayout({
         name: true,
         image: true,
         dateFormat: true,
+        locale: true,
       },
     }),
     getLocale(),
@@ -42,6 +44,26 @@ export default async function AppLayout({
   const needsVerification = Boolean(
     account?.hashedPassword && !account.emailVerified,
   );
+
+  // Keep the stored language in step with the one actually in use. The cookie
+  // is the source of truth for the UI, but `User.locale` is the ONLY locale a
+  // receipt PDF, statement or digest email can read — those render outside a
+  // request — so a mismatch means Spanish screens and English documents. It
+  // happens whenever the switcher ran while signed out (landing/login pages
+  // mount it too, and `setLocale` can mirror nothing without a session) or the
+  // language came from `Accept-Language`, never from an explicit pick.
+  if (account && account.locale !== locale) {
+    after(async () => {
+      try {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { locale },
+        });
+      } catch (error) {
+        console.error('[i18n] could not mirror the active locale', error);
+      }
+    });
+  }
 
   // `minmax(0,1fr)` + `min-w-0` on the content column: with a plain `1fr`
   // (= `minmax(auto,1fr)`) the column cannot shrink below its min-content
