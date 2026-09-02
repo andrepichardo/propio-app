@@ -39,19 +39,10 @@ export default async function AppLayout({
     getLocale(),
   ]);
 
-  // Only credential accounts need in-app verification — OAuth providers
-  // already verified the address.
   const needsVerification = Boolean(
     account?.hashedPassword && !account.emailVerified,
   );
 
-  // Keep the stored language in step with the one actually in use. The cookie
-  // is the source of truth for the UI, but `User.locale` is the ONLY locale a
-  // receipt PDF, statement or digest email can read — those render outside a
-  // request — so a mismatch means Spanish screens and English documents. It
-  // happens whenever the switcher ran while signed out (landing/login pages
-  // mount it too, and `setLocale` can mirror nothing without a session) or the
-  // language came from `Accept-Language`, never from an explicit pick.
   if (account && account.locale !== locale) {
     after(async () => {
       try {
@@ -65,10 +56,6 @@ export default async function AppLayout({
     });
   }
 
-  // `minmax(0,1fr)` + `min-w-0` on the content column: with a plain `1fr`
-  // (= `minmax(auto,1fr)`) the column cannot shrink below its min-content
-  // width, so a wide table (payments, contracts…) widens the whole document
-  // instead of scrolling inside its own container.
   return (
     <div className="min-h-screen lg:grid lg:grid-cols-[16rem_minmax(0,1fr)]">
       <aside className="sticky top-0 hidden h-screen flex-col border-r bg-card lg:flex">
@@ -83,8 +70,6 @@ export default async function AppLayout({
       </aside>
 
       <div className="flex min-h-screen min-w-0 flex-col">
-        {/* Prefer DB values for name/image: the JWT snapshot goes stale after
-            profile edits (avatar upload, rename) until the next sign-in. */}
         <Topbar
           user={{
             ...user,

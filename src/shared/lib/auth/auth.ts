@@ -19,14 +19,6 @@ export class EmailNotVerifiedError extends CredentialsSignin {
   override code = 'email_not_verified';
 }
 
-/**
- * Full Auth.js instance (Node runtime). Composes the edge-safe base config
- * with the database adapter and Node-only providers.
- *
- * We deliberately keep a JWT session strategy (required by the Credentials
- * provider) while still using the Prisma adapter so OAuth accounts and users
- * are persisted for a unified account model.
- */
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   adapter: PrismaAdapter(prisma),
@@ -40,16 +32,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientId: process.env.AUTH_GITHUB_ID,
       clientSecret: process.env.AUTH_GITHUB_SECRET,
       allowDangerousEmailAccountLinking: true,
-      /**
-       * Required because this is a GitHub **App** (client id `Ov23li…`), not a
-       * classic OAuth App. GitHub Apps append an `iss` parameter to the
-       * callback; Auth.js validates it against `provider.issuer`, which the
-       * GitHub provider leaves unset, so it falls back to the placeholder
-       * "https://authjs.dev" and every callback dies with
-       * `unexpected "iss" (issuer) response parameter value` — surfaced to the
-       * user as the opaque `Configuration` error. Classic OAuth Apps send no
-       * `iss`, which is why the stock config works for them and not here.
-       */
       issuer: 'https://github.com/login/oauth',
     }),
     Credentials({
@@ -67,14 +49,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           where: { email: email.toLowerCase() },
         });
 
-        // No password set → account is OAuth-only; reject credential login.
+
         if (!user?.hashedPassword) return null;
 
         const valid = await verifyPassword(password, user.hashedPassword);
         if (!valid) return null;
 
-        // Credentials are correct — now require a verified email. Checked after
-        // the password so we never reveal verification state to a guesser.
         if (!user.emailVerified) throw new EmailNotVerifiedError();
 
         return {
@@ -88,13 +68,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   events: {
-    /**
-     * OAuth users are created by the adapter, which knows nothing about the
-     * visitor's language, so the row keeps the schema default ("en") — and
-     * `User.locale` is what every receipt PDF, statement and digest email
-     * renders in. The event still runs inside the callback request, so the
-     * locale cookie is readable here; a failure must not break the sign-in.
-     */
     async createUser({ user }) {
       if (!user.id) return;
       try {

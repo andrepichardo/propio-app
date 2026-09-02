@@ -38,10 +38,6 @@ export async function registerAction(
 
     const hashedPassword = await hashPassword(parsed.data.password);
 
-    // The language the visitor signed up in becomes the account's. `User.locale`
-    // is the ONLY locale receipts, statements and digest emails can see — they
-    // render outside a request, where the cookie doesn't exist — so leaving it
-    // at the schema default ("en") ships English documents to a Spanish owner.
     const locale = await getUserLocale();
 
     const user = await prisma.user.create({
@@ -54,11 +50,6 @@ export async function registerAction(
       select: { id: true, email: true, name: true },
     });
 
-    // Never block registration on delivery, but a plain fire-and-forget dies
-    // when Vercel freezes the function after the response — `after()` keeps it
-    // alive until the send completes. Only the verification email goes out now
-    // — the welcome email is sent after the address is verified (when the
-    // account is actually usable).
     after(async () => {
       try {
         await issueVerificationEmail(user.email, locale);
