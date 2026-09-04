@@ -50,8 +50,10 @@ export function GenerateStatementDialog({
     startTransition(async () => {
       const result = await generateStatementAction({
         contractId,
-        // "yyyy-MM" coerces to the first day of that month.
-        month: new Date(`${month}-01T00:00:00`),
+        // "yyyy-MM" → the first of that month at UTC midnight. The `Z` is
+        // load-bearing: without it the string parses in the VIEWER's zone, and
+        // east of UTC that lands on the last day of the previous month.
+        month: new Date(`${month}-01T00:00:00Z`),
       });
       if (!result.success) {
         toast.error(result.error);

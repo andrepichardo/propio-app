@@ -1,5 +1,4 @@
 import 'server-only';
-import { addMonths, endOfMonth, format, startOfMonth } from 'date-fns';
 import { es as esDateLocale } from 'date-fns/locale';
 import { getTranslations } from 'next-intl/server';
 import {
@@ -24,7 +23,15 @@ import {
   type PaginatedResult,
 } from '@/shared/types/pagination';
 import { logActivity } from '@/shared/lib/activity/activity-logger';
-import { formatCurrency } from '@/shared/lib/format';
+import { formatCurrency, formatDate } from '@/shared/lib/format';
+import {
+  contractAnchorDay,
+  dueDateForPeriod,
+  monthRangeOf,
+  nextPeriod,
+  rentPeriodEnd,
+  rentPeriodStart,
+} from '@/shared/lib/rent-period';
 import { getStorage } from '@/shared/lib/storage';
 import { renderStatementPdf, type StatementLine } from '@/pdf/render';
 import { getUserPreferences } from '@/shared/lib/auth/preferences';
@@ -123,10 +130,17 @@ export const statementService = {
   },
 
   /**
-   * Generate a monthly statement for a contract: charges vs payments for the
-   * period, outstanding balance, and next due date. The record is written
-   * atomically; PDF rendering + upload happen post-commit (same pattern as
-   * receipts) so slow I/O never blocks the write.
+   * Generate a statement for one of a contract's rent PERIODS: charges vs the
+   * payments that settle it, outstanding balance, and next due date. The
+   * record is written atomically; PDF rendering + upload happen post-commit
+   * (same pattern as receipts) so slow I/O never blocks the write.
+   *
+   * The owner picks a month and it resolves to that month's period on the
+   * contract's own cycle — a 15th-to-15th lease gets "15 Jul – 15 Aug", not
+   * "1–31 Jul", which is what the rest of the app has always meant by a rent
+   * period. It used to be the plain calendar month, and its payments were
+   * matched by `paidAt`: an advance payment then counted twice in the month it
+   * was PAID and left the month it COVERED showing a full balance due.
    */
   async generate(ownerId: string, input: GenerateStatementInput) {
     const contract = await prisma.contract.findFirst({
@@ -140,11 +154,20 @@ export const statementService = {
       throw new ForbiddenError('Contract not found in your account.');
     }
 
-    const periodStart = startOfMonth(input.month);
-    const periodEnd = endOfMonth(input.month);
+    const anchorDay = contractAnchorDay(contract.startDate);
+    const periodStart = rentPeriodStart(input.month, anchorDay);
+    const periodEnd = rentPeriodEnd(periodStart);
+    const withinMonth = monthRangeOf(periodStart);
 
+    // Matched by MONTH, not by an exact `periodStart`: statements written
+    // before periods followed the contract's start day sit on the 1st, and
+    // they still cover the same month.
     const existing = await prisma.statement.findFirst({
-      where: { ownerId, contractId: contract.id, periodStart },
+      where: {
+        ownerId,
+        contractId: contract.id,
+        periodStart: withinMonth,
+      },
       select: { number: true },
     });
     if (existing) {
@@ -161,7 +184,11 @@ export const statementService = {
         status: PaymentStatus.COMPLETED,
         // A rent statement reflects rent paid, not deposits held.
         type: { not: PaymentType.DEPOSIT },
-        paidAt: { gte: periodStart, lte: periodEnd },
+        // The payments that SETTLE this period, wherever they were paid from.
+        OR: [
+          { periodStart: withinMonth },
+          { periodStart: null, paidAt: withinMonth },
+        ],
       },
       orderBy: { paidAt: 'asc' },
       select: { paidAt: true, concept: true, amount: true },
@@ -170,12 +197,9 @@ export const statementService = {
     const totalCharged = Number(contract.monthlyRent);
     const totalPaid = payments.reduce((sum, p) => sum + Number(p.amount), 0);
     const outstanding = Math.max(0, totalCharged - totalPaid);
-    const dueDay = Math.min(contract.dueDay, 28);
-    const nextMonth = addMonths(periodStart, 1);
-    const nextDueDate = new Date(
-      nextMonth.getFullYear(),
-      nextMonth.getMonth(),
-      dueDay,
+    const nextDueDate = dueDateForPeriod(
+      nextPeriod(periodStart, anchorDay),
+      contract.dueDay,
     );
 
     const statement = await prisma.$transaction(async (tx) => {
@@ -264,20 +288,25 @@ export const statementService = {
       const dfOpts = locale === 'es' ? { locale: esDateLocale } : undefined;
       // Full month name: "8 de mayo" (es) / "May 8" (en).
       const lineDateFmt = locale === 'es' ? "d 'de' MMMM" : 'MMMM d';
+      // Every date here is a date-only value at UTC midnight (a period start,
+      // a due date, a payment's paidAt), so they go through the UTC-aware
+      // `formatDate` — bare date-fns `format` reads them in the server's local
+      // time and, west of UTC, prints the day before: a period starting 1 Jul
+      // would be labelled "junio".
       const t = await getTranslations({ locale, namespace: 'pdf.statement' });
 
       const money = (value: number) =>
         formatCurrency(value, params.currency, numberLocale(prefs.locale));
 
       const lines: StatementLine[] = params.lines.map((line) => ({
-        date: format(line.date, lineDateFmt, dfOpts),
+        date: formatDate(line.date, lineDateFmt, dfOpts),
         concept: line.concept,
         amount: money(line.amount),
       }));
 
       const pdf = await renderStatementPdf({
         number: params.number,
-        periodLabel: format(params.periodStart, 'MMMM yyyy', dfOpts),
+        periodLabel: formatDate(params.periodStart, 'MMMM yyyy', dfOpts),
         ownerName: owner?.name ?? owner?.email ?? 'Owner',
         tenantName: params.tenantName,
         propertyName: params.propertyName,
@@ -285,7 +314,7 @@ export const statementService = {
         totalCharged: money(params.totalCharged),
         totalPaid: money(params.totalPaid),
         outstanding: money(params.outstanding),
-        nextDueDate: format(params.nextDueDate, 'PPP', dfOpts),
+        nextDueDate: formatDate(params.nextDueDate, 'PPP', dfOpts),
         appName: clientEnv.NEXT_PUBLIC_APP_NAME,
         labels: {
           title: t('title'),
@@ -300,7 +329,7 @@ export const statementService = {
           totalPaid: t('totalPaid'),
           outstanding: t('outstanding'),
           nextDue: t('nextDue', {
-            date: format(params.nextDueDate, 'PPP', dfOpts),
+            date: formatDate(params.nextDueDate, 'PPP', dfOpts),
           }),
           generatedBy: t('generatedBy', {
             app: clientEnv.NEXT_PUBLIC_APP_NAME,
