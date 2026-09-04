@@ -56,7 +56,7 @@ export async function TenantsList({
 
   return (
     <div className="space-y-5">
-      <div className="rounded-xl border bg-card shadow-soft">
+      <div className="bg-card shadow-soft rounded-xl border">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -88,7 +88,7 @@ export async function TenantsList({
                   </Link>
                 </TableCell>
                 <TableCell>
-                  <div className="space-y-0.5 text-xs text-muted-foreground">
+                  <div className="text-muted-foreground space-y-0.5 text-xs">
                     {tenant.email ? (
                       <span className="flex items-center gap-1.5">
                         <Mail className="size-3.5" /> {tenant.email}

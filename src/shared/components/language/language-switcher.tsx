@@ -58,13 +58,13 @@ export function LanguageSwitcher({ className }: { className?: string }) {
         disabled={isPending}
         aria-label={t('label')}
         className={cn(
-          'inline-flex items-center gap-2 rounded-md border px-2.5 py-1.5 text-sm font-medium outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring',
+          'hover:bg-accent focus-visible:ring-ring inline-flex items-center gap-2 rounded-md border px-2.5 py-1.5 text-sm font-medium outline-hidden transition-colors focus-visible:ring-2',
           className,
         )}
       >
         <current.Flag />
         <span className="hidden sm:inline">{t(current.labelKey)}</span>
-        <ChevronDown className="size-3.5 text-muted-foreground" />
+        <ChevronDown className="text-muted-foreground size-3.5" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-44">
         {OPTIONS.map(({ value, Flag, labelKey }) => (

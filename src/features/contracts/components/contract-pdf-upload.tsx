@@ -57,12 +57,12 @@ export function ContractPdfUpload({
             href={pdfUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+            className="text-primary inline-flex items-center gap-2 text-sm font-medium hover:underline"
           >
             <FileText className="size-4" /> {t('view')}
           </a>
         ) : (
-          <p className="text-sm text-muted-foreground">{t('none')}</p>
+          <p className="text-muted-foreground text-sm">{t('none')}</p>
         )}
         <Button
           variant="outline"

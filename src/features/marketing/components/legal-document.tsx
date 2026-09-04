@@ -67,18 +67,18 @@ export async function LegalDocument({
     <div className="relative isolate -mt-16">
       <GridPattern fade="top" className="-z-10" />
 
-      <div className="container pb-16 pt-32 sm:pb-24 sm:pt-40">
+      <div className="container pt-32 pb-16 sm:pt-40 sm:pb-24">
         <header className="mx-auto max-w-3xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+          <p className="text-primary text-xs font-semibold tracking-[0.14em] uppercase">
             {tc('eyebrow')}
           </p>
-          <h1 className="mt-3 text-balance text-3xl font-semibold tracking-tight sm:text-5xl">
+          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-balance sm:text-5xl">
             {t('title')}
           </h1>
-          <p className="mt-4 text-sm text-muted-foreground">
+          <p className="text-muted-foreground mt-4 text-sm">
             {tc('lastUpdated')}: {t('updated')}
           </p>
-          <p className="mt-6 text-base leading-relaxed text-muted-foreground">
+          <p className="text-muted-foreground mt-6 text-base leading-relaxed">
             {t('intro')}
           </p>
         </header>
@@ -89,15 +89,15 @@ export async function LegalDocument({
               const id = slugify(section.title, index);
               return (
                 <section key={id} id={id} className="scroll-mt-24">
-                  <h2 className="text-balance text-xl font-semibold tracking-tight sm:text-2xl">
-                    <span className="mr-2 text-primary">{index + 1}.</span>
+                  <h2 className="text-xl font-semibold tracking-tight text-balance sm:text-2xl">
+                    <span className="text-primary mr-2">{index + 1}.</span>
                     {section.title}
                   </h2>
                   <div className="mt-4 space-y-4">
                     {section.body.map((paragraph) => (
                       <p
                         key={paragraph}
-                        className="text-sm leading-relaxed text-muted-foreground sm:text-[0.95rem]"
+                        className="text-muted-foreground text-sm leading-relaxed sm:text-[0.95rem]"
                       >
                         {paragraph}
                       </p>
@@ -108,11 +108,11 @@ export async function LegalDocument({
                       {section.bullets.map((bullet) => (
                         <li
                           key={bullet}
-                          className="flex gap-3 text-sm leading-relaxed text-muted-foreground"
+                          className="text-muted-foreground flex gap-3 text-sm leading-relaxed"
                         >
                           <span
                             aria-hidden
-                            className="mt-2 size-1.5 shrink-0 rounded-full bg-primary/60"
+                            className="bg-primary/60 mt-2 size-1.5 shrink-0 rounded-full"
                           />
                           <span>{bullet}</span>
                         </li>
@@ -123,13 +123,13 @@ export async function LegalDocument({
               );
             })}
 
-            <div className="rounded-2xl border bg-muted/30 p-6">
+            <div className="bg-muted/30 rounded-2xl border p-6">
               <h2 className="text-base font-semibold">{tc('contactTitle')}</h2>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
                 {tc('contactBody')}{' '}
                 <a
                   href={`mailto:${tc('contactEmail')}`}
-                  className="font-medium text-primary underline-offset-4 hover:underline"
+                  className="text-primary font-medium underline-offset-4 hover:underline"
                 >
                   {tc('contactEmail')}
                 </a>
@@ -144,7 +144,7 @@ export async function LegalDocument({
             aria-label={tc('tocLabel')}
             className="hidden lg:sticky lg:top-24 lg:block lg:self-start"
           >
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+            <p className="text-muted-foreground text-xs font-semibold tracking-[0.14em] uppercase">
               {tc('tocLabel')}
             </p>
             <ol className="mt-4 space-y-2.5 border-l">
@@ -152,7 +152,7 @@ export async function LegalDocument({
                 <li key={section.title}>
                   <a
                     href={`#${slugify(section.title, index)}`}
-                    className="-ml-px block border-l border-transparent py-0.5 pl-4 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-foreground"
+                    className="text-muted-foreground hover:border-primary hover:text-foreground -ml-px block border-l border-transparent py-0.5 pl-4 text-sm transition-colors"
                   >
                     {section.title}
                   </a>

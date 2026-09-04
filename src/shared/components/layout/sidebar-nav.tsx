@@ -20,7 +20,7 @@ export function SidebarNav() {
       {navSections.map((section, index) => (
         <div key={section.titleKey ?? index} className="space-y-1">
           {section.titleKey ? (
-            <p className="px-3 pb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground/70">
+            <p className="text-muted-foreground/70 px-3 pb-1 text-xs font-medium tracking-wide uppercase">
               {t(section.titleKey)}
             </p>
           ) : null}

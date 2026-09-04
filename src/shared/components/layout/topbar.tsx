@@ -19,7 +19,7 @@ interface TopbarProps {
 export function Topbar({ user, unreadCount = 0 }: TopbarProps) {
   const t = useTranslations('topbar');
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-2 border-b bg-background/80 px-4 backdrop-blur sm:px-6">
+    <header className="bg-background/80 sticky top-0 z-30 flex h-16 items-center gap-2 border-b px-4 backdrop-blur-sm sm:px-6">
       <MobileNav />
 
       <div className="ml-auto flex items-center gap-1.5">
@@ -41,7 +41,7 @@ export function Topbar({ user, unreadCount = 0 }: TopbarProps) {
               <Link href="/app/notifications">
                 <Bell className="size-5" />
                 {unreadCount > 0 ? (
-                  <span className="absolute right-1.5 top-1.5 flex size-2 items-center justify-center rounded-full bg-destructive" />
+                  <span className="bg-destructive absolute top-1.5 right-1.5 flex size-2 items-center justify-center rounded-full" />
                 ) : null}
                 <span className="sr-only">{t('notifications')}</span>
               </Link>

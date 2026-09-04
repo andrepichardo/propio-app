@@ -42,7 +42,7 @@ export async function StatementsList({
 
   return (
     <div className="space-y-5">
-      <div className="rounded-xl border bg-card shadow-soft">
+      <div className="bg-card shadow-soft rounded-xl border">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -67,14 +67,14 @@ export async function StatementsList({
                   <TableCell className="font-medium">
                     {statement.number}
                   </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
+                  <TableCell className="text-muted-foreground text-sm">
                     {formatDate(statement.periodStart, 'MMMM yyyy')}
                   </TableCell>
                   <TableCell>
                     <p className="text-sm font-medium">
                       {statement.property.name}
                     </p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-muted-foreground text-xs">
                       {statement.tenant.firstName} {statement.tenant.lastName}
                     </p>
                   </TableCell>
@@ -101,7 +101,7 @@ export async function StatementsList({
                         </a>
                       </Button>
                     ) : (
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-muted-foreground text-xs">
                         {t('generating')}
                       </span>
                     )}

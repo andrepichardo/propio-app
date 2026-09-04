@@ -19,7 +19,7 @@ export default async function RegisterPage() {
         <h1 className="text-2xl font-semibold tracking-tight">
           {t('register.title')}
         </h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           {t('register.subtitle')}
         </p>
       </div>
@@ -28,18 +28,18 @@ export default async function RegisterPage() {
 
       <div className="relative">
         <Separator />
-        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-2 text-xs text-muted-foreground">
+        <span className="bg-background text-muted-foreground absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-2 text-xs">
           {t('register.orSignUpEmail')}
         </span>
       </div>
 
       <RegisterForm />
 
-      <p className="text-center text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-center text-sm">
         {t('register.haveAccount')}{' '}
         <Link
           href="/login"
-          className="font-medium text-primary hover:underline"
+          className="text-primary font-medium hover:underline"
         >
           {t('register.signIn')}
         </Link>

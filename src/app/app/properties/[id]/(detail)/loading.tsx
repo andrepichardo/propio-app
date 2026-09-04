@@ -20,7 +20,7 @@ export default function PropertyDetailLoading() {
       <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
         {/* Cover image + location/description */}
         <Card className="overflow-hidden">
-          <Skeleton className="aspect-[16/9] w-full rounded-none" />
+          <Skeleton className="aspect-video w-full rounded-none" />
           <CardContent className="space-y-4 p-6">
             <div className="flex items-start gap-2">
               <Skeleton className="mt-0.5 size-4 shrink-0 rounded" />
@@ -69,7 +69,7 @@ export default function PropertyDetailLoading() {
           <Skeleton className="mb-5 h-32 w-full rounded-lg" />
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="aspect-[4/3] rounded-lg" />
+              <Skeleton key={i} className="aspect-4/3 rounded-lg" />
             ))}
           </div>
         </CardContent>

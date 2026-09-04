@@ -17,7 +17,7 @@ export default function NotificationsLoading() {
         </div>
 
         {/* Notification list */}
-        <ul className="divide-y rounded-xl border bg-card shadow-soft">
+        <ul className="bg-card shadow-soft divide-y rounded-xl border">
           {Array.from({ length: 5 }).map((_, i) => (
             <li key={i} className="flex items-start gap-3 p-4">
               <Skeleton className="mt-0.5 size-9 shrink-0 rounded-lg" />

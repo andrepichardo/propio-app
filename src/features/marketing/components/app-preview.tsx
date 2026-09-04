@@ -44,18 +44,18 @@ export function AppPreview({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        'overflow-hidden rounded-2xl border bg-card shadow-2xl shadow-primary/10 ring-1 ring-black/5 dark:ring-white/10',
+        'bg-card shadow-primary/10 overflow-hidden rounded-2xl border shadow-2xl ring-1 ring-black/5 dark:ring-white/10',
         className,
       )}
     >
       {/* Browser chrome */}
-      <div className="flex items-center gap-2 border-b bg-muted/60 px-3 py-2.5 sm:px-4">
+      <div className="bg-muted/60 flex items-center gap-2 border-b px-3 py-2.5 sm:px-4">
         <div className="flex gap-1.5">
-          <span className="size-2.5 rounded-full bg-destructive/60" />
-          <span className="size-2.5 rounded-full bg-warning/60" />
-          <span className="size-2.5 rounded-full bg-success/60" />
+          <span className="bg-destructive/60 size-2.5 rounded-full" />
+          <span className="bg-warning/60 size-2.5 rounded-full" />
+          <span className="bg-success/60 size-2.5 rounded-full" />
         </div>
-        <div className="mx-auto flex h-6 min-w-0 max-w-[15rem] flex-1 items-center justify-center rounded-md bg-background/80 px-3 text-[10px] font-medium text-muted-foreground sm:text-[11px]">
+        <div className="bg-background/80 text-muted-foreground mx-auto flex h-6 max-w-60 min-w-0 flex-1 items-center justify-center rounded-md px-3 text-[10px] font-medium sm:text-[11px]">
           <span className="truncate">usepropio.com/app</span>
         </div>
         <span className="w-[42px]" />
@@ -63,7 +63,7 @@ export function AppPreview({ className }: { className?: string }) {
 
       <div className="flex">
         {/* Sidebar */}
-        <aside className="hidden w-[10.5rem] shrink-0 flex-col gap-1 border-r bg-muted/30 p-3 sm:flex">
+        <aside className="bg-muted/30 hidden w-42 shrink-0 flex-col gap-1 border-r p-3 sm:flex">
           <div className="mb-3 px-1">
             <Logo showWordmark={false} className="h-6" />
           </div>
@@ -90,11 +90,11 @@ export function AppPreview({ className }: { className?: string }) {
               <p className="truncate text-xs font-semibold sm:text-sm">
                 {t('title')}
               </p>
-              <p className="truncate text-[10px] text-muted-foreground sm:text-[11px]">
+              <p className="text-muted-foreground truncate text-[10px] sm:text-[11px]">
                 {t('subtitle')}
               </p>
             </div>
-            <span className="hidden shrink-0 rounded-md bg-primary px-2.5 py-1.5 text-[10px] font-medium text-primary-foreground sm:inline-block">
+            <span className="bg-primary text-primary-foreground hidden shrink-0 rounded-md px-2.5 py-1.5 text-[10px] font-medium sm:inline-block">
               {t('cta')}
             </span>
           </div>
@@ -109,11 +109,11 @@ export function AppPreview({ className }: { className?: string }) {
 
           <div className="grid gap-2 lg:grid-cols-[1.55fr_1fr]">
             {/* Chart */}
-            <div className="rounded-lg border bg-background p-3">
-              <p className="text-[10px] font-medium text-muted-foreground sm:text-[11px]">
+            <div className="bg-background rounded-lg border p-3">
+              <p className="text-muted-foreground text-[10px] font-medium sm:text-[11px]">
                 {t('chartTitle')}
               </p>
-              <div className="mt-3 flex h-[4.5rem] items-end gap-[3px] sm:h-24 sm:gap-1">
+              <div className="mt-3 flex h-18 items-end gap-[3px] sm:h-24 sm:gap-1">
                 {BARS.map((height, index) => (
                   <div
                     key={index}
@@ -130,8 +130,8 @@ export function AppPreview({ className }: { className?: string }) {
             </div>
 
             {/* Upcoming payments */}
-            <div className="rounded-lg border bg-background p-3">
-              <p className="text-[10px] font-medium text-muted-foreground sm:text-[11px]">
+            <div className="bg-background rounded-lg border p-3">
+              <p className="text-muted-foreground text-[10px] font-medium sm:text-[11px]">
                 {t('upcomingTitle')}
               </p>
               <ul className="mt-2.5 space-y-2">
@@ -144,7 +144,7 @@ export function AppPreview({ className }: { className?: string }) {
                       <p className="truncate text-[10px] font-medium sm:text-[11px]">
                         {row.unit}
                       </p>
-                      <p className="text-[9px] text-muted-foreground sm:text-[10px]">
+                      <p className="text-muted-foreground text-[9px] sm:text-[10px]">
                         {row.due}
                       </p>
                     </div>
@@ -172,15 +172,15 @@ function Kpi({
   trend?: string;
 }) {
   return (
-    <div className="rounded-lg border bg-background p-2.5">
-      <p className="truncate text-[9px] text-muted-foreground sm:text-[10px]">
+    <div className="bg-background rounded-lg border p-2.5">
+      <p className="text-muted-foreground truncate text-[9px] sm:text-[10px]">
         {label}
       </p>
       <p className="mt-1 truncate text-[11px] font-semibold tabular-nums sm:text-sm">
         {value}
       </p>
       {trend ? (
-        <p className="mt-0.5 flex items-center gap-0.5 text-[9px] font-medium text-success">
+        <p className="text-success mt-0.5 flex items-center gap-0.5 text-[9px] font-medium">
           <ArrowUpRight className="size-2.5" />
           {trend}
         </p>

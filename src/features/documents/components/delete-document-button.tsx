@@ -29,7 +29,7 @@ export function DeleteDocumentButton({ documentId }: { documentId: string }) {
     <Button
       variant="ghost"
       size="icon"
-      className="size-8 text-muted-foreground hover:text-destructive"
+      className="text-muted-foreground hover:text-destructive size-8"
       loading={isPending}
       onClick={handleDelete}
       aria-label={t('deleteAria')}

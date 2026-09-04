@@ -41,7 +41,7 @@ export default async function LandingPage() {
       {/* Skip link — the page is long and anchor-heavy. */}
       <a
         href="#features"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:text-primary-foreground"
+        className="focus:bg-primary focus:text-primary-foreground sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-60 focus:rounded-md focus:px-4 focus:py-2 focus:text-sm"
       >
         {t('skipToContent')}
       </a>

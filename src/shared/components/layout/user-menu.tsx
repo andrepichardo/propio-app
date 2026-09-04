@@ -44,7 +44,7 @@ export function UserMenu({ name, email, image }: UserMenuProps) {
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          className="flex items-center gap-2 rounded-full outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          className="ring-offset-background focus-visible:ring-ring flex items-center gap-2 rounded-full outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2"
         >
           <Avatar>
             {image ? <AvatarImage src={image} alt={name ?? 'User'} /> : null}
@@ -55,11 +55,11 @@ export function UserMenu({ name, email, image }: UserMenuProps) {
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col">
-            <span className="text-sm font-medium text-foreground">
+            <span className="text-foreground text-sm font-medium">
               {name ?? t('account')}
             </span>
             {email ? (
-              <span className="truncate text-xs text-muted-foreground">
+              <span className="text-muted-foreground truncate text-xs">
                 {email}
               </span>
             ) : null}

@@ -107,7 +107,7 @@ export function ProfileForm({
             <div className="space-y-1.5">
               <Label>{t('email')}</Label>
               <Input value={email} disabled />
-              <p className="text-xs text-muted-foreground">{t('emailHint')}</p>
+              <p className="text-muted-foreground text-xs">{t('emailHint')}</p>
             </div>
           </CardContent>
         </Card>

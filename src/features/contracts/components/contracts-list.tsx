@@ -52,7 +52,7 @@ export async function ContractsList({
 
   return (
     <div className="space-y-5">
-      <div className="rounded-xl border bg-card shadow-soft">
+      <div className="bg-card shadow-soft rounded-xl border">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -75,10 +75,10 @@ export async function ContractsList({
                     {contract.property.name}
                   </Link>
                 </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
+                <TableCell className="text-muted-foreground text-sm">
                   {contract.tenant.firstName} {contract.tenant.lastName}
                 </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
+                <TableCell className="text-muted-foreground text-sm">
                   {formatDate(contract.startDate)}
                   {' – '}
                   {contract.endDate ? formatDate(contract.endDate) : t('open')}

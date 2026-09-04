@@ -57,7 +57,7 @@ export function ChangePasswordForm({ hasPassword }: { hasPassword: boolean }) {
           <CardTitle className="text-base">{t('security')}</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             {t('oauthNoPassword')}
           </p>
         </CardContent>

@@ -100,7 +100,7 @@ export function UploadDocumentDialog({
           <div className="space-y-1.5">
             <Label>
               {t('dialog.file')}
-              <span aria-hidden className="ml-0.5 text-destructive">
+              <span aria-hidden className="text-destructive ml-0.5">
                 *
               </span>
             </Label>

@@ -434,7 +434,7 @@ export function PaymentForm({
                       }}
                     />
                     {periodRejected ? (
-                      <p className="text-[0.8rem] font-medium text-destructive">
+                      <p className="text-destructive text-[0.8rem] font-medium">
                         {t(
                           periodOutsideTerm
                             ? 'form.periodOutsideTerm'

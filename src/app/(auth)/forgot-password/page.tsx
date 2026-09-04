@@ -17,16 +17,16 @@ export default async function ForgotPasswordPage() {
         <h1 className="text-2xl font-semibold tracking-tight">
           {t('forgot.title')}
         </h1>
-        <p className="text-sm text-muted-foreground">{t('forgot.subtitle')}</p>
+        <p className="text-muted-foreground text-sm">{t('forgot.subtitle')}</p>
       </div>
 
       <ForgotPasswordForm />
 
-      <p className="text-center text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-center text-sm">
         {t('forgot.remembered')}{' '}
         <Link
           href="/login"
-          className="font-medium text-primary hover:underline"
+          className="text-primary font-medium hover:underline"
         >
           {t('forgot.backToSignIn')}
         </Link>

@@ -112,7 +112,7 @@ export function ExpenseBreakdownChart({
   const t = useTranslations('reports');
   if (data.length === 0) {
     return (
-      <div className="flex h-[300px] items-center justify-center text-sm text-muted-foreground">
+      <div className="text-muted-foreground flex h-[300px] items-center justify-center text-sm">
         {t('noExpenses')}
       </div>
     );

@@ -73,7 +73,7 @@ export async function DepositCard({
 
       <CardContent className="flex flex-1 flex-col space-y-3 text-sm">
         {held <= 0 && !settlement ? (
-          <p className="py-2 text-muted-foreground">{t('noneCollected')}</p>
+          <p className="text-muted-foreground py-2">{t('noneCollected')}</p>
         ) : settlement ? (
           <>
             <Row
@@ -95,10 +95,10 @@ export async function DepositCard({
             />
             {settlement.reason ? (
               <div className="rounded-lg border p-3">
-                <p className="mb-1 text-xs font-medium text-muted-foreground">
+                <p className="text-muted-foreground mb-1 text-xs font-medium">
                   {t('reason')}
                 </p>
-                <p className="leading-relaxed text-foreground/90">
+                <p className="text-foreground/90 leading-relaxed">
                   {settlement.reason}
                 </p>
               </div>
@@ -110,7 +110,7 @@ export async function DepositCard({
               label={t('collected')}
               value={formatCurrency(held, currency)}
             />
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               {t('liabilityNote')}
             </p>
           </>

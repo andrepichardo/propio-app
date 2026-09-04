@@ -85,7 +85,7 @@ export function AvatarUploader({
             </Button>
           ) : null}
         </div>
-        <p className="text-xs text-muted-foreground">{t('photoHint')}</p>
+        <p className="text-muted-foreground text-xs">{t('photoHint')}</p>
       </div>
       <input
         ref={inputRef}

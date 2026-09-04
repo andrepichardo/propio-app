@@ -77,7 +77,7 @@ export function SiteHeader({
       className={cn(
         'sticky top-0 z-50 transition-[background-color,border-color,box-shadow] duration-300',
         scrolled || menuOpen
-          ? 'border-b bg-background/80 shadow-xs backdrop-blur-xl'
+          ? 'bg-background/80 border-b shadow-xs backdrop-blur-xl'
           : 'border-b border-transparent bg-transparent',
       )}
     >
@@ -92,7 +92,7 @@ export function SiteHeader({
             <a
               key={section.href}
               href={sectionHref(section.href)}
-              className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              className="text-muted-foreground hover:text-foreground rounded-md px-3 py-2 text-sm font-medium transition-colors"
             >
               {t(section.key)}
             </a>
@@ -129,7 +129,7 @@ export function SiteHeader({
             onClick={() => setMenuOpen((open) => !open)}
             aria-expanded={menuOpen}
             aria-label={t(menuOpen ? 'closeMenu' : 'openMenu')}
-            className="inline-flex size-9 items-center justify-center rounded-md border text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring md:hidden"
+            className="text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:ring-ring inline-flex size-9 items-center justify-center rounded-md border outline-hidden transition-colors focus-visible:ring-2 md:hidden"
           >
             {menuOpen ? <X className="size-4" /> : <Menu className="size-4" />}
           </button>
@@ -158,7 +158,7 @@ export function SiteHeader({
             initial="closed"
             animate="open"
             exit="closed"
-            className="absolute inset-x-0 top-full overflow-hidden border-b border-t bg-background/95 shadow-lg backdrop-blur-xl md:hidden"
+            className="bg-background/95 absolute inset-x-0 top-full overflow-hidden border-t border-b shadow-lg backdrop-blur-xl md:hidden"
           >
             <div className="container flex flex-col gap-1 py-4">
               {SECTIONS.map((section) => (
@@ -169,7 +169,7 @@ export function SiteHeader({
                     if (onLanding) handlePanelAnchor(event, section.href);
                     else setMenuOpen(false);
                   }}
-                  className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                  className="text-muted-foreground hover:bg-accent hover:text-foreground rounded-md px-3 py-2.5 text-sm font-medium transition-colors"
                 >
                   {t(section.key)}
                 </a>

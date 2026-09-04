@@ -91,7 +91,7 @@ export async function DashboardOverview({
           splits into two equal halves that each scroll. items-start keeps the
           chart from being stretched by anything taller beside it. */}
       <div className="grid items-start gap-6 lg:grid-cols-[1.6fr_1fr]">
-        <Card className="flex flex-col lg:h-[26rem]">
+        <Card className="flex flex-col lg:h-104">
           <CardHeader>
             <CardTitle className="text-base">
               {t('revenueVsExpenses')}
@@ -103,7 +103,7 @@ export async function DashboardOverview({
           </CardContent>
         </Card>
         {hasDeposits ? (
-          <div className="flex flex-col gap-6 lg:grid lg:h-[26rem] lg:grid-rows-2">
+          <div className="flex flex-col gap-6 lg:grid lg:h-104 lg:grid-rows-2">
             {/* Capped on mobile too so a long list doesn't run down the page;
                 on lg the grid-rows-2 height takes over (max-h-none). */}
             <UpcomingPaymentsCard
@@ -122,7 +122,7 @@ export async function DashboardOverview({
         ) : (
           // No deposits card → the payments card fills the chart's height.
           <UpcomingPaymentsCard
-            className="lg:h-[26rem]"
+            className="lg:h-104"
             payments={summary.upcomingPayments}
             formatDate={formatDate}
           />
@@ -133,12 +133,12 @@ export async function DashboardOverview({
           list. Capped (not fixed) on mobile so they don't run down the page. */}
       <div className="grid gap-6 lg:grid-cols-2">
         <ExpiringContractsCard
-          className="max-h-[22rem] lg:h-[22rem]"
+          className="max-h-88 lg:h-88"
           contracts={summary.expiringContracts}
           formatDate={formatDate}
         />
         <RecentActivityCard
-          className="max-h-[22rem] lg:h-[22rem]"
+          className="max-h-88 lg:h-88"
           activity={summary.recentActivity}
         />
       </div>

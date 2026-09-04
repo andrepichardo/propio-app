@@ -146,7 +146,7 @@ export function RenewContractDialog({
                   </Button>
                 ))}
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-muted-foreground text-xs">
                 {t('increaseHint')}
               </p>
             </div>
@@ -227,7 +227,7 @@ export function RenewContractDialog({
               )}
             />
 
-            <p className="rounded-lg border bg-muted/40 p-3 text-xs text-muted-foreground">
+            <p className="bg-muted/40 text-muted-foreground rounded-lg border p-3 text-xs">
               {t('depositNote')}
             </p>
 

@@ -251,7 +251,7 @@ function ReminderRow({
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-0.5 pr-2">
           <p className="text-sm font-medium">{title}</p>
-          <p className="text-sm text-muted-foreground">{description}</p>
+          <p className="text-muted-foreground text-sm">{description}</p>
         </div>
         <div className="pt-0.5">{toggle}</div>
       </div>
@@ -308,7 +308,7 @@ function LeadDaysField({
             !enabled && 'opacity-50',
           )}
         >
-          <span className="text-sm text-muted-foreground">
+          <span className="text-muted-foreground text-sm">
             {t('leadBefore')}
           </span>
           <FormControl>
@@ -322,7 +322,7 @@ function LeadDaysField({
               {...field}
             />
           </FormControl>
-          <span className="text-sm text-muted-foreground">
+          <span className="text-muted-foreground text-sm">
             {t('leadDaysUnit')}
           </span>
           <FormMessage className="w-full" />

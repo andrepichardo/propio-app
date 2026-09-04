@@ -43,7 +43,7 @@ export async function DocumentsList({
 
   return (
     <div className="space-y-5">
-      <div className="rounded-xl border bg-card shadow-soft">
+      <div className="bg-card shadow-soft rounded-xl border">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -65,9 +65,9 @@ export async function DocumentsList({
                       href={document.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 font-medium hover:text-primary"
+                      className="hover:text-primary flex items-center gap-2 font-medium"
                     >
-                      <Icon className="size-4 shrink-0 text-muted-foreground" />
+                      <Icon className="text-muted-foreground size-4 shrink-0" />
                       <span className="truncate">{document.name}</span>
                     </a>
                   </TableCell>
@@ -76,16 +76,16 @@ export async function DocumentsList({
                       {t(`types.${document.type}`)}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
+                  <TableCell className="text-muted-foreground text-sm">
                     {document.property?.name ??
                       (document.tenant
                         ? `${document.tenant.firstName} ${document.tenant.lastName}`
                         : '—')}
                   </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
+                  <TableCell className="text-muted-foreground text-sm">
                     {formatFileSize(document.sizeBytes)}
                   </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
+                  <TableCell className="text-muted-foreground text-sm">
                     {formatDate(document.createdAt)}
                   </TableCell>
                   <TableCell>

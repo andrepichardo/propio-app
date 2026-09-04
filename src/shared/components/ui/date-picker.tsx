@@ -77,8 +77,8 @@ export function DatePicker({
           id={id}
           disabled={disabled}
           className={cn(
-            'flex h-9 w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-1 text-left text-sm shadow-sm transition-colors',
-            'hover:border-ring focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
+            'border-input flex h-9 w-full items-center justify-between gap-2 rounded-md border bg-transparent px-3 py-1 text-left text-sm shadow-sm transition-colors',
+            'hover:border-ring focus-visible:ring-ring focus-visible:ring-1 focus-visible:outline-hidden',
             'disabled:cursor-not-allowed disabled:opacity-50',
             !selected && 'text-muted-foreground',
           )}

@@ -5,8 +5,8 @@ import { Card, CardContent, CardHeader } from '@/shared/components/ui/card';
 function UploaderControls() {
   return (
     <div className="min-w-0 flex-1 space-y-2">
-      <Skeleton className="h-8 w-full max-w-[9rem]" />
-      <Skeleton className="h-3 w-full max-w-[12rem]" />
+      <Skeleton className="h-8 w-full max-w-36" />
+      <Skeleton className="h-3 w-full max-w-48" />
     </div>
   );
 }

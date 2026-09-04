@@ -55,17 +55,17 @@ export function UseCases() {
           {PERSONAS.map((persona, index) => (
             <Reveal key={persona.key} delay={index * 0.06} className="flex">
               <SpotlightCard className="flex w-full flex-col p-6">
-                <span className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-inset ring-primary/15">
+                <span className="bg-primary/10 text-primary ring-primary/15 flex size-11 items-center justify-center rounded-xl ring-1 ring-inset">
                   <persona.icon className="size-5" />
                 </span>
                 <h3 className="mt-4 text-base font-semibold">
                   {t(`${persona.key}Title`)}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
                   {t(`${persona.key}Desc`)}
                 </p>
                 <div className="mt-auto pt-5">
-                  <span className="inline-flex items-center rounded-full border bg-muted/40 px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                  <span className="bg-muted/40 text-muted-foreground inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium">
                     {t(`${persona.key}Tag`)}
                   </span>
                 </div>

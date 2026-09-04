@@ -62,7 +62,7 @@ export function FeatureBento() {
                 <h3 className="mt-4 text-base font-semibold">
                   {t(`${tile.key}Title`)}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
                   {t(`${tile.key}Desc`)}
                 </p>
                 {'visual' in tile && tile.visual ? (
@@ -81,7 +81,7 @@ export function FeatureBento() {
 
 function FeatureIcon({ icon: Icon }: { icon: LucideIcon }) {
   return (
-    <span className="relative flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-inset ring-primary/15">
+    <span className="bg-primary/10 text-primary ring-primary/15 relative flex size-11 items-center justify-center rounded-xl ring-1 ring-inset">
       <Icon className="size-5" />
     </span>
   );
@@ -96,18 +96,18 @@ function FeatureVisual({
 
   if (kind === 'payment') {
     return (
-      <div className="flex items-center gap-3 rounded-xl border bg-muted/40 p-3">
-        <div className="min-w-0 flex-1 rounded-lg border bg-background px-3 py-2">
-          <p className="truncate text-[11px] text-muted-foreground">
+      <div className="bg-muted/40 flex items-center gap-3 rounded-xl border p-3">
+        <div className="bg-background min-w-0 flex-1 rounded-lg border px-3 py-2">
+          <p className="text-muted-foreground truncate text-[11px]">
             {t('paymentLabel')}
           </p>
           <p className="truncate text-sm font-semibold tabular-nums">
             RD$ 28,500
           </p>
         </div>
-        <ArrowRight className="size-4 shrink-0 text-muted-foreground" />
-        <div className="min-w-0 flex-1 rounded-lg border border-success/30 bg-success/5 px-3 py-2">
-          <p className="flex items-center gap-1 truncate text-[11px] text-success">
+        <ArrowRight className="text-muted-foreground size-4 shrink-0" />
+        <div className="border-success/30 bg-success/5 min-w-0 flex-1 rounded-lg border px-3 py-2">
+          <p className="text-success flex items-center gap-1 truncate text-[11px]">
             <Check className="size-3 shrink-0" />
             {t('receiptLabel')}
           </p>
@@ -119,7 +119,7 @@ function FeatureVisual({
 
   if (kind === 'chart') {
     return (
-      <div className="flex h-16 items-end gap-1.5 rounded-xl border bg-muted/40 p-3">
+      <div className="bg-muted/40 flex h-16 items-end gap-1.5 rounded-xl border p-3">
         {[38, 55, 44, 68, 60, 82, 74, 96].map((height, index) => (
           <div
             key={index}
@@ -136,10 +136,10 @@ function FeatureVisual({
 
   if (kind === 'fx') {
     return (
-      <div className="flex items-center justify-between gap-2 rounded-xl border bg-muted/40 p-3 text-sm">
+      <div className="bg-muted/40 flex items-center justify-between gap-2 rounded-xl border p-3 text-sm">
         <span className="font-semibold tabular-nums">US$ 950</span>
-        <ArrowRight className="size-3.5 shrink-0 text-muted-foreground" />
-        <span className="font-semibold tabular-nums text-primary">
+        <ArrowRight className="text-muted-foreground size-3.5 shrink-0" />
+        <span className="text-primary font-semibold tabular-nums">
           {'≈ RD$ 57,950'}
         </span>
       </div>
@@ -151,9 +151,9 @@ function FeatureVisual({
       {(['contract', 'id', 'invoice'] as const).map((doc) => (
         <span
           key={doc}
-          className="inline-flex items-center gap-1.5 rounded-lg border bg-muted/40 px-2.5 py-1.5 text-xs text-muted-foreground"
+          className="bg-muted/40 text-muted-foreground inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs"
         >
-          <ImageIcon className="size-3.5 shrink-0 text-primary" />
+          <ImageIcon className="text-primary size-3.5 shrink-0" />
           {t(doc)}
         </span>
       ))}

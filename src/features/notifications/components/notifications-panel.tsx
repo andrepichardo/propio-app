@@ -89,7 +89,7 @@ export function NotificationsPanel({
         </Button>
       </div>
 
-      <ul className="divide-y rounded-xl border bg-card shadow-soft">
+      <ul className="bg-card shadow-soft divide-y rounded-xl border">
         {notifications.map((notification) => {
           const Icon = NOTIFICATION_ICONS[notification.type];
           const unread = !notification.readAt;
@@ -99,7 +99,7 @@ export function NotificationsPanel({
               key={notification.id}
               className={cn(
                 'flex items-start gap-3 p-4 transition-colors',
-                unread && 'bg-primary/[0.03]',
+                unread && 'bg-primary/3',
               )}
             >
               <span
@@ -116,20 +116,20 @@ export function NotificationsPanel({
                 <div className="flex items-center gap-2">
                   <p className="text-sm font-medium">{title}</p>
                   {unread ? (
-                    <span className="size-1.5 rounded-full bg-primary" />
+                    <span className="bg-primary size-1.5 rounded-full" />
                   ) : null}
                 </div>
                 {body ? (
-                  <p className="text-sm text-muted-foreground">{body}</p>
+                  <p className="text-muted-foreground text-sm">{body}</p>
                 ) : null}
                 <div className="mt-1 flex items-center gap-3">
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-muted-foreground text-xs">
                     {formatRelative(notification.createdAt)}
                   </span>
                   {notification.actionUrl ? (
                     <Link
                       href={notification.actionUrl}
-                      className="text-xs font-medium text-primary hover:underline"
+                      className="text-primary text-xs font-medium hover:underline"
                     >
                       {t('view')}
                     </Link>
@@ -138,7 +138,7 @@ export function NotificationsPanel({
                     <button
                       type="button"
                       onClick={() => markRead(notification.id)}
-                      className="text-xs text-muted-foreground hover:text-foreground"
+                      className="text-muted-foreground hover:text-foreground text-xs"
                     >
                       {t('markRead')}
                     </button>

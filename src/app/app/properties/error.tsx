@@ -17,12 +17,12 @@ export default function PropertiesError({
 
   return (
     <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 text-center">
-      <div className="flex size-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+      <div className="bg-destructive/10 text-destructive flex size-12 items-center justify-center rounded-full">
         <AlertTriangle className="size-6" />
       </div>
       <div className="space-y-1">
         <h2 className="text-lg font-semibold">Couldn’t load properties</h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           Something went wrong while loading your portfolio.
         </p>
       </div>

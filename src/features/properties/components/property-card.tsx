@@ -12,8 +12,8 @@ export function PropertyCard({ property }: { property: PropertyListItem }) {
 
   return (
     <Link href={`/app/properties/${property.id}`} className="group block">
-      <Card className="overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-card">
-        <div className="relative aspect-[16/10] bg-muted">
+      <Card className="hover:shadow-card overflow-hidden transition-all hover:-translate-y-0.5">
+        <div className="bg-muted relative aspect-16/10">
           {property.coverImageUrl ? (
             <Image
               src={property.coverImageUrl}
@@ -24,23 +24,23 @@ export function PropertyCard({ property }: { property: PropertyListItem }) {
             />
           ) : (
             <div className="flex h-full items-center justify-center">
-              <Building2 className="size-9 text-muted-foreground/40" />
+              <Building2 className="text-muted-foreground/40 size-9" />
             </div>
           )}
-          <div className="absolute right-3 top-3">
+          <div className="absolute top-3 right-3">
             <PropertyStatusBadge status={property.status} />
           </div>
         </div>
         <div className="space-y-2 p-4">
           <div className="space-y-0.5">
-            <h3 className="truncate font-medium group-hover:text-primary">
+            <h3 className="group-hover:text-primary truncate font-medium">
               {property.name}
             </h3>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               {t(`types.${property.type}`)}
             </p>
           </div>
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <div className="text-muted-foreground flex items-center justify-between text-xs">
             <span className="inline-flex items-center gap-1 truncate">
               <MapPin className="size-3.5 shrink-0" />
               {location || t('noLocation')}

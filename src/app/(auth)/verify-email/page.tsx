@@ -20,26 +20,26 @@ export default async function VerifyEmailPage({
 
   return (
     <div className="flex flex-col items-center gap-4 text-center">
-      <div className="flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+      <div className="bg-primary/10 text-primary flex size-12 items-center justify-center rounded-full">
         <MailCheck className="size-6" />
       </div>
       <div className="space-y-1.5">
         <h1 className="text-2xl font-semibold tracking-tight">
           {t('verify.title')}
         </h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           {email
             ? t.rich('verify.bodyWithEmail', {
                 email,
                 b: (chunks) => (
-                  <span className="font-medium text-foreground">{chunks}</span>
+                  <span className="text-foreground font-medium">{chunks}</span>
                 ),
               })
             : t('verify.bodyNoEmail')}
         </p>
       </div>
       {email && (
-        <p className="text-xs text-muted-foreground">{t('verify.spamHint')}</p>
+        <p className="text-muted-foreground text-xs">{t('verify.spamHint')}</p>
       )}
       <ResendVerificationForm initialEmail={email} />
       <Button variant="ghost" asChild>

@@ -19,7 +19,7 @@ export default async function NotFound() {
       <div className="space-y-1">
         <p className="text-5xl font-semibold tracking-tight">404</p>
         <h1 className="text-lg font-medium">{t('title')}</h1>
-        <p className="max-w-sm text-sm text-muted-foreground">
+        <p className="text-muted-foreground max-w-sm text-sm">
           {t('description')}
         </p>
       </div>

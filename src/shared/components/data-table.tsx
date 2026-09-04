@@ -53,7 +53,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="rounded-xl border bg-card shadow-soft">
+    <div className="bg-card shadow-soft rounded-xl border">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -70,7 +70,7 @@ export function DataTable<TData, TValue>({
                         onClick={header.column.getToggleSortingHandler()}
                         className={cn(
                           'inline-flex items-center gap-1',
-                          canSort && 'cursor-pointer hover:text-foreground',
+                          canSort && 'hover:text-foreground cursor-pointer',
                         )}
                       >
                         {flexRender(
@@ -114,7 +114,7 @@ export function DataTable<TData, TValue>({
             <TableRow className="hover:bg-transparent">
               <TableCell colSpan={columns.length} className="p-0">
                 {emptyState ?? (
-                  <div className="py-12 text-center text-sm text-muted-foreground">
+                  <div className="text-muted-foreground py-12 text-center text-sm">
                     {t('noResults')}
                   </div>
                 )}

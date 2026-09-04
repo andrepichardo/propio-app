@@ -25,13 +25,13 @@ export function MobileNav() {
           <span className="sr-only">{t('openMenu')}</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="left-0 top-0 flex h-full max-w-[17rem] translate-x-0 translate-y-0 flex-col gap-0 rounded-none border-r p-0 sm:rounded-none">
+      <DialogContent className="top-0 left-0 flex h-full max-w-68 translate-x-0 translate-y-0 flex-col gap-0 rounded-none border-r p-0 sm:rounded-none">
         <DialogTitle className="sr-only">{t('menuTitle')}</DialogTitle>
         <div className="flex h-16 shrink-0 items-center border-b px-5">
           <Logo />
         </div>
         <div
-          className="scrollbar-thin flex-1 overflow-y-auto"
+          className="flex-1 scrollbar-thin overflow-y-auto"
           onClickCapture={(event) => {
             if ((event.target as Element).closest('a')) setOpen(false);
           }}

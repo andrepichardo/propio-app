@@ -39,7 +39,7 @@ export function UpcomingPaymentsCard({
         <CardTitle className="text-base">{t('upcomingPayments')}</CardTitle>
         <Link
           href="/app/payments"
-          className="text-xs font-medium text-primary hover:underline"
+          className="text-primary text-xs font-medium hover:underline"
         >
           {t('viewAll')}
         </Link>
@@ -64,7 +64,7 @@ export function UpcomingPaymentsCard({
                   <p className="truncate text-sm font-medium">
                     {payment.propertyName}
                   </p>
-                  <p className="truncate text-xs text-muted-foreground">
+                  <p className="text-muted-foreground truncate text-xs">
                     {payment.tenantName}
                   </p>
                 </div>
@@ -72,7 +72,7 @@ export function UpcomingPaymentsCard({
                   <p className="text-sm font-semibold">
                     {formatCurrency(payment.amount, payment.currency)}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     {t('due', { date: formatDate(payment.dueDate) })}
                   </p>
                 </div>
@@ -116,7 +116,7 @@ export function DepositsHeldCard({
             {approx ? '≈ ' : ''}
             {formatCurrency(total, currency)}
           </p>
-          <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
+          <p className="text-muted-foreground text-[11px] tracking-wide uppercase">
             {t('depositsTotal')}
           </p>
         </div>
@@ -130,7 +130,7 @@ export function DepositsHeldCard({
             >
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium">{item.property}</p>
-                <p className="truncate text-xs text-muted-foreground">
+                <p className="text-muted-foreground truncate text-xs">
                   {item.tenant}
                 </p>
               </div>
@@ -161,7 +161,7 @@ export function ExpiringContractsCard({
         <CardTitle className="text-base">{t('expiringContracts')}</CardTitle>
         <Link
           href="/app/contracts"
-          className="text-xs font-medium text-primary hover:underline"
+          className="text-primary text-xs font-medium hover:underline"
         >
           {t('viewAll')}
         </Link>
@@ -177,17 +177,17 @@ export function ExpiringContractsCard({
               <li key={contract.contractId}>
                 <Link
                   href={`/app/contracts/${contract.contractId}`}
-                  className="flex items-center justify-between gap-3 px-6 py-3 transition-colors hover:bg-muted/50"
+                  className="hover:bg-muted/50 flex items-center justify-between gap-3 px-6 py-3 transition-colors"
                 >
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium">
                       {contract.propertyName}
                     </p>
-                    <p className="truncate text-xs text-muted-foreground">
+                    <p className="text-muted-foreground truncate text-xs">
                       {contract.tenantName}
                     </p>
                   </div>
-                  <span className="inline-flex shrink-0 items-center gap-1 text-xs text-warning">
+                  <span className="text-warning inline-flex shrink-0 items-center gap-1 text-xs">
                     <CalendarClock className="size-3.5" />
                     {formatDate(contract.endDate)}
                   </span>
@@ -225,10 +225,10 @@ export function RecentActivityCard({
             />
           </div>
         ) : (
-          <ul className="min-h-0 flex-1 space-y-4 overflow-y-auto border-t px-6 pb-6 pt-4">
+          <ul className="min-h-0 flex-1 space-y-4 overflow-y-auto border-t px-6 pt-4 pb-6">
             {activity.map((item) => (
               <li key={item.id} className="flex gap-3">
-                <span className="mt-1.5 size-2 shrink-0 rounded-full bg-primary/60" />
+                <span className="bg-primary/60 mt-1.5 size-2 shrink-0 rounded-full" />
                 <div className="min-w-0">
                   {/* Rows recorded before i18n only carry the English summary. */}
                   <p className="text-sm">
@@ -236,7 +236,7 @@ export function RecentActivityCard({
                       ? tActivity(item.messageKey, item.params)
                       : item.summary}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     {formatRelative(item.createdAt)}
                   </p>
                 </div>

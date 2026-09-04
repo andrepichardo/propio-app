@@ -57,10 +57,10 @@ export function ResetPasswordForm({
 
   if (done) {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-xl border bg-muted/30 p-6 text-center">
-        <CheckCircle2 className="size-8 text-success" />
+      <div className="bg-muted/30 flex flex-col items-center gap-3 rounded-xl border p-6 text-center">
+        <CheckCircle2 className="text-success size-8" />
         <p className="font-medium">{t('reset.doneTitle')}</p>
-        <p className="text-sm text-muted-foreground">{t('reset.doneBody')}</p>
+        <p className="text-muted-foreground text-sm">{t('reset.doneBody')}</p>
       </div>
     );
   }
@@ -107,10 +107,10 @@ export function ResetPasswordForm({
         <Button type="submit" className="w-full" loading={isPending}>
           {t('reset.submit')}
         </Button>
-        <p className="text-center text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-center text-sm">
           <Link
             href="/login"
-            className="font-medium text-primary hover:underline"
+            className="text-primary font-medium hover:underline"
           >
             {t('reset.backToSignIn')}
           </Link>

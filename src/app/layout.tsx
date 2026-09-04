@@ -7,7 +7,10 @@ import './globals.css';
 
 const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-sans',
+  // Its own variable, NOT --font-sans: that one is Tailwind's theme token,
+  // and `--font-sans: var(--font-sans)` is a circular reference that drops
+  // the fallback stack.
+  variable: '--font-inter',
   display: 'swap',
 });
 

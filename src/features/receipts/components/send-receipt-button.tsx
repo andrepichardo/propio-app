@@ -43,7 +43,7 @@ export function SendReceiptButton({
     return (
       <span
         title={t('noTenantEmail')}
-        className="inline-flex size-9 items-center justify-center text-muted-foreground/40"
+        className="text-muted-foreground/40 inline-flex size-9 items-center justify-center"
       >
         <MailX className="size-4" />
         <span className="sr-only">{t('noTenantEmail')}</span>

@@ -102,7 +102,7 @@ export function PropertyPhotos({
           />
         </div>
         {photos.length === 0 ? (
-          <p className="py-6 text-center text-sm text-muted-foreground">
+          <p className="text-muted-foreground py-6 text-center text-sm">
             {t('empty')}
           </p>
         ) : (
@@ -110,7 +110,7 @@ export function PropertyPhotos({
             {photos.map((photo, index) => (
               <div
                 key={photo.id}
-                className="group relative aspect-[4/3] overflow-hidden rounded-lg border bg-muted"
+                className="group bg-muted relative aspect-4/3 overflow-hidden rounded-lg border"
               >
                 <Image
                   src={photo.url}
@@ -126,7 +126,7 @@ export function PropertyPhotos({
                   aria-label={t('view')}
                   className="absolute inset-0 z-10 cursor-zoom-in"
                 />
-                <span className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black/70 to-transparent px-2 py-1 text-xs font-medium text-white">
+                <span className="pointer-events-none absolute right-0 bottom-0 left-0 z-10 bg-linear-to-t from-black/70 to-transparent px-2 py-1 text-xs font-medium text-white">
                   {formatDate(photo.createdAt)}
                 </span>
                 <button
@@ -134,7 +134,7 @@ export function PropertyPhotos({
                   onClick={() => removePhoto(photo.id)}
                   disabled={deletePending}
                   aria-label={t('deleteAria')}
-                  className="absolute right-2 top-2 z-20 rounded-md bg-background/90 p-1.5 opacity-0 shadow-soft transition-opacity hover:text-destructive focus-visible:opacity-100 group-hover:opacity-100"
+                  className="bg-background/90 shadow-soft hover:text-destructive absolute top-2 right-2 z-20 rounded-md p-1.5 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
                 >
                   <Trash2 className="size-4" />
                 </button>
