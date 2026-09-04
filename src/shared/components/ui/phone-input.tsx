@@ -47,8 +47,8 @@ function CountrySelect({
   return (
     <div
       className={cn(
-        'relative inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-input bg-background px-2.5',
-        'focus-within:ring-1 focus-within:ring-ring',
+        'border-input bg-background relative inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border px-2.5',
+        'focus-within:ring-ring focus-within:ring-1',
         disabled && 'cursor-not-allowed opacity-50',
       )}
     >
@@ -56,10 +56,10 @@ function CountrySelect({
         {value ? (
           <Flag country={value} label={value} />
         ) : (
-          <Globe className="size-4 text-muted-foreground" />
+          <Globe className="text-muted-foreground size-4" />
         )}
       </span>
-      <ChevronDown className="size-3.5 text-muted-foreground" />
+      <ChevronDown className="text-muted-foreground size-3.5" />
       <select
         className="absolute inset-0 cursor-pointer opacity-0"
         value={value ?? ''}

@@ -135,15 +135,15 @@ export function FileDropzone(props: FileDropzoneProps) {
   if (value) {
     return (
       <div className="space-y-2">
-        <div className="flex items-center justify-between gap-3 rounded-lg border bg-muted/30 p-3">
+        <div className="bg-muted/30 flex items-center justify-between gap-3 rounded-lg border p-3">
           <span className="flex min-w-0 items-center gap-2">
-            <FileText className="size-4 shrink-0 text-muted-foreground" />
+            <FileText className="text-muted-foreground size-4 shrink-0" />
             {value.url ? (
               <a
                 href={value.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="truncate text-sm font-medium text-primary hover:underline"
+                className="text-primary truncate text-sm font-medium hover:underline"
               >
                 {value.name}
               </a>
@@ -187,7 +187,7 @@ export function FileDropzone(props: FileDropzoneProps) {
         className={cn(
           'flex w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-4 py-8 text-center transition-colors',
           'hover:border-primary/50 hover:bg-muted/40',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+          'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden',
           dragging && 'border-primary bg-primary/5',
           error && !dragging && 'border-destructive/60',
           busy &&
@@ -196,14 +196,14 @@ export function FileDropzone(props: FileDropzoneProps) {
       >
         {uploading ? (
           <>
-            <Paperclip className="size-6 animate-pulse text-muted-foreground" />
+            <Paperclip className="text-muted-foreground size-6 animate-pulse" />
             <span className="text-sm font-medium">{t('uploading')}</span>
           </>
         ) : (
           <>
             <UploadCloud
               className={cn(
-                'size-6 text-muted-foreground transition-colors',
+                'text-muted-foreground size-6 transition-colors',
                 dragging && 'text-primary',
               )}
             />
@@ -212,7 +212,7 @@ export function FileDropzone(props: FileDropzoneProps) {
                 ? t(multiple ? 'dropHereMany' : 'dropHere')
                 : t(multiple ? 'ctaMany' : 'cta')}
             </span>
-            <span className="text-xs text-muted-foreground">
+            <span className="text-muted-foreground text-xs">
               {hint ?? t(multiple ? 'hintMany' : 'hint', { mb: maxMb })}
             </span>
           </>
@@ -231,7 +231,7 @@ export function FileDropzone(props: FileDropzoneProps) {
         }}
       />
 
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && <p className="text-destructive text-sm">{error}</p>}
     </div>
   );
 }

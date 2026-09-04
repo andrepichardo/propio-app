@@ -42,11 +42,11 @@ export function ForgotPasswordForm() {
 
   if (sent) {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-xl border bg-muted/30 p-6 text-center">
-        <CheckCircle2 className="size-8 text-success" />
+      <div className="bg-muted/30 flex flex-col items-center gap-3 rounded-xl border p-6 text-center">
+        <CheckCircle2 className="text-success size-8" />
         <div className="space-y-1">
           <p className="font-medium">{t('forgot.sentTitle')}</p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             {t('forgot.sentBody')}
           </p>
         </div>

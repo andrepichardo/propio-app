@@ -37,15 +37,15 @@ export function CapabilityStrip() {
   const t = useTranslations('landing.capabilities');
 
   return (
-    <section className="relative border-y bg-muted/30 py-5">
+    <section className="bg-muted/30 relative border-y py-5">
       <p className="sr-only">{t('srTitle')}</p>
       <Marquee duration={55}>
         {CAPABILITIES.map((capability) => (
           <span
             key={capability.key}
-            className="mx-3 inline-flex items-center gap-2 whitespace-nowrap rounded-full border bg-background/70 px-4 py-2 text-sm font-medium text-muted-foreground shadow-xs"
+            className="bg-background/70 text-muted-foreground mx-3 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium whitespace-nowrap shadow-xs"
           >
-            <capability.icon className="size-4 shrink-0 text-primary" />
+            <capability.icon className="text-primary size-4 shrink-0" />
             {t(capability.key)}
           </span>
         ))}

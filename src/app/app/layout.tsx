@@ -58,13 +58,13 @@ export default async function AppLayout({
 
   return (
     <div className="min-h-screen lg:grid lg:grid-cols-[16rem_minmax(0,1fr)]">
-      <aside className="sticky top-0 hidden h-screen flex-col border-r bg-card lg:flex">
+      <aside className="bg-card sticky top-0 hidden h-screen flex-col border-r lg:flex">
         <div className="flex h-16 items-center border-b px-5">
           <Link href="/app">
             <Logo />
           </Link>
         </div>
-        <div className="scrollbar-thin flex-1 overflow-y-auto">
+        <div className="flex-1 scrollbar-thin overflow-y-auto">
           <SidebarNav />
         </div>
       </aside>

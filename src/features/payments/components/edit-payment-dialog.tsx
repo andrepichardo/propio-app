@@ -165,7 +165,7 @@ export function EditPaymentDialog({ payment }: { payment: EditablePayment }) {
         <Button
           variant="ghost"
           size="icon"
-          className="size-8 text-muted-foreground hover:text-foreground"
+          className="text-muted-foreground hover:text-foreground size-8"
           aria-label={t('editAria')}
         >
           <Pencil className="size-4" />
@@ -364,7 +364,7 @@ export function EditPaymentDialog({ payment }: { payment: EditablePayment }) {
               )}
             />
 
-            <p className="rounded-lg border bg-muted/40 p-3 text-xs text-muted-foreground sm:col-span-2">
+            <p className="bg-muted/40 text-muted-foreground rounded-lg border p-3 text-xs sm:col-span-2">
               {t('edit.receiptNote')}
             </p>
 

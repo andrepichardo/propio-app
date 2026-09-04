@@ -17,17 +17,17 @@ export function FinalCta({ authed }: { authed: boolean }) {
   return (
     <section className="relative py-20 sm:py-28">
       <div className="container">
-        <Reveal className="relative isolate overflow-hidden rounded-3xl border bg-card px-6 py-16 text-center shadow-card sm:px-12 sm:py-20">
+        <Reveal className="bg-card shadow-card relative isolate overflow-hidden rounded-3xl border px-6 py-16 text-center sm:px-12 sm:py-20">
           <Aurora intensity="soft" />
           <GridPattern fade="center" />
 
           <div className="relative mx-auto flex max-w-2xl flex-col items-center">
             <Logo showWordmark={false} className="h-11" />
 
-            <h2 className="mt-7 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h2 className="mt-7 text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
               {t('title')}
             </h2>
-            <p className="mt-4 text-balance text-base text-muted-foreground sm:text-lg">
+            <p className="text-muted-foreground mt-4 text-base text-balance sm:text-lg">
               {t('description')}
             </p>
 
@@ -35,7 +35,7 @@ export function FinalCta({ authed }: { authed: boolean }) {
               <Button
                 size="lg"
                 asChild
-                className="group shadow-lg shadow-primary/20"
+                className="group shadow-primary/20 shadow-lg"
               >
                 <Link href={authed ? '/app' : '/register'}>
                   {authed ? t('dashboard') : t('primary')}
@@ -49,10 +49,10 @@ export function FinalCta({ authed }: { authed: boolean }) {
               ) : null}
             </div>
 
-            <ul className="mt-8 flex flex-col items-center gap-3 text-sm text-muted-foreground sm:flex-row sm:gap-6">
+            <ul className="text-muted-foreground mt-8 flex flex-col items-center gap-3 text-sm sm:flex-row sm:gap-6">
               {POINTS.map((point) => (
                 <li key={point} className="flex items-center gap-2">
-                  <Check className="size-4 shrink-0 text-primary" />
+                  <Check className="text-primary size-4 shrink-0" />
                   {t(point)}
                 </li>
               ))}

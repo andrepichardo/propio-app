@@ -70,7 +70,7 @@ function Panel({
       className={cn(
         'h-full rounded-2xl border p-6 sm:p-7',
         isAfter
-          ? 'border-primary/30 bg-card shadow-card ring-1 ring-inset ring-primary/10'
+          ? 'border-primary/30 bg-card shadow-card ring-primary/10 ring-1 ring-inset'
           : 'bg-muted/30',
       )}
     >
@@ -87,7 +87,7 @@ function Panel({
         </span>
         <div className="min-w-0">
           <p className="text-sm font-semibold">{label}</p>
-          <p className="truncate text-xs text-muted-foreground">{caption}</p>
+          <p className="text-muted-foreground truncate text-xs">{caption}</p>
         </div>
       </div>
 

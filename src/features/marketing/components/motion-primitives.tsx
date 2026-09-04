@@ -96,7 +96,7 @@ export function Marquee({
     <div
       className={cn(
         'group relative flex overflow-hidden',
-        '[mask-image:linear-gradient(to_right,transparent,#000_8%,#000_92%,transparent)]',
+        'mask-[linear-gradient(to_right,transparent,#000_8%,#000_92%,transparent)]',
         className,
       )}
     >

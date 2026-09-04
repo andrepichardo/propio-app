@@ -15,8 +15,8 @@ export function ReportsDataSkeleton() {
         ))}
       </div>
       <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-        <Skeleton className="h-[22rem] rounded-xl" />
-        <Skeleton className="h-[22rem] rounded-xl" />
+        <Skeleton className="h-88 rounded-xl" />
+        <Skeleton className="h-88 rounded-xl" />
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ import { cn } from '@/shared/lib/utils';
  * Rounded corners come from an HTML wrapper with `overflow-hidden` (reliable
  * across browsers) rather than an SVG clipPath (whose ids can collide).
  *
- * The inner svg sizes with `!size-full`: menu/button containers apply generic
+ * The inner svg sizes with `size-full!`: menu/button containers apply generic
  * icon rules like `[&_svg]:size-4` that would otherwise squash the flag.
  */
 function FlagFrame({
@@ -49,7 +49,7 @@ export function FlagUS({
     <FlagFrame label={label} className={className}>
       <svg
         viewBox="0 0 20 14"
-        className="block !size-full"
+        className="block size-full!"
         preserveAspectRatio="none"
       >
         <rect width="20" height="14" fill="#fff" />
@@ -82,7 +82,7 @@ export function FlagDO({
     <FlagFrame label={label} className={className}>
       <svg
         viewBox="0 0 20 14"
-        className="block !size-full"
+        className="block size-full!"
         preserveAspectRatio="none"
       >
         {/* White cross background shows through the gaps between quadrants. */}

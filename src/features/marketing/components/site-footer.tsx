@@ -39,12 +39,12 @@ export async function SiteFooter({ authed }: { authed: boolean }) {
   ];
 
   return (
-    <footer className="border-t bg-muted/25">
+    <footer className="bg-muted/25 border-t">
       <div className="container py-14">
         <div className="grid gap-10 md:grid-cols-[minmax(0,1.4fr)_repeat(3,minmax(0,1fr))]">
           <div className="min-w-0">
             <Logo />
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
+            <p className="text-muted-foreground mt-4 max-w-xs text-sm leading-relaxed">
               {t('tagline')}
             </p>
           </div>
@@ -72,10 +72,10 @@ export async function SiteFooter({ authed }: { authed: boolean }) {
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t pt-6 sm:flex-row">
-          <p className="text-center text-sm text-muted-foreground sm:text-left">
+          <p className="text-muted-foreground text-center text-sm sm:text-left">
             © {new Date().getFullYear()} Propio. {t('rights')}
           </p>
-          <p className="text-center text-sm text-muted-foreground sm:text-right">
+          <p className="text-muted-foreground text-center text-sm sm:text-right">
             {t('madeIn')}
           </p>
         </div>

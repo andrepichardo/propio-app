@@ -23,7 +23,7 @@ export default async function ResetPasswordPage({
         <h1 className="text-2xl font-semibold tracking-tight">
           {t('reset.invalidTitle')}
         </h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           {t('reset.invalidBody')}
         </p>
         <Button asChild>
@@ -39,7 +39,7 @@ export default async function ResetPasswordPage({
         <h1 className="text-2xl font-semibold tracking-tight">
           {t('reset.title')}
         </h1>
-        <p className="text-sm text-muted-foreground">{t('reset.subtitle')}</p>
+        <p className="text-muted-foreground text-sm">{t('reset.subtitle')}</p>
       </div>
       <ResetPasswordForm token={token} email={email} />
     </div>

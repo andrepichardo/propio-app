@@ -36,11 +36,11 @@ export function StatCard({
 
   return (
     <Card
-      className={cn('h-full transition-shadow hover:shadow-card', className)}
+      className={cn('hover:shadow-card h-full transition-shadow', className)}
     >
       <CardContent className="flex h-full flex-col p-5">
         <div className="flex items-start justify-between">
-          <p className="text-sm font-medium text-muted-foreground">{label}</p>
+          <p className="text-muted-foreground text-sm font-medium">{label}</p>
           {Icon ? (
             <span
               className={cn(
@@ -54,7 +54,7 @@ export function StatCard({
         </div>
         {/* The value owns the full card width; trend/hint live below so long
             amounts only wrap as a last resort. */}
-        <p className="mt-3 min-w-0 break-words text-xl font-semibold tracking-tight xl:text-2xl">
+        <p className="mt-3 min-w-0 text-xl font-semibold tracking-tight wrap-break-word xl:text-2xl">
           {value}
         </p>
         {/* mt-auto pins the footer to the bottom so secondary text aligns
@@ -77,7 +77,7 @@ export function StatCard({
               </span>
             ) : null}
             {hint ? (
-              <p className="text-xs text-muted-foreground">{hint}</p>
+              <p className="text-muted-foreground text-xs">{hint}</p>
             ) : null}
           </div>
         ) : null}

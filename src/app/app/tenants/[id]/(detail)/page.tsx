@@ -68,12 +68,12 @@ export default async function TenantDetailPage({
               <div className="space-y-0.5">
                 <p className="font-semibold">{fullName}</p>
                 {tenant.email ? (
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     {tenant.email}
                   </p>
                 ) : null}
                 {tenant.phone ? (
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     {formatPhone(tenant.phone)}
                   </p>
                 ) : null}
@@ -96,7 +96,7 @@ export default async function TenantDetailPage({
                 href={`/app/documents?tenantId=${tenant.id}`}
               />
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               {t('since', {
                 date: formatter.dateTime(tenant.createdAt, {
                   dateStyle: 'medium',
@@ -157,7 +157,7 @@ export default async function TenantDetailPage({
               <CardHeader>
                 <CardTitle className="text-base">{t('notes')}</CardTitle>
               </CardHeader>
-              <CardContent className="text-sm leading-relaxed text-foreground/90">
+              <CardContent className="text-foreground/90 text-sm leading-relaxed">
                 {tenant.notes}
               </CardContent>
             </Card>
@@ -180,10 +180,10 @@ function Stat({
   return (
     <Link
       href={href}
-      className="rounded-lg bg-muted/40 px-2 py-2.5 text-center transition-colors hover:bg-muted"
+      className="bg-muted/40 hover:bg-muted rounded-lg px-2 py-2.5 text-center transition-colors"
     >
-      <p className="text-lg font-semibold leading-none">{value}</p>
-      <p className="mt-1 truncate text-xs text-muted-foreground">{label}</p>
+      <p className="text-lg leading-none font-semibold">{value}</p>
+      <p className="text-muted-foreground mt-1 truncate text-xs">{label}</p>
     </Link>
   );
 }
@@ -199,7 +199,7 @@ function Row({
 }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="inline-flex items-center gap-2 text-muted-foreground">
+      <span className="text-muted-foreground inline-flex items-center gap-2">
         <Icon className="size-4" /> {label}
       </span>
       <span className="font-medium">{value || '—'}</span>

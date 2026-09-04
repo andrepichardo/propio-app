@@ -77,11 +77,11 @@ export function Hero({ authed }: { authed: boolean }) {
   // out, so the aurora and grid paint BEHIND it while it is still transparent —
   // otherwise the page opens with a flat strip above the gradient.
   return (
-    <section className="relative isolate -mt-16 overflow-hidden pb-16 pt-[7.5rem] sm:pb-24 sm:pt-36">
+    <section className="relative isolate -mt-16 overflow-hidden pt-30 pb-16 sm:pt-36 sm:pb-24">
       <Aurora />
       <GridPattern />
 
-      <div className="container relative">
+      <div className="relative container">
         {/* max-w-4xl, not 3xl, so the HEADLINE gets two lines in both locales.
             At 3xl (768px) "Gestiona tus propiedades" lands within a few px of
             the limit at lg's 4.25rem and spills to a third line, while the
@@ -94,9 +94,9 @@ export function Hero({ authed }: { authed: boolean }) {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: EASE }}
-            className="inline-flex items-center gap-1.5 rounded-full border bg-background/70 px-3 py-1 text-xs font-medium text-muted-foreground shadow-xs backdrop-blur"
+            className="bg-background/70 text-muted-foreground inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium shadow-xs backdrop-blur-sm"
           >
-            <ShieldCheck className="size-3.5 text-primary" />
+            <ShieldCheck className="text-primary size-3.5" />
             {t('badge')}
           </motion.span>
 
@@ -104,11 +104,11 @@ export function Hero({ authed }: { authed: boolean }) {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.06, ease: EASE }}
-            className="mt-6 text-balance text-4xl font-semibold leading-[1.06] tracking-tight sm:text-6xl lg:text-[4.25rem]"
+            className="mt-6 text-4xl leading-[1.06] font-semibold tracking-tight text-balance sm:text-6xl lg:text-[4.25rem]"
           >
             {t('heroTitleLead')}{' '}
             <span className="relative inline-block">
-              <span className="bg-gradient-to-br from-primary via-primary to-violet-500 bg-clip-text text-transparent dark:from-primary dark:via-violet-300 dark:to-sky-300">
+              <span className="from-primary via-primary dark:from-primary bg-linear-to-br to-violet-500 bg-clip-text text-transparent dark:via-violet-300 dark:to-sky-300">
                 {t('heroTitleAccent')}
               </span>
               {/* Hand-drawn underline that sweeps in after the headline lands. */}
@@ -116,7 +116,7 @@ export function Hero({ authed }: { authed: boolean }) {
                 aria-hidden
                 viewBox="0 0 300 12"
                 preserveAspectRatio="none"
-                className="absolute -bottom-1 left-0 h-2.5 w-full text-primary/40"
+                className="text-primary/40 absolute -bottom-1 left-0 h-2.5 w-full"
               >
                 <motion.path
                   d="M2 8.5C48 3.5 104 2 150 3.5S250 8 298 4"
@@ -136,7 +136,7 @@ export function Hero({ authed }: { authed: boolean }) {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.14, ease: EASE }}
-            className="mt-6 max-w-2xl text-balance text-base text-muted-foreground sm:text-lg"
+            className="text-muted-foreground mt-6 max-w-2xl text-base text-balance sm:text-lg"
           >
             {t('heroSubtitle')}
           </motion.p>
@@ -150,7 +150,7 @@ export function Hero({ authed }: { authed: boolean }) {
             <Button
               size="lg"
               asChild
-              className="group shadow-lg shadow-primary/20"
+              className="group shadow-primary/20 shadow-lg"
             >
               <Link href={authed ? '/app' : '/register'}>
                 {authed ? t('goToDashboard') : t('startFree')}
@@ -161,7 +161,7 @@ export function Hero({ authed }: { authed: boolean }) {
               size="lg"
               variant="outline"
               asChild
-              className="backdrop-blur"
+              className="backdrop-blur-sm"
             >
               {/* Plain anchor, not `next/link` — see the note in site-header. */}
               <a href="#how-it-works">
@@ -175,7 +175,7 @@ export function Hero({ authed }: { authed: boolean }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.34 }}
-            className="mt-5 text-xs text-muted-foreground"
+            className="text-muted-foreground mt-5 text-xs"
           >
             {t('heroReassurance')}
           </motion.p>
@@ -192,7 +192,7 @@ export function Hero({ authed }: { authed: boolean }) {
           {/* Glow pooling under the shot, so it reads as lifted off the page. */}
           <div
             aria-hidden
-            className="absolute inset-x-6 -bottom-6 h-24 rounded-[50%] bg-primary/25 blur-3xl"
+            className="bg-primary/25 absolute inset-x-6 -bottom-6 h-24 rounded-[50%] blur-3xl"
           />
 
           <motion.div
@@ -211,16 +211,16 @@ export function Hero({ authed }: { authed: boolean }) {
           <FloatingChip
             drift={driftFast}
             reduce={reduce}
-            className="-left-10 top-24"
-            icon={<CheckCircle2 className="size-4 text-success" />}
+            className="top-24 -left-10"
+            icon={<CheckCircle2 className="text-success size-4" />}
             title={t('hero.floatReceiptTitle')}
             caption={t('hero.floatReceiptCaption')}
           />
           <FloatingChip
             drift={driftMid}
             reduce={reduce}
-            className="-right-12 top-14"
-            icon={<BellRing className="size-4 text-primary" />}
+            className="top-14 -right-12"
+            icon={<BellRing className="text-primary size-4" />}
             title={t('hero.floatReminderTitle')}
             caption={t('hero.floatReminderCaption')}
           />
@@ -229,7 +229,7 @@ export function Hero({ authed }: { authed: boolean }) {
             reduce={reduce}
             className="-right-8 bottom-10"
             icon={
-              <span className="text-[13px] font-semibold text-primary">
+              <span className="text-primary text-[13px] font-semibold">
                 {'≈'}
               </span>
             }
@@ -265,13 +265,13 @@ function FloatingChip({
       transition={{ duration: 0.6, delay: 0.5, ease: EASE }}
       className={cn('absolute z-10 hidden lg:block', className)}
     >
-      <div className="flex items-center gap-2.5 rounded-xl border bg-background/85 px-3 py-2.5 shadow-card backdrop-blur-md">
-        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted">
+      <div className="bg-background/85 shadow-card flex items-center gap-2.5 rounded-xl border px-3 py-2.5 backdrop-blur-md">
+        <span className="bg-muted flex size-8 shrink-0 items-center justify-center rounded-lg">
           {icon}
         </span>
         <div className="min-w-0">
-          <p className="whitespace-nowrap text-xs font-semibold">{title}</p>
-          <p className="whitespace-nowrap text-[11px] text-muted-foreground">
+          <p className="text-xs font-semibold whitespace-nowrap">{title}</p>
+          <p className="text-muted-foreground text-[11px] whitespace-nowrap">
             {caption}
           </p>
         </div>

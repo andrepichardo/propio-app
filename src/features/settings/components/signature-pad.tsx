@@ -193,7 +193,7 @@ export function SignaturePad({ onSave }: { onSave: (file: File) => void }) {
           <canvas
             ref={canvasRef}
             style={{ touchAction: 'none' }}
-            className="block aspect-[600/220] w-full cursor-crosshair"
+            className="block aspect-600/220 w-full cursor-crosshair"
             onPointerDown={onDown}
             onPointerMove={onMove}
             onPointerUp={onUp}

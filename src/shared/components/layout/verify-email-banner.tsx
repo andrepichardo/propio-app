@@ -29,9 +29,9 @@ export function VerifyEmailBanner() {
   }
 
   return (
-    <div className="flex items-center justify-between gap-3 border-b bg-warning/10 px-4 py-2.5 text-sm sm:px-6">
-      <p className="flex items-center gap-2 text-foreground/90">
-        <MailWarning className="size-4 shrink-0 text-warning" />
+    <div className="bg-warning/10 flex items-center justify-between gap-3 border-b px-4 py-2.5 text-sm sm:px-6">
+      <p className="text-foreground/90 flex items-center gap-2">
+        <MailWarning className="text-warning size-4 shrink-0" />
         {t('message')}
       </p>
       <Button

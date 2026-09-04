@@ -97,7 +97,7 @@ export default async function PropertyDetailPage({
 
       <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
         <Card className="overflow-hidden">
-          <div className="relative aspect-[16/9] bg-muted">
+          <div className="bg-muted relative aspect-video">
             {property.coverImageUrl ? (
               <Image
                 src={property.coverImageUrl}
@@ -108,28 +108,28 @@ export default async function PropertyDetailPage({
               />
             ) : (
               <div className="flex h-full items-center justify-center">
-                <Building2 className="size-12 text-muted-foreground/40" />
+                <Building2 className="text-muted-foreground/40 size-12" />
               </div>
             )}
-            <div className="absolute left-4 top-4">
+            <div className="absolute top-4 left-4">
               <PropertyStatusBadge status={property.status} />
             </div>
           </div>
           <CardContent className="space-y-4 p-6">
-            <div className="flex items-start gap-2 text-sm text-muted-foreground">
+            <div className="text-muted-foreground flex items-start gap-2 text-sm">
               <MapPin className="mt-0.5 size-4 shrink-0" />
               <span>{location || t('noLocation')}</span>
             </div>
             {property.description ? (
-              <p className="text-sm leading-relaxed text-foreground/90">
+              <p className="text-foreground/90 text-sm leading-relaxed">
                 {property.description}
               </p>
             ) : (
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 {t('detail.noDescription')}
               </p>
             )}
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               {t('detail.added', { date: formatDate(property.createdAt) })}
             </p>
           </CardContent>
@@ -139,11 +139,11 @@ export default async function PropertyDetailPage({
           <div className="grid grid-cols-3 gap-3">
             {stats.map((stat) => (
               <Link key={stat.label} href={stat.href} className="group">
-                <Card className="transition-colors group-hover:border-primary/40 group-hover:bg-muted/40">
+                <Card className="group-hover:border-primary/40 group-hover:bg-muted/40 transition-colors">
                   <CardContent className="flex flex-col items-center gap-1 p-4 text-center">
-                    <stat.icon className="size-5 text-muted-foreground transition-colors group-hover:text-primary" />
+                    <stat.icon className="text-muted-foreground group-hover:text-primary size-5 transition-colors" />
                     <p className="text-xl font-semibold">{stat.value}</p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-muted-foreground text-xs">
                       {stat.label}
                     </p>
                   </CardContent>

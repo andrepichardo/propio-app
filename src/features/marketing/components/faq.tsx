@@ -26,7 +26,7 @@ export function Faq() {
   return (
     <section
       id="faq"
-      className="relative scroll-mt-6 border-t bg-muted/25 py-20 sm:scroll-mt-0 sm:py-28"
+      className="bg-muted/25 relative scroll-mt-6 border-t py-20 sm:scroll-mt-0 sm:py-28"
     >
       <div className="container">
         <SectionHeading
@@ -35,7 +35,7 @@ export function Faq() {
           description={t('description')}
         />
 
-        <Reveal className="mx-auto mt-14 max-w-3xl divide-y overflow-hidden rounded-2xl border bg-card">
+        <Reveal className="bg-card mx-auto mt-14 max-w-3xl divide-y overflow-hidden rounded-2xl border">
           {QUESTIONS.map((key) => {
             const isOpen = open === key;
             return (
@@ -47,7 +47,7 @@ export function Faq() {
                     aria-expanded={isOpen}
                     aria-controls={`faq-panel-${key}`}
                     onClick={() => setOpen(isOpen ? null : key)}
-                    className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left outline-none transition-colors hover:bg-accent/50 focus-visible:bg-accent/50 sm:px-6"
+                    className="hover:bg-accent/50 focus-visible:bg-accent/50 flex w-full items-center justify-between gap-4 px-5 py-5 text-left outline-hidden transition-colors sm:px-6"
                   >
                     <span className="text-sm font-medium sm:text-base">
                       {t(`${key}.q`)}
@@ -55,8 +55,8 @@ export function Faq() {
                     <Plus
                       aria-hidden
                       className={cn(
-                        'size-4 shrink-0 text-muted-foreground transition-transform duration-300',
-                        isOpen && 'rotate-45 text-primary',
+                        'text-muted-foreground size-4 shrink-0 transition-transform duration-300',
+                        isOpen && 'text-primary rotate-45',
                       )}
                     />
                   </button>
@@ -75,7 +75,7 @@ export function Faq() {
                       transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                       className="overflow-hidden"
                     >
-                      <p className="px-5 pb-5 text-sm leading-relaxed text-muted-foreground sm:px-6">
+                      <p className="text-muted-foreground px-5 pb-5 text-sm leading-relaxed sm:px-6">
                         {t(`${key}.a`)}
                       </p>
                     </motion.div>
@@ -90,12 +90,12 @@ export function Faq() {
             locale, not a code change. */}
         <Reveal
           delay={0.1}
-          className="mt-8 text-center text-sm text-muted-foreground"
+          className="text-muted-foreground mt-8 text-center text-sm"
         >
           {t('moreLead')}{' '}
           <Link
             href={`mailto:${t('email')}`}
-            className="font-medium text-primary underline-offset-4 hover:underline"
+            className="text-primary font-medium underline-offset-4 hover:underline"
           >
             {t('email')}
           </Link>

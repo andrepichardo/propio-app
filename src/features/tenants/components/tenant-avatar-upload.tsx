@@ -57,7 +57,7 @@ export function TenantAvatarUpload({
         onClick={() => inputRef.current?.click()}
         disabled={isPending}
         aria-label={t('changeAvatar')}
-        className="absolute -bottom-1 -right-1 flex size-7 items-center justify-center rounded-full border bg-background shadow-soft transition-colors hover:text-primary"
+        className="bg-background shadow-soft hover:text-primary absolute -right-1 -bottom-1 flex size-7 items-center justify-center rounded-full border transition-colors"
       >
         {isPending ? (
           <Loader2 className="size-3.5 animate-spin" />

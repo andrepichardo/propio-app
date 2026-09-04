@@ -94,7 +94,7 @@ const FormLabel = React.forwardRef<
     >
       {children}
       {required ? (
-        <span aria-hidden className="ml-0.5 text-destructive">
+        <span aria-hidden className="text-destructive ml-0.5">
           *
         </span>
       ) : null}
@@ -132,7 +132,7 @@ const FormDescription = React.forwardRef<
     <p
       ref={ref}
       id={formDescriptionId}
-      className={cn('text-xs text-muted-foreground', className)}
+      className={cn('text-muted-foreground text-xs', className)}
       {...props}
     />
   );
@@ -155,7 +155,7 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={cn('text-xs font-medium text-destructive', className)}
+      className={cn('text-destructive text-xs font-medium', className)}
       {...props}
     >
       {body}

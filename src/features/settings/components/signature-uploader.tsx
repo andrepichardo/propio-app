@@ -61,7 +61,7 @@ export function SignatureUploader({
             className="max-h-full max-w-full object-contain"
           />
         ) : (
-          <span className="text-xs text-muted-foreground">
+          <span className="text-muted-foreground text-xs">
             {t('noSignature')}
           </span>
         )}
@@ -90,7 +90,7 @@ export function SignatureUploader({
             </Button>
           ) : null}
         </div>
-        <p className="text-xs text-muted-foreground">{t('signatureHint')}</p>
+        <p className="text-muted-foreground text-xs">{t('signatureHint')}</p>
       </div>
       <input
         ref={inputRef}

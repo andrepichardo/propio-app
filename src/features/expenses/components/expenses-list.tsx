@@ -47,7 +47,7 @@ export async function ExpensesList({
 
   return (
     <div className="space-y-5">
-      <div className="rounded-xl border bg-card shadow-soft">
+      <div className="bg-card shadow-soft rounded-xl border">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -62,7 +62,7 @@ export async function ExpensesList({
           <TableBody>
             {items.map((expense) => (
               <TableRow key={expense.id}>
-                <TableCell className="text-sm text-muted-foreground">
+                <TableCell className="text-muted-foreground text-sm">
                   {formatDate(expense.incurredAt)}
                 </TableCell>
                 <TableCell>
@@ -82,7 +82,7 @@ export async function ExpensesList({
                     ) : null}
                   </div>
                   {expense.vendor ? (
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-muted-foreground text-xs">
                       {expense.vendor}
                     </p>
                   ) : null}
@@ -92,7 +92,7 @@ export async function ExpensesList({
                     {t(`categories.${expense.category}`)}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
+                <TableCell className="text-muted-foreground text-sm">
                   {expense.property?.name ?? t('portfolioWide')}
                 </TableCell>
                 <TableCell className="text-right font-semibold">

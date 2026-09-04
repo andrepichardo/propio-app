@@ -33,7 +33,7 @@ export function PaginationControls({
 
   return (
     <div className="flex items-center justify-between pt-2">
-      <p className="text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-sm">
         {t('pagination.pageInfo', { page, pageCount, total })}
       </p>
       <div className="flex items-center gap-2">

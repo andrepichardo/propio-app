@@ -86,7 +86,7 @@ export function EditExpenseDialog({
         <Button
           variant="ghost"
           size="icon"
-          className="size-8 text-muted-foreground hover:text-foreground"
+          className="text-muted-foreground hover:text-foreground size-8"
           aria-label={t('editAria')}
         >
           <Pencil className="size-4" />

@@ -46,7 +46,7 @@ export function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="relative scroll-mt-6 border-y bg-muted/25 py-20 sm:scroll-mt-0 sm:py-28"
+      className="bg-muted/25 relative scroll-mt-6 border-y py-20 sm:scroll-mt-0 sm:py-28"
     >
       <div className="container">
         <SectionHeading
@@ -59,11 +59,11 @@ export function HowItWorks() {
           {/* Rail: a static track with the progress line painted over it. */}
           <div
             aria-hidden
-            className="absolute bottom-6 left-6 top-6 -ml-px w-px bg-border sm:left-7"
+            className="bg-border absolute top-6 bottom-6 left-6 -ml-px w-px sm:left-7"
           >
             <motion.div
               style={{ scaleY: progress }}
-              className="h-full w-px origin-top bg-gradient-to-b from-primary via-primary to-primary/30"
+              className="from-primary via-primary to-primary/30 h-full w-px origin-top bg-linear-to-b"
             />
           </div>
 
@@ -114,21 +114,21 @@ function Step({
         <motion.span
           style={{ opacity: active }}
           aria-hidden
-          className="absolute inset-0 rounded-2xl bg-primary/20 blur-md"
+          className="bg-primary/20 absolute inset-0 rounded-2xl blur-md"
         />
-        <span className="relative flex size-12 items-center justify-center rounded-2xl border bg-background text-primary shadow-xs sm:size-14">
+        <span className="bg-background text-primary relative flex size-12 items-center justify-center rounded-2xl border shadow-xs sm:size-14">
           <Icon className="size-5 sm:size-6" />
         </span>
       </div>
 
-      <Reveal className="min-w-0 flex-1 pb-2 pt-1" delay={index * 0.05}>
-        <span className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+      <Reveal className="min-w-0 flex-1 pt-1 pb-2" delay={index * 0.05}>
+        <span className="text-primary text-xs font-semibold tracking-[0.14em] uppercase">
           {step}
         </span>
         <h3 className="mt-2 text-lg font-semibold tracking-tight sm:text-xl">
           {title}
         </h3>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">
+        <p className="text-muted-foreground mt-2 text-sm leading-relaxed sm:text-base">
           {description}
         </p>
       </Reveal>

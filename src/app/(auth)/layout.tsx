@@ -37,13 +37,13 @@ export default async function AuthLayout({
         </div>
       </div>
 
-      <div className="relative hidden overflow-hidden bg-primary lg:block">
+      <div className="bg-primary relative hidden overflow-hidden lg:block">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.18),transparent_45%)]" />
-        <div className="relative flex h-full flex-col justify-center px-16 text-primary-foreground">
-          <blockquote className="max-w-md text-balance text-2xl font-medium leading-relaxed">
+        <div className="text-primary-foreground relative flex h-full flex-col justify-center px-16">
+          <blockquote className="max-w-md text-2xl leading-relaxed font-medium text-balance">
             {t('heroQuote')}
           </blockquote>
-          <p className="mt-6 text-sm text-primary-foreground/80">
+          <p className="text-primary-foreground/80 mt-6 text-sm">
             {t('heroAttribution')}
           </p>
         </div>

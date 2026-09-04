@@ -67,7 +67,7 @@ async function ReceiptsTable({
 
   return (
     <div className="space-y-5">
-      <div className="rounded-xl border bg-card shadow-soft">
+      <div className="bg-card shadow-soft rounded-xl border">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -83,13 +83,13 @@ async function ReceiptsTable({
             {items.map((receipt) => (
               <TableRow key={receipt.id}>
                 <TableCell className="font-medium">{receipt.number}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">
+                <TableCell className="text-muted-foreground text-sm">
                   {formatDate(receipt.issuedAt)}
                 </TableCell>
                 <TableCell className="text-sm">
                   {receipt.tenant.firstName} {receipt.tenant.lastName}
                 </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
+                <TableCell className="text-muted-foreground text-sm">
                   {receipt.property.name}
                 </TableCell>
                 <TableCell className="text-right font-semibold">
@@ -113,7 +113,7 @@ async function ReceiptsTable({
                         </a>
                       </Button>
                     ) : (
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-muted-foreground text-xs">
                         {t('generating')}
                       </span>
                     )}

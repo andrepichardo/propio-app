@@ -47,7 +47,7 @@ export function DeleteStatementDialog({
         <Button
           variant="ghost"
           size="icon"
-          className="size-8 text-muted-foreground hover:text-destructive"
+          className="text-muted-foreground hover:text-destructive size-8"
           aria-label={t('trigger')}
         >
           <Trash2 className="size-4" />

@@ -114,13 +114,13 @@ export default async function ContractDetailPage({
         <Badge variant={CONTRACT_STATUS_VARIANT[contract.status]}>
           {(await getTranslations('contracts.statuses'))(contract.status)}
         </Badge>
-        <span className="text-sm text-muted-foreground">
+        <span className="text-muted-foreground text-sm">
           {t('paymentsRecorded', { count: contract._count.payments })}
         </span>
         {contract.renewedFrom && (
           <Link
             href={`/app/contracts/${contract.renewedFrom.id}`}
-            className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+            className="text-primary inline-flex items-center gap-1 text-sm font-medium hover:underline"
           >
             <ArrowLeft className="size-3.5" />
             {t('renewedFrom', {
@@ -134,7 +134,7 @@ export default async function ContractDetailPage({
         {contract.renewedTo && (
           <Link
             href={`/app/contracts/${contract.renewedTo.id}`}
-            className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+            className="text-primary inline-flex items-center gap-1 text-sm font-medium hover:underline"
           >
             {t('renewedTo', {
               rent: formatCurrency(
@@ -180,7 +180,7 @@ export default async function ContractDetailPage({
               <CardHeader>
                 <CardTitle className="text-base">{t('notes')}</CardTitle>
               </CardHeader>
-              <CardContent className="text-sm leading-relaxed text-foreground/90">
+              <CardContent className="text-foreground/90 text-sm leading-relaxed">
                 {contract.notes}
               </CardContent>
             </Card>

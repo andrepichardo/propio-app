@@ -81,7 +81,7 @@ export function LoginForm() {
                 <FormLabel>{t('passwordLabel')}</FormLabel>
                 <Link
                   href="/forgot-password"
-                  className="text-xs font-medium text-primary hover:underline"
+                  className="text-primary text-xs font-medium hover:underline"
                 >
                   {t('login.forgotPassword')}
                 </Link>
@@ -102,11 +102,11 @@ export function LoginForm() {
           {t('login.submit')}
         </Button>
         {unverifiedEmail && (
-          <p className="text-center text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-center text-sm">
             {t('login.emailNotVerified')}{' '}
             <Link
               href={`/verify-email?email=${encodeURIComponent(unverifiedEmail)}`}
-              className="font-medium text-primary hover:underline"
+              className="text-primary font-medium hover:underline"
             >
               {t('login.resendVerification')}
             </Link>

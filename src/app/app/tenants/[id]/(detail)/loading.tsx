@@ -21,7 +21,7 @@ export default function TenantDetailLoading() {
             <div className="flex flex-1 flex-col items-center gap-4">
               <div className="relative">
                 <Skeleton className="size-16 rounded-full" />
-                <Skeleton className="absolute -bottom-1 -right-1 size-7 rounded-full" />
+                <Skeleton className="absolute -right-1 -bottom-1 size-7 rounded-full" />
               </div>
               <div className="flex flex-col items-center gap-2">
                 <Skeleton className="h-4 w-32" />

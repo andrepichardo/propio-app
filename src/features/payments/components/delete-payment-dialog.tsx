@@ -59,7 +59,7 @@ export function DeletePaymentDialog({
         <Button
           variant="ghost"
           size="icon"
-          className="size-8 text-muted-foreground hover:text-destructive"
+          className="text-muted-foreground hover:text-destructive size-8"
           aria-label={t('trigger')}
         >
           <Trash2 className="size-4" />
@@ -71,7 +71,7 @@ export function DeletePaymentDialog({
           <DialogDescription>{t('description')}</DialogDescription>
         </DialogHeader>
         {receiptNumber ? (
-          <p className="rounded-lg border bg-muted/40 p-3 text-xs text-muted-foreground">
+          <p className="bg-muted/40 text-muted-foreground rounded-lg border p-3 text-xs">
             {t('receiptReuse', { number: receiptNumber })}
           </p>
         ) : null}

@@ -89,19 +89,19 @@ function ShowcaseRow({
         from={flipped ? 'right' : 'left'}
         className={cn('min-w-0', flipped && 'lg:order-2')}
       >
-        <span className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+        <span className="text-primary text-xs font-semibold tracking-[0.14em] uppercase">
           {eyebrow}
         </span>
-        <h3 className="mt-3 text-balance text-2xl font-semibold tracking-tight sm:text-3xl">
+        <h3 className="mt-3 text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
           {title}
         </h3>
-        <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+        <p className="text-muted-foreground mt-4 text-base leading-relaxed">
           {description}
         </p>
         <ul className="mt-6 space-y-3">
           {bullets.map((bullet) => (
             <li key={bullet} className="flex items-start gap-3 text-sm">
-              <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <span className="bg-primary/10 text-primary mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full">
                 <Check className="size-3" />
               </span>
               <span className="text-muted-foreground">{bullet}</span>
@@ -141,9 +141,9 @@ function ReceiptVisual() {
     <div className="relative mx-auto max-w-md">
       <div
         aria-hidden
-        className="absolute -inset-4 rounded-3xl bg-primary/10 blur-2xl"
+        className="bg-primary/10 absolute -inset-4 rounded-3xl blur-2xl"
       />
-      <div className="relative overflow-hidden rounded-2xl border bg-white text-[#1f2430] shadow-card">
+      <div className="shadow-card relative overflow-hidden rounded-2xl border bg-white text-[#1f2430]">
         <div className="h-2 w-full bg-[#2d3193]" />
         <div className="space-y-5 p-6 sm:p-7">
           <div>
@@ -154,7 +154,7 @@ function ReceiptVisual() {
           </div>
 
           <div>
-            <p className="text-2xl font-bold leading-tight text-[#2d3193]">
+            <p className="text-2xl leading-tight font-bold text-[#2d3193]">
               {t('title')}
             </p>
             <p className="mt-1 text-sm font-semibold text-[#ec138f]">
@@ -181,10 +181,10 @@ function ReceiptVisual() {
           </dl>
 
           <div className="flex items-baseline justify-between rounded-lg bg-[#f3f4f6] px-4 py-3">
-            <span className="text-xs font-semibold uppercase tracking-wide text-[#6b7280]">
+            <span className="text-xs font-semibold tracking-wide text-[#6b7280] uppercase">
               {t('total')}
             </span>
-            <span className="text-lg font-bold tabular-nums text-[#ec138f]">
+            <span className="text-lg font-bold text-[#ec138f] tabular-nums">
               RD$ 42,000.00
             </span>
           </div>
@@ -204,7 +204,7 @@ function ReceiptVisual() {
                   strokeLinecap="round"
                 />
               </svg>
-              <div className="mt-1 border-t border-[#1f2430] pt-1 text-[9px] font-semibold uppercase tracking-wide text-[#6b7280]">
+              <div className="mt-1 border-t border-[#1f2430] pt-1 text-[9px] font-semibold tracking-wide text-[#6b7280] uppercase">
                 {t('signedBy')}
               </div>
             </div>
@@ -233,15 +233,15 @@ function ReportVisual() {
     <div className="relative mx-auto max-w-md">
       <div
         aria-hidden
-        className="absolute -inset-4 rounded-3xl bg-primary/10 blur-2xl"
+        className="bg-primary/10 absolute -inset-4 rounded-3xl blur-2xl"
       />
-      <div className="relative space-y-5 rounded-2xl border bg-card p-6 shadow-card">
+      <div className="bg-card shadow-card relative space-y-5 rounded-2xl border p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-sm font-semibold">{t('title')}</p>
-            <p className="text-xs text-muted-foreground">{t('period')}</p>
+            <p className="text-muted-foreground text-xs">{t('period')}</p>
           </div>
-          <span className="inline-flex items-center gap-1 rounded-full bg-success/10 px-2.5 py-1 text-xs font-medium text-success">
+          <span className="bg-success/10 text-success inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium">
             <TrendingUp className="size-3" />
             +18.2%
           </span>
@@ -255,8 +255,8 @@ function ReportVisual() {
               { label: t('profit'), value: 'RD$ 1.55M' },
             ] as const
           ).map((stat) => (
-            <div key={stat.label} className="rounded-lg border bg-muted/30 p-3">
-              <p className="truncate text-[10px] text-muted-foreground">
+            <div key={stat.label} className="bg-muted/30 rounded-lg border p-3">
+              <p className="text-muted-foreground truncate text-[10px]">
                 {stat.label}
               </p>
               <p className="mt-1 truncate text-sm font-semibold tabular-nums">
@@ -271,23 +271,23 @@ function ReportVisual() {
             <div key={index} className="flex flex-1 items-end gap-1">
               <div
                 style={{ height: `${bar.revenue}%` }}
-                className="flex-1 rounded-t-sm bg-primary"
+                className="bg-primary flex-1 rounded-t-sm"
               />
               <div
                 style={{ height: `${bar.expense}%` }}
-                className="flex-1 rounded-t-sm bg-primary/25"
+                className="bg-primary/25 flex-1 rounded-t-sm"
               />
             </div>
           ))}
         </div>
 
-        <div className="flex items-center gap-4 border-t pt-3 text-xs text-muted-foreground">
+        <div className="text-muted-foreground flex items-center gap-4 border-t pt-3 text-xs">
           <span className="inline-flex items-center gap-1.5">
-            <span className="size-2 rounded-sm bg-primary" />
+            <span className="bg-primary size-2 rounded-sm" />
             {t('revenue')}
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="size-2 rounded-sm bg-primary/25" />
+            <span className="bg-primary/25 size-2 rounded-sm" />
             {t('expenses')}
           </span>
         </div>
@@ -327,21 +327,21 @@ function RemindersVisual() {
     <div className="relative mx-auto max-w-md">
       <div
         aria-hidden
-        className="absolute -inset-4 rounded-3xl bg-primary/10 blur-2xl"
+        className="bg-primary/10 absolute -inset-4 rounded-3xl blur-2xl"
       />
-      <div className="relative space-y-3 rounded-2xl border bg-card p-5 shadow-card">
+      <div className="bg-card shadow-card relative space-y-3 rounded-2xl border p-5">
         <div className="flex items-center justify-between px-1 pb-1">
           <p className="text-sm font-semibold">{t('title')}</p>
           <span className="relative flex size-2.5">
-            <span className="absolute inset-0 animate-pulse-ring rounded-full bg-primary motion-reduce:animate-none" />
-            <span className="relative size-2.5 rounded-full bg-primary" />
+            <span className="animate-pulse-ring bg-primary absolute inset-0 rounded-full motion-reduce:animate-none" />
+            <span className="bg-primary relative size-2.5 rounded-full" />
           </span>
         </div>
 
         {items.map((item) => (
           <div
             key={item.title}
-            className="flex items-start gap-3 rounded-xl border bg-background p-3.5 transition-colors hover:border-primary/30"
+            className="bg-background hover:border-primary/30 flex items-start gap-3 rounded-xl border p-3.5 transition-colors"
           >
             <span
               className={cn(
@@ -353,11 +353,11 @@ function RemindersVisual() {
             </span>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">{item.title}</p>
-              <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+              <p className="text-muted-foreground mt-0.5 text-xs leading-relaxed">
                 {item.body}
               </p>
             </div>
-            <span className="shrink-0 text-[10px] text-muted-foreground">
+            <span className="text-muted-foreground shrink-0 text-[10px]">
               {item.when}
             </span>
           </div>

@@ -54,7 +54,7 @@ export async function PaymentsList({
 
   return (
     <div className="space-y-5">
-      <div className="rounded-xl border bg-card shadow-soft">
+      <div className="bg-card shadow-soft rounded-xl border">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -77,7 +77,7 @@ export async function PaymentsList({
               const bounds = periodMonthBounds(payment.contract, anchorDay);
               return (
                 <TableRow key={payment.id}>
-                  <TableCell className="text-sm text-muted-foreground">
+                  <TableCell className="text-muted-foreground text-sm">
                     {formatDate(payment.paidAt)}
                   </TableCell>
                   <TableCell>
@@ -88,7 +88,7 @@ export async function PaymentsList({
                           <Badge variant="outline">{t('depositBadge')}</Badge>
                         )}
                       </div>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-muted-foreground text-xs">
                         {payment.tenant.firstName} {payment.tenant.lastName}
                       </p>
                     </div>
@@ -104,13 +104,13 @@ export async function PaymentsList({
                         href={payment.receipt.pdfUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                        className="text-primary inline-flex items-center gap-1 text-xs font-medium hover:underline"
                       >
                         <Download className="size-3.5 shrink-0" />
                         {payment.receipt.number}
                       </a>
                     ) : (
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-muted-foreground text-xs">
                         {payment.receipt?.number ?? '—'}
                       </span>
                     )}
@@ -121,13 +121,13 @@ export async function PaymentsList({
                         href={payment.proofUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                        className="text-primary inline-flex items-center gap-1 text-xs font-medium hover:underline"
                       >
                         <Paperclip className="size-3.5" />
                         {t('viewProof')}
                       </a>
                     ) : (
-                      <span className="text-xs text-muted-foreground">—</span>
+                      <span className="text-muted-foreground text-xs">—</span>
                     )}
                   </TableCell>
                   <TableCell className="text-right font-semibold">

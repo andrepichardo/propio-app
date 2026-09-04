@@ -22,11 +22,11 @@ export async function RatesUnavailableNotice({
     <div
       role="status"
       className={cn(
-        'flex items-start gap-3 rounded-lg border border-warning/30 bg-warning/10 p-3 text-sm',
+        'border-warning/30 bg-warning/10 flex items-start gap-3 rounded-lg border p-3 text-sm',
         className,
       )}
     >
-      <AlertTriangle className="mt-0.5 size-4 shrink-0 text-warning" />
+      <AlertTriangle className="text-warning mt-0.5 size-4 shrink-0" />
       <div className="min-w-0">
         <p className="font-medium">{t('unavailableTitle')}</p>
         <p className="text-muted-foreground">{t('unavailableBody')}</p>

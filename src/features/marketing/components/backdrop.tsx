@@ -25,9 +25,9 @@ export function Aurora({
         className,
       )}
     >
-      <div className="absolute -top-48 left-1/2 size-[46rem] -translate-x-1/2 animate-aurora-drift rounded-full bg-primary/25 blur-[130px] motion-reduce:animate-none dark:bg-primary/20" />
-      <div className="absolute -left-32 top-24 size-[30rem] animate-aurora-drift rounded-full bg-violet-400/20 blur-[120px] [animation-delay:-7s] motion-reduce:animate-none dark:bg-violet-500/15" />
-      <div className="dark:bg-sky-500/12 absolute -right-24 top-10 size-[34rem] animate-aurora-drift rounded-full bg-sky-400/20 blur-[120px] [animation-delay:-14s] motion-reduce:animate-none" />
+      <div className="animate-aurora-drift bg-primary/25 dark:bg-primary/20 absolute -top-48 left-1/2 size-184 -translate-x-1/2 rounded-full blur-[130px] motion-reduce:animate-none" />
+      <div className="animate-aurora-drift absolute top-24 -left-32 size-120 rounded-full bg-violet-400/20 blur-[120px] [animation-delay:-7s] motion-reduce:animate-none dark:bg-violet-500/15" />
+      <div className="animate-aurora-drift absolute top-10 -right-24 size-136 rounded-full bg-sky-400/20 blur-[120px] [animation-delay:-14s] motion-reduce:animate-none dark:bg-sky-500/12" />
     </div>
   );
 }
@@ -45,10 +45,10 @@ export function GridPattern({
 }) {
   const mask =
     fade === 'top'
-      ? '[mask-image:radial-gradient(ellipse_65%_55%_at_50%_0%,#000_55%,transparent_100%)]'
+      ? 'mask-[radial-gradient(ellipse_65%_55%_at_50%_0%,#000_55%,transparent_100%)]'
       : fade === 'bottom'
-        ? '[mask-image:radial-gradient(ellipse_65%_55%_at_50%_100%,#000_55%,transparent_100%)]'
-        : '[mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_45%,transparent_100%)]';
+        ? 'mask-[radial-gradient(ellipse_65%_55%_at_50%_100%,#000_55%,transparent_100%)]'
+        : 'mask-[radial-gradient(ellipse_60%_60%_at_50%_50%,#000_45%,transparent_100%)]';
 
   return (
     <div
@@ -56,7 +56,7 @@ export function GridPattern({
       className={cn(
         'pointer-events-none absolute inset-0',
         'bg-[linear-gradient(to_right,hsl(var(--foreground)/0.055)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--foreground)/0.055)_1px,transparent_1px)]',
-        'bg-[size:56px_56px]',
+        'bg-size-[56px_56px]',
         mask,
         className,
       )}
@@ -70,7 +70,7 @@ export function GradientRule({ className }: { className?: string }) {
     <div
       aria-hidden
       className={cn(
-        'h-px w-full bg-gradient-to-r from-transparent via-border to-transparent',
+        'via-border h-px w-full bg-linear-to-r from-transparent to-transparent',
         className,
       )}
     />

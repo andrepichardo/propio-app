@@ -25,7 +25,7 @@ export default async function LoginPage({
         <h1 className="text-2xl font-semibold tracking-tight">
           {t('login.title')}
         </h1>
-        <p className="text-sm text-muted-foreground">{t('login.subtitle')}</p>
+        <p className="text-muted-foreground text-sm">{t('login.subtitle')}</p>
       </div>
 
       {verified === '1' && (
@@ -41,7 +41,7 @@ export default async function LoginPage({
           the user back to a pristine login form with no explanation at all.
           The raw code is shown small so a failure stays diagnosable. */}
       {error && error !== 'verification' && (
-        <div className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+        <div className="border-destructive/30 bg-destructive/10 text-destructive flex items-start gap-2 rounded-md border p-3 text-sm">
           <TriangleAlert className="mt-0.5 size-4 shrink-0" />
           <div className="min-w-0 space-y-1">
             <p>
@@ -81,18 +81,18 @@ export default async function LoginPage({
 
       <div className="relative">
         <Separator />
-        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-2 text-xs text-muted-foreground">
+        <span className="bg-background text-muted-foreground absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-2 text-xs">
           {t('login.orContinueEmail')}
         </span>
       </div>
 
       <LoginForm />
 
-      <p className="text-center text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-center text-sm">
         {t('login.noAccount')}{' '}
         <Link
           href="/register"
-          className="font-medium text-primary hover:underline"
+          className="text-primary font-medium hover:underline"
         >
           {t('login.createOne')}
         </Link>
