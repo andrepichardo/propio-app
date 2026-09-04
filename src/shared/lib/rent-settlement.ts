@@ -33,16 +33,24 @@ export function settlesRentPeriod(
  * an agreed amount BELOW the rent (a discount) that still closes the month.
  * Otherwise it is the shortfall, never negative: overpaying leaves 0, not
  * credit.
+ *
+ * `alreadyPaid` is what the period's OTHER payments already put on it, and it
+ * is what keeps this half of the invariant aligned with `isPeriodCovered`
+ * below, which sums them. Reading only `amount` made a second partial repeat
+ * the first one's balance on its receipt — a tenant paying 500 + 500 of a 1000
+ * rent got two receipts both saying they still owed 500, while the dashboard
+ * counted the month as covered.
  */
 export function rentBalanceAfter(input: {
   amount: number;
   monthlyRent: number;
   isDeposit: boolean;
   settlesPeriod: boolean;
+  alreadyPaid?: number;
 }): number {
   const { amount, monthlyRent, isDeposit, settlesPeriod } = input;
   if (isDeposit || settlesPeriod) return 0;
-  return Math.max(0, monthlyRent - amount);
+  return Math.max(0, monthlyRent - ((input.alreadyPaid ?? 0) + amount));
 }
 
 /**

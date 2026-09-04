@@ -87,6 +87,44 @@ describe('rentBalanceAfter', () => {
       }),
     ).toBeCloseTo(0.01, 10);
   });
+
+  it('counts what the period was already paid', () => {
+    // Second half of a 500 + 700 split: the month is closed, so the receipt
+    // must not repeat the first payment's outstanding balance.
+    expect(
+      rentBalanceAfter({
+        amount: 700,
+        alreadyPaid: 500,
+        monthlyRent: RENT,
+        isDeposit: false,
+        settlesPeriod: false,
+      }),
+    ).toBe(0);
+  });
+
+  it('leaves only the real remainder after an earlier partial', () => {
+    expect(
+      rentBalanceAfter({
+        amount: 300,
+        alreadyPaid: 500,
+        monthlyRent: RENT,
+        isDeposit: false,
+        settlesPeriod: false,
+      }),
+    ).toBe(400);
+  });
+
+  it('ignores earlier payments on a deposit', () => {
+    expect(
+      rentBalanceAfter({
+        amount: 50,
+        alreadyPaid: 500,
+        monthlyRent: RENT,
+        isDeposit: true,
+        settlesPeriod: false,
+      }),
+    ).toBe(0);
+  });
 });
 
 describe('isPeriodCovered', () => {
@@ -127,32 +165,69 @@ describe('the two halves of the invariant agree', () => {
   const cases: {
     name: string;
     amount: number;
+    alreadyPaid: number;
     isDeposit: boolean;
     requested: boolean;
   }[] = [
-    { name: 'full rent', amount: RENT, isDeposit: false, requested: false },
-    { name: 'overpayment', amount: 1500, isDeposit: false, requested: false },
-    { name: 'partial', amount: 500, isDeposit: false, requested: false },
+    {
+      name: 'full rent',
+      amount: RENT,
+      alreadyPaid: 0,
+      isDeposit: false,
+      requested: false,
+    },
+    {
+      name: 'overpayment',
+      amount: 1500,
+      alreadyPaid: 0,
+      isDeposit: false,
+      requested: false,
+    },
+    {
+      name: 'partial',
+      amount: 500,
+      alreadyPaid: 0,
+      isDeposit: false,
+      requested: false,
+    },
     {
       name: 'agreed discount',
       amount: 900,
+      alreadyPaid: 0,
       isDeposit: false,
       requested: true,
+    },
+    // The pair that used to disagree: the dashboard summed both halves and
+    // called the month covered while the second receipt still claimed 700 due.
+    {
+      name: 'second half of a split',
+      amount: 700,
+      alreadyPaid: 500,
+      isDeposit: false,
+      requested: false,
+    },
+    {
+      name: 'second partial that still falls short',
+      amount: 300,
+      alreadyPaid: 500,
+      isDeposit: false,
+      requested: false,
     },
   ];
 
   it.each(cases)(
     'a $name leaving no balance also stops appearing as upcoming',
-    ({ amount, isDeposit, requested }) => {
+    ({ amount, alreadyPaid, isDeposit, requested }) => {
       const settlesPeriod = settlesRentPeriod(isDeposit, requested);
       const balance = rentBalanceAfter({
         amount,
+        alreadyPaid,
         monthlyRent: RENT,
         isDeposit,
         settlesPeriod,
       });
       const covered = isPeriodCovered({
-        paid: amount,
+        paid: alreadyPaid + amount,
         monthlyRent: RENT,
         settled: settlesPeriod,
       });

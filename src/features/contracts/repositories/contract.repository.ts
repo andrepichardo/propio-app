@@ -131,6 +131,9 @@ export const contractRepository = {
         monthlyRent: true,
         currency: true,
         dueDay: true,
+        // The term bounds which rent periods the payment form may offer.
+        startDate: true,
+        endDate: true,
         property: { select: { name: true } },
         tenant: { select: { firstName: true, lastName: true } },
       },

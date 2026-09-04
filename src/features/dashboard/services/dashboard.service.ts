@@ -16,7 +16,13 @@ import { prisma } from '@/shared/lib/prisma';
 import { propertyRepository } from '@/features/properties/repositories/property.repository';
 import { depositRepository } from '@/features/deposits/repositories/deposit.repository';
 import { toNumber } from '@/shared/lib/format';
-import { monthKey, nextDueDate } from '@/shared/lib/rent-period';
+import {
+  contractAnchorDay,
+  dueDateForPeriod,
+  monthKey,
+  nextPeriod,
+  periodContaining,
+} from '@/shared/lib/rent-period';
 import { isPeriodCovered } from '@/shared/lib/rent-settlement';
 import {
   getUsdRates,
@@ -268,6 +274,9 @@ export async function getDashboardSummary(
         monthlyRent: true,
         currency: true,
         dueDay: true,
+        // Anchors the contract's rent periods; the due day only says when
+        // the rent for one of them must be paid.
+        startDate: true,
         property: { select: { name: true } },
         tenant: { select: { firstName: true, lastName: true } },
       },
@@ -354,11 +363,15 @@ export async function getDashboardSummary(
   const upcomingPayments: UpcomingPayment[] = activeContracts
     .map((contract) => {
       const rent = toNumber(contract.monthlyRent.toString());
-      // Skip due dates whose month is already covered — either enough was paid
-      // (overpayment can exceed the rent, hence >=) or it was marked settled.
-      let dueDate = nextDueDate(contract.dueDay, now);
+      // Walk the contract's own PERIODS, from the one running today, skipping
+      // those already covered — enough was paid (overpayment can exceed the
+      // rent, hence >=) or the month was marked settled. Iterating due dates
+      // instead would ask about the wrong bucket whenever the due day and the
+      // start day sit in different months (starts the 25th, due the 5th).
+      const anchorDay = contractAnchorDay(contract.startDate);
+      let period = periodContaining(now, anchorDay);
       for (let i = 0; i < 3; i++) {
-        const key = `${contract.id}:${monthKey(dueDate)}`;
+        const key = `${contract.id}:${monthKey(period)}`;
         const paid = paidByContractMonth.get(key) ?? 0;
         const covered = isPeriodCovered({
           paid,
@@ -366,7 +379,7 @@ export async function getDashboardSummary(
           settled: settledMonths.has(key),
         });
         if (!covered) break;
-        dueDate = addMonths(dueDate, 1);
+        period = nextPeriod(period, anchorDay);
       }
       return {
         contractId: contract.id,
@@ -374,7 +387,7 @@ export async function getDashboardSummary(
         tenantName: `${contract.tenant.firstName} ${contract.tenant.lastName}`,
         amount: rent,
         currency: contract.currency,
-        dueDate,
+        dueDate: dueDateForPeriod(period, contract.dueDay),
       };
     })
     .sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime())

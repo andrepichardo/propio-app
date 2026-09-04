@@ -20,8 +20,21 @@ import { Button } from '@/shared/components/ui/button';
 /**
  * Confirmed rather than one-click: this permanently deletes the payment, its
  * receipt and both PDFs, and shifts reported income. There is no undo.
+ *
+ * `receiptNumber` is named in the confirmation because deleting frees it: the
+ * next receipt takes it back (the sequence is the MAX in use, and this is a
+ * hard delete). Harmless when re-registering the same payment, which is the
+ * intended use — but a tenant who already has that receipt ends up holding a
+ * number that belongs to a different payment, and only the owner knows whether
+ * it was delivered.
  */
-export function DeletePaymentDialog({ paymentId }: { paymentId: string }) {
+export function DeletePaymentDialog({
+  paymentId,
+  receiptNumber,
+}: {
+  paymentId: string;
+  receiptNumber?: string | null;
+}) {
   const t = useTranslations('payments.delete');
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -57,6 +70,11 @@ export function DeletePaymentDialog({ paymentId }: { paymentId: string }) {
           <DialogTitle>{t('title')}</DialogTitle>
           <DialogDescription>{t('description')}</DialogDescription>
         </DialogHeader>
+        {receiptNumber ? (
+          <p className="rounded-lg border bg-muted/40 p-3 text-xs text-muted-foreground">
+            {t('receiptReuse', { number: receiptNumber })}
+          </p>
+        ) : null}
         <DialogFooter>
           <Button
             variant="ghost"

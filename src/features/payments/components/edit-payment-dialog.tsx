@@ -22,10 +22,10 @@ import {
   uploadPaymentProofAction,
 } from '../actions/payment.actions';
 import { applyFieldErrors } from '@/shared/hooks/use-server-action';
-import { addMonths } from 'date-fns';
 import {
   monthValueToDate,
   periodToMonthValue,
+  rentPeriodEnd,
   rentPeriodStart,
 } from '@/shared/lib/rent-period';
 import { useFormatDate } from '@/shared/components/date-format-provider';
@@ -78,8 +78,11 @@ export type EditablePayment = {
   /** Contract's monthly rent — the "covers full period" toggle only shows when
    * the amount is below it. */
   rent: number;
-  /** Contract's due day — anchors the period range shown under the picker. */
-  dueDay: number;
+  /** Day the contract STARTED — what its rent periods are anchored to. */
+  anchorDay: number;
+  /** `yyyy-MM` bounds of the contract's term; `max` absent = open-ended. */
+  periodMin: string;
+  periodMax?: string;
 };
 
 export function EditPaymentDialog({ payment }: { payment: EditablePayment }) {
@@ -122,8 +125,8 @@ export function EditPaymentDialog({ payment }: { payment: EditablePayment }) {
   const periodMonth = watchPeriod ? periodToMonthValue(watchPeriod) : '';
   const periodRange = watchPeriod
     ? (() => {
-        const start = rentPeriodStart(watchPeriod, payment.dueDay);
-        return `${formatDate(start)} – ${formatDate(addMonths(start, 1))}`;
+        const start = rentPeriodStart(watchPeriod, payment.anchorDay);
+        return `${formatDate(start)} – ${formatDate(rentPeriodEnd(start))}`;
       })()
     : null;
 
@@ -280,6 +283,8 @@ export function EditPaymentDialog({ payment }: { payment: EditablePayment }) {
                     <FormLabel>{t('form.period')}</FormLabel>
                     <MonthPicker
                       value={periodMonth}
+                      min={payment.periodMin}
+                      max={payment.periodMax}
                       onChange={(month) =>
                         field.onChange(monthValueToDate(month))
                       }

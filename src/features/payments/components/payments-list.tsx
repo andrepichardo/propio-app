@@ -18,6 +18,7 @@ import {
   TableRow,
 } from '@/shared/components/ui/table';
 import { formatCurrency } from '@/shared/lib/format';
+import { contractAnchorDay, periodMonthBounds } from '@/shared/lib/rent-period';
 import { getFormatDate } from '@/shared/lib/date-format.server';
 
 export async function PaymentsList({
@@ -69,88 +70,103 @@ export async function PaymentsList({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {items.map((payment) => (
-              <TableRow key={payment.id}>
-                <TableCell className="text-sm text-muted-foreground">
-                  {formatDate(payment.paidAt)}
-                </TableCell>
-                <TableCell>
-                  <div>
-                    <div className="flex items-center gap-2 text-sm font-medium">
-                      {payment.property.name}
-                      {payment.type === 'DEPOSIT' && (
-                        <Badge variant="outline">{t('depositBadge')}</Badge>
-                      )}
+            {items.map((payment) => {
+              // Periods run start-day to start-day; the due day only says
+              // when the rent must be paid within one.
+              const anchorDay = contractAnchorDay(payment.contract.startDate);
+              const bounds = periodMonthBounds(payment.contract, anchorDay);
+              return (
+                <TableRow key={payment.id}>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {formatDate(payment.paidAt)}
+                  </TableCell>
+                  <TableCell>
+                    <div>
+                      <div className="flex items-center gap-2 text-sm font-medium">
+                        {payment.property.name}
+                        {payment.type === 'DEPOSIT' && (
+                          <Badge variant="outline">{t('depositBadge')}</Badge>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {payment.tenant.firstName} {payment.tenant.lastName}
+                      </p>
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      {payment.tenant.firstName} {payment.tenant.lastName}
-                    </p>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge variant="secondary">
-                    {t(`methods.${payment.method}`)}
-                  </Badge>
-                </TableCell>
-                <TableCell className="whitespace-nowrap">
-                  {payment.receipt?.pdfUrl ? (
-                    <a
-                      href={payment.receipt.pdfUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-                    >
-                      <Download className="size-3.5 shrink-0" />
-                      {payment.receipt.number}
-                    </a>
-                  ) : (
-                    <span className="text-xs text-muted-foreground">
-                      {payment.receipt?.number ?? '—'}
-                    </span>
-                  )}
-                </TableCell>
-                <TableCell>
-                  {payment.proofUrl ? (
-                    <a
-                      href={payment.proofUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-                    >
-                      <Paperclip className="size-3.5" />
-                      {t('viewProof')}
-                    </a>
-                  ) : (
-                    <span className="text-xs text-muted-foreground">—</span>
-                  )}
-                </TableCell>
-                <TableCell className="text-right font-semibold">
-                  {formatCurrency(payment.amount.toString(), payment.currency)}
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center justify-end gap-1">
-                    <EditPaymentDialog
-                      payment={{
-                        id: payment.id,
-                        amount: Number(payment.amount),
-                        type: payment.type,
-                        method: payment.method,
-                        reference: payment.reference,
-                        concept: payment.concept,
-                        notes: payment.notes,
-                        proofUrl: payment.proofUrl,
-                        paidAt: payment.paidAt.toISOString(),
-                        periodStart: payment.periodStart?.toISOString() ?? null,
-                        settlesPeriod: payment.settlesPeriod,
-                        rent: Number(payment.contract.monthlyRent),
-                        dueDay: payment.contract.dueDay,
-                      }}
-                    />
-                    <DeletePaymentDialog paymentId={payment.id} />
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="secondary">
+                      {t(`methods.${payment.method}`)}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    {payment.receipt?.pdfUrl ? (
+                      <a
+                        href={payment.receipt.pdfUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                      >
+                        <Download className="size-3.5 shrink-0" />
+                        {payment.receipt.number}
+                      </a>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">
+                        {payment.receipt?.number ?? '—'}
+                      </span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {payment.proofUrl ? (
+                      <a
+                        href={payment.proofUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                      >
+                        <Paperclip className="size-3.5" />
+                        {t('viewProof')}
+                      </a>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">—</span>
+                    )}
+                  </TableCell>
+                  <TableCell className="text-right font-semibold">
+                    {formatCurrency(
+                      payment.amount.toString(),
+                      payment.currency,
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center justify-end gap-1">
+                      <EditPaymentDialog
+                        payment={{
+                          id: payment.id,
+                          amount: Number(payment.amount),
+                          type: payment.type,
+                          method: payment.method,
+                          reference: payment.reference,
+                          concept: payment.concept,
+                          notes: payment.notes,
+                          proofUrl: payment.proofUrl,
+                          paidAt: payment.paidAt.toISOString(),
+                          periodStart:
+                            payment.periodStart?.toISOString() ?? null,
+                          settlesPeriod: payment.settlesPeriod,
+                          rent: Number(payment.contract.monthlyRent),
+                          anchorDay,
+                          periodMin: bounds.min,
+                          periodMax: bounds.max,
+                        }}
+                      />
+                      <DeletePaymentDialog
+                        paymentId={payment.id}
+                        receiptNumber={payment.receipt?.number}
+                      />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </div>

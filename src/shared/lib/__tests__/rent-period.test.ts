@@ -1,11 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import {
+  contractAnchorDay,
+  nextPeriod,
+  periodContaining,
+  rentPeriodEnd,
+  dueDateForPeriod,
   firstUncoveredMonth,
+  isPeriodWithinTerm,
   monthKey,
   monthValueToDate,
-  nextDueDate,
+  periodMonthBounds,
   periodToMonthValue,
   rentPeriodStart,
+  shiftMonthValue,
 } from '@/shared/lib/rent-period';
 
 /** Readable assertion helper: a UTC-midnight date as `yyyy-MM-dd`. */
@@ -160,37 +167,350 @@ describe('monthKey', () => {
   });
 });
 
-describe('nextDueDate', () => {
-  it('uses this month when the due day is still ahead', () => {
-    const reference = new Date(2026, 7, 3); // 3 Aug
-    expect(nextDueDate(15, reference)).toEqual(new Date(2026, 7, 15));
+describe('shiftMonthValue', () => {
+  it('moves within a year', () => {
+    expect(shiftMonthValue('2026-07', 2)).toBe('2026-09');
+    expect(shiftMonthValue('2026-07', -2)).toBe('2026-05');
   });
 
-  it('rolls to next month once the due day has passed', () => {
-    const reference = new Date(2026, 7, 20); // 20 Aug
-    expect(nextDueDate(15, reference)).toEqual(new Date(2026, 8, 15));
+  it('crosses year boundaries in both directions', () => {
+    expect(shiftMonthValue('2026-12', 1)).toBe('2027-01');
+    expect(shiftMonthValue('2026-01', -1)).toBe('2025-12');
+    expect(shiftMonthValue('2026-01', -13)).toBe('2024-12');
   });
 
-  it('treats the due day itself as still due today', () => {
-    const reference = new Date(2026, 7, 15); // exactly the due day, midnight
-    expect(nextDueDate(15, reference)).toEqual(new Date(2026, 7, 15));
+  it('leaves a malformed value alone', () => {
+    expect(shiftMonthValue('nope', 1)).toBe('nope');
+  });
+});
+
+describe('isPeriodWithinTerm', () => {
+  // The contract André asked about: 15 Jul 2026 – 15 Jul 2027, due day 15.
+  const term = {
+    startDate: new Date('2026-07-15T00:00:00.000Z'),
+    endDate: new Date('2027-07-15T00:00:00.000Z'),
+  };
+  const period = (month: string) =>
+    rentPeriodStart(monthValueToDate(month) as Date, 15);
+
+  it('accepts the first month of the term', () => {
+    expect(isPeriodWithinTerm(period('2026-07'), term)).toBe(true);
   });
 
-  it('clamps a due day of 29-31 to 28 so February is never skipped', () => {
-    const reference = new Date(2026, 0, 5); // 5 Jan
-    expect(nextDueDate(31, reference)).toEqual(new Date(2026, 0, 28));
-    expect(nextDueDate(29, new Date(2026, 1, 1))).toEqual(
-      new Date(2026, 1, 28),
+  it('accepts the last payable month', () => {
+    expect(isPeriodWithinTerm(period('2027-06'), term)).toBe(true);
+  });
+
+  it('rejects a month before the contract started', () => {
+    // What used to be accepted: paying April on a contract starting in July.
+    expect(isPeriodWithinTerm(period('2026-04'), term)).toBe(false);
+    expect(isPeriodWithinTerm(period('2026-06'), term)).toBe(false);
+  });
+
+  it('rejects the period that starts exactly when the term ends', () => {
+    expect(isPeriodWithinTerm(period('2027-07'), term)).toBe(false);
+  });
+
+  it('accepts a period that only overlaps the term partially', () => {
+    // Contract starts on the 20th, due day 15: the tenant's first month is the
+    // 15th–15th period that began five days before they moved in.
+    const late = {
+      startDate: new Date('2026-08-20T00:00:00.000Z'),
+      endDate: new Date('2027-08-20T00:00:00.000Z'),
+    };
+    expect(isPeriodWithinTerm(period('2026-08'), late)).toBe(true);
+  });
+
+  it('has no upper bound on an open-ended contract', () => {
+    const open = { startDate: new Date('2026-07-15T00:00:00.000Z') };
+    expect(isPeriodWithinTerm(period('2030-01'), open)).toBe(true);
+    expect(isPeriodWithinTerm(period('2026-05'), open)).toBe(false);
+  });
+
+  it('compares by day, ignoring a stored local-midnight offset', () => {
+    // Real dev rows hold `T04:00:00Z` contract dates. Comparing instants let
+    // the period starting 1 May squeeze inside a term ending 1 May.
+    const offset = {
+      startDate: new Date('2026-05-01T04:00:00.000Z'),
+      endDate: new Date('2027-05-01T04:00:00.000Z'),
+    };
+    expect(isPeriodWithinTerm(period('2027-05'), offset)).toBe(false);
+    expect(isPeriodWithinTerm(period('2027-04'), offset)).toBe(true);
+  });
+
+  it('does not drift on a month-end period', () => {
+    // Jan 31 + 1 month clamps to Feb 28, and reading UTC parts keeps it there
+    // no matter the reader's timezone.
+    const feb = {
+      startDate: new Date('2026-02-27T00:00:00.000Z'),
+      endDate: new Date('2026-12-31T00:00:00.000Z'),
+    };
+    expect(isPeriodWithinTerm(new Date('2026-01-31T00:00:00.000Z'), feb)).toBe(
+      true,
     );
   });
+});
 
-  it('clamps a nonsensical due day up to 1', () => {
-    const reference = new Date(2026, 7, 20);
-    expect(nextDueDate(0, reference)).toEqual(new Date(2026, 8, 1));
+describe('periodMonthBounds', () => {
+  it('bounds a whole-year term to its twelve payable months', () => {
+    expect(
+      periodMonthBounds(
+        {
+          startDate: new Date('2026-07-15T00:00:00.000Z'),
+          endDate: new Date('2027-07-15T00:00:00.000Z'),
+        },
+        15,
+      ),
+    ).toEqual({ min: '2026-07', max: '2027-06' });
+  });
+
+  it('opens the month before the start when the due day precedes it', () => {
+    // Starts 20 Aug, due day 15 → the 15 Aug – 15 Sep period is payable.
+    expect(
+      periodMonthBounds(
+        {
+          startDate: new Date('2026-08-20T00:00:00.000Z'),
+          endDate: new Date('2027-08-20T00:00:00.000Z'),
+        },
+        15,
+      ),
+    ).toEqual({ min: '2026-08', max: '2027-08' });
+  });
+
+  it('gives a twelve-month term exactly twelve payable months', () => {
+    // Due day 1 on a 1 May 2026 – 1 May 2027 term, as stored in dev.
+    const bounds = periodMonthBounds(
+      {
+        startDate: new Date('2026-05-01T04:00:00.000Z'),
+        endDate: new Date('2027-05-01T04:00:00.000Z'),
+      },
+      1,
+    );
+    expect(bounds).toEqual({ min: '2026-05', max: '2027-04' });
+  });
+
+  it('leaves an open-ended contract without an upper bound', () => {
+    expect(
+      periodMonthBounds(
+        { startDate: new Date('2026-07-15T00:00:00.000Z') },
+        15,
+      ),
+    ).toEqual({ min: '2026-07' });
+  });
+
+  it('never returns an inverted range on a term shorter than a month', () => {
+    const bounds = periodMonthBounds(
+      {
+        startDate: new Date('2026-07-20T00:00:00.000Z'),
+        endDate: new Date('2026-07-28T00:00:00.000Z'),
+      },
+      15,
+    );
+    expect(bounds.max).not.toBeUndefined();
+    expect(bounds.max! >= bounds.min).toBe(true);
+  });
+
+  it('agrees with isPeriodWithinTerm on every month around the bounds', () => {
+    const term = {
+      startDate: new Date('2026-07-15T00:00:00.000Z'),
+      endDate: new Date('2027-07-15T00:00:00.000Z'),
+    };
+    const { min, max } = periodMonthBounds(term, 15);
+
+    for (let step = -3; step <= 15; step += 1) {
+      const month = shiftMonthValue(min, step);
+      const inBounds = month >= min && (!max || month <= max);
+      const allowed = isPeriodWithinTerm(
+        rentPeriodStart(monthValueToDate(month) as Date, 15),
+        term,
+      );
+      expect({ month, inBounds }).toEqual({ month, inBounds: allowed });
+    }
+  });
+});
+
+describe('contractAnchorDay', () => {
+  it('reads the start day in UTC', () => {
+    // A local getter west of UTC turns a 1 May start into 30 April.
+    expect(contractAnchorDay(new Date('2026-05-01T00:00:00.000Z'))).toBe(1);
+    expect(contractAnchorDay(new Date('2026-05-01T04:00:00.000Z'))).toBe(1);
+    expect(contractAnchorDay(new Date('2026-07-15T00:00:00.000Z'))).toBe(15);
+  });
+});
+
+describe('dueDateForPeriod', () => {
+  it('lands in the same month when the due day comes after the anchor', () => {
+    // Costa Azul: starts the 1st, rent due the 28th → 1 May – 1 Jun is due 28 May.
+    const period = new Date('2026-05-01T00:00:00.000Z');
+    expect(iso(dueDateForPeriod(period, 28))).toBe('2026-05-28');
+  });
+
+  it('rolls into the next month when the due day precedes the anchor', () => {
+    // Starts the 25th, due the 5th → 25 Aug – 25 Sep has no 5th until September.
+    const period = new Date('2026-08-25T00:00:00.000Z');
+    expect(iso(dueDateForPeriod(period, 5))).toBe('2026-09-05');
+  });
+
+  it('is the period start itself when both days match', () => {
+    const period = new Date('2026-07-15T00:00:00.000Z');
+    expect(iso(dueDateForPeriod(period, 15))).toBe('2026-07-15');
+  });
+
+  it('clamps a due day the month does not have', () => {
+    const period = new Date('2026-02-01T00:00:00.000Z');
+    expect(iso(dueDateForPeriod(period, 31))).toBe('2026-02-28');
   });
 
   it('crosses the year boundary', () => {
-    const reference = new Date(2026, 11, 20); // 20 Dec
-    expect(nextDueDate(5, reference)).toEqual(new Date(2027, 0, 5));
+    const period = new Date('2026-12-25T00:00:00.000Z');
+    expect(iso(dueDateForPeriod(period, 5))).toBe('2027-01-05');
+  });
+
+  it('always falls inside the period it pays for', () => {
+    // The invariant the dashboard and the scheduler depend on.
+    for (const anchorDay of [1, 5, 15, 25, 28, 31]) {
+      for (const dueDay of [1, 5, 15, 25, 28, 31]) {
+        for (const month of [0, 1, 5, 11]) {
+          const period = rentPeriodStart(
+            new Date(Date.UTC(2026, month, 15)),
+            anchorDay,
+          );
+          const due = dueDateForPeriod(period, dueDay);
+          const next = rentPeriodStart(
+            new Date(Date.UTC(2026, month + 1, 15)),
+            anchorDay,
+          );
+          expect({
+            anchorDay,
+            dueDay,
+            month,
+            inside: due >= period && due < next,
+          }).toEqual({ anchorDay, dueDay, month, inside: true });
+        }
+      }
+    }
+  });
+});
+
+describe('the contract André reported (1 May 2026 – 1 May 2027, due day 28)', () => {
+  const term = {
+    startDate: new Date('2026-05-01T04:00:00.000Z'),
+    endDate: new Date('2027-05-01T04:00:00.000Z'),
+  };
+  const anchorDay = contractAnchorDay(term.startDate);
+
+  it('is anchored to the 1st, not to the due day', () => {
+    const period = rentPeriodStart(
+      new Date('2026-09-04T00:00:00.000Z'),
+      anchorDay,
+    );
+    expect(iso(period)).toBe('2026-09-01');
+  });
+
+  it('offers exactly the twelve months of the lease', () => {
+    expect(periodMonthBounds(term, anchorDay)).toEqual({
+      min: '2026-05',
+      max: '2027-04',
+    });
+  });
+
+  it('no longer accepts April 2026', () => {
+    const april = rentPeriodStart(
+      monthValueToDate('2026-04') as Date,
+      anchorDay,
+    );
+    expect(isPeriodWithinTerm(april, term)).toBe(false);
+  });
+
+  it('still bills rent on the 28th', () => {
+    const may = rentPeriodStart(monthValueToDate('2026-05') as Date, anchorDay);
+    expect(iso(dueDateForPeriod(may, 28))).toBe('2026-05-28');
+  });
+});
+
+describe('rentPeriodEnd', () => {
+  it('lands on the same day next month, in UTC', () => {
+    // date-fns addMonths reads these in local time: west of UTC it turns
+    // 1 May into 31 May, and 1 Mar into 29 Mar.
+    expect(iso(rentPeriodEnd(new Date('2026-05-01T00:00:00.000Z')))).toBe(
+      '2026-06-01',
+    );
+    expect(iso(rentPeriodEnd(new Date('2026-03-01T00:00:00.000Z')))).toBe(
+      '2026-04-01',
+    );
+    expect(iso(rentPeriodEnd(new Date('2026-07-15T00:00:00.000Z')))).toBe(
+      '2026-08-15',
+    );
+  });
+
+  it('clamps into a shorter month', () => {
+    expect(iso(rentPeriodEnd(new Date('2026-01-31T00:00:00.000Z')))).toBe(
+      '2026-02-28',
+    );
+  });
+});
+
+describe('periodContaining', () => {
+  it('returns the period already running, not the one still ahead', () => {
+    // 4 Sep on a 15th-anchored lease: the tenant is in 15 Aug – 15 Sep.
+    const date = new Date('2026-09-04T00:00:00.000Z');
+    expect(iso(periodContaining(date, 15))).toBe('2026-08-15');
+  });
+
+  it('returns this month once the anchor day has arrived', () => {
+    const date = new Date('2026-09-20T00:00:00.000Z');
+    expect(iso(periodContaining(date, 15))).toBe('2026-09-15');
+  });
+
+  it('is the day itself on the anchor', () => {
+    const date = new Date('2026-09-15T00:00:00.000Z');
+    expect(iso(periodContaining(date, 15))).toBe('2026-09-15');
+  });
+
+  it('crosses the year boundary backwards', () => {
+    const date = new Date('2026-01-04T00:00:00.000Z');
+    expect(iso(periodContaining(date, 15))).toBe('2025-12-15');
+  });
+
+  it('never skips a period, for any anchor day', () => {
+    // `period <= date < nextPeriod(period)` — the containment invariant that
+    // survives the 29–31 anchors, where the calendar itself leaves a gap
+    // (28 Feb–28 Mar ends before a period re-anchored to 31 Mar begins).
+    for (const anchorDay of [1, 5, 15, 28, 29, 30, 31]) {
+      for (let day = 1; day <= 28; day += 3) {
+        for (const month of [0, 1, 2, 11]) {
+          const date = new Date(Date.UTC(2026, month, day));
+          const period = periodContaining(date, anchorDay);
+          expect({
+            anchorDay,
+            month,
+            day,
+            ok: period <= date && date < nextPeriod(period, anchorDay),
+          }).toEqual({ anchorDay, month, day, ok: true });
+        }
+      }
+    }
+  });
+
+  it('reports the last period that started when the anchor leaves a gap', () => {
+    // Anchor 31: February clamps to the 28th, so 28–30 March sit between the
+    // period that just ended and the one that re-anchors on the 31st.
+    const date = new Date('2026-03-29T00:00:00.000Z');
+    expect(iso(periodContaining(date, 31))).toBe('2026-02-28');
+  });
+});
+
+describe('nextPeriod', () => {
+  it('advances a month', () => {
+    expect(iso(nextPeriod(new Date('2026-05-01T00:00:00.000Z'), 1))).toBe(
+      '2026-06-01',
+    );
+  });
+
+  it('recovers an anchor the calendar had to clamp', () => {
+    // 31 Jan clamps to 28 Feb, and March must go back to the 31st.
+    const feb = nextPeriod(new Date('2026-01-31T00:00:00.000Z'), 31);
+    expect(iso(feb)).toBe('2026-02-28');
+    expect(iso(nextPeriod(feb, 31))).toBe('2026-03-31');
   });
 });

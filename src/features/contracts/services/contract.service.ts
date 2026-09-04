@@ -4,6 +4,7 @@ import {
   ContractStatus,
   PropertyStatus,
 } from '@/generated/prisma/enums';
+import { getTranslations } from 'next-intl/server';
 import { prisma } from '@/shared/lib/prisma';
 import { contractRepository } from '../repositories/contract.repository';
 import type {
@@ -96,14 +97,45 @@ export const contractService = {
     return contract;
   },
 
+  /**
+   * Edit a contract's terms.
+   *
+   * The term dates are re-checked against the STORED row, not just against
+   * each other: every field here is optional, so a payload carrying only
+   * `endDate` would slip past the schema's `endAfterStart` refine and leave a
+   * lease ending before it began. The forms also grey the impossible days out
+   * (`DatePicker`'s `minDate`); this is the guarantee behind them.
+   */
   async update(ownerId: string, input: UpdateContractInput) {
     const { id, ...rest } = input;
     if (rest.propertyId && rest.tenantId) {
       await assertOwnership(ownerId, rest.propertyId, rest.tenantId);
     }
+
+    const existing = await prisma.contract.findFirst({
+      where: { id, ownerId, deletedAt: null },
+      select: { startDate: true, endDate: true },
+    });
+    if (!existing) throw new NotFoundError('Contract');
+
+    const startDate = rest.startDate ?? existing.startDate;
+    // `undefined` leaves the column alone, `null` clears it — the two are NOT
+    // interchangeable here (see the clearable-fields rule).
+    const endDate =
+      rest.endDate === undefined ? existing.endDate : rest.endDate;
+    if (endDate && endDate <= startDate) {
+      const t = await getTranslations('validation');
+      throw new ValidationError(t('endAfterStart'), {
+        endDate: ['endAfterStart'],
+      });
+    }
+
     const updated = await contractRepository.update(ownerId, id, {
       ...rest,
-      endDate: rest.endDate ?? undefined,
+      // Passing `?? undefined` here made the end date impossible to clear:
+      // Prisma reads undefined as "leave this column alone", so switching a
+      // lease to open-ended reported success and kept the old date.
+      endDate: rest.endDate,
     });
     if (!updated) throw new NotFoundError('Contract');
 

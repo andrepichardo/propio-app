@@ -23,11 +23,11 @@ import {
   uploadPaymentProofAction,
 } from '../actions/payment.actions';
 import { applyFieldErrors } from '@/shared/hooks/use-server-action';
-import { addMonths } from 'date-fns';
 import {
   firstUncoveredMonth,
   monthValueToDate,
   periodToMonthValue,
+  rentPeriodEnd,
   rentPeriodStart,
 } from '@/shared/lib/rent-period';
 import { useFormatDate } from '@/shared/components/date-format-provider';
@@ -66,10 +66,17 @@ export type ContractOption = {
   id: string;
   label: string;
   rent: number;
+  /** Day of the month the contract STARTED — what its periods run on. */
+  anchorDay: number;
+  /** Day the rent is due within each period; never anchors a period. */
   dueDay: number;
   currency: string;
-  /** `yyyy-MM` periods already settled — drives the default and the warning. */
+  /** `yyyy-MM` periods already settled — drives the default and the block. */
   coveredPeriods: string[];
+  /** First `yyyy-MM` the contract's term can be paid for. */
+  min: string;
+  /** Last one; absent on an open-ended contract. */
+  max?: string;
 };
 
 interface PaymentFormProps {
@@ -93,6 +100,42 @@ export function PaymentForm({
   const preselected = contracts.find((c) => c.id === defaultContractId);
   const today = new Date();
 
+  /**
+   * Month of the payment date. `DatePicker` hands back `yyyy-MM-dd` while the
+   * initial default is a real `Date` for today — Zod coerces both on submit,
+   * so the field holds either shape while the form is open.
+   */
+  function monthOf(paidAt: Date | string): string {
+    if (typeof paidAt === 'string') return paidAt.slice(0, 7);
+    const month = String(paidAt.getMonth() + 1).padStart(2, '0');
+    return `${paidAt.getFullYear()}-${month}`;
+  }
+
+  /** Pull a month inside the contract's term. `yyyy-MM` sorts as a string. */
+  function clampToTerm(contract: ContractOption | undefined, month: string) {
+    if (!contract) return month;
+    if (month < contract.min) return contract.min;
+    if (contract.max && month > contract.max) return contract.max;
+    return month;
+  }
+
+  /**
+   * Month to preselect: the first one this contract still owes counting from
+   * `paidAt`, never outside its term — registering a payment before the
+   * contract starts would otherwise default to a month it cannot settle.
+   */
+  function suggestPeriod(
+    contract: ContractOption | undefined,
+    paidAt: Date | string,
+  ) {
+    const from = clampToTerm(contract, monthOf(paidAt));
+    const suggestion = firstUncoveredMonth(
+      contract?.coveredPeriods ?? [],
+      from,
+    );
+    return monthValueToDate(clampToTerm(contract, suggestion));
+  }
+
   const form = useForm<RegisterPaymentInput>({
     resolver: zodResolver(registerPaymentSchema),
     defaultValues: {
@@ -103,12 +146,7 @@ export function PaymentForm({
       reference: '',
       concept: '',
       paidAt: today,
-      periodStart: monthValueToDate(
-        firstUncoveredMonth(
-          preselected?.coveredPeriods ?? [],
-          `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`,
-        ),
-      ),
+      periodStart: suggestPeriod(preselected, today),
       notes: '',
       proofUrl: '',
       sendReceipt: false,
@@ -131,40 +169,35 @@ export function PaymentForm({
     watchAmount < selectedRent;
   const isRent = watchType !== PaymentType.DEPOSIT;
 
-  /**
-   * Month of the payment date. `DatePicker` hands back `yyyy-MM-dd` while the
-   * initial default is a real `Date` for today — Zod coerces both on submit,
-   * so the field holds either shape while the form is open.
-   */
-  function monthOf(paidAt: Date | string): string {
-    if (typeof paidAt === 'string') return paidAt.slice(0, 7);
-    const month = String(paidAt.getMonth() + 1).padStart(2, '0');
-    return `${paidAt.getFullYear()}-${month}`;
-  }
-
-  /** Suggest the first month this contract still owes, from `paidAt` forward. */
-  function suggestPeriod(
-    contract: ContractOption | undefined,
-    paidAt: Date | string,
-  ) {
-    return monthValueToDate(
-      firstUncoveredMonth(contract?.coveredPeriods ?? [], monthOf(paidAt)),
-    );
-  }
-
   const periodMonth = watchPeriod ? periodToMonthValue(watchPeriod) : '';
   const periodAlreadyCovered = Boolean(
     isRent &&
     periodMonth &&
     selectedContract?.coveredPeriods.includes(periodMonth),
   );
-  // "15 oct 2026 – 15 nov 2026" — the range the picked month resolves to once
-  // the service anchors it to the contract's due day.
+  // The picker greys these out, so this only catches a month that was already
+  // in the field when the contract changed under it.
+  const periodOutsideTerm = Boolean(
+    isRent &&
+    periodMonth &&
+    selectedContract &&
+    (periodMonth < selectedContract.min ||
+      (selectedContract.max !== undefined &&
+        periodMonth > selectedContract.max)),
+  );
+  const periodRejected = periodAlreadyCovered || periodOutsideTerm;
+  // "1 may 2026 – 1 jun 2026" — the range the picked month resolves to once the
+  // service anchors it to the contract's start day. `rentPeriodEnd`, never
+  // `addMonths`: these are UTC-midnight dates and date-fns walks them in local
+  // time, which lands a day (or three, across February) short.
   const periodRange =
     isRent && watchPeriod && selectedContract
       ? (() => {
-          const start = rentPeriodStart(watchPeriod, selectedContract.dueDay);
-          return `${formatDate(start)} – ${formatDate(addMonths(start, 1))}`;
+          const start = rentPeriodStart(
+            watchPeriod,
+            selectedContract.anchorDay,
+          );
+          return `${formatDate(start)} – ${formatDate(rentPeriodEnd(start))}`;
         })()
       : null;
 
@@ -191,6 +224,18 @@ export function PaymentForm({
   }
 
   function onSubmit(values: RegisterPaymentInput) {
+    // A settled month records money that advances nothing (there is no credit
+    // concept), and a month outside the term belongs to no contract at all.
+    // The submit button is disabled for both; this catches the paths that
+    // bypass the button, and the service refuses them regardless — the page
+    // may have gone stale.
+    if (periodRejected) {
+      toast.error(
+        t(periodOutsideTerm ? 'form.periodOutsideTerm' : 'form.periodCovered'),
+      );
+      return;
+    }
+
     startTransition(async () => {
       const result = await registerPaymentAction(values);
       if (!result.success) {
@@ -239,7 +284,11 @@ export function PaymentForm({
                       const c = contracts.find((x) => x.id === value);
                       if (!c) return;
                       form.setValue('amount', c.rent);
-                      if (!periodPicked) {
+                      // A hand-picked month is left alone, unless the contract
+                      // that just replaced this one can't settle it.
+                      const current = form.getValues('periodStart');
+                      const month = current ? periodToMonthValue(current) : '';
+                      if (!periodPicked || month !== clampToTerm(c, month)) {
                         form.setValue(
                           'periodStart',
                           suggestPeriod(c, form.getValues('paidAt')),
@@ -377,21 +426,29 @@ export function PaymentForm({
                     <FormLabel>{t('form.period')}</FormLabel>
                     <MonthPicker
                       value={periodMonth}
+                      min={selectedContract?.min}
+                      max={selectedContract?.max}
                       onChange={(month) => {
                         setPeriodPicked(true);
                         field.onChange(monthValueToDate(month));
                       }}
                     />
-                    {periodAlreadyCovered ? (
-                      <p className="text-[0.8rem] text-amber-600 dark:text-amber-500">
-                        {t('form.periodCovered')}
+                    {periodRejected ? (
+                      <p className="text-[0.8rem] font-medium text-destructive">
+                        {t(
+                          periodOutsideTerm
+                            ? 'form.periodOutsideTerm'
+                            : 'form.periodCovered',
+                        )}
                       </p>
                     ) : (
-                      <FormDescription>
-                        {periodRange ?? t('form.periodHint')}
-                      </FormDescription>
+                      <>
+                        <FormDescription>
+                          {periodRange ?? t('form.periodHint')}
+                        </FormDescription>
+                        <FormMessage />
+                      </>
                     )}
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -502,7 +559,11 @@ export function PaymentForm({
           >
             {t('form.cancel')}
           </Button>
-          <Button type="submit" loading={isPending} disabled={proofUploading}>
+          <Button
+            type="submit"
+            loading={isPending}
+            disabled={proofUploading || periodRejected}
+          >
             {t('form.submit')}
           </Button>
         </div>

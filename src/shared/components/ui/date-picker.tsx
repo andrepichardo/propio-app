@@ -11,8 +11,14 @@ import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import { Calendar } from './calendar';
 import { Button } from './button';
 
-/** Parse any accepted value into a local-midnight Date the calendar can select. */
-function toLocalDate(
+/**
+ * Parse any accepted value into a local-midnight Date the calendar can select.
+ *
+ * Exported because callers that derive a bound from another field (a contract's
+ * end date from its start date) need the same parsing — `value` may be a Date
+ * or a `yyyy-MM-dd` string depending on whether the form has been touched.
+ */
+export function toLocalDate(
   value: Date | string | null | undefined,
 ): Date | undefined {
   const ymd = toDateInputValue(value);
@@ -27,6 +33,12 @@ function toLocalDate(
  * Format) and picks via a calendar. Drop-in for `<input type="date">`: `value`
  * accepts a Date or `yyyy-MM-dd` string, `onChange` emits `yyyy-MM-dd` (or ''
  * when cleared).
+ *
+ * `minDate`/`maxDate` are INCLUSIVE bounds: days outside them are greyed out,
+ * the month navigation stops there, and an empty field opens on the bound
+ * rather than on today (which would otherwise land on a month with nothing
+ * selectable). To exclude the bound itself — an end date must be AFTER the
+ * start, not equal to it — pass the neighbouring day.
  */
 export function DatePicker({
   value,
@@ -34,18 +46,28 @@ export function DatePicker({
   id,
   disabled,
   clearable,
+  minDate,
+  maxDate,
 }: {
   value: Date | string | null | undefined;
   onChange: (value: string) => void;
   id?: string;
   disabled?: boolean;
   clearable?: boolean;
+  minDate?: Date | string | null;
+  maxDate?: Date | string | null;
 }) {
   const formatDate = useFormatDate();
   const locale = useLocale();
   const t = useTranslations('datePicker');
   const [open, setOpen] = useState(false);
   const selected = toLocalDate(value);
+  const min = toLocalDate(minDate);
+  const max = toLocalDate(maxDate);
+  const outOfRange = [
+    ...(min ? [{ before: min }] : []),
+    ...(max ? [{ after: max }] : []),
+  ];
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -71,7 +93,10 @@ export function DatePicker({
         <Calendar
           mode="single"
           selected={selected}
-          defaultMonth={selected}
+          defaultMonth={selected ?? min ?? max}
+          startMonth={min}
+          endMonth={max}
+          disabled={outOfRange.length > 0 ? outOfRange : undefined}
           autoFocus
           locale={locale.slice(0, 2) === 'es' ? esDateLocale : undefined}
           onSelect={(date) => {

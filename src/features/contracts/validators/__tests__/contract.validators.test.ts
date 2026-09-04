@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   createContractSchema,
   renewContractSchema,
+  updateContractSchema,
 } from '../contract.validators';
 
 const validInput = {
@@ -33,6 +34,16 @@ describe('createContractSchema', () => {
     if (!result.success) {
       expect(result.error.flatten().fieldErrors.endDate).toBeDefined();
     }
+  });
+
+  it('rejects an end date equal to the start date', () => {
+    // A lease that starts and ends the same day covers no period at all.
+    expect(
+      createContractSchema.safeParse({
+        ...validInput,
+        endDate: validInput.startDate,
+      }).success,
+    ).toBe(false);
   });
 
   it('rejects non-positive rent', () => {
@@ -100,5 +111,62 @@ describe('renewContractSchema', () => {
       renewContractSchema.safeParse({ ...validRenewal, monthlyRent: 0 })
         .success,
     ).toBe(false);
+  });
+});
+
+const contractId = 'clxxxxxxxxxxxxxxxxxxxxxxx';
+
+describe('updateContractSchema', () => {
+  it('accepts a partial edit', () => {
+    const result = updateContractSchema.safeParse({
+      id: contractId,
+      monthlyRent: 1500,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects an end date before the start when both are sent', () => {
+    const result = updateContractSchema.safeParse({
+      id: contractId,
+      startDate: '2026-05-01',
+      endDate: '2026-04-01',
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.flatten().fieldErrors.endDate).toBeDefined();
+    }
+  });
+
+  it('rejects the two dates being equal', () => {
+    expect(
+      updateContractSchema.safeParse({
+        id: contractId,
+        startDate: '2026-05-01',
+        endDate: '2026-05-01',
+      }).success,
+    ).toBe(false);
+  });
+
+  it('accepts clearing the end date (open-ended)', () => {
+    const result = updateContractSchema.safeParse({
+      id: contractId,
+      startDate: '2026-05-01',
+      endDate: null,
+    });
+    expect(result.success).toBe(true);
+    // null must survive as null — undefined would tell Prisma to keep the old
+    // value, so the lease could never be switched to open-ended.
+    if (result.success) expect(result.data.endDate).toBeNull();
+  });
+
+  it('cannot judge an end date sent on its own — the service does', () => {
+    // Documents the gap the schema structurally cannot close: with no start
+    // date in the payload there is nothing here to compare against, which is
+    // why contractService.update re-checks against the stored row.
+    const result = updateContractSchema.safeParse({
+      id: contractId,
+      endDate: '1999-01-01',
+    });
+    expect(result.success).toBe(true);
   });
 });

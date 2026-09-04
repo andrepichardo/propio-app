@@ -1,5 +1,5 @@
 import 'server-only';
-import { format, getDaysInMonth } from 'date-fns';
+import { format } from 'date-fns';
 import { es as esDateLocale } from 'date-fns/locale';
 import { getTranslations } from 'next-intl/server';
 import { prisma } from '@/shared/lib/prisma';
@@ -17,6 +17,11 @@ import { renderReceiptPdf } from '@/pdf/render';
 import { sendReceiptEmail } from '@/emails/send';
 import { clientEnv } from '@/shared/config/env';
 import { numberLocale, toLocale } from '@/i18n/config';
+import {
+  contractAnchorDay,
+  dueDateForPeriod,
+  nextPeriod,
+} from '@/shared/lib/rent-period';
 
 export type ReceiptListItem = Awaited<
   ReturnType<typeof receiptService.list>
@@ -143,7 +148,14 @@ export const receiptService = {
             periodStart: true,
           },
         },
-        contract: { select: { dueDay: true, endDate: true, status: true } },
+        contract: {
+          select: {
+            dueDay: true,
+            startDate: true,
+            endDate: true,
+            status: true,
+          },
+        },
         owner: { select: { name: true, email: true, signatureUrl: true } },
       },
     });
@@ -243,27 +255,33 @@ export const receiptService = {
 };
 
 /**
- * Due date of the NEXT rent after the paid period: the contract's `dueDay`
- * in the following month (clamped to that month's length). Omitted when the
- * contract is no longer active or already ended by then. Dates are rebuilt
- * from UTC parts — date-only values live at UTC midnight in the DB.
+ * Due date of the NEXT rent after the paid period — what the receipt prints as
+ * "Fecha límite de pago próxima renta". Omitted when the contract is no longer
+ * active or has ended by then.
+ *
+ * Derived from the contract's own period cycle (`nextPeriod` +
+ * `dueDateForPeriod`) rather than "the due day one month on": those differ
+ * whenever the due day falls before the contract's start day, where the due
+ * date belongs to the month AFTER the period opens (starts the 25th, due the
+ * 5th ⇒ the 25 Sep period is due 5 Oct, not 5 Sep).
  */
 function nextRentDueDate(
   paidPeriod: Date,
-  contract: { dueDay: number; endDate: Date | null; status: string },
+  contract: {
+    dueDay: number;
+    startDate: Date;
+    endDate: Date | null;
+    status: string;
+  },
 ): Date | null {
   if (contract.status !== 'ACTIVE') return null;
 
-  const year = paidPeriod.getUTCFullYear();
-  const nextMonth = paidPeriod.getUTCMonth() + 1;
-  const day = Math.min(
-    contract.dueDay,
-    getDaysInMonth(new Date(year, nextMonth, 1)),
+  const upcoming = nextPeriod(
+    paidPeriod,
+    contractAnchorDay(contract.startDate),
   );
-  const nextDue = new Date(year, nextMonth, day);
-
-  if (contract.endDate && nextDue > contract.endDate) return null;
-  return nextDue;
+  if (contract.endDate && upcoming >= contract.endDate) return null;
+  return dueDateForPeriod(upcoming, contract.dueDay);
 }
 
 /** Receipts whose payment is still live — a voided payment has no receipt. */

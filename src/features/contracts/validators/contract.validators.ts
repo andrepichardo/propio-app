@@ -28,25 +28,36 @@ export const contractBaseSchema = z
 
 export const createContractSchema = contractBaseSchema;
 
-export const updateContractSchema = z.object({
-  id: z.string().cuid(),
-  propertyId: z.string().cuid().optional(),
-  tenantId: z.string().cuid().optional(),
-  startDate: z.coerce.date().optional(),
-  endDate: z.coerce.date().optional().nullable(),
-  monthlyRent: z.coerce.number().positive().max(100_000_000).optional(),
-  currency: z
-    .string()
-    .trim()
-    .length(3, 'currencyCode')
-    .transform((v) => v.toUpperCase())
-    .optional(),
-  dueDay: z.coerce.number().int().min(1).max(31).optional(),
-  securityDeposit: z.coerce.number().min(0).max(100_000_000).optional(),
-  maintenanceIncluded: z.boolean().optional(),
-  status: z.nativeEnum(ContractStatus).optional(),
-  notes: optionalText(2000),
-});
+/**
+ * Editing an existing contract: every field is optional, so this can only
+ * check the pair when BOTH arrive (which the form always sends). A payload
+ * carrying just one of them is validated against the stored row in
+ * `contractService.update`.
+ */
+export const updateContractSchema = z
+  .object({
+    id: z.string().cuid(),
+    propertyId: z.string().cuid().optional(),
+    tenantId: z.string().cuid().optional(),
+    startDate: z.coerce.date().optional(),
+    endDate: z.coerce.date().optional().nullable(),
+    monthlyRent: z.coerce.number().positive().max(100_000_000).optional(),
+    currency: z
+      .string()
+      .trim()
+      .length(3, 'currencyCode')
+      .transform((v) => v.toUpperCase())
+      .optional(),
+    dueDay: z.coerce.number().int().min(1).max(31).optional(),
+    securityDeposit: z.coerce.number().min(0).max(100_000_000).optional(),
+    maintenanceIncluded: z.boolean().optional(),
+    status: z.nativeEnum(ContractStatus).optional(),
+    notes: optionalText(2000),
+  })
+  .refine(
+    (data) => !data.endDate || !data.startDate || data.endDate > data.startDate,
+    { message: 'endAfterStart', path: ['endDate'] },
+  );
 
 /**
  * Renewing a contract creates a NEW one carrying the previous terms forward,

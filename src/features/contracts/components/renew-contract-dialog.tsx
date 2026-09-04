@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { RefreshCw } from 'lucide-react';
-import { addYears } from 'date-fns';
+import { addDays, addYears } from 'date-fns';
 import {
   renewContractSchema,
   type RenewContractInput,
@@ -34,7 +34,7 @@ import {
   FormMessage,
 } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
-import { DatePicker } from '@/shared/components/ui/date-picker';
+import { DatePicker, toLocalDate } from '@/shared/components/ui/date-picker';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Button } from '@/shared/components/ui/button';
 
@@ -88,6 +88,11 @@ export function RenewContractDialog({
       shouldValidate: true,
     });
   }
+
+  // Same rule as the contract form: the renewal's end date has to fall after
+  // its start, so the day before it is the last one the calendar greys out.
+  const startLocal = toLocalDate(form.watch('startDate'));
+  const minEndDate = startLocal ? addDays(startLocal, 1) : undefined;
 
   function onSubmit(values: RenewContractInput) {
     startTransition(async () => {
@@ -176,7 +181,15 @@ export function RenewContractDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel required>{t('startDate')}</FormLabel>
-                    <DatePicker value={field.value} onChange={field.onChange} />
+                    <DatePicker
+                      value={field.value}
+                      onChange={(v) => {
+                        field.onChange(v);
+                        if (form.getValues('endDate')) {
+                          void form.trigger('endDate');
+                        }
+                      }}
+                    />
                     <FormMessage />
                   </FormItem>
                 )}
@@ -190,6 +203,7 @@ export function RenewContractDialog({
                     <DatePicker
                       value={field.value}
                       onChange={(v) => field.onChange(v || null)}
+                      minDate={minEndDate}
                       clearable
                     />
                     <FormDescription>{t('endDateHint')}</FormDescription>

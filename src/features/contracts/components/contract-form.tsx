@@ -28,7 +28,8 @@ import {
   FormMessage,
 } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
-import { DatePicker } from '@/shared/components/ui/date-picker';
+import { addDays } from 'date-fns';
+import { DatePicker, toLocalDate } from '@/shared/components/ui/date-picker';
 import { CURRENCY_CODES } from '@/shared/lib/currencies';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Button } from '@/shared/components/ui/button';
@@ -86,6 +87,13 @@ export function ContractForm({
       ...defaultValues,
     },
   });
+
+  // The end date must be AFTER the start, so the calendar's first selectable
+  // day is the one after it — the same rule the `endAfterStart` refine checks,
+  // enforced where the owner can see it instead of only on submit.
+  const watchStart = form.watch('startDate');
+  const startLocal = toLocalDate(watchStart);
+  const minEndDate = startLocal ? addDays(startLocal, 1) : undefined;
 
   function onSubmit(values: CreateContractInput) {
     startTransition(async () => {
@@ -198,7 +206,16 @@ export function ContractForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel required>{t('form.startDate')}</FormLabel>
-                  <DatePicker value={field.value} onChange={field.onChange} />
+                  <DatePicker
+                    value={field.value}
+                    onChange={(v) => {
+                      field.onChange(v);
+                      // Moving the start past an end date already chosen makes
+                      // that field invalid; surface it now rather than on save.
+                      if (form.getValues('endDate'))
+                        void form.trigger('endDate');
+                    }}
+                  />
                   <FormMessage />
                 </FormItem>
               )}
@@ -211,7 +228,10 @@ export function ContractForm({
                   <FormLabel>{t('form.endDate')}</FormLabel>
                   <DatePicker
                     value={field.value}
-                    onChange={(v) => field.onChange(v || undefined)}
+                    // null clears the column; undefined would leave the old
+                    // date in place and report success anyway.
+                    onChange={(v) => field.onChange(v || null)}
+                    minDate={minEndDate}
                     clearable
                   />
                   <FormDescription>{t('form.openEnded')}</FormDescription>

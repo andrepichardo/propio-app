@@ -1,12 +1,5 @@
 import 'server-only';
-import {
-  addDays,
-  addMonths,
-  differenceInCalendarDays,
-  endOfMonth,
-  startOfMonth,
-  subDays,
-} from 'date-fns';
+import { addDays, differenceInCalendarDays, subDays } from 'date-fns';
 import {
   ContractStatus,
   NotificationType,
@@ -14,6 +7,12 @@ import {
 } from '@/generated/prisma/enums';
 import { prisma } from '@/shared/lib/prisma';
 import { formatCurrency } from '@/shared/lib/format';
+import {
+  contractAnchorDay,
+  dueDateForPeriod,
+  monthRangeOf,
+  periodContaining,
+} from '@/shared/lib/rent-period';
 import { sendReminderDigests } from './notification-digest';
 
 /** Fallback reminder settings for owners whose row is somehow missing. Mirrors
@@ -66,15 +65,6 @@ async function alreadyNotified(
     select: { id: true },
   });
   return existing !== null;
-}
-
-/** Due date for the given month, clamped to day 28 for short months. */
-function dueDateFor(monthAnchor: Date, dueDay: number): Date {
-  return new Date(
-    monthAnchor.getFullYear(),
-    monthAnchor.getMonth(),
-    Math.min(Math.max(dueDay, 1), 28),
-  );
 }
 
 export type SchedulerResult = {
@@ -144,6 +134,8 @@ export async function runNotificationScheduler(): Promise<SchedulerResult> {
       id: true,
       ownerId: true,
       dueDay: true,
+      // Anchors the rent period the reminder is about.
+      startDate: true,
       endDate: true,
       monthlyRent: true,
       currency: true,
@@ -199,7 +191,13 @@ export async function runNotificationScheduler(): Promise<SchedulerResult> {
     }
 
     // --- Rent payment status for the current period --------------------------
-    const periodStart = startOfMonth(now);
+    // The period is the contract's own cycle (start day to start day), not the
+    // calendar month this used to assume — a lease running 15th-to-15th was
+    // asked about "September" while its payment sat on the 15 Aug period.
+    // Matched by month like `periodTally`, so rows anchored differently (older
+    // ones, or a corrected start date) still count.
+    const period = periodContaining(now, contractAnchorDay(contract.startDate));
+    const withinMonth = monthRangeOf(period);
     const paid = await prisma.payment.findFirst({
       where: {
         ownerId: contract.ownerId,
@@ -207,15 +205,15 @@ export async function runNotificationScheduler(): Promise<SchedulerResult> {
         deletedAt: null,
         status: PaymentStatus.COMPLETED,
         OR: [
-          { periodStart },
-          { paidAt: { gte: periodStart, lte: endOfMonth(now) } },
+          { periodStart: withinMonth },
+          { periodStart: null, paidAt: withinMonth },
         ],
       },
       select: { id: true },
     });
     if (paid) continue;
 
-    const dueThisMonth = dueDateFor(now, contract.dueDay);
+    const dueThisMonth = dueDateForPeriod(period, contract.dueDay);
 
     if (now > dueThisMonth) {
       // Late for the current period.
@@ -252,11 +250,9 @@ export async function runNotificationScheduler(): Promise<SchedulerResult> {
         result.late += 1;
       }
     } else {
-      // Not yet due — remind when the window opens.
-      const nextDue =
-        dueThisMonth >= now
-          ? dueThisMonth
-          : dueDateFor(addMonths(now, 1), contract.dueDay);
+      // Not yet due — remind when the window opens. This branch only runs
+      // while `now <= dueThisMonth`, so that IS the next due date.
+      const nextDue = dueThisMonth;
       if (
         prefs.notifyPaymentUpcoming &&
         nextDue <= addDays(now, prefs.paymentUpcomingLeadDays) &&

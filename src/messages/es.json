@@ -614,6 +614,10 @@
     "editAria": "Editar pago",
     "recordedToast": "Pago registrado — recibo {number}.",
     "updatedToast": "Pago actualizado.",
+    "errors": {
+      "periodAlreadyPaid": "Ese período ya está pagado. Elige otro mes o edita el pago existente.",
+      "periodOutsideContract": "Ese mes está fuera de la vigencia del contrato. Elige un mes dentro del período contratado."
+    },
     "edit": {
       "title": "Editar pago",
       "desc": "Corrige un pago registrado por error. Para moverlo a otro contrato, anúlalo y regístralo de nuevo.",
@@ -627,7 +631,8 @@
       "description": "El pago, su recibo y ambos PDF se borrarán para siempre — esto no se puede deshacer. También deja de contar en tus ingresos.",
       "keep": "Mantenerlo",
       "confirm": "Eliminar permanentemente",
-      "deletedToast": "Pago eliminado."
+      "deletedToast": "Pago eliminado.",
+      "receiptReuse": "El número {number} quedará libre y se reutilizará en el próximo recibo. Si ya se lo enviaste al inquilino, su copia quedará con un número que pertenecerá a otro pago."
     },
     "methods": {
       "CASH": "Efectivo",
@@ -656,6 +661,7 @@
       "period": "Período que cubre",
       "periodHint": "El mes de alquiler que salda este pago. Cámbialo para pagar un mes por adelantado.",
       "periodCovered": "Este período ya está pagado. Elige otro mes para registrar un pago adelantado.",
+      "periodOutsideTerm": "Este mes está fuera de la vigencia del contrato.",
       "method": "Método",
       "date": "Fecha del pago",
       "reference": "Referencia",

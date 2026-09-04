@@ -25,7 +25,14 @@ export type PaymentListItem = Prisma.PaymentGetPayload<{
     settlesPeriod: true;
     property: { select: { id: true; name: true } };
     tenant: { select: { id: true; firstName: true; lastName: true } };
-    contract: { select: { monthlyRent: true; dueDay: true } };
+    contract: {
+      select: {
+        monthlyRent: true;
+        dueDay: true;
+        startDate: true;
+        endDate: true;
+      };
+    };
     receipt: { select: { id: true; number: true; pdfUrl: true } };
   };
 }>;
@@ -55,7 +62,15 @@ const listSelect = {
   settlesPeriod: true,
   property: { select: { id: true, name: true } },
   tenant: { select: { id: true, firstName: true, lastName: true } },
-  contract: { select: { monthlyRent: true, dueDay: true } },
+  // startDate/endDate bound the months the edit dialog's period picker offers.
+  contract: {
+    select: {
+      monthlyRent: true,
+      dueDay: true,
+      startDate: true,
+      endDate: true,
+    },
+  },
   receipt: { select: { id: true, number: true, pdfUrl: true } },
 } satisfies Prisma.PaymentSelect;
 

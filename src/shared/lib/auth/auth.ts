@@ -49,7 +49,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           where: { email: email.toLowerCase() },
         });
 
-
         if (!user?.hashedPassword) return null;
 
         const valid = await verifyPassword(password, user.hashedPassword);
