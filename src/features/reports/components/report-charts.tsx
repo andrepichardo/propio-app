@@ -50,15 +50,13 @@ export function ProfitBarChart({
           dataKey="month"
           tickLine={false}
           axisLine={false}
-          className="text-xs"
-          stroke="hsl(var(--muted-foreground))"
+          tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
         />
         <YAxis
           tickLine={false}
           axisLine={false}
-          width={56}
-          className="text-xs"
-          stroke="hsl(var(--muted-foreground))"
+          width="auto"
+          tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
           tickFormatter={(v: number) => formatCompactCurrency(v, currency)}
         />
         <Tooltip
@@ -71,13 +69,14 @@ export function ProfitBarChart({
           }}
           labelStyle={{ color: 'hsl(var(--popover-foreground))' }}
           itemStyle={{ color: 'hsl(var(--popover-foreground))' }}
-          formatter={(value: number, name: string, item) => {
+          formatter={(value, name, item) => {
+            // See revenue-chart: recharts 3 widens these to ValueType/NameType.
             const point = item?.payload as MonthlyReportRow | undefined;
             const approx =
               name === 'revenue' ? point?.revenueApprox : point?.expensesApprox;
             return [
-              `${approx ? '≈ ' : ''}${formatCurrency(value, currency)}`,
-              seriesLabel(name),
+              `${approx ? '≈ ' : ''}${formatCurrency(Number(value), currency)}`,
+              seriesLabel(String(name)),
             ];
           }}
         />
@@ -147,8 +146,8 @@ export function ExpenseBreakdownChart({
           }}
           labelStyle={{ color: 'hsl(var(--popover-foreground))' }}
           itemStyle={{ color: 'hsl(var(--popover-foreground))' }}
-          formatter={(value: number) =>
-            `${approx ? '≈ ' : ''}${formatCurrency(value, currency)}`
+          formatter={(value) =>
+            `${approx ? '≈ ' : ''}${formatCurrency(Number(value), currency)}`
           }
         />
         <Legend wrapperStyle={{ fontSize: 12 }} />
