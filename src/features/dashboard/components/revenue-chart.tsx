@@ -70,15 +70,13 @@ export function RevenueChart({
           dataKey="month"
           tickLine={false}
           axisLine={false}
-          className="text-xs"
-          stroke="hsl(var(--muted-foreground))"
+          tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
         />
         <YAxis
           tickLine={false}
           axisLine={false}
-          width={56}
-          className="text-xs"
-          stroke="hsl(var(--muted-foreground))"
+          width="auto"
+          tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
           tickFormatter={(value: number) =>
             formatCompactCurrency(value, currency)
           }
@@ -93,12 +91,15 @@ export function RevenueChart({
             boxShadow: '0 4px 12px -4px rgb(0 0 0 / 0.1)',
           }}
           labelStyle={{ color: 'hsl(var(--muted-foreground))' }}
-          formatter={(value: number, name: string, item) => {
+          formatter={(value, name, item) => {
+            // recharts 3 types these as its own ValueType/NameType (a string,
+            // a number or an array of either), so they are inferred from the
+            // context and normalised here rather than annotated as primitives.
             const point = item?.payload as Point | undefined;
             const approx =
               name === 'revenue' ? point?.revenueApprox : point?.expensesApprox;
             return [
-              `${approx ? '≈ ' : ''}${formatCurrency(value, currency)}`,
+              `${approx ? '≈ ' : ''}${formatCurrency(Number(value), currency)}`,
               name === 'revenue' ? t('revenue') : t('expenses'),
             ];
           }}

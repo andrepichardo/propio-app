@@ -7,8 +7,12 @@ import {
 } from '@/generated/prisma/enums';
 
 /** A number field that treats an empty input as "not set" (undefined), so
- * clearing it never coerces to 0. */
-const optionalNumber = (schema: z.ZodNumber) =>
+ * clearing it never coerces to 0.
+ *
+ * Generic rather than `z.ZodNumber`: every caller passes `z.coerce.number()`,
+ * which zod types as `ZodCoercedNumber<unknown>` — a distinct type since 3.25,
+ * and the shape zod 4 uses throughout. */
+const optionalNumber = <T extends z.ZodTypeAny>(schema: T) =>
   z.preprocess(
     (v) => (v === '' || v === null ? undefined : v),
     schema.optional(),
