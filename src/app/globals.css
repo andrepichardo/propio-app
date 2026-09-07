@@ -1,6 +1,4 @@
 @import 'tailwindcss';
-/* Replaces the v3 `tailwindcss-animate` plugin: provides animate-in and
-   animate-out plus the fade and zoom modifiers the dialogs and popovers use. */
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
@@ -187,9 +185,6 @@
     --popover: 0 0% 100%;
     --popover-foreground: 224 16% 12%;
 
-    /* Propio brand indigo (#48509e), straight off the logo tile. Dark mode
-       lightens it: the literal brand value only reaches 2.6:1 on the dark
-       background, so it is unusable there for text, links or focus rings. */
     --primary: 234 37% 45%;
     --primary-foreground: 0 0% 100%;
 
@@ -256,10 +251,6 @@
 }
 
 @layer base {
-  /* v4 defaults the border colour to `currentcolor`; this project has always
-     set it from its own token instead, so it never depended on v3's gray-200
-     (the upgrade's compatibility shim was dropped). The pseudo-element
-     selectors match what v3's preflight covered. */
   *,
   ::after,
   ::before,
@@ -276,15 +267,16 @@
     text-rendering: optimizeLegibility;
   }
 
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']) {
+    cursor: pointer;
+  }
+
   /* Consistent focus rings across interactive elements. */
   :focus-visible {
     @apply ring-ring ring-offset-background ring-2 ring-offset-2 outline-hidden;
   }
 
-  /* Smooth in-page anchor scrolling, opted into by the marketing pages via
-     `data-smooth-scroll` on their root (html:has keeps it off the app shell,
-     where it would animate the router's scroll-to-top on every navigation).
-     Gated on reduced motion like every other animation on those pages. */
   @media (prefers-reduced-motion: no-preference) {
     html:has([data-smooth-scroll]) {
       scroll-behavior: smooth;

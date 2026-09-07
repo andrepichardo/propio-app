@@ -1,0 +1,26 @@
+{
+  "extends": [
+    "development"
+  ],
+  "hints": {
+    "compat-api/css": [
+      "default",
+      {
+        "ignore": [
+          "@layer",
+          "scrollbar-color",
+          "scrollbar-width"
+        ]
+      }
+    ]
+  },
+  "browserslist": [
+    "defaults",
+    "not ie 11",
+    "not and_chr <= 123",
+    "not chrome <= 124",
+    "not edge <= 123",
+    "not opera <= 109",
+    "not samsung <= 24"
+  ]
+}
