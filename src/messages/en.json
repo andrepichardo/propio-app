@@ -1248,7 +1248,8 @@
       "privacy": "Privacy policy",
       "rights": "All rights reserved.",
       "madeIn": "Made in the Dominican Republic.",
-      "pricing": "Pricing"
+      "pricing": "Pricing",
+      "refunds": "Refunds"
     },
     "navPricing": "Pricing",
     "pricing": {
@@ -1557,6 +1558,50 @@
           "bullets": []
         }
       ]
+    },
+    "refunds": {
+      "title": "Refund policy",
+      "updated": "September 24, 2026",
+      "intro": "We want you to pay for Propio only if it works for you. This policy explains when we refund you, how to cancel, and who processes refunds. It complements the Terms of use.",
+      "sections": [
+        {
+          "title": "Try it without paying",
+          "body": [
+            "The Free plan asks for no card and never expires: you can use Propio with one property for as long as you like before deciding whether a paid plan is worth it."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Refund of the first charge",
+          "body": [
+            "If you are not satisfied, we refund the full amount of a subscription’s first charge if you ask within 14 days of that charge. You do not have to give a reason.",
+            "To request it, write to info@usepropio.com from your account’s email address. The refund goes back to the payment method you used; depending on your bank, it can take 5 to 10 business days to show."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Renewals and plan changes",
+          "body": [
+            "Outside those 14 days, monthly or yearly renewals are non-refundable, except where applicable law requires otherwise.",
+            "When you switch plans, the difference is prorated automatically: if the new plan costs more, only the proportional part is charged; if it costs less, the balance becomes credit toward your next bills."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "How to cancel",
+          "body": [
+            "You can cancel whenever you want from Plan & billing → Manage subscription, or by writing to us. You keep your plan until the end of the period you already paid for, then move to the Free plan. Cancelling never deletes your data."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Who processes the payment",
+          "body": [
+            "Payments and refunds are processed by Paddle.com, our authorised reseller and the Merchant of Record for all our orders. You can also look up or manage a charge directly with Paddle at paddle.net."
+          ],
+          "bullets": []
+        }
+      ]
     }
   },
   "meta": {
@@ -1590,7 +1635,8 @@
     "profile": "Profile",
     "terms": "Terms of use",
     "privacy": "Privacy policy",
-    "billing": "Plan & billing"
+    "billing": "Plan & billing",
+    "refunds": "Refund policy"
   },
   "emails": {
     "footer": "Manage your properties with confidence.",

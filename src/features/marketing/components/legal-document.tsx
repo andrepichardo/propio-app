@@ -2,7 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { GridPattern } from './backdrop';
 
 /**
- * Renderer for the long-form legal pages (`/terms`, `/privacy`).
+ * Renderer for the long-form legal pages (`/terms`, `/privacy`, `/refunds`).
  *
  * The documents live entirely in the message catalogues as an array of
  * sections, so both locales stay in lockstep and editing a clause never means
@@ -55,7 +55,7 @@ export async function LegalDocument({
   namespace,
 }: {
   /** Message namespace holding the document, e.g. `legal.terms`. */
-  namespace: 'legal.terms' | 'legal.privacy';
+  namespace: 'legal.terms' | 'legal.privacy' | 'legal.refunds';
 }) {
   const t = await getTranslations(namespace);
   const tc = await getTranslations('legal');

@@ -1248,7 +1248,8 @@
       "privacy": "Política de privacidad",
       "rights": "Todos los derechos reservados.",
       "madeIn": "Hecho en República Dominicana.",
-      "pricing": "Precios"
+      "pricing": "Precios",
+      "refunds": "Reembolsos"
     },
     "navPricing": "Precios",
     "pricing": {
@@ -1559,6 +1560,50 @@
           "bullets": []
         }
       ]
+    },
+    "refunds": {
+      "title": "Política de reembolso",
+      "updated": "24 de septiembre de 2026",
+      "intro": "Queremos que pagues por Propio solo si te sirve. Esta política explica cuándo te devolvemos el dinero, cómo cancelar y quién procesa los reembolsos. Complementa los Términos de uso.",
+      "sections": [
+        {
+          "title": "Pruébalo sin pagar",
+          "body": [
+            "El plan Gratis no pide tarjeta y no vence: puedes usar Propio con una propiedad todo el tiempo que quieras antes de decidir si un plan de pago te conviene."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Reembolso del primer cobro",
+          "body": [
+            "Si no quedas conforme, te devolvemos el importe completo del primer cobro de una suscripción si nos lo pides dentro de los 14 días siguientes a ese cobro. No tienes que explicar el motivo.",
+            "Para pedirlo, escríbenos a info@usepropio.com desde el correo de tu cuenta. El reembolso se hace al mismo medio de pago que usaste; según tu banco, puede tardar entre 5 y 10 días hábiles en reflejarse."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Renovaciones y cambios de plan",
+          "body": [
+            "Fuera de esos 14 días, las renovaciones mensuales o anuales no son reembolsables, salvo donde la ley aplicable lo exija.",
+            "Cuando cambias de plan, la diferencia se prorratea automáticamente: si el nuevo plan cuesta más, se cobra solo la parte proporcional; si cuesta menos, el saldo queda como crédito para tus próximos cobros."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Cómo cancelar",
+          "body": [
+            "Puedes cancelar cuando quieras desde Plan y facturación → Gestionar suscripción, o escribiéndonos. Conservas tu plan hasta el final del período que ya pagaste y después pasas al plan Gratis. Cancelar nunca borra tus datos."
+          ],
+          "bullets": []
+        },
+        {
+          "title": "Quién procesa el pago",
+          "body": [
+            "Los pagos y reembolsos los procesa Paddle.com, nuestro revendedor autorizado y Merchant of Record de todos nuestros pedidos. También puedes consultar o gestionar un cobro directamente con Paddle en paddle.net."
+          ],
+          "bullets": []
+        }
+      ]
     }
   },
   "meta": {
@@ -1592,7 +1637,8 @@
     "profile": "Perfil",
     "terms": "Términos de uso",
     "privacy": "Política de privacidad",
-    "billing": "Plan y facturación"
+    "billing": "Plan y facturación",
+    "refunds": "Política de reembolso"
   },
   "emails": {
     "footer": "Gestiona tus propiedades con confianza.",

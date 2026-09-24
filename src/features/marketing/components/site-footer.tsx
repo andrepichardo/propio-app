@@ -25,6 +25,7 @@ const SIGNED_OUT_LINKS: FooterLink[] = [
 const LEGAL_LINKS: FooterLink[] = [
   { href: '/terms', key: 'terms' },
   { href: '/privacy', key: 'privacy' },
+  { href: '/refunds', key: 'refunds' },
 ];
 
 const LINK_CLASS =
