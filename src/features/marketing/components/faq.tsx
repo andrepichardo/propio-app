@@ -8,8 +8,9 @@ import { Plus } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
 import { SectionHeading } from './section-heading';
 import { Reveal } from './motion-primitives';
+import { pricingMessageParams } from '@/features/billing/plans';
 
-const QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7'] as const;
+const QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'] as const;
 
 /**
  * FAQ accordion.
@@ -76,7 +77,7 @@ export function Faq() {
                       className="overflow-hidden"
                     >
                       <p className="text-muted-foreground px-5 pb-5 text-sm leading-relaxed sm:px-6">
-                        {t(`${key}.a`)}
+                        {t(`${key}.a`, pricingMessageParams())}
                       </p>
                     </motion.div>
                   ) : null}

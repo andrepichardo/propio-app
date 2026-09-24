@@ -133,11 +133,12 @@ src/
 - ✅ Documents: uploads (PDF/images/Word) stored per owner, linked to properties/tenants
 - ✅ Reports: yearly revenue/expenses/profit with **year selector**, expense category breakdown, occupancy
 - ✅ Notifications: in-app feed + **daily cron** (`/api/cron/notifications`, `CRON_SECRET`-protected, wired in `vercel.json`) for upcoming/late payments and expiring contracts
+- ✅ Billing: Free (1 property) · Pro (20) · Business (100), monthly or yearly, through **Paddle** as Merchant of Record — checkout overlay, signed webhook (`/api/webhooks/paddle`), plan changes and customer portal. Runs without Paddle env: everyone stays on their free/comp plan
 - ✅ Tests: Vitest unit suite for validators, formatting, pagination and error mapping (`yarn test`)
 
 ### Roadmap
 
-Airbnb/Booking sync · calendar integrations · WhatsApp notifications · Stripe · e-signature · maintenance requests · accounting & taxes · mobile app.
+Airbnb/Booking sync · calendar integrations · WhatsApp notifications · e-signature · maintenance requests · accounting & taxes · mobile app.
 
 ---
 

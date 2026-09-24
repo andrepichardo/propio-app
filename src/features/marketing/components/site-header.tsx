@@ -36,6 +36,7 @@ const SECTIONS = [
   { href: '#features', key: 'navFeatures' },
   { href: '#how-it-works', key: 'navHowItWorks' },
   { href: '#use-cases', key: 'navUseCases' },
+  { href: '#pricing', key: 'navPricing' },
   { href: '#faq', key: 'navFaq' },
 ] as const;
 
@@ -87,7 +88,7 @@ export function SiteHeader({
           <Logo />
         </a>
 
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="hidden items-center gap-1 lg:flex">
           {SECTIONS.map((section) => (
             <a
               key={section.href}
@@ -129,7 +130,7 @@ export function SiteHeader({
             onClick={() => setMenuOpen((open) => !open)}
             aria-expanded={menuOpen}
             aria-label={t(menuOpen ? 'closeMenu' : 'openMenu')}
-            className="text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:ring-ring inline-flex size-9 items-center justify-center rounded-md border outline-hidden transition-colors focus-visible:ring-2 md:hidden"
+            className="text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:ring-ring inline-flex size-9 items-center justify-center rounded-md border outline-hidden transition-colors focus-visible:ring-2 lg:hidden"
           >
             {menuOpen ? <X className="size-4" /> : <Menu className="size-4" />}
           </button>
@@ -158,7 +159,7 @@ export function SiteHeader({
             initial="closed"
             animate="open"
             exit="closed"
-            className="bg-background/95 absolute inset-x-0 top-full overflow-hidden border-t border-b shadow-lg backdrop-blur-xl md:hidden"
+            className="bg-background/95 absolute inset-x-0 top-full overflow-hidden border-t border-b shadow-lg backdrop-blur-xl lg:hidden"
           >
             <div className="container flex flex-col gap-1 py-4">
               {SECTIONS.map((section) => (

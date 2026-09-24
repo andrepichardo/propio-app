@@ -10,7 +10,11 @@
 // DATABASE_URL and conclude it is not production.
 import 'dotenv/config';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { PropertyStatus, PropertyType } from '../src/generated/prisma/enums';
+import {
+  Plan,
+  PropertyStatus,
+  PropertyType,
+} from '../src/generated/prisma/enums';
 import { PrismaClient } from '../src/generated/prisma/client';
 import bcrypt from 'bcryptjs';
 import { addMonths, startOfMonth, subMonths } from 'date-fns';
@@ -63,6 +67,8 @@ async function main() {
       hashedPassword,
       emailVerified: new Date(),
       currency: 'USD',
+      // Three properties would trip the FREE plan's limit of one.
+      compPlan: Plan.BUSINESS,
     },
   });
 

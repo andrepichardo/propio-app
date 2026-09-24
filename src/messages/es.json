@@ -59,7 +59,8 @@
     "themeLight": "Claro",
     "themeDark": "Oscuro",
     "themeSystem": "Sistema",
-    "signOut": "Cerrar sesión"
+    "signOut": "Cerrar sesión",
+    "billing": "Plan y facturación"
   },
   "topbar": {
     "registerPayment": "Registrar pago",
@@ -1010,7 +1011,7 @@
     "badge": "Hecho para arrendadores independientes",
     "heroTitleLead": "Gestiona tus propiedades con",
     "heroTitleAccent": "confianza",
-    "heroSubtitle": "Propio es el sistema todo-en-uno para arrendadores con 1 a 50 propiedades. Alquileres, inquilinos, contratos, pagos y reportes — un panel tranquilo y rápido.",
+    "heroSubtitle": "Propio es el sistema todo-en-uno para arrendadores con 1 a 100 propiedades. Alquileres, inquilinos, contratos, pagos y reportes — un panel tranquilo y rápido.",
     "heroReassurance": "Empieza gratis · Sin tarjeta de crédito · Listo en pocos minutos",
     "hero": {
       "floatReceiptTitle": "Recibo enviado",
@@ -1179,7 +1180,7 @@
       "currenciesTag": "Multi-moneda",
       "portfolioTitle": "El del portafolio serio",
       "portfolioDesc": "Decenas de unidades, un contador que pide números y cero paciencia para perseguir papeles. Ocupación, ingresos y gastos del año en una sola pantalla.",
-      "portfolioTag": "Hasta 50 propiedades"
+      "portfolioTag": "Hasta 100 propiedades"
     },
     "faq": {
       "eyebrow": "Preguntas",
@@ -1189,11 +1190,11 @@
       "email": "info@usepropio.com",
       "q1": {
         "q": "¿Necesito tarjeta de crédito para empezar?",
-        "a": "No. Creas la cuenta con tu correo, lo verificas y empiezas a trabajar. No se guarda ninguna tarjeta ni hay un reloj de prueba corriendo."
+        "a": "No. El plan Gratis no pide tarjeta: creas tu cuenta, la verificas y empiezas con tu primera propiedad, sin reloj de prueba corriendo. Solo si necesitas más propiedades eliges un plan de pago."
       },
       "q2": {
         "q": "¿Vale la pena si solo alquilo una propiedad?",
-        "a": "Sí — es justo donde empieza a rendir. Una sola propiedad igual implica contratos, recibos, depósitos y un año de números que recordar. Propio guarda todo eso para que tú no tengas que guardarlo en la cabeza."
+        "a": "Sí — es justo donde empieza a rendir, y con una propiedad es gratis. Una sola propiedad igual implica contratos, recibos, depósitos y un año de números que recordar. Propio guarda todo eso para que tú no tengas que guardarlo en la cabeza."
       },
       "q3": {
         "q": "¿Puedo manejar alquileres en dólares y en pesos a la vez?",
@@ -1214,6 +1215,10 @@
       "q7": {
         "q": "¿Puedo sacar mi información si dejo de usar Propio?",
         "a": "Sí. Cada recibo y estado de cuenta es un PDF que puedes descargar cuando quieras, y puedes pedirnos por correo que exportemos o eliminemos los datos de tu cuenta."
+      },
+      "q8": {
+        "q": "¿Cuánto cuesta y puedo cancelar cuando quiera?",
+        "a": "Gratis con {freeLimit} propiedad. Pro cuesta {proPrice}/mes hasta {proLimit} propiedades y Business {businessPrice}/mes hasta {businessLimit}; si pagas el año te llevas 2 meses gratis. Son precios finales, con impuestos incluidos. Todas las funciones vienen en todos los planes. Cancelas cuando quieras desde la app y conservas tu plan hasta el final del período pagado — y bajar de plan nunca borra tus datos."
       }
     },
     "cta": {
@@ -1242,7 +1247,19 @@
       "terms": "Términos de uso",
       "privacy": "Política de privacidad",
       "rights": "Todos los derechos reservados.",
-      "madeIn": "Hecho en República Dominicana."
+      "madeIn": "Hecho en República Dominicana.",
+      "pricing": "Precios"
+    },
+    "navPricing": "Precios",
+    "pricing": {
+      "eyebrow": "Precios",
+      "title": "Paga según el tamaño de tu cartera",
+      "description": "Todas las funciones en todos los planes. Lo único que cambia es cuántas propiedades administras.",
+      "ctaFree": "Empieza gratis",
+      "ctaPaid": "Elegir {plan}",
+      "ctaDashboard": "Ver mi plan",
+      "largePortfolio": "¿Más de 100 propiedades? Escríbenos a",
+      "note": "Precios finales en dólares estadounidenses, con impuestos incluidos: pagas exactamente lo que ves. Cambia de plan o cancela cuando quieras."
     }
   },
   "legal": {
@@ -1254,7 +1271,7 @@
     "contactEmail": "info@usepropio.com",
     "terms": {
       "title": "Términos de uso",
-      "updated": "27 de agosto de 2026",
+      "updated": "24 de septiembre de 2026",
       "intro": "Estos términos rigen tu uso de Propio, el servicio de gestión de propiedades disponible en usepropio.com. Al crear una cuenta los aceptas. Vale la pena leerlos: describen qué hace Propio, qué no hace, y de qué es responsable cada parte.",
       "sections": [
         {
@@ -1339,19 +1356,30 @@
           "bullets": []
         },
         {
-          "title": "Precio y disponibilidad",
+          "title": "Planes, pagos y reembolsos",
           "body": [
-            "Actualmente Propio se ofrece sin costo. Si introducimos planes de pago, lo anunciaremos con anticipación y nunca se te cobrará sin que aceptes antes los nuevos términos.",
+            "Propio ofrece un plan Gratis y planes de pago (Pro y Business) que se diferencian únicamente por la cantidad de propiedades que puedes administrar. Los precios vigentes y lo que incluye cada plan se publican en usepropio.com.",
+            "Nuestro proceso de compra lo realiza nuestro revendedor en línea Paddle.com. Paddle.com es el Merchant of Record de todos nuestros pedidos: procesa el pago, emite la factura, calcula y cobra los impuestos que correspondan, y atiende las consultas sobre cobros y devoluciones. Al pagar aceptas también los términos de compra de Paddle. Propio nunca ve ni guarda los datos de tu tarjeta.",
+            "Los precios publicados son finales: incluyen los impuestos aplicables y no se agrega ningún cargo al pagar. Los planes de pago se cobran por adelantado, en dólares estadounidenses, cada mes o cada año según elijas, y se renuevan automáticamente al final de cada período hasta que los canceles.",
+            "Puedes cambiar de plan o cancelar en cualquier momento desde Plan y facturación. Al cambiar de plan, la diferencia se prorratea: una mejora se cobra en el momento y una reducción se acredita a tus próximos cobros. Al cancelar, conservas tu plan hasta el final del período ya pagado y luego pasas al plan Gratis.",
+            "Si tu cuenta supera el límite de propiedades de su plan — por ejemplo, después de cancelar o de bajar de plan — no pierdes nada: tus propiedades y registros siguen disponibles, pero no podrás agregar propiedades nuevas hasta volver a estar dentro del límite o mejorar tu plan.",
+            "Si no quedas conforme, puedes pedir el reembolso completo del primer cobro de una suscripción dentro de los 14 días siguientes a ese cobro, escribiendo a la dirección que aparece al final de esta página. Fuera de ese plazo los cobros no son reembolsables, salvo donde la ley aplicable lo exija.",
+            "Si cambiamos los precios, te avisaremos con al menos 30 días de anticipación. El nuevo precio se aplica a partir de tu siguiente renovación, y puedes cancelar antes si no quieres continuar."
+          ]
+        },
+        {
+          "title": "Disponibilidad del servicio",
+          "body": [
             "Trabajamos para mantener el servicio disponible y rápido, pero no prometemos disponibilidad ininterrumpida. Podemos cambiar, agregar o retirar funciones, y podemos realizar mantenimientos que interrumpan brevemente el acceso.",
-            "Si alguna vez descontinuamos el servicio, te daremos un aviso razonable y una forma de exportar tu información antes de que se elimine."
-          ],
-          "bullets": []
+            "Si alguna vez descontinuamos el servicio, te daremos un aviso razonable y una forma de exportar tu información antes de que se elimine, y dejaremos de cobrar cualquier suscripción activa."
+          ]
         },
         {
           "title": "Suspensión y cierre de tu cuenta",
           "body": [
             "Puedes dejar de usar Propio en cualquier momento, y puedes pedirnos que eliminemos tu cuenta y sus datos escribiendo a la dirección que aparece al final de esta página.",
-            "Podemos suspender o cerrar una cuenta que incumpla estos términos, que se esté usando de forma ilícita, o que ponga en riesgo el servicio o a otros usuarios. Cuando las circunstancias lo permitan, te avisaremos primero y te daremos la oportunidad de corregirlo."
+            "Podemos suspender o cerrar una cuenta que incumpla estos términos, que se esté usando de forma ilícita, o que ponga en riesgo el servicio o a otros usuarios. Cuando las circunstancias lo permitan, te avisaremos primero y te daremos la oportunidad de corregirlo.",
+            "Cerrar tu cuenta no cancela por sí solo una suscripción de pago. Cancélala antes desde Plan y facturación, o pídenos que la cancelemos junto con la cuenta."
           ],
           "bullets": []
         },
@@ -1390,7 +1418,7 @@
     },
     "privacy": {
       "title": "Política de privacidad",
-      "updated": "27 de agosto de 2026",
+      "updated": "24 de septiembre de 2026",
       "intro": "Esta política explica qué información recopila Propio, por qué la recopila, con quién la comparte y qué puedes pedirnos que hagamos con ella. Aplica a usepropio.com y a la aplicación Propio. Intentamos escribirla en lenguaje claro y no en jerga legal.",
       "sections": [
         {
@@ -1410,7 +1438,8 @@
             "Registros de propiedades y contratos: direcciones, descripciones, fotos, montos de alquiler, monedas, días de pago y fechas del contrato.",
             "Registros de inquilinos: nombre, correo, teléfono, identificación y notas que decidas ingresar.",
             "Registros financieros: pagos, gastos, depósitos, recibos y los estados de cuenta generados a partir de ellos.",
-            "Archivos que subes: contratos, documentos de identidad, facturas, comprobantes y fotos de las propiedades."
+            "Archivos que subes: contratos, documentos de identidad, facturas, comprobantes y fotos de las propiedades.",
+            "Datos de facturación: tu plan, el estado de tu suscripción y los identificadores que Paddle le asigna a tu compra. Los datos de tu tarjeta los recibe y procesa Paddle directamente; Propio nunca los ve ni los guarda."
           ]
         },
         {
@@ -1432,7 +1461,8 @@
             "Para generar recibos, estados de cuenta y reportes, y enviar por correo los recibos a los inquilinos que elijas.",
             "Para generar los recordatorios que hayas activado sobre contratos por vencer, alquileres próximos y pagos atrasados y, cuando tengas activo el resumen diario, enviártelos por correo.",
             "Para darte soporte cuando nos contactas y diagnosticar fallas.",
-            "Para cumplir obligaciones legales y proteger el servicio contra abusos."
+            "Para cumplir obligaciones legales y proteger el servicio contra abusos.",
+            "Para aplicar tu plan y gestionar tu suscripción."
           ]
         },
         {
@@ -1445,7 +1475,8 @@
             "Supabase — la base de datos PostgreSQL y el almacenamiento de archivos donde viven tus cargas, alojados en Amazon Web Services en Estados Unidos.",
             "Resend — entrega de correo transaccional: verificación, restablecimiento de contraseña, los recibos que envías a inquilinos, y tu resumen diario de recordatorios.",
             "Google y GitHub — solo si eliges iniciar sesión con ellos, y únicamente para autenticarte.",
-            "open.er-api.com — fuente pública de tasas de cambio. Solo solicitamos tasas publicadas; no se le envía ningún dato tuyo ni de tu cartera."
+            "open.er-api.com — fuente pública de tasas de cambio. Solo solicitamos tasas publicadas; no se le envía ningún dato tuyo ni de tu cartera.",
+            "Paddle — nuestro revendedor (Merchant of Record) para los planes de pago: procesa los pagos, emite las facturas y calcula los impuestos. Recibe tu nombre, correo, país y los datos de pago que ingresas en su formulario, y los trata bajo su propia política de privacidad."
           ]
         },
         {
@@ -1474,7 +1505,8 @@
           "bullets": [
             "Una cookie de sesión que mantiene tu sesión iniciada.",
             "Una cookie de idioma (NEXT_LOCALE) que recuerda si elegiste español o inglés.",
-            "Una entrada de almacenamiento local que recuerda tu preferencia de tema claro u oscuro. Nunca sale de tu navegador."
+            "Una entrada de almacenamiento local que recuerda tu preferencia de tema claro u oscuro. Nunca sale de tu navegador.",
+            "En la página Plan y facturación, el formulario de pago de Paddle puede usar sus propias cookies, necesarias para procesar el pago y prevenir fraudes. No se cargan en ninguna otra parte de Propio."
           ]
         },
         {
@@ -1559,7 +1591,8 @@
     "settings": "Configuración",
     "profile": "Perfil",
     "terms": "Términos de uso",
-    "privacy": "Política de privacidad"
+    "privacy": "Política de privacidad",
+    "billing": "Plan y facturación"
   },
   "emails": {
     "footer": "Gestiona tus propiedades con confianza.",
@@ -1587,5 +1620,89 @@
     "digestIntroNamed": "Hola {name}, esto es lo que Propio encontró en tu cartera esta mañana.",
     "digestCta": "Abrir mi panel",
     "digestManage": "Recibes este correo porque tienes activos los recordatorios por correo. Puedes desactivarlos cuando quieras en Configuración → Recordatorios."
+  },
+  "plans": {
+    "FREE": {
+      "name": "Gratis",
+      "tagline": "Para empezar con tu primera propiedad."
+    },
+    "PRO": {
+      "name": "Pro",
+      "tagline": "Para el arrendador que ya tiene varias unidades."
+    },
+    "BUSINESS": {
+      "name": "Business",
+      "tagline": "Para portafolios grandes y administradores."
+    },
+    "propertyLimit": "{limit, plural, one {# propiedad} other {Hasta # propiedades}}",
+    "perMonth": "/mes",
+    "perYear": "/año",
+    "monthly": "Mensual",
+    "yearly": "Anual",
+    "yearlyBadge": "2 meses gratis",
+    "billedYearly": "Equivale a {monthly}/mes",
+    "popular": "Más popular",
+    "featuresLabel": "Todo incluido en todos los planes:",
+    "features": {
+      "records": "Inquilinos, contratos y pagos sin límite",
+      "receipts": "Recibos en PDF con tu firma, enviados por correo",
+      "reports": "Estados de cuenta y reportes anuales",
+      "reminders": "Recordatorios en la app y por correo",
+      "currencies": "Varias monedas con conversión automática"
+    }
+  },
+  "billing": {
+    "title": "Plan y facturación",
+    "subtitle": "Tu plan, cuánto lo estás usando y tus pagos.",
+    "currentPlan": "Plan actual",
+    "usageLabel": "Propiedades",
+    "usage": "{count} de {limit}",
+    "renewsOn": "Se renueva el {date}.",
+    "cancelsOn": "Tu suscripción termina el {date}. Después pasas al plan Gratis.",
+    "pastDue": "No pudimos cobrar tu último pago. Actualiza tu método de pago para conservar tu plan.",
+    "comp": "Este plan te fue otorgado sin costo.",
+    "overLimit": "Tienes {count} propiedades y tu plan incluye {limit}. Todo sigue disponible, pero no podrás agregar propiedades nuevas hasta mejorar tu plan.",
+    "manage": "Gestionar suscripción",
+    "manageHint": "Tarjeta, facturas y cancelación, en el portal seguro de Paddle.",
+    "choosePlan": "Elige tu plan",
+    "current": "Tu plan actual",
+    "subscribe": "Elegir {plan}",
+    "switchTo": "Cambiar a {plan}",
+    "resume": "Seguir con {plan}",
+    "freeViaCancel": "Para volver al plan Gratis, cancela tu suscripción desde «Gestionar suscripción».",
+    "confirmTitle": "¿Cambiar a {plan}?",
+    "confirmChange": "Paddle calcula la diferencia según el tiempo que le queda a tu período: si el nuevo plan cuesta más, se cobra hoy; si cuesta menos, queda como crédito para tus próximos cobros. El nuevo límite aplica de inmediato.",
+    "confirmResume": "Tu suscripción deja de estar programada para terminar y se renovará con normalidad.",
+    "downgradeWarning": "Con {plan} tu límite es {limit} propiedades y hoy tienes {count}: las conservas todas, pero no podrás agregar nuevas.",
+    "confirm": "Confirmar",
+    "cancel": "Volver",
+    "changed": "Listo, tu plan ahora es {plan}.",
+    "processing": "Estamos confirmando tu pago con Paddle. Tu plan se actualizará en unos segundos.",
+    "processingSlow": "Tu pago se completó, pero la confirmación está tardando. Recarga esta página en un minuto; si tu plan no cambia, escríbenos a {email}.",
+    "notConfigured": "Los pagos todavía no están habilitados. Mientras tanto sigues en tu plan actual.",
+    "checkoutError": "No se pudo abrir el pago. Intenta de nuevo en unos segundos.",
+    "largePortfolio": "¿Más de 100 propiedades? Escríbenos a {email} y lo resolvemos.",
+    "poweredBy": "Los pagos los procesa Paddle.com, nuestro revendedor autorizado, que emite tu factura. El precio que ves es el precio final, con impuestos incluidos.",
+    "limitReached": {
+      "title": "Llegaste al límite de tu plan",
+      "description": "Tu plan {plan} incluye {limit, plural, one {# propiedad} other {# propiedades}} y ya las usaste. Mejora tu plan para agregar más — todo lo demás sigue igual.",
+      "cta": "Ver planes"
+    },
+    "errors": {
+      "propertyLimit": "Tu plan incluye {limit, plural, one {# propiedad} other {hasta # propiedades}}. Mejora tu plan para agregar más.",
+      "unavailable": "Los pagos no están disponibles en este momento.",
+      "paddleFailed": "No pudimos completar la operación con Paddle. Intenta de nuevo o escríbenos.",
+      "noSubscription": "No encontramos una suscripción activa en tu cuenta.",
+      "samePlan": "Ya estás en ese plan."
+    },
+    "switchInterval": "Cambiar a {interval}",
+    "confirmIntervalTitle": "¿Cambiar a facturación {interval}?",
+    "changedInterval": "Listo, tu plan {plan} ahora tiene pago {interval}.",
+    "intervalWord": {
+      "MONTH": "mensual",
+      "YEAR": "anual"
+    },
+    "toYearlyHint": "Ahora pagas {monthly}/mes. Con pago anual ahorras {savings} al año.",
+    "toMonthlyHint": "Ahora pagas {yearly}/año. Con pago mensual serían {annualized} al año."
   }
 }

@@ -59,7 +59,8 @@
     "themeLight": "Light",
     "themeDark": "Dark",
     "themeSystem": "System",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "billing": "Plan & billing"
   },
   "topbar": {
     "registerPayment": "Register payment",
@@ -1010,7 +1011,7 @@
     "badge": "Built for independent landlords",
     "heroTitleLead": "Manage your properties with",
     "heroTitleAccent": "confidence",
-    "heroSubtitle": "Propio is the all-in-one operating system for landlords with 1 to 50 properties. Rentals, tenants, contracts, payments and reports — one calm, fast dashboard.",
+    "heroSubtitle": "Propio is the all-in-one operating system for landlords with 1 to 100 properties. Rentals, tenants, contracts, payments and reports — one calm, fast dashboard.",
     "heroReassurance": "Free to start · No credit card required · Set up in a few minutes",
     "hero": {
       "floatReceiptTitle": "Receipt sent",
@@ -1179,7 +1180,7 @@
       "currenciesTag": "Multi-currency",
       "portfolioTitle": "The serious portfolio",
       "portfolioDesc": "Dozens of units, an accountant asking for numbers and zero patience for chasing paper. Occupancy, revenue and expenses for the year on a single screen.",
-      "portfolioTag": "Up to 50 properties"
+      "portfolioTag": "Up to 100 properties"
     },
     "faq": {
       "eyebrow": "Questions",
@@ -1189,11 +1190,11 @@
       "email": "info@usepropio.com",
       "q1": {
         "q": "Do I need a credit card to start?",
-        "a": "No. You create an account with your email, verify it and start working. There is no card on file and no trial clock counting down."
+        "a": "No. The Free plan asks for no card: you create an account, verify it and start with your first property, with no trial clock counting down. You only pick a paid plan if you need more properties."
       },
       "q2": {
         "q": "Is it worth it if I only rent out one property?",
-        "a": "Yes — that is exactly where it starts paying off. One property still means contracts, receipts, deposits and a year of numbers to remember. Propio keeps all of it without you keeping any of it in your head."
+        "a": "Yes — that is exactly where it starts paying off, and with one property it is free. One property still means contracts, receipts, deposits and a year of numbers to remember. Propio keeps all of it without you keeping any of it in your head."
       },
       "q3": {
         "q": "Can I handle rent in dollars and in pesos at the same time?",
@@ -1214,6 +1215,10 @@
       "q7": {
         "q": "Can I get my information out if I stop using Propio?",
         "a": "Yes. Every receipt and statement is a PDF you can download whenever you want, and you can ask us to export or delete your account data by email."
+      },
+      "q8": {
+        "q": "How much does it cost, and can I cancel anytime?",
+        "a": "Free with {freeLimit} property. Pro is {proPrice}/mo for up to {proLimit} properties and Business {businessPrice}/mo for up to {businessLimit}; pay yearly and get 2 months free. Prices are final, taxes included. Every feature comes with every plan. Cancel whenever you want from the app and keep your plan until the end of the paid period — and downgrading never deletes your data."
       }
     },
     "cta": {
@@ -1242,7 +1247,19 @@
       "terms": "Terms of use",
       "privacy": "Privacy policy",
       "rights": "All rights reserved.",
-      "madeIn": "Made in the Dominican Republic."
+      "madeIn": "Made in the Dominican Republic.",
+      "pricing": "Pricing"
+    },
+    "navPricing": "Pricing",
+    "pricing": {
+      "eyebrow": "Pricing",
+      "title": "Pay for the size of your portfolio",
+      "description": "Every feature on every plan. The only thing that changes is how many properties you manage.",
+      "ctaFree": "Start free",
+      "ctaPaid": "Choose {plan}",
+      "ctaDashboard": "See my plan",
+      "largePortfolio": "More than 100 properties? Write to us at",
+      "note": "Final prices in US dollars, taxes included: you pay exactly what you see. Switch plans or cancel whenever you want."
     }
   },
   "legal": {
@@ -1254,7 +1271,7 @@
     "contactEmail": "info@usepropio.com",
     "terms": {
       "title": "Terms of use",
-      "updated": "August 27, 2026",
+      "updated": "September 24, 2026",
       "intro": "These terms govern your use of Propio, the property-management service available at usepropio.com. By creating an account you agree to them. Please read them — they describe what Propio does, what it does not do, and what each of us is responsible for.",
       "sections": [
         {
@@ -1339,19 +1356,30 @@
           "bullets": []
         },
         {
-          "title": "Price and availability",
+          "title": "Plans, payments and refunds",
           "body": [
-            "Propio is currently offered free of charge. If we introduce paid plans, we will announce it in advance and you will never be charged without accepting the new terms first.",
+            "Propio offers a Free plan and paid plans (Pro and Business) that differ only in how many properties you can manage. Current prices and what each plan includes are published at usepropio.com.",
+            "Our order process is conducted by our online reseller Paddle.com. Paddle.com is the Merchant of Record for all our orders: it processes the payment, issues the invoice, calculates and collects any applicable taxes, and handles billing and refund enquiries. By paying you also accept Paddle’s buyer terms. Propio never sees or stores your card details.",
+            "Published prices are final: they include any applicable taxes and nothing is added at checkout. Paid plans are charged in advance, in US dollars, monthly or yearly as you choose, and renew automatically at the end of each period until you cancel.",
+            "You can switch plans or cancel at any time from Plan & billing. When you switch, the difference is prorated: an upgrade is charged right away and a downgrade is credited against your next bills. When you cancel, you keep your plan until the end of the period already paid and then move to the Free plan.",
+            "If your account goes over its plan’s property limit — for example after cancelling or downgrading — you lose nothing: your properties and records stay available, but you cannot add new properties until you are back within the limit or upgrade.",
+            "If you are not satisfied, you can request a full refund of a subscription’s first charge within 14 days of that charge by writing to the address at the end of this page. Outside that window charges are non-refundable, except where applicable law requires otherwise.",
+            "If we change our prices, we will tell you at least 30 days in advance. The new price applies from your next renewal, and you can cancel before then if you do not want to continue."
+          ]
+        },
+        {
+          "title": "Service availability",
+          "body": [
             "We work to keep the service available and fast, but we do not promise uninterrupted availability. We may change, add or remove features, and we may perform maintenance that briefly interrupts access.",
-            "If we ever discontinue the service, we will give you reasonable notice and a way to export your information before it is deleted."
-          ],
-          "bullets": []
+            "If we ever discontinue the service, we will give you reasonable notice and a way to export your information before it is deleted, and we will stop charging any active subscription."
+          ]
         },
         {
           "title": "Suspension and closing your account",
           "body": [
             "You may stop using Propio at any time, and you may ask us to delete your account and its data by writing to the address at the bottom of this page.",
-            "We may suspend or close an account that breaches these terms, that is being used unlawfully, or that puts the service or other users at risk. Where circumstances allow, we will warn you first and give you a chance to put things right."
+            "We may suspend or close an account that breaches these terms, that is being used unlawfully, or that puts the service or other users at risk. Where circumstances allow, we will warn you first and give you a chance to put things right.",
+            "Closing your account does not by itself cancel a paid subscription. Cancel it first from Plan & billing, or ask us to cancel it together with the account."
           ],
           "bullets": []
         },
@@ -1390,7 +1418,7 @@
     },
     "privacy": {
       "title": "Privacy policy",
-      "updated": "August 27, 2026",
+      "updated": "September 24, 2026",
       "intro": "This policy explains what information Propio collects, why we collect it, who we share it with, and what you can ask us to do with it. It covers usepropio.com and the Propio application. We have tried to write it in plain language rather than legalese.",
       "sections": [
         {
@@ -1410,7 +1438,8 @@
             "Property and contract records: addresses, descriptions, photos, rent amounts, currencies, due days and contract dates.",
             "Tenant records: the name, email address, phone number, identification and notes you choose to enter.",
             "Financial records: payments, expenses, deposits, receipts and the statements generated from them.",
-            "Files you upload: contracts, identification documents, invoices, receipts and property photos."
+            "Files you upload: contracts, identification documents, invoices, receipts and property photos.",
+            "Billing data: your plan, your subscription status and the identifiers Paddle assigns to your purchase. Your card details are received and processed by Paddle directly; Propio never sees or stores them."
           ]
         },
         {
@@ -1430,7 +1459,8 @@
             "To generate receipts, statements and reports, and to email the receipts to the tenants you choose.",
             "To generate the reminders you have enabled about expiring contracts, upcoming rent and late payments, and — when the daily summary is switched on — to email them to you.",
             "To provide support when you contact us, and to diagnose faults.",
-            "To meet legal obligations and to protect the service against abuse."
+            "To meet legal obligations and to protect the service against abuse.",
+            "To apply your plan and manage your subscription."
           ]
         },
         {
@@ -1443,7 +1473,8 @@
             "Supabase — the PostgreSQL database and the file storage that holds your uploads, hosted on Amazon Web Services in the United States.",
             "Resend — delivery of transactional email: verification messages, password resets, the receipts you send to tenants, and your daily reminder summary.",
             "Google and GitHub — only if you choose to sign in with them, and only to authenticate you.",
-            "open.er-api.com — a public exchange-rate source. We request published rates only; no data about you or your portfolio is sent to it."
+            "open.er-api.com — a public exchange-rate source. We request published rates only; no data about you or your portfolio is sent to it.",
+            "Paddle — our reseller (Merchant of Record) for paid plans: it processes payments, issues invoices and calculates taxes. It receives your name, email, country and the payment details you enter in its form, and handles them under its own privacy policy."
           ]
         },
         {
@@ -1472,7 +1503,8 @@
           "bullets": [
             "A session cookie that keeps you signed in.",
             "A language cookie (NEXT_LOCALE) that remembers whether you chose English or Spanish.",
-            "A local-storage entry that remembers your light or dark theme preference. It never leaves your browser."
+            "A local-storage entry that remembers your light or dark theme preference. It never leaves your browser.",
+            "On the Plan & billing page, Paddle’s payment form may use its own cookies, needed to process the payment and prevent fraud. They are not loaded anywhere else in Propio."
           ]
         },
         {
@@ -1557,7 +1589,8 @@
     "settings": "Settings",
     "profile": "Profile",
     "terms": "Terms of use",
-    "privacy": "Privacy policy"
+    "privacy": "Privacy policy",
+    "billing": "Plan & billing"
   },
   "emails": {
     "footer": "Manage your properties with confidence.",
@@ -1585,5 +1618,89 @@
     "digestIntroNamed": "Hi {name}, here is what Propio found in your portfolio this morning.",
     "digestCta": "Open my dashboard",
     "digestManage": "You are getting this because reminder emails are on. Turn them off any time in Settings → Reminders."
+  },
+  "plans": {
+    "FREE": {
+      "name": "Free",
+      "tagline": "To get started with your first property."
+    },
+    "PRO": {
+      "name": "Pro",
+      "tagline": "For the landlord who already has several units."
+    },
+    "BUSINESS": {
+      "name": "Business",
+      "tagline": "For large portfolios and property managers."
+    },
+    "propertyLimit": "{limit, plural, one {# property} other {Up to # properties}}",
+    "perMonth": "/mo",
+    "perYear": "/yr",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "yearlyBadge": "2 months free",
+    "billedYearly": "Works out to {monthly}/mo",
+    "popular": "Most popular",
+    "featuresLabel": "Everything included on every plan:",
+    "features": {
+      "records": "Unlimited tenants, contracts and payments",
+      "receipts": "PDF receipts with your signature, sent by email",
+      "reports": "Statements and yearly reports",
+      "reminders": "In-app and email reminders",
+      "currencies": "Multiple currencies with automatic conversion"
+    }
+  },
+  "billing": {
+    "title": "Plan & billing",
+    "subtitle": "Your plan, how much of it you use, and your payments.",
+    "currentPlan": "Current plan",
+    "usageLabel": "Properties",
+    "usage": "{count} of {limit}",
+    "renewsOn": "Renews on {date}.",
+    "cancelsOn": "Your subscription ends on {date}. After that you move to the Free plan.",
+    "pastDue": "We could not collect your last payment. Update your payment method to keep your plan.",
+    "comp": "This plan was granted to you free of charge.",
+    "overLimit": "You have {count} properties and your plan includes {limit}. Everything stays available, but you cannot add new properties until you upgrade.",
+    "manage": "Manage subscription",
+    "manageHint": "Card, invoices and cancellation, in Paddle's secure portal.",
+    "choosePlan": "Choose your plan",
+    "current": "Your current plan",
+    "subscribe": "Choose {plan}",
+    "switchTo": "Switch to {plan}",
+    "resume": "Keep {plan}",
+    "freeViaCancel": "To go back to the Free plan, cancel your subscription from “Manage subscription”.",
+    "confirmTitle": "Switch to {plan}?",
+    "confirmChange": "Paddle works out the difference for the time left in your period: if the new plan costs more, it is charged today; if it costs less, it becomes credit toward your next bills. The new limit applies immediately.",
+    "confirmResume": "Your subscription is no longer scheduled to end and will renew as usual.",
+    "downgradeWarning": "On {plan} your limit is {limit} properties and you have {count} today: you keep all of them, but cannot add new ones.",
+    "confirm": "Confirm",
+    "cancel": "Go back",
+    "changed": "Done — you are now on {plan}.",
+    "processing": "We are confirming your payment with Paddle. Your plan will update in a few seconds.",
+    "processingSlow": "Your payment went through, but the confirmation is taking a while. Reload this page in a minute; if your plan has not changed, write to us at {email}.",
+    "notConfigured": "Payments are not enabled yet. In the meantime you stay on your current plan.",
+    "checkoutError": "The checkout could not open. Try again in a few seconds.",
+    "largePortfolio": "More than 100 properties? Write to us at {email} and we will sort it out.",
+    "poweredBy": "Payments are processed by Paddle.com, our authorised reseller, which issues your invoice. The price you see is the final price, taxes included.",
+    "limitReached": {
+      "title": "You have reached your plan’s limit",
+      "description": "Your {plan} plan includes {limit, plural, one {# property} other {# properties}} and you are using all of them. Upgrade to add more — everything else stays the same.",
+      "cta": "See plans"
+    },
+    "errors": {
+      "propertyLimit": "Your plan includes {limit, plural, one {# property} other {up to # properties}}. Upgrade to add more.",
+      "unavailable": "Payments are not available right now.",
+      "paddleFailed": "We could not complete that with Paddle. Try again or write to us.",
+      "noSubscription": "We could not find an active subscription on your account.",
+      "samePlan": "You are already on that plan."
+    },
+    "switchInterval": "Switch to {interval}",
+    "confirmIntervalTitle": "Switch to {interval} billing?",
+    "changedInterval": "Done — {plan} is now billed {interval}.",
+    "intervalWord": {
+      "MONTH": "monthly",
+      "YEAR": "yearly"
+    },
+    "toYearlyHint": "You pay {monthly}/mo now. Yearly billing saves you {savings} a year.",
+    "toMonthlyHint": "You pay {yearly}/yr now. Monthly billing comes to {annualized} a year."
   }
 }

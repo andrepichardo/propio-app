@@ -9,6 +9,7 @@ import { FeatureBento } from '@/features/marketing/components/feature-bento';
 import { HowItWorks } from '@/features/marketing/components/how-it-works';
 import { Showcase } from '@/features/marketing/components/showcase';
 import { UseCases } from '@/features/marketing/components/use-cases';
+import { Pricing } from '@/features/marketing/components/pricing';
 import { Faq } from '@/features/marketing/components/faq';
 import { FinalCta } from '@/features/marketing/components/final-cta';
 import { LandingJsonLd } from '@/features/marketing/components/json-ld';
@@ -54,6 +55,7 @@ export default async function LandingPage() {
         <HowItWorks />
         <Showcase />
         <UseCases />
+        <Pricing authed={authed} />
         <Faq />
         <FinalCta authed={authed} />
       </main>

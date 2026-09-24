@@ -59,6 +59,11 @@ model User {
   // to open the app to see is the weakest form of a reminder.
   notifyByEmail            Boolean @default(true)
 
+  // A plan granted by hand, no payment involved (the founder's own account,
+  // early users, the dev demo). The effective plan is the HIGHER of this and
+  // any live subscription, so a lapsed subscription never drops below it.
+  compPlan Plan?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -78,6 +83,7 @@ model User {
   notifications      Notification[]
   activities         Activity[]
   depositSettlements DepositSettlement[]
+  subscriptions      Subscription[]
 
   @@index([email])
   @@map("users")
@@ -86,6 +92,54 @@ model User {
 enum UserRole {
   OWNER
   ADMIN // reserved for internal/staff usage
+}
+
+// ===========================================================================
+// BILLING — a local mirror of Paddle's subscription state, written ONLY by
+// the Paddle webhook. Paddle is the source of truth; this row exists so the
+// app can answer "what plan is this owner on" without an API call.
+// ===========================================================================
+
+enum Plan {
+  FREE
+  PRO
+  BUSINESS
+}
+
+enum BillingInterval {
+  MONTH
+  YEAR
+}
+
+model Subscription {
+  id      String @id @default(cuid())
+  ownerId String
+
+  paddleSubscriptionId String @unique
+  paddleCustomerId     String
+  paddlePriceId        String
+
+  plan     Plan
+  interval BillingInterval
+  // Paddle's own status, verbatim: active | trialing | past_due | paused | canceled.
+  status   String
+
+  currentPeriodEnd  DateTime?
+  // Set when the owner cancelled from the portal: access continues until
+  // `currentPeriodEnd`, then Paddle sends the final `canceled` status.
+  cancelAtPeriodEnd Boolean   @default(false)
+
+  // Paddle does not guarantee delivery order; an event older than this one
+  // must not overwrite newer state.
+  lastEventAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([ownerId])
+  @@map("subscriptions")
 }
 
 model Account {
@@ -640,8 +694,8 @@ model Notification {
   entityId   String?
   actionUrl  String?
 
-  readAt DateTime?
-  dueAt  DateTime? // when the reminder becomes relevant
+  readAt    DateTime?
+  dueAt     DateTime? // when the reminder becomes relevant
   // Stamped once this row has gone out in a digest email. Nullable on purpose:
   // it is the retry ledger. The scheduler's de-dupe works off the notification
   // ROW, so without this a failed send would be skipped forever on the next
