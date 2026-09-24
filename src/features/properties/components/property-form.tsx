@@ -67,6 +67,7 @@ export function PropertyForm({
   defaultValues,
 }: PropertyFormProps) {
   const t = useTranslations('properties');
+  const tb = useTranslations('billing.limitReached');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -100,7 +101,17 @@ export function PropertyForm({
 
       if (!result.success) {
         applyFieldErrors(form, result.fieldErrors);
-        toast.error(result.error);
+        toast.error(
+          result.error,
+          result.code === 'PLAN_LIMIT'
+            ? {
+                action: {
+                  label: tb('cta'),
+                  onClick: () => router.push('/app/billing'),
+                },
+              }
+            : undefined,
+        );
         return;
       }
 

@@ -11,6 +11,7 @@ import { NotFoundError } from '@/shared/lib/errors';
 import { logActivity } from '@/shared/lib/activity/activity-logger';
 import { getStorage } from '@/shared/lib/storage';
 import { fileExtension, type UploadedFile } from '@/shared/lib/uploads';
+import { billingService } from '@/features/billing/services/billing.service';
 
 /**
  * Property business logic. Orchestrates the repository, enforces existence,
@@ -33,6 +34,8 @@ export const propertyService = {
   },
 
   async create(ownerId: string, input: CreatePropertyInput) {
+    await billingService.assertCanAddProperty(ownerId);
+
     const property = await propertyRepository.create(ownerId, {
       name: input.name,
       description: input.description,
@@ -46,6 +49,12 @@ export const propertyService = {
       bedrooms: input.bedrooms,
       bathrooms: input.bathrooms,
       areaSqm: input.areaSqm,
+      furnishing: input.furnishing,
+      parkingSpaces: input.parkingSpaces,
+      petsAllowed: input.petsAllowed,
+      hasPowerBackup: input.hasPowerBackup,
+      hasWaterTank: input.hasWaterTank,
+      hasAirConditioning: input.hasAirConditioning,
       coverImageUrl: input.coverImageUrl || undefined,
     });
 

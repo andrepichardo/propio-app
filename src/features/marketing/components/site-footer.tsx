@@ -8,6 +8,7 @@ const PRODUCT_LINKS: FooterLink[] = [
   { href: '/#features', key: 'features' },
   { href: '/#how-it-works', key: 'howItWorks' },
   { href: '/#use-cases', key: 'useCases' },
+  { href: '/#pricing', key: 'pricing' },
   { href: '/#faq', key: 'faq' },
 ];
 

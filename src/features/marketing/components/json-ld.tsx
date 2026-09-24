@@ -1,9 +1,10 @@
 import { getLocale, getTranslations } from 'next-intl/server';
+import { PLANS, pricingMessageParams } from '@/features/billing/plans';
 
 const SITE_URL = 'https://usepropio.com';
 
 /** Same keys the FAQ section renders — the two must not drift apart. */
-const QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7'] as const;
+const QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'] as const;
 
 /**
  * Structured data for the landing: the product itself plus the FAQ.
@@ -27,6 +28,13 @@ export async function LandingJsonLd() {
       url: SITE_URL,
       description: site('description'),
       inLanguage: locale,
+      offers: {
+        '@type': 'AggregateOffer',
+        priceCurrency: 'USD',
+        lowPrice: PLANS.FREE.price.MONTH,
+        highPrice: PLANS.BUSINESS.price.MONTH,
+        offerCount: Object.keys(PLANS).length,
+      },
     },
     {
       '@context': 'https://schema.org',
@@ -34,7 +42,10 @@ export async function LandingJsonLd() {
       mainEntity: QUESTIONS.map((key) => ({
         '@type': 'Question',
         name: faq(`${key}.q`),
-        acceptedAnswer: { '@type': 'Answer', text: faq(`${key}.a`) },
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: faq(`${key}.a`, pricingMessageParams()),
+        },
       })),
     },
   ];

@@ -50,6 +50,13 @@ export class ConflictError extends AppError {
   }
 }
 
+/** The owner's plan does not allow this; the client offers an upgrade on this code. */
+export class PlanLimitError extends AppError {
+  constructor(message = 'Your plan does not allow this.') {
+    super(message, 'PLAN_LIMIT', 403);
+  }
+}
+
 export function isAppError(error: unknown): error is AppError {
   return error instanceof AppError;
 }

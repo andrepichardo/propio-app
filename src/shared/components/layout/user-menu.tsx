@@ -3,7 +3,13 @@
 import { useTransition } from 'react';
 import { useTheme } from 'next-themes';
 import { useTranslations } from 'next-intl';
-import { LogOut, Settings, SunMoon, User as UserIcon } from 'lucide-react';
+import {
+  CreditCard,
+  LogOut,
+  Settings,
+  SunMoon,
+  User as UserIcon,
+} from 'lucide-react';
 import Link from 'next/link';
 import {
   Avatar,
@@ -74,6 +80,11 @@ export function UserMenu({ name, email, image }: UserMenuProps) {
         <DropdownMenuItem asChild>
           <Link href="/app/settings">
             <Settings /> {t('settings')}
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/app/billing">
+            <CreditCard /> {t('billing')}
           </Link>
         </DropdownMenuItem>
 

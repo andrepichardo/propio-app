@@ -42,12 +42,23 @@ const serverSchema = z.object({
 
   /** Shared secret protecting /api/cron/* endpoints. */
   CRON_SECRET: optionalString,
+
+  /** Paddle Billing. Unset = billing disabled: everyone stays on their free/comp plan. */
+  PADDLE_API_KEY: optionalString,
+  PADDLE_WEBHOOK_SECRET: optionalString,
+  PADDLE_PRICE_PRO_MONTHLY: optionalString,
+  PADDLE_PRICE_PRO_YEARLY: optionalString,
+  PADDLE_PRICE_BUSINESS_MONTHLY: optionalString,
+  PADDLE_PRICE_BUSINESS_YEARLY: optionalString,
 });
 
 const clientSchema = z.object({
   NEXT_PUBLIC_SUPABASE_URL: optionalUrl,
   NEXT_PUBLIC_APP_URL: z.string().url().default('http://localhost:3000'),
   NEXT_PUBLIC_APP_NAME: z.string().default('Propio'),
+  NEXT_PUBLIC_PADDLE_CLIENT_TOKEN: optionalString,
+  /** Drives BOTH Paddle.js and the server SDK, so the two can never point at different environments. */
+  NEXT_PUBLIC_PADDLE_ENV: z.enum(['sandbox', 'production']).default('sandbox'),
 });
 
 /**
@@ -58,6 +69,8 @@ const rawClientEnv = {
   NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
   NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
+  NEXT_PUBLIC_PADDLE_CLIENT_TOKEN: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
+  NEXT_PUBLIC_PADDLE_ENV: emptyToUndefined(process.env.NEXT_PUBLIC_PADDLE_ENV),
 };
 
 function formatError(error: z.ZodError): never {
