@@ -55,6 +55,7 @@
     "react-day-picker": "^10.0.1",
     "react-dom": "19.2.8",
     "react-hook-form": "^7.87.0",
+    "react-is": "19.2.8",
     "react-phone-number-input": "^3.4.18",
     "recharts": "^3",
     "resend": "^6",
@@ -70,6 +71,7 @@
     "@types/pg": "^8.23.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
+    "@types/react-is": "^19",
     "dotenv": "^17.4.2",
     "eslint": "9.39.5",
     "eslint-config-next": "16.3.4",
@@ -92,6 +94,7 @@
     "brace-expansion": "^1.1.18",
     "fast-uri": "^3.1.6",
     "deepmerge-ts": "^8.0.2",
-    "mysql2": "^3.24.3"
+    "mysql2": "^3.24.3",
+    "js-yaml": "^4.3.2"
   }
 }

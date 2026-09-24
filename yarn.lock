@@ -3355,6 +3355,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-is@npm:^19":
+  version: 19.3.0
+  resolution: "@types/react-is@npm:19.3.0"
+  dependencies:
+    "@types/react": "npm:*"
+  checksum: 10c0/57391be255f8af062eed4c538d77f053a6479f5011cc68ac0c6fb75e5bec7a31b9e6e92ba58bfd069d928a8c400908c869574c8a6e88e0f6266057ef59c13adb
+  languageName: node
+  linkType: hard
+
 "@types/react@npm:*, @types/react@npm:^19.2.18":
   version: 19.2.18
   resolution: "@types/react@npm:19.2.18"
@@ -6499,14 +6508,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-yaml@npm:^4.3.0":
-  version: 4.3.1
-  resolution: "js-yaml@npm:4.3.1"
+"js-yaml@npm:^4.3.2":
+  version: 4.3.2
+  resolution: "js-yaml@npm:4.3.2"
   dependencies:
     argparse: "npm:^2.0.1"
   bin:
     js-yaml: bin/js-yaml.js
-  checksum: 10c0/13c500ca322e0c3f8c81686e6ecda96d2ea37b45247a420c17c7db36932d6965cc27391abc2d1a104501600e7f0d947a5f8b7be6db619c4fefa87901b3512807
+  checksum: 10c0/dedd34c2e8fef1d504687f1bc94ed0ee1311a1f78770fa2800352c6d59c635ccf555009d74e9afe529ae62199da2b1ccef30e53dc84dcd8d2d8187c22574bc97
   languageName: node
   linkType: hard
 
@@ -7913,6 +7922,7 @@ __metadata:
     "@types/pg": "npm:^8.23.1"
     "@types/react": "npm:^19.2.18"
     "@types/react-dom": "npm:^19.2.7"
+    "@types/react-is": "npm:^19"
     bcryptjs: "npm:^3"
     class-variance-authority: "npm:^0.7.1"
     clsx: "npm:^2.1.1"
@@ -7936,6 +7946,7 @@ __metadata:
     react-day-picker: "npm:^10.0.1"
     react-dom: "npm:19.2.8"
     react-hook-form: "npm:^7.87.0"
+    react-is: "npm:19.2.8"
     react-phone-number-input: "npm:^3.4.18"
     recharts: "npm:^3"
     resend: "npm:^6"
@@ -8026,6 +8037,13 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17 || ^18 || ^19
   checksum: 10c0/da095c160c216f0db19c8568b35faa27835f0faa56bd487c32dfafd3d6c45f0c5fcabd627f4d7edc03b0bf05273e93bed6959112b384f01b1ae124450e68ba33
+  languageName: node
+  linkType: hard
+
+"react-is@npm:19.2.8":
+  version: 19.2.8
+  resolution: "react-is@npm:19.2.8"
+  checksum: 10c0/ed5322c84efe035c8fc814b1614ff5ca7fb8c2872a7c045197daf99f9b1bd68f32a2c79ffcbcfcff2fc5d93924ff9f9447400898f5b1534e6302bb0736a257f0
   languageName: node
   linkType: hard
 
