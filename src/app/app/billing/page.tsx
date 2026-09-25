@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { requireUser } from '@/shared/lib/auth/session';
-import { getFormatDate } from '@/shared/lib/date-format.server';
 import { clientEnv } from '@/shared/config/env';
 import { PageHeader } from '@/shared/components/page-header';
 import {
@@ -14,6 +13,7 @@ import { billingService } from '@/features/billing/services/billing.service';
 import { PlanPicker } from '@/features/billing/components/plan-picker';
 import { ManageSubscriptionButton } from '@/features/billing/components/manage-subscription-button';
 import { CheckoutProcessing } from '@/features/billing/components/checkout-processing';
+import { PeriodEndLine } from '@/features/billing/components/period-end-line';
 import { isPaidPlan } from '@/features/billing/plans';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -27,10 +27,9 @@ export default async function BillingPage({
   searchParams: Promise<{ checkout?: string }>;
 }) {
   const user = await requireUser();
-  const [overview, { checkout }, formatDate, t, tp, tf] = await Promise.all([
+  const [overview, { checkout }, t, tp, tf] = await Promise.all([
     billingService.overview(user.id),
     searchParams,
-    getFormatDate(),
     getTranslations('billing'),
     getTranslations('plans'),
     getTranslations('landing.faq'),
@@ -45,17 +44,23 @@ export default async function BillingPage({
   );
   const overLimit = overview.propertyCount > overview.propertyLimit;
 
-  let statusLine: string | null = null;
+  let statusLine: React.ReactNode = null;
   if (subscription?.status === 'past_due') {
     statusLine = t('pastDue');
   } else if (subscription?.cancelAtPeriodEnd && subscription.currentPeriodEnd) {
-    statusLine = t('cancelsOn', {
-      date: formatDate(subscription.currentPeriodEnd),
-    });
+    statusLine = (
+      <PeriodEndLine
+        kind="cancelsOn"
+        periodEnd={subscription.currentPeriodEnd.toISOString()}
+      />
+    );
   } else if (subscription?.currentPeriodEnd) {
-    statusLine = t('renewsOn', {
-      date: formatDate(subscription.currentPeriodEnd),
-    });
+    statusLine = (
+      <PeriodEndLine
+        kind="renewsOn"
+        periodEnd={subscription.currentPeriodEnd.toISOString()}
+      />
+    );
   } else if (
     overview.compPlan &&
     overview.compPlan === plan &&
