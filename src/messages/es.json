@@ -1710,6 +1710,8 @@
     "overLimit": "Tienes {count} propiedades y tu plan incluye {limit}. Todo sigue disponible, pero no podrás agregar propiedades nuevas hasta mejorar tu plan.",
     "manage": "Gestionar suscripción",
     "manageHint": "Tarjeta, facturas y cancelación, en el portal seguro de Paddle.",
+    "pastPayments": "Ver pagos anteriores",
+    "pastPaymentsHint": "Tus facturas y reembolsos anteriores, en el portal de Paddle.",
     "choosePlan": "Elige tu plan",
     "current": "Tu plan actual",
     "subscribe": "Elegir {plan}",

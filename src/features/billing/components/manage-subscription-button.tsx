@@ -1,15 +1,13 @@
 'use client';
 
 import { useTransition } from 'react';
-import { useTranslations } from 'next-intl';
 import { ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/shared/components/ui/button';
 import { openBillingPortalAction } from '../actions/billing.actions';
 
 /** Portal links are single-use and short-lived, so one is minted per click rather than rendered into the page. */
-export function ManageSubscriptionButton() {
-  const t = useTranslations('billing');
+export function ManageSubscriptionButton({ label }: { label: string }) {
   const [isPending, startTransition] = useTransition();
 
   function openPortal() {
@@ -25,7 +23,7 @@ export function ManageSubscriptionButton() {
 
   return (
     <Button variant="outline" onClick={openPortal} loading={isPending}>
-      {t('manage')} <ExternalLink className="size-4" />
+      {label} <ExternalLink className="size-4" />
     </Button>
   );
 }

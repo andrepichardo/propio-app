@@ -1708,6 +1708,8 @@
     "overLimit": "You have {count} properties and your plan includes {limit}. Everything stays available, but you cannot add new properties until you upgrade.",
     "manage": "Manage subscription",
     "manageHint": "Card, invoices and cancellation, in Paddle's secure portal.",
+    "pastPayments": "View past payments",
+    "pastPaymentsHint": "Your past invoices and refunds, in Paddle’s portal.",
     "choosePlan": "Choose your plan",
     "current": "Your current plan",
     "subscribe": "Choose {plan}",

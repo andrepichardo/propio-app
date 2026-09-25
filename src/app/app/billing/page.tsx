@@ -106,8 +106,15 @@ export default async function BillingPage({
           </div>
           {overview.hasBillingAccount && overview.configured ? (
             <div className="flex flex-col items-start gap-1.5 sm:items-end">
-              <ManageSubscriptionButton />
-              <p className="text-muted-foreground text-xs">{t('manageHint')}</p>
+              {/* Without a live subscription the portal only holds past
+                  invoices and refunds, so the button must not promise a
+                  subscription to manage next to "Current plan: Free". */}
+              <ManageSubscriptionButton
+                label={subscription ? t('manage') : t('pastPayments')}
+              />
+              <p className="text-muted-foreground text-xs">
+                {subscription ? t('manageHint') : t('pastPaymentsHint')}
+              </p>
             </div>
           ) : null}
         </CardHeader>
