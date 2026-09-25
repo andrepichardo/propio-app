@@ -6,7 +6,6 @@ import { useTranslations } from 'next-intl';
 import {
   motion,
   useMotionValue,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
@@ -23,6 +22,7 @@ import { Button } from '@/shared/components/ui/button';
 import { cn } from '@/shared/lib/utils';
 import { Aurora, GridPattern } from './backdrop';
 import { AppPreview } from './app-preview';
+import { useReducedMotionSafe } from './motion-primitives';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -38,7 +38,7 @@ const EASE = [0.22, 1, 0.36, 1] as const;
  */
 export function Hero({ authed }: { authed: boolean }) {
   const t = useTranslations('landing');
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const stageRef = React.useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -118,7 +118,11 @@ export function Hero({ authed }: { authed: boolean }) {
                 preserveAspectRatio="none"
                 className="text-primary/40 absolute -bottom-1 left-0 h-2.5 w-full"
               >
+                {/* Remounted once the preference is known: `initial` is only
+                    read on mount, and a reduced-motion visitor should get the
+                    underline already drawn, not swept in. */}
                 <motion.path
+                  key={reduce ? 'static' : 'animated'}
                   d="M2 8.5C48 3.5 104 2 150 3.5S250 8 298 4"
                   fill="none"
                   stroke="currentColor"
@@ -198,12 +202,12 @@ export function Hero({ authed }: { authed: boolean }) {
           <motion.div
             style={
               reduce
-                ? undefined
+                ? { rotateX: 0, scale: 1 }
                 : { rotateX, scale, transformStyle: 'preserve-3d' }
             }
             className="relative origin-top"
           >
-            <motion.div style={reduce ? undefined : { rotateY }}>
+            <motion.div style={reduce ? { rotateY: 0 } : { rotateY }}>
               <AppPreview />
             </motion.div>
           </motion.div>
@@ -251,7 +255,7 @@ function FloatingChip({
   caption,
 }: {
   drift: MotionValue<number>;
-  reduce: boolean | null;
+  reduce: boolean;
   className?: string;
   icon: React.ReactNode;
   title: string;
@@ -259,7 +263,7 @@ function FloatingChip({
 }) {
   return (
     <motion.div
-      style={reduce ? undefined : { y: drift }}
+      style={reduce ? { y: 0 } : { y: drift }}
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, delay: 0.5, ease: EASE }}

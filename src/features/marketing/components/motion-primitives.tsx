@@ -24,6 +24,30 @@ import { cn } from '@/shared/lib/utils';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+const noopSubscribe = () => () => {};
+
+/**
+ * `useReducedMotion()`, but `false` until hydration has finished.
+ *
+ * framer's hook returns `null` on the server (the preference is unknowable
+ * there) and `true` on the first CLIENT render for a visitor who reduces
+ * motion, so every value derived from it rendered one thing on the server and
+ * another in the browser. React does not patch attributes on a hydration
+ * mismatch: the hero's product shot stayed frozen at the server's
+ * `scale(0.9) rotateX(26deg)` for exactly the visitors who asked for a still
+ * page. Answering "no" during hydration makes both renders agree; the real
+ * preference applies on the re-render right after.
+ */
+export function useReducedMotionSafe(): boolean {
+  const prefersReduced = useReducedMotion();
+  const hydrated = React.useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
+  );
+  return hydrated && prefersReduced === true;
+}
+
 type MotionDivProps = Omit<
   HTMLMotionProps<'div'>,
   'initial' | 'animate' | 'whileInView' | 'variants' | 'transition'
@@ -47,7 +71,7 @@ export function Reveal({
   from = 'up',
   ...props
 }: RevealProps) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
 
   const offset = reduce
     ? {}
@@ -65,7 +89,19 @@ export function Reveal({
       initial={{ opacity: 0, ...offset }}
       whileInView={{ opacity: 1, x: 0, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.65, delay, ease: EASE }}
+      // `initial` is read once, at hydration, so the offset is already applied
+      // by the time the preference is known — travel it in zero time instead.
+      transition={
+        reduce
+          ? {
+              duration: 0.65,
+              delay,
+              ease: EASE,
+              x: { duration: 0 },
+              y: { duration: 0 },
+            }
+          : { duration: 0.65, delay, ease: EASE }
+      }
       {...props}
     >
       {children}

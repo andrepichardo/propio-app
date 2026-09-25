@@ -2,12 +2,7 @@
 
 import * as React from 'react';
 import { useTranslations } from 'next-intl';
-import {
-  motion,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import {
   AlertTriangle,
   BellRing,
@@ -16,7 +11,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
-import { Reveal } from './motion-primitives';
+import { Reveal, useReducedMotionSafe } from './motion-primitives';
 
 /**
  * Alternating deep-dive rows. Each one pairs a claim with the artefact that
@@ -72,7 +67,7 @@ function ShowcaseRow({
   bullets: string[];
   visual: 'receipt' | 'report' | 'reminders';
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const ref = React.useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -111,7 +106,7 @@ function ShowcaseRow({
       </Reveal>
 
       <motion.div
-        style={reduce ? undefined : { y }}
+        style={reduce ? { y: 0 } : { y }}
         className={cn('min-w-0', flipped && 'lg:order-1')}
       >
         <Reveal from={flipped ? 'left' : 'right'} distance={32}>
